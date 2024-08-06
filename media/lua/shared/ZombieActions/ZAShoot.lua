@@ -19,7 +19,7 @@ local function Hit (shooter, victim)
 
     local accuracyThreshold = 100 / (1 + accuracyCoeff * dist)
 
-    if ZombRand(100) < accuracyThreshold then
+      if ZombRand(100) < accuracyThreshold then
         local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
         
         local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
@@ -135,21 +135,33 @@ local function ManageLineOfFire (shooter, victim)
                                 vehicle:transmitPartItem(vehiclePart)
                             end
 
-                            if partRandom <= 12 then
-                                vehiclePart:damage(20+ZombRand(10))
+                            if partRandom <= 4 then
+                                vehiclePart:damage(20+ZombRand(5))
+                                square:playSound("BreakGlassItem")
+                                return false
+                            elseif partRandom <= 12 then
+                                vehiclePart:damage(10+ZombRand(10))
                                 if vehiclePart:getCondition() <= 0 then
                                     square:playSound("SmashWindow")
                                 else
                                     square:playSound("BreakGlassItem")
+                                    return false
                                 end
                             elseif partRandom <= 17 then
                                 vehiclePart:damage(5+ZombRand(5))
                                 square:playSound("HitVehiclePartWithWeapon")
+                                if vehiclePart:getCondition() <= 0 then
+                                    square:playSound("SmashWindow")
+                                else
+                                    square:playSound("BreakGlassItem")
+                                    return false
+                                end
                             elseif partRandom <= 21 then
                                 vehiclePart:damage(10+ZombRand(30))
                                 if vehiclePart:getCondition() <= 0 then
-                                    square:playSound("VehicleTireExplode")
+                                    square:playSound("VehicleTireExplode
                                 end
+                                return false
                             end
                         end
 
