@@ -1,0 +1,683 @@
+module BanditsVoiceMale4{
+    sound ZSSpotted_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_7.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSSpotted_Male_4_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_male_4_8.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSReloading_Male_4_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_male_4_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_7.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_8.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_9 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_9.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_10 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_10.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_11 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_11.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_12 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_12.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_13 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_13.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSHit_Male_4_14 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_male_4_14.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBreach_Male_4_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_male_4_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSCar_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_male_4_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSCar_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_male_4_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSCar_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_male_4_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSCar_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_male_4_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_6.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_7.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDeath_Male_4_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_male_4_8.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSInside_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSInside_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_male_4_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSInside_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_male_4_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSOutside_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSUpstairs_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/upstairs_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSOutside_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_male_4_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSOutside_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_male_4_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSRoom_Kitchen_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/room_kitchen_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSRoom_Bathroom_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/room_bathroom_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Male_4_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_male_4_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Male_4_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_male_4_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Male_4_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_male_4_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Male_4_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_male_4_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+}

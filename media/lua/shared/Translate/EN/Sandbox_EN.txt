@@ -1,0 +1,122 @@
+Sandbox_EN = {
+
+    /***** GENERAL *****/
+    Sandbox_Bandits_General = "Bandits General"
+    Sandbox_Bandits.StrenghtModel = "Wave days rely on [ONLY PLAYER TIME IMPLEMENTED]"
+    Sandbox_Bandits.StrenghtModelTooltip = "Bandit strenght depends on"
+    Sandbox_Bandits.StrenghtModel_option1 = "Player time survived"    
+    Sandbox_Bandits.StrenghtModel_option2 = "World age"
+    Sandbox_Bandits.StrenghtModel_option3 = "Map zone"
+
+    Sandbox_Bandits.Surrender = "Hurt Bandits may surrender"
+    Sandbox_Bandits.BleedOut = "Hurt Bandits may bleed and die"
+    Sandbox_Bandits.LimitedEndurance = "Bandits have limited endurance"
+    Sandbox_Bandits.RunAway = "Hurt Bandits may run away"
+    Sandbox_Bandits.DestroyDoor = "Bandits may destroy doors"
+    Sandbox_Bandits.SmashWindow = "Bandits may smash windows"
+    Sandbox_Bandits.RemoveBarricade = "Bandits may remove planks or metal sheets from windows and doors"
+    Sandbox_Bandits.DestroyThumpable = "Bandits may destroy player build structures"
+    Sandbox_Bandits.Speak = "Bandits speak"
+    Sandbox_Bandits.SneakAtNight = "Bandits sneak during night-time"
+    Sandbox_Bandits.CarryTorches = "Bandits carry flashflights during night-time"
+    Sandbox_Bandits.ArrivalSoundLevel = "Attacking bandits sound volume"
+    Sandbox_Bandits.ArrivalIcon = "Bandits icon marker"
+    Sandbox_Bandits.ArrivalWakeUp = "Attacking bandits wake up targeted player"
+    Sandbox_Bandits.ArrivaPanic = "Attacking bandits trigger temporary panic"
+    Sandbox_Bandits.GunReflexMin = "Weapon minimum aiming time [ticks]"
+    Sandbox_Bandits.GunReflexRand = "Weapon random surplus maximum aiming time [ticks]"
+    Sandbox_Bandits.PistolRange = "Max Bandit pistol range [squares]"
+    Sandbox_Bandits.RifleRange = "Max Bandit rifle range [squares]"
+
+    Sandbox_Bandits.HitModel = "Player damage hit model"
+    Sandbox_Bandits.HitModelTooltip = "How damage is calculated"
+    Sandbox_Bandits.HitModel_option1 = "Vanilla (more compatibile)"    
+    Sandbox_Bandits.HitModel_option2 = "Bandits"
+    
+    Sandbox_Bandits.OverallAccuracy = "Bandit global weapon accuracy"
+    Sandbox_Bandits.OverallAccuracyTooltip = "Bandit global weapon accuracy"
+    Sandbox_Bandits.OverallAccuracy_option1 = "Stormtrooper Mode"    
+    Sandbox_Bandits.OverallAccuracy_option2 = "Can't Hit the Broad Side of a Barn"
+    Sandbox_Bandits.OverallAccuracy_option3 = "Occasional Marksman"
+    Sandbox_Bandits.OverallAccuracy_option4 = "Sharpshooter on a Good Day"
+    Sandbox_Bandits.OverallAccuracy_option5 = "Laser-Guided Ninja"
+
+    Sandbox_Bandits.DefenderSpawnHourlyChance = "Bandit defenders hourly spawn chance [%]"
+    Sandbox_Bandits.BaseSpawnHourlyChance = "Bandit base/camp hourly spawn chance (if location allows) [%]"
+
+    /***** WAVES *****/
+    Sandbox_Bandits = "Bandits"
+    Sandbox_Bandits_Wave_1 = "Bandits Wave 1"
+    Sandbox_Bandits_Wave_2 = "Bandits Wave 2"
+    Sandbox_Bandits_Wave_3 = "Bandits Wave 3"
+    Sandbox_Bandits_Wave_4 = "Bandits Wave 4"
+    Sandbox_Bandits_Wave_5 = "Bandits Wave 5"
+    Sandbox_Bandits_Wave_6 = "Bandits Wave 6"
+    Sandbox_Bandits_Wave_7 = "Bandits Wave 7"
+    Sandbox_Bandits_Wave_8 = "Bandits Wave 8"
+    Sandbox_Bandits_Wave_9 = "Bandits Wave 9"
+    Sandbox_Bandits_Wave_10 = "Bandits Wave 10"
+    Sandbox_Bandits_Wave_11 = "Bandits Wave 11"
+    Sandbox_Bandits_Wave_12 = "Bandits Wave 12"
+    Sandbox_Bandits_Wave_13 = "Bandits Wave 13"
+    Sandbox_Bandits_Wave_14 = "Bandits Wave 14"
+    Sandbox_Bandits_Wave_15 = "Bandits Wave 15"
+    Sandbox_Bandits_Wave_16 = "Bandits Wave 16"
+    
+    Sandbox_Bandits.WaveEnabled = "Wave Enabled"
+
+    Sandbox_Bandits.WaveEnabledTooltip = "The percentage of the water pump filter that is consumed every 10 game minutes."
+
+    Sandbox_Bandits.FirstDay = "Day Start"
+    Sandbox_Bandits.FirstDayTooltip = "The day number after apocalypse when the wave starts"
+
+    Sandbox_Bandits.LastDay = "Date End"
+    Sandbox_Bandits.LastDayTooltip = "The day number after apocalypse when the wave ends"
+
+    Sandbox_Bandits.SpawnDistance = "Spawn Distance"
+    Sandbox_Bandits.SpawnDistanceTooltip = "How far the bandits will spawn from the player[squares]"
+
+    Sandbox_Bandits.SpawnHourlyChance = "Hourly Spawn Chance [%]"
+    Sandbox_Bandits.SpawnHourlyChanceTooltip = "Chance of the wave to spawn in a given hour"
+
+    Sandbox_Bandits.GroupSize = "Group Size"
+    Sandbox_Bandits.GroupSizeTooltip = "Number of bandits to spawn"
+
+    Sandbox_Bandits.IsFriendly = "Friendly"
+    Sandbox_Bandits.IsFriendlyTooltip = "Are bandits friendly to player"
+
+    Sandbox_Bandits.GroupName = "Group Type"
+    Sandbox_Bandits.GroupNameTooltip = "Character of the group"
+    Sandbox_Bandits.GroupName_option1 = "Desperate Citizens"    
+    Sandbox_Bandits.GroupName_option2 = "Carpenter Clan"
+    Sandbox_Bandits.GroupName_option3 = "Angry Farmers"
+    Sandbox_Bandits.GroupName_option4 = "Mad Doctors"
+    Sandbox_Bandits.GroupName_option5 = "Yakuza"
+    Sandbox_Bandits.GroupName_option6 = "Inmates"
+    Sandbox_Bandits.GroupName_option7 = "Security Guards"
+    Sandbox_Bandits.GroupName_option8 = "Police"
+    Sandbox_Bandits.GroupName_option9 = "State Police"
+    Sandbox_Bandits.GroupName_option10 = "Riot Police"
+    Sandbox_Bandits.GroupName_option11 = "Rangers"
+    Sandbox_Bandits.GroupName_option12 = "Bandits"    
+    Sandbox_Bandits.GroupName_option13 = "Private Militia"    
+    Sandbox_Bandits.GroupName_option14 = "Veterans"
+    Sandbox_Bandits.GroupName_option15 = "Army"
+    Sandbox_Bandits.GroupName_option16 = "Hazmats"
+    Sandbox_Bandits.GroupName_option17 = "Survivors"
+
+    Sandbox_Bandits.HasPistolChance = "Pistol Chance [%]"
+    Sandbox_Bandits.HasPistolChanceTooltip = "Chance that the bandits have to carry a loaded pisto"
+
+    Sandbox_Bandits.PistolMagCount = "Pistol Mag. Count"
+    Sandbox_Bandits.PistolMagCountTooltip = "The number of extra magazines bandit carry for a pistol"
+
+    Sandbox_Bandits.HasRifleChance = "Rifle chance [%]"
+    Sandbox_Bandits.HasRifleChanceTooltip = "Chance that the bandits have to carry a loaded rifle"
+
+    Sandbox_Bandits.RifleMagCount = "Rifle Mag. Count"
+    Sandbox_Bandits.RifleMagCountTooltip = "The number of extra magazines bandit carry for a rifle"
+
+
+
+}

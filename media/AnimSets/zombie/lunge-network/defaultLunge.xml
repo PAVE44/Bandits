@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>defaultLunge</m_Name>
+	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_BlendTime>0.35</m_BlendTime>
+	<m_Conditions>
+		<m_Name>intrees</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>false</m_BoolValue>
+	</m_Conditions>
+</animNode>

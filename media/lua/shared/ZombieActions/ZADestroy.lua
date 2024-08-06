@@ -1,0 +1,50 @@
+ZombieActions = ZombieActions or {}
+
+ZombieActions.Destroy = {}
+ZombieActions.Destroy.onStart = function(zombie, task)
+    if ZombRand(7) == 1 then Bandit.Say(zombie, "BREACH") end
+    return true
+end
+
+ZombieActions.Destroy.onWorking = function(zombie, task)
+    local asn = zombie:getActionStateName()
+    if asn == "bumped" then
+        return false
+    else
+        return true
+    end
+end
+
+ZombieActions.Destroy.onComplete = function(zombie, task)
+    local cell = zombie:getSquare():getCell()
+    local square = cell:getGridSquare(task.x, task.y, task.z)
+    if square then
+        local thumpable = square:getIsoDoor()
+        
+        if not thumpable then
+            local objects = square:getSpecialObjects()
+            for i=0, objects:size()-1 do
+                local obj = objects:get(i)
+                if instanceof(obj, "IsoThumpable") then
+                    thumpable = obj
+                    break
+                end
+            end
+        end
+
+        if thumpable then
+            local health = thumpable:getHealth()
+            print ("thumpable health: " .. thumpable:getHealth())
+            health = health - ZombRand(50)
+            if health < 0 then health = 0 end
+            if health == 0 then
+                thumpable:destroy()
+            else
+                thumpable:setHealth(health)
+                thumpable:Thump(zombie)
+            end
+        end
+    end
+
+    return true
+end

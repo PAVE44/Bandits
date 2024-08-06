@@ -1,0 +1,684 @@
+module BanditsVoiceFemale3{
+    sound ZSSpotted_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_7.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSSpotted_Female_3_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/spotted_female_3_8.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSReloading_Female_3_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/reloading_female_3_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_7.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_8.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_9 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_9.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_10 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_10.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_11 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_11.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_12 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_12.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_13 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_13.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSHit_Female_3_14 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/hit_female_3_14.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_5.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSBreach_Female_3_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/breach_female_3_6.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSCar_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_female_3_1.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSCar_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_female_3_2.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSCar_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_female_3_3.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSCar_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/car_female_3_4.wav, 
+            distanceMax = 4, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_6.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_7 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_7.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDeath_Female_3_8 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/death_female_3_8.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSInside_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSInside_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_female_3_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSInside_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/inside_female_3_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSOutside_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSUpstairs_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/upstairs_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSOutside_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_female_3_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSOutside_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/outside_female_3_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSRoom_Kitchen_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/room_kitchen_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSRoom_Bathroom_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/room_bathroom_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_female_3_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_female_3_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_female_3_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDefender_Spot_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/defender_spot_female_3_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+}

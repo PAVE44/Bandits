@@ -1,0 +1,1121 @@
+VERSION = 1,
+
+/***** GENERAL *****/
+
+option Bandits.General_StrenghtModel = {
+    type = enum, numValues=3, default = 1,
+    page = Bandits_General, translation = Bandits.StrenghtModel, _tooltip=Bandits.StrenghtModelTooltip, valueTranslation=Bandits.StrenghtModel,
+}
+
+option Bandits.General_Surrender = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Surrender,
+}
+
+option Bandits.General_BleedOut = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.BleedOut,
+}
+
+option Bandits.General_LimitedEndurance = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.LimitedEndurance,
+}
+
+option Bandits.General_RunAway = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.RunAway,
+}
+
+option Bandits.General_DestroyDoor = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DestroyDoor,
+}
+
+option Bandits.General_SmashWindow = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SmashWindow,
+}
+
+option Bandits.General_RemoveBarricade = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.RemoveBarricade,
+}
+
+option Bandits.General_DestroyThumpable = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DestroyThumpable,
+}
+
+option Bandits.General_Speak = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Speak,
+}
+
+option Bandits.General_SneakAtNight = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SneakAtNight,
+}
+
+option Bandits.General_CarryTorches = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.CarryTorches,
+}
+
+option Bandits.General_ArrivalSoundLevel = {
+    type = double, min = 0, max = 1, default = 0.40,
+    page = Bandits_General, translation = Bandits.ArrivalSoundLevel,
+}
+
+option Bandits.General_ArrivalIcon = {
+    type = boolean, default = false,
+    page = Bandits_General, translation = Bandits.ArrivalIcon,
+}
+
+option Bandits.General_ArrivalWakeUp = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.ArrivalWakeUp,
+}
+
+option Bandits.General_ArrivaPanic = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.ArrivaPanic,
+}
+
+option Bandits.General_GunReflexMin = {
+    type = integer, min = 0, max = 200, default = 18,
+    page = Bandits_General, translation = Bandits.GunReflexMin,
+}
+
+option Bandits.General_GunReflexRand = {
+    type = integer, min = 0, max = 200, default = 35,
+    page = Bandits_General, translation = Bandits.GunReflexRand,
+}
+
+option Bandits.General_PistolRange = {
+    type = integer, min = 8, max = 24, default = 10,
+    page = Bandits_General, translation = Bandits.PistolRange,
+}
+
+option Bandits.General_RifleRange = {
+    type = integer, min = 8, max = 32, default = 24,
+    page = Bandits_General, translation = Bandits.RifleRange,
+}
+
+option Bandits.General_OverallAccuracy = {
+    type = enum, numValues=5, default = 3,
+    page = Bandits_General, translation = Bandits.OverallAccuracy, _tooltip=Bandits.OverallAccuracyTooltip, valueTranslation=Bandits.OverallAccuracy,
+}
+
+option Bandits.General_HitModel = {
+    type = enum, numValues=2, default = 1,
+    page = Bandits_General, translation = Bandits.HitModel, _tooltip=Bandits.HitModelTooltip, valueTranslation=Bandits.HitModel,
+}
+
+option Bandits.General_DefenderSpawnHourlyChanced = {
+    type = double, min = 0, max = 100, default = 8,
+    page = Bandits_General, translation = Bandits.DefenderSpawnHourlyChance,
+}
+
+option Bandits.General_BaseSpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 0.04,
+    page = Bandits_General, translation = Bandits.BaseSpawnHourlyChance,
+}
+
+
+
+/***** WAVE 1 *****/
+
+option Bandits.Wave_1_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_1, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_1_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_1, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_1_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 1,
+    page = Bandits_Wave_1, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_1_LastDay = {
+    type = integer, min = 0, max = 10000, default = 22,
+    page = Bandits_Wave_1, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_1_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 35,
+    page = Bandits_Wave_1, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_1_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 8,
+    page = Bandits_Wave_1, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_1_GroupSize = {
+    type = integer, min = 0, max = 25, default = 1,
+    page = Bandits_Wave_1, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_1_GroupName = {
+    type = enum, numValues=17, default = 1,
+    page = Bandits_Wave_1, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_1_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_1, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_1_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_1, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_1_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_1, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_1_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_1, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 2 *****/
+
+option Bandits.Wave_2_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_2, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_2_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_2, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_2_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 4,
+    page = Bandits_Wave_2, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_2_LastDay = {
+    type = integer, min = 0, max = 10000, default = 14,
+    page = Bandits_Wave_2, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_2_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 40,
+    page = Bandits_Wave_2, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_2_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 5,
+    page = Bandits_Wave_2, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_2_GroupSize = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_2, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_2_GroupName = {
+    type = enum, numValues=17, default = 2,
+    page = Bandits_Wave_2, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_2_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_2, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_2_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_2, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_2_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_2, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_2_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_2, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 3 *****/
+
+option Bandits.Wave_3_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_3, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_3_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_3, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_3_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 7,
+    page = Bandits_Wave_3, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_3_LastDay = {
+    type = integer, min = 0, max = 10000, default = 14,
+    page = Bandits_Wave_3, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_3_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 45,
+    page = Bandits_Wave_3, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_3_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 2,
+    page = Bandits_Wave_3, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_3_GroupSize = {
+    type = integer, min = 0, max = 25, default = 4,
+    page = Bandits_Wave_3, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_3_GroupName = {
+    type = enum, numValues=17, default = 3,
+    page = Bandits_Wave_3, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_3_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_3, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_3_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_3, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_3_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_3, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_3_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_3, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 4 *****/
+
+option Bandits.Wave_4_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_4, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_4_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_4, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_4_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 13,
+    page = Bandits_Wave_4, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_4_LastDay = {
+    type = integer, min = 0, max = 10000, default = 21,
+    page = Bandits_Wave_4, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_4_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_4, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_4_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 4,
+    page = Bandits_Wave_4, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_4_GroupSize = {
+    type = integer, min = 0, max = 25, default = 6,
+    page = Bandits_Wave_4, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_4_GroupName = {
+    type = enum, numValues=17, default = 4,
+    page = Bandits_Wave_4, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_4_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 2,
+    page = Bandits_Wave_4, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_4_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_4, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_4_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_4, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_4_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_4, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 5 *****/
+
+option Bandits.Wave_5_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_5, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_5_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_5, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_5_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 7,
+    page = Bandits_Wave_5, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_5_LastDay = {
+    type = integer, min = 0, max = 10000, default = 31,
+    page = Bandits_Wave_5, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_5_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_5, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_5_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 1,
+    page = Bandits_Wave_5, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_5_GroupSize = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_5, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_5_GroupName = {
+    type = enum, numValues=17, default = 6,
+    page = Bandits_Wave_5, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_5_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 34,
+    page = Bandits_Wave_5, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_5_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_5, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_5_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_5, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_5_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_5, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 6 *****/
+
+option Bandits.Wave_6_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_6, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_6_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_6, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_6_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 12,
+    page = Bandits_Wave_6, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_6_LastDay = {
+    type = integer, min = 0, max = 10000, default = 30,
+    page = Bandits_Wave_6, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_6_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_6, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_6_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 4,
+    page = Bandits_Wave_6, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_6_GroupSize = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_6, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_6_GroupName = {
+    type = enum, numValues=17, default = 8,
+    page = Bandits_Wave_6, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_6_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_6, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_6_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_6, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_6_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_6, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_6_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_6, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 7 *****/
+
+option Bandits.Wave_7_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_7, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_7_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_7, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_7_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 26,
+    page = Bandits_Wave_7, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_7_LastDay = {
+    type = integer, min = 0, max = 10000, default = 49,
+    page = Bandits_Wave_7, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_7_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_7, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_7_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_7, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_7_GroupSize = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_7, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_7_GroupName = {
+    type = enum, numValues=17, default = 9,
+    page = Bandits_Wave_7, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_7_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_7, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_7_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 4,
+    page = Bandits_Wave_7, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_7_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 10,
+    page = Bandits_Wave_7, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_7_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_7, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 8 *****/
+
+option Bandits.Wave_8_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_8, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_8_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_8, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_8_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 45,
+    page = Bandits_Wave_8, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_8_LastDay = {
+    type = integer, min = 0, max = 10000, default = 79,
+    page = Bandits_Wave_8, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_8_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_8, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_8_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_8, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_8_GroupSize = {
+    type = integer, min = 0, max = 25, default = 5,
+    page = Bandits_Wave_8, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_8_GroupName = {
+    type = enum, numValues=17, default = 10,
+    page = Bandits_Wave_8, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_8_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_8, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_8_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_8, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_8_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_8, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_8_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 4,
+    page = Bandits_Wave_8, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 9 *****/
+
+option Bandits.Wave_9_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_9, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_9_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_9, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_9_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 16,
+    page = Bandits_Wave_9, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_9_LastDay = {
+    type = integer, min = 0, max = 10000, default = 48,
+    page = Bandits_Wave_9, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_9_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_9, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_9_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_9, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_9_GroupSize = {
+    type = integer, min = 0, max = 25, default = 8,
+    page = Bandits_Wave_9, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_9_GroupName = {
+    type = enum, numValues=17, default = 7,
+    page = Bandits_Wave_9, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_9_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 30,
+    page = Bandits_Wave_9, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_9_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_9, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_9_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_9, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_9_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_9, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 10 *****/
+
+option Bandits.Wave_10_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_10, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_10_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_10, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_10_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 32,
+    page = Bandits_Wave_10, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_10_LastDay = {
+    type = integer, min = 0, max = 10000, default = 45,
+    page = Bandits_Wave_10, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_10_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_10, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_10_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_10, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_10_GroupSize = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_10, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_10_GroupName = {
+    type = enum, numValues=17, default = 12,
+    page = Bandits_Wave_10, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_10_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 80,
+    page = Bandits_Wave_10, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_10_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_10, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_10_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 60,
+    page = Bandits_Wave_10, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_10_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_10, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 11 *****/
+
+option Bandits.Wave_11_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_11, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_11_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_11, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_11_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 46,
+    page = Bandits_Wave_11, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_11_LastDay = {
+    type = integer, min = 0, max = 10000, default = 100,
+    page = Bandits_Wave_11, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_11_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_11, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_11_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_11, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_11_GroupSize = {
+    type = integer, min = 0, max = 25, default = 6,
+    page = Bandits_Wave_11, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_11_GroupName = {
+    type = enum, numValues=17, default = 12,
+    page = Bandits_Wave_11, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_11_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 80,
+    page = Bandits_Wave_11, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_11_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_11, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_11_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 70,
+    page = Bandits_Wave_11, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_11_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 5,
+    page = Bandits_Wave_11, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 12 *****/
+
+option Bandits.Wave_12_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_12, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_12_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_12, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_12_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 77,
+    page = Bandits_Wave_12, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_12_LastDay = {
+    type = integer, min = 0, max = 10000, default = 700,
+    page = Bandits_Wave_12, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_12_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_12, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_12_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 2,
+    page = Bandits_Wave_12, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_12_GroupSize = {
+    type = integer, min = 0, max = 25, default = 7,
+    page = Bandits_Wave_12, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_12_GroupName = {
+    type = enum, numValues=17, default = 13,
+    page = Bandits_Wave_12, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_12_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_12, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_12_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 3,
+    page = Bandits_Wave_12, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_12_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 95,
+    page = Bandits_Wave_12, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_12_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 5,
+    page = Bandits_Wave_12, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 13 *****/
+
+option Bandits.Wave_13_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_13, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_13_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_13, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_13_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 14,
+    page = Bandits_Wave_13, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_13_LastDay = {
+    type = integer, min = 0, max = 10000, default = 31,
+    page = Bandits_Wave_13, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_13_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_13, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_13_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 3,
+    page = Bandits_Wave_13, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_13_GroupSize = {
+    type = integer, min = 0, max = 25, default = 1,
+    page = Bandits_Wave_13, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_13_GroupName = {
+    type = enum, numValues=17, default = 14,
+    page = Bandits_Wave_13, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_13_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_13, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_13_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 5,
+    page = Bandits_Wave_13, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_13_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_13, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_13_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 7,
+    page = Bandits_Wave_13, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 14 *****/
+
+option Bandits.Wave_14_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_14, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_14_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_14, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_14_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 101,
+    page = Bandits_Wave_14, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_14_LastDay = {
+    type = integer, min = 0, max = 10000, default = 700,
+    page = Bandits_Wave_14, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_14_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_14, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_14_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 1.5,
+    page = Bandits_Wave_14, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_14_GroupSize = {
+    type = integer, min = 0, max = 25, default = 12,
+    page = Bandits_Wave_14, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_14_GroupName = {
+    type = enum, numValues=17, default = 17,
+    page = Bandits_Wave_14, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_14_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_14, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_14_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 4,
+    page = Bandits_Wave_14, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_14_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 100,
+    page = Bandits_Wave_14, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_14_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 4,
+    page = Bandits_Wave_14, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 15 *****/
+
+option Bandits.Wave_15_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_15, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_15_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_15, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_15_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 39,
+    page = Bandits_Wave_15, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_15_LastDay = {
+    type = integer, min = 0, max = 10000, default = 58,
+    page = Bandits_Wave_15, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_15_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_15, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_15_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 1,
+    page = Bandits_Wave_15, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_15_GroupSize = {
+    type = integer, min = 0, max = 25, default = 12,
+    page = Bandits_Wave_15, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_15_GroupName = {
+    type = enum, numValues=17, default = 16,
+    page = Bandits_Wave_15, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_15_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 1,
+    page = Bandits_Wave_15, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_15_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 2,
+    page = Bandits_Wave_15, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_15_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 0,
+    page = Bandits_Wave_15, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_15_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 0,
+    page = Bandits_Wave_15, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+/***** WAVE 16 *****/
+
+option Bandits.Wave_16_WaveEnabled = {
+    type = boolean, default = true,
+    page = Bandits_Wave_16, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
+}
+
+option Bandits.Wave_16_IsFriendly = {
+    type = boolean, default = false,
+    page = Bandits_Wave_16, translation = Bandits.IsFriendly, _tooltip=Bandits.IsFriendlyTooltip,
+}
+
+option Bandits.Wave_16_FirstDay = {
+    type = integer, min = 0, max = 10000, default = 120,
+    page = Bandits_Wave_16, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
+}
+
+option Bandits.Wave_16_LastDay = {
+    type = integer, min = 0, max = 10000, default = 700,
+    page = Bandits_Wave_16, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
+}
+
+option Bandits.Wave_16_SpawnDistance = {
+    type = integer, min = 0, max = 100, default = 50,
+    page = Bandits_Wave_16, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
+}
+
+option Bandits.Wave_16_SpawnHourlyChance = {
+    type = double, min = 0, max = 100, default = 1,
+    page = Bandits_Wave_16, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
+}
+
+option Bandits.Wave_16_GroupSize = {
+    type = integer, min = 0, max = 25, default = 14,
+    page = Bandits_Wave_16, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
+}
+
+option Bandits.Wave_16_GroupName = {
+    type = enum, numValues=17, default = 15,
+    page = Bandits_Wave_16, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
+}
+
+option Bandits.Wave_16_HasPistolChance = {
+    type = double, min = 0, max = 100, default = 80,
+    page = Bandits_Wave_16, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
+}
+
+option Bandits.Wave_16_PistolMagCount = {
+    type = integer, min = 0, max = 25, default = 5,
+    page = Bandits_Wave_16, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
+}
+
+option Bandits.Wave_16_HasRifleChance = {
+    type = double, min = 0, max = 100, default = 70,
+    page = Bandits_Wave_16, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
+}
+
+option Bandits.Wave_16_RifleMagCount = {
+    type = integer, min = 0, max = 25, default = 6,
+    page = Bandits_Wave_16, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
+}
+
+
+
+
