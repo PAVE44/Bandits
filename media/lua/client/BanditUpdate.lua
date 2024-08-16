@@ -243,7 +243,10 @@ function BanditUpdate.Health(bandit)
                 bandit:getChunk():addBloodSplat(bx, by, 0, ZombRand(20))
             end
 
-            bandit:setHealth(bandit:getHealth() - 0.00025)
+            if BanditUtils.IsController(bandit) then
+                bandit:setHealth(bandit:getHealth() - 0.00025)
+            end
+            
             if not Bandit.HasActionTask(bandit) then
 
                 local id = BanditUtils.GetCharacterID(bandit)
@@ -852,6 +855,8 @@ end
 
 local uTick = 0
 function BanditUpdate.OnBanditUpdate(zombie)
+
+    if isServer() then return end
 
     if uTick == 15 then uTick = 0 end
     uTick = uTick + 1

@@ -17,6 +17,37 @@ function BanditUtils.GetCharacterID (character)
         return id
     end
 end
+    
+function BanditUtils.IsController(zombie)
+
+    -- ZOMBIE/BANDIT BEHAVIOUR IS FULLY CLIENT CONTROLLED
+    -- SO CLIENTS ARE MIRRORING ACTIONS FOR ZOMBIES
+    -- NOW, WE WANT VISUAL MIRRORING BY ALL CLIENTS 
+    -- BUT THE ACTUAL ACTION CONSEQUENCES TO HAPPEN ONCE
+
+    local gamemode = getWorld():getGameMode()
+
+    if gamemode ~= "Multiplayer" then return true end
+
+    local zx = zombie:getX()
+    local zy = zombie:getY()
+
+    local bestDist = 10000
+    local bestPlayerId
+    local playerList = getOnlinePlayers()
+    for i=0, playerList:size()-1 do
+        local player = playerList:get(i)
+        local px = player:getX()
+        local py = player:getY()
+
+        local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+        if dist < bestDist then
+            bestDist = dist
+            bestPlayerId = BanditUtils.GetCharacterID(player)
+        end
+    end
+    return bestPlayerId == BanditUtils.GetCharacterID(getPlayer())
+end
 
 function BanditUtils.IsInAngle(observer, targetX, targetY)
     

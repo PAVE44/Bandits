@@ -13,11 +13,13 @@ end
 ZombieActions.Unbarricade.onComplete = function(zombie, task)
 
     --zombie:getEmitter():stopAll()
-    zombie:getEmitter():stopAll()
-    zombie:playSound("RemoveBarricadePlank")
-    
-    local args = {x=task.x, y=task.y, z=task.z, index=task.idx}
-	sendClientCommand(getPlayer(), 'Commands', 'Unbarricade', args)
+    if BanditUtils.IsController(zombie) then
+        zombie:getEmitter():stopAll()
+        zombie:playSound("RemoveBarricadePlank")
+        
+        local args = {x=task.x, y=task.y, z=task.z, index=task.idx}
+        sendClientCommand(getPlayer(), 'Commands', 'Unbarricade', args)
+    end
 
     return true
 end

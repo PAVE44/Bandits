@@ -10,6 +10,7 @@ local function Hit(attacker, item, victim)
     if dist < item:getMaxRange() + 0.4 then
         victim:forceAwake()
 
+        local isController = BanditUtils.IsController(attacker) 
         local hitSound
         local veh = victim:getVehicle()
         
@@ -22,7 +23,9 @@ local function Hit(attacker, item, victim)
             else
                 hitSound = item:getZombieHitSound()
             end
-            victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
+            if isController then
+                victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
+            end
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempAttacker)
             
@@ -30,7 +33,9 @@ local function Hit(attacker, item, victim)
                 victim:Kill(getCell():getFakeZombieForHit(), true) 
             end
         end
-        victim:playSound(hitSound)
+        if isController then
+            victim:playSound(hitSound)
+        end
     end
 
     -- Clean up the temporary player after use

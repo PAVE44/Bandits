@@ -382,6 +382,9 @@ local function ATROShoot(bandit, handWeapon)
 end
 
 local function Hit(shooter, victim)
+
+    if not BanditUtils.IsController(zombie) then return true end
+
     -- Clone the shooter to create a temporary IsoPlayer
     local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
 
@@ -429,6 +432,8 @@ local function Hit(shooter, victim)
     -- Clean up the temporary player after use
     tempShooter:removeFromWorld()
     tempShooter = nil
+
+    return true
 end
 
 -- Bresenham's line of fire to detect what needs to destroyed between shooter and target
