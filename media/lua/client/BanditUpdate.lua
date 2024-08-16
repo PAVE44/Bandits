@@ -73,6 +73,7 @@ function BanditUpdate.Banditize(zombie, brain)
 
     -- bandit walking type defined in animations
     zombie:setWalkType("Walk")
+    zombie:setVariable("BanditWalkType", "Walk")
 
     -- this shit here is important, removes black screen crashes
     -- with this var set, game engine skips testDefense function that
@@ -82,10 +83,13 @@ function BanditUpdate.Banditize(zombie, brain)
     -- stfu
     zombie:getEmitter():stopAll()
 
+    zombie:setPrimaryHandItem(nil)
+    zombie:setSecondaryHandItem(nil)
+    zombie:resetEquippedHandsModels()
+    zombie:clearAttachedItems()
+
     -- makes bandit unstuck after spawns
     zombie:setTurnAlertedValues(-5, 5)
-
-    zombie:clearAttachedItems()
 
 end
 
@@ -595,7 +599,7 @@ function BanditUpdate.Combat(bandit)
                             if Bandit.Can(bandit, "melee") and weapons.melee then
                                 local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                                 local minRange = itemMelee:getMaxRange()
-                                if dist <= minRange + 0.4 then
+                                if dist <= minRange then
                                     enemyCharacter = potentialEnemy
                                     combat = true
                                 end
@@ -807,31 +811,35 @@ function BanditUpdate.Zombie(zombie)
 
                                 if dist < 0.8 and not isWallTo then
 
-                                    local attackingZombiesNumber = 0
-                                    for _, z in pairs(BanditMap.ZMap) do 
-                                        local dist = math.sqrt(math.pow(z.x - b.x, 2) + math.pow(z.y - b.y, 2))
-                                        if dist < 0.8 then
-                                            attackingZombiesNumber = attackingZombiesNumber +1
+                                    if zombie:isFacingObject(bandit, 0.5) then
+                                        local attackingZombiesNumber = 0
+                                        for _, z in pairs(BanditMap.ZMap) do 
+                                            local dist = math.sqrt(math.pow(z.x - b.x, 2) + math.pow(z.y - b.y, 2))
+                                            if dist < 0.8 then
+                                                attackingZombiesNumber = attackingZombiesNumber +1
+                                            end
                                         end
-                                    end
 
-                                    zombie:setBumpType("Bite")
+                                        zombie:setBumpType("Bite")
 
-                                    if ZombRand(4) == 1 then
-                                        bandit:playSound("ZombieScratch")
+                                        if ZombRand(4) == 1 then
+                                            bandit:playSound("ZombieScratch")
+                                        else
+                                            bandit:playSound("ZombieBite")
+                                        end
+
+                                        SwipeStatePlayer.splash(bandit, teeth, zombie)
+
+                                        if attackingZombiesNumber > 2 then
+                                            local sound = "MaleBeingEatenDeath"
+                                            if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
+                                            local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
+                                            Bandit.AddTask(bandit, task)
+                                        else
+                                            bandit:Hit(teeth, zombie, 0.01, false, 1, false)
+                                        end
                                     else
-                                        bandit:playSound("ZombieBite")
-                                    end
-
-                                    SwipeStatePlayer.splash(bandit, teeth, zombie)
-
-                                    if attackingZombiesNumber > 2 then
-                                        local sound = "MaleBeingEatenDeath"
-                                        if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-                                        local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
-                                        Bandit.AddTask(bandit, task)
-                                    else
-                                        bandit:Hit(teeth, zombie, 0.01, false, 1, false)
+                                        zombie:faceThisObject(bandit)
                                     end
                                 else
                                     local asn = zombie:getActionStateName()
@@ -909,6 +917,11 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if bandit:isTeleporting() then
         return
     end
+
+    -- WALKTYPE
+    -- we do ot this way, if walktype get overwritten by game engine we force our animations
+    zombie:setWalkType(zombie:getVariableString("BanditWalkType"))
+    
 
     -- NO ZOMBIE SOUNDS
     bandit:getEmitter():stopSoundByName("MaleZombieCombined")

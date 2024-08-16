@@ -10,7 +10,6 @@ local function Hit(attacker, item, victim)
     if dist < item:getMaxRange() + 0.4 then
         victim:forceAwake()
 
-        local isController = BanditUtils.IsController(attacker) 
         local hitSound
         local veh = victim:getVehicle()
         
@@ -23,9 +22,7 @@ local function Hit(attacker, item, victim)
             else
                 hitSound = item:getZombieHitSound()
             end
-            if isController then
-                victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
-            end
+            victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempAttacker)
             
@@ -33,9 +30,7 @@ local function Hit(attacker, item, victim)
                 victim:Kill(getCell():getFakeZombieForHit(), true) 
             end
         end
-        if isController then
-            victim:playSound(hitSound)
-        end
+        victim:playSound(hitSound)
     end
 
     -- Clean up the temporary player after use
@@ -51,23 +46,30 @@ ZombieActions.Hit.onStart = function(zombie, task)
         local attacks = {"Attack2HFloor", "Attack2HStamp"}
         anim = attacks[1+ZombRand(#attacks)]
     else
+        local meleeItem = InventoryItemFactory.CreateItem(task.weapon)
+        local meleeItemType = WeaponType.getWeaponType(meleeItem)
+
         local hands = zombie:getVariableString("BanditPrimaryType")
         local attacks = false
-        if hands == "twohanded" then
+        if meleeItemType == WeaponType.twohanded then
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
-        elseif hands == "heavy" then
+        elseif meleeItemType == WeaponType.heavy then
             attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
-        elseif hands == "onehanded" then
+        elseif meleeItemType == WeaponType.onehanded then
             attacks = {"Attack1H1", "Attack1H2", "Attack1H3", "Attack1H4", "Attack1H5"}
-        elseif hands == "spear" then
+        elseif meleeItemType == WeaponType.spear then
             attacks = {"AttackS1", "AttackS2"}
-        else
-            print ("this should not happen")
+        elseif meleeItemType == WeaponType.chainsaw then
+            attacks = {"AttackChainsaw1", "AttackChainsaw2"}
+        else -- two handed / knife ?
+            attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         end
 
+        --[[
         if zombie:isPrimaryEquipped("AuthenticZClothing.Chainsaw") then
             attacks = {"AttackChainsaw1", "AttackChainsaw2"}
-        end
+        end]]
+
         if attacks then 
             anim = attacks[1+ZombRand(#attacks)]
             -- print (anim)
@@ -86,7 +88,7 @@ end
 ZombieActions.Hit.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
 
-    if task.time == 50 then
+    if task.time == 45 then
         local cell = zombie:getSquare():getCell()
         local square = cell:getGridSquare(task.x, task.y, task.z)
         if square then

@@ -383,8 +383,6 @@ end
 
 local function Hit(shooter, victim)
 
-    if not BanditUtils.IsController(zombie) then return true end
-
     -- Clone the shooter to create a temporary IsoPlayer
     local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
 
