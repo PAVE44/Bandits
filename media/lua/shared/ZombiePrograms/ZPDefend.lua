@@ -23,7 +23,19 @@ end
 
 ZombiePrograms.Defend.Prepare = function(bandit)
 
+    local tasks = {}
+    local world = getWorld()
+    local cell = getCell()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
+
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
+    
+    -- weapons are spawn, not program decided
+    local primary = Bandit.GetBestWeapon(bandit)
+
+    local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
+    table.insert(tasks, task)
 
     return {status=true, next="Defend", tasks={}}
 end
