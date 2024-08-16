@@ -92,6 +92,12 @@ function Bandit.GetMaster(zombie)
     return brain.master
 end
 
+function Bandit.SetMaster(zombie, master)
+    local brain = BanditBrain.Get(zombie)
+    brain.master = master
+    BanditBrain.Update(zombie, brain)
+end
+
 function Bandit.SetProgram(zombie, program, programParams)
     local brain = BanditBrain.Get(zombie)
     brain.program = {}
@@ -202,6 +208,33 @@ function Bandit.SetWeapons(zombie, weapons)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
 end
 
+function Bandit.SetCapabilities(zombie, capabilities)
+    local brain = BanditBrain.Get(zombie)
+    brain.capabilities = capabilities
+    BanditBrain.Update(zombie, brain)
+end
+
+function Bandit.Can(zombie, capability)
+    local brain = BanditBrain.Get(zombie)
+    if brain.capabilities[capability] then return true end
+    return false
+end
+
+function Bandit.SetInventory(zombie, inventory)
+    local brain = BanditBrain.Get(zombie)
+    brain.inventory = inventory
+    BanditBrain.Update(zombie, brain)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+end
+
+function Bandit.Has(zombie, item)
+    local brain = BanditBrain.Get(zombie)
+    for _, i in pairs(brain.inventory) do
+        if i == item then return true end
+    end
+    return false
+end
+
 function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     local brain = BanditBrain.Get(zombie)
     local weapons = brain.weapons
@@ -209,6 +242,13 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     --zombie:resetEquippedHandsModels()
     zombie:clearItemsToSpawnAtDeath()
     
+    -- keyring
+    if brain.fullname then
+        local item = InventoryItemFactory.CreateItem("Base.KeyRing")
+        item:setName(brain.fullname .. " Key Ring")
+        zombie:addItemToSpawnAtDeath(item)
+    end
+
     -- update weapons that the bandit has
     if weapons.melee then 
         local item = InventoryItemFactory.CreateItem(weapons.melee)
@@ -279,6 +319,18 @@ function Bandit.GetWeapons(zombie)
     return brain.weapons
 end
 
+function Bandit.GetBestWeapon(zombie)
+    local brain = BanditBrain.Get(zombie)
+    local weapons = brain.weapons
+    if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
+        return weapons.primary.name
+    elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
+        return weapons.secondary.name
+    else
+        return weapons.melee
+    end
+end
+
 function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
     local weapons = brain.weapons
@@ -297,7 +349,7 @@ function Bandit.Say(zombie, phrase)
     
     if SandboxVars.Bandits.General_Speak then
         local brain = BanditBrain.Get(zombie)
-        if brain.speech > 0 then return end
+        if brain.speech and brain.speech > 0 then return end
         
         local player = getPlayer()
         local dist = math.sqrt(math.pow(player:getX() - zombie:getX(), 2) + math.pow(player:getY() - zombie:getY(), 2))
@@ -313,38 +365,50 @@ function Bandit.Say(zombie, phrase)
             end
 
             local sound
+            local length = 2
             if phrase == "SPOTTED" then
                 sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
             elseif phrase == "HIT" then
                 sound = "ZSHit_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(14))
+                length = 0.5
             elseif phrase == "BREACH" then
                 sound = "ZSBreach_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+                length = 4
             elseif phrase == "RELOADING" then
                 sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+                length = 4
             elseif phrase == "CAR" then
                 sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
+                length = 4
             elseif phrase == "DEATH" then
                 sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
+                length = 6
             elseif phrase == "INSIDE" then
                 sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+                length = 6
             elseif phrase == "OUTSIDE" then
                 sound = "ZSOutside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+                length = 6
             elseif phrase == "UPSTAIRS" then
                 sound = "ZSUpstairs_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+                length = 6
             elseif phrase == "ROOM_KITCHEN" then
                 sound = "ZSRoom_Kitchen_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+                length = 6
             elseif phrase == "ROOM_BATHROOM" then
                 sound = "ZSRoom_Bathroom_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+                length = 6
             elseif phrase == "DEFENDER_SPOTTED" then
                 sound = "ZSDefender_Spot_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
+                length = 5
             end
 
             if sound then
-                zombie:getEmitter():stopAll()
+                -- zombie:getEmitter():stopAll()
                 -- print (sound)
-                zombie:playSound(sound)
+                zombie:getEmitter():playVocals(sound)
 
-                brain.speech = 1
+                brain.speech = length
                 BanditBrain.Update(zombie, brain)
             end
         end

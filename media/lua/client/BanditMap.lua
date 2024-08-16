@@ -17,7 +17,7 @@ BanditMap.Update = function(numberTicks)
             if zombie:getVariableBoolean("Bandit") then
                 local brain = BanditBrain.Get(zombie)
                 if not brain.clan then brain.clan = 0 end
-                BanditMap.BMap[id] = {x=zombie:getX(), y=zombie:getY(), z=zombie:getZ(), clan=brain.clan}
+                BanditMap.BMap[id] = {x=zombie:getX(), y=zombie:getY(), z=zombie:getZ(), clan=brain.clan, hostile=brain.hostile}
             else
                 BanditMap.ZMap[id] = {x=zombie:getX(), y=zombie:getY(), z=zombie:getZ()}
             end

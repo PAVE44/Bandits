@@ -2,7 +2,7 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Destroy = {}
 ZombieActions.Destroy.onStart = function(zombie, task)
-    if ZombRand(7) == 1 then Bandit.Say(zombie, "BREACH") end
+    Bandit.Say(zombie, "BREACH")
     return true
 end
 

@@ -6,6 +6,21 @@ ZombiePrograms.Civilian.Stages = {}
 ZombiePrograms.Civilian.Init = function(civilian)
 end
 
+ZombiePrograms.Civilian.GetCapabilities = function()
+    -- capabilities are program decided
+    local capabilities = {}
+    capabilities.melee = true
+    capabilities.shoot = true
+    capabilities.smashWindow = true
+    capabilities.openDoor = true
+    capabilities.breakDoor = false
+    capabilities.breakObjects = false
+    capabilities.unbarricade = false
+    capabilities.disableGenerators = false
+    capabilities.sabotageCars = false
+    return capabilities
+end
+
 ZombiePrograms.Civilian.Prepare = function(civilian)
 
     Bandit.SetWeapons(civilian, Bandit.GetWeapons(civilian))

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>start</m_Name>
+	<m_AnimName>Bob_IdleHandgun</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_Looped>false</m_Looped>
+	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
+	<m_SpeedScale>1.04</m_SpeedScale>
+	<m_BlendTime>0.20</m_BlendTime>
+	<m_BlendOutTime>0.00</m_BlendOutTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditPrimaryType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>handgun</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>AttackType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>bite</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>targetSeenTime</m_Name>
+		<m_Type>GTR</m_Type>
+		<m_FloatValue>0.5</m_FloatValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>AttackOutcome</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>start</m_StringValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>SetAttackOutcome</m_EventName>
+		<m_Time>End</m_Time>
+		<m_ParameterValue></m_ParameterValue>
+	</m_Events>
+	<m_Events>
+		<m_EventName>SetState</m_EventName>
+		<m_Time>Start</m_Time>
+		<m_ParameterValue></m_ParameterValue>
+	</m_Events>
+</animNode>

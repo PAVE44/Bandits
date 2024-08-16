@@ -9,7 +9,7 @@ function BanditCreator.MakeWeaponsGeneric(config)
     end
     
     local weapons = {}
-    weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeStrong)
+    weapons.melee = "Base.Axe"
 
     weapons.primary = {}
     weapons.primary.name = false
@@ -54,7 +54,6 @@ function BanditCreator.MakeBanditGeneric()
     bandit.femaleChance = 50
     bandit.weapons = {}
     bandit.loot = {}
-    bandit.arrivalSound = "SMALL"
     return bandit
 end
 
@@ -64,51 +63,282 @@ function BanditCreator.MakeDesperateCitizen(config)
     local weapons = BanditCreator.MakeWeaponsGeneric(config)
     local loot = BanditCreator.MakeLootGeneric()
     local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Bathrobe", "Generic02", "Generic01", "Punk"})
-    bandit.femaleChance = 25
-    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeWeak)
-    bandit.loot = {}
-
-    return bandit
-end
-
-function BanditCreator.MakeCarpenterClan(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 1
     bandit.weapons = weapons
     bandit.loot = loot
     bandit.clan = 1
 
     -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Woodcut"})
+    --bandit.outfit = BanditUtils.Choice({"Bathrobe", "Generic02", "Generic01", "Punk"})
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.DesperateCitizen)
+    bandit.femaleChance = 25
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.DesperateCitizen)
+    bandit.loot = {}
+
+    return bandit
+end
+
+function BanditCreator.MakePsychopath(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 2
+
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Psychopath)
     bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice({"Base.WoodAxe", "Base.HammerStone", "Base.WoodenLance", "Base.PlankNail"})
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Psychopath)
 
     return bandit
 end
 
-function BanditCreator.MakeAngryFarmers(config)
+function BanditCreator.MakeCannibal(config)
     local weapons = BanditCreator.MakeWeaponsGeneric(config)
     local loot = BanditCreator.MakeLootGeneric()
     local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
     bandit.weapons = weapons
     bandit.loot = loot
-    bandit.clan = 2
+    bandit.clan = 3
      
     -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Farmer"})
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Cannibal)
     bandit.femaleChance = 10
-    bandit.weapons.melee = BanditUtils.Choice({"Base.GardenFork"})
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Cannibal)
 
     return bandit
 end
 
-function BanditCreator.MakeMadDoctors(config)
+function BanditCreator.MakeCrimial(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 1
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 4
+     
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Crimial)
+    bandit.femaleChance = 40
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Criminal)
+
+    return bandit
+end
+
+
+function BanditCreator.MakeInmate(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 5
+    
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Inmate)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Inmate)
+
+    return bandit
+end
+
+function BanditCreator.MakePolice(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 3
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 6
+     
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Police)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Police)
+
+    return bandit
+end
+
+function BanditCreator.MakePrepper(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 7
+    
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Prepper)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Prepper)
+
+    return bandit
+end
+
+function BanditCreator.MakeVeteran(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 4
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 8
+   
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Veteran)
+    bandit.femaleChance = 20
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Veteran)
+
+    return bandit
+end
+
+function BanditCreator.MakeBiker(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 9
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Biker)
+    bandit.femaleChance = 10
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Biker)
+
+    return bandit
+end
+
+function BanditCreator.MakeHunter(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 10
+   
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Hunter)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Hunter)
+
+    return bandit
+end
+
+function BanditCreator.MakeReclaimer(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 9
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 11
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Reclaimer)
+    bandit.femaleChance = 20
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Reclaimer)
+
+    return bandit
+end
+
+function BanditCreator.MakeScientist(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 12
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.Scientist)
+    bandit.femaleChance = 20
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Scientist)
+
+    return bandit
+end
+
+function BanditCreator.MakeDoomRider(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 2
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 13
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.DoomRider)
+    bandit.femaleChance = 10
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.DoomRider)
+
+    return bandit
+end
+
+function BanditCreator.MakePrivateMilitia(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 3
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 0
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.PrivateMilitia)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.PrivateMilitia)
+
+    return bandit
+end
+
+function BanditCreator.MakeDeathLegion(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 4
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 15
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.DeathLegion)
+    bandit.femaleChance = 5
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.DeathLegion)
+
+    return bandit
+end
+
+function BanditCreator.MakeNewOrder(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 3
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 16
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice(BanditOutfits.NewOrder)
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.NewOrder)
+
+    return bandit
+end
+
+-- end of wave bandits
+
+-- defender bandits below
+
+function BanditCreator.MakeMadDoctor(config)
     local weapons = BanditCreator.MakeWeaponsGeneric(config)
     local loot = BanditCreator.MakeLootGeneric()
     local bandit = BanditCreator.MakeBanditGeneric()
@@ -117,47 +347,14 @@ function BanditCreator.MakeMadDoctors(config)
     bandit.clan = 2
      
     -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Doctor"})
+    bandit.outfit = BanditUtils.Choice({"Doctor", "Nurse"})
     bandit.femaleChance = 40
     bandit.weapons.melee = BanditUtils.Choice({"Base.Scalpel"})
 
     return bandit
 end
 
-
-function BanditCreator.MakeYakuza(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 3
-    
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Classy", "Groom"})
-    bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice({"Base.Katana"})
-
-    return bandit
-end
-
-function BanditCreator.MakeInmates(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 4
-     
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Inmate", "InmateEscaped"})
-    bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeStrong)
-
-    return bandit
-end
-
-function BanditCreator.MakeSecurityGuards(config)
+function BanditCreator.MakeSecurityGuard(config)
     local weapons = BanditCreator.MakeWeaponsGeneric(config)
     local loot = BanditCreator.MakeLootGeneric()
     local bandit = BanditCreator.MakeBanditGeneric()
@@ -173,157 +370,6 @@ function BanditCreator.MakeSecurityGuards(config)
     return bandit
 end
 
-function BanditCreator.MakePolice(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 5
-   
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Police"})
-    bandit.femaleChance = 20
-    bandit.weapons.melee = BanditUtils.Choice({"Base.Nightstick"})
-
-    return bandit
-end
-
-function BanditCreator.MakeStatePolice(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 5
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"PoliceState"})
-    bandit.femaleChance = 10
-    bandit.weapons.melee = BanditUtils.Choice({"Base.Nightstick"})
-
-    return bandit
-end
-
-function BanditCreator.MakeRiotPolice(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.health = 3
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.arrivalSound = "MEDIUM"
-    bandit.clan = 5
-   
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"PoliceRiot"})
-    bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice({"Base.Nightstick"})
-
-    return bandit
-end
-
-function BanditCreator.MakeRangers(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 5
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Ranger"})
-    bandit.femaleChance = 20
-    bandit.weapons.melee = BanditUtils.Choice({"Base.Nightstick"})
-
-    return bandit
-end
-
-function BanditCreator.MakeBandits(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.arrivalSound = "MEDIUM"
-    bandit.clan = 6
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Bandit"})
-    bandit.femaleChance = 20
-    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeStrong)
-
-    return bandit
-end
-
-function BanditCreator.MakePrivateMilitia(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.arrivalSound = "BIG"
-    bandit.clan = 7
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"PrivateMilitia"})
-    bandit.femaleChance = 10
-    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeStrong)
-
-    return bandit
-end
-
-function BanditCreator.MakeVeterans(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.health = 4
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 0
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"Veteran"})
-    bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice({"Base.HuntingKnife"})
-
-    return bandit
-end
-
-function BanditCreator.MakeArmy(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.health = 3
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.arrivalSound = "CHOPPER"
-    bandit.clan = 5
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"ArmyCamoGreen", "ArmyCamoDesert"})
-    bandit.femaleChance = 5
-    bandit.weapons.melee = BanditUtils.Choice({"Base.HuntingKnife"})
-
-    return bandit
-end
-
-function BanditCreator.MakeHazardSuit(config)
-    local weapons = BanditCreator.MakeWeaponsGeneric(config)
-    local loot = BanditCreator.MakeLootGeneric()
-    local bandit = BanditCreator.MakeBanditGeneric()
-    bandit.weapons = weapons
-    bandit.loot = loot
-    bandit.clan = 5
-  
-    -- overwrite defaults with details specific to this group below
-    bandit.outfit = BanditUtils.Choice({"HazardSuit"})
-    bandit.femaleChance = 0
-    bandit.weapons.melee = BanditUtils.Choice({"Base.LeadPipe"})
-
-    return bandit
-end
-
 function BanditCreator.MakeSurvivalist(config)
     local weapons = BanditCreator.MakeWeaponsGeneric(config)
     local loot = BanditCreator.MakeLootGeneric()
@@ -335,7 +381,7 @@ function BanditCreator.MakeSurvivalist(config)
     -- overwrite defaults with details specific to this group below
     bandit.outfit = BanditUtils.Choice({"Survivalist"})
     bandit.femaleChance = 40
-    bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.MeleeStrong)
+    bandit.weapons.melee = BanditUtils.Choice({"Base.BaseballBat"})
 
     return bandit
 end
@@ -406,6 +452,39 @@ function BanditCreator.MakeHockey(config)
     return bandit
 end
 
+function BanditCreator.MakeBaseballKY(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 12
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 98
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice({"BaseballPlayer_KY"})
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice({"Base.BaseballBat"})
+
+    return bandit
+end
+
+function BanditCreator.MakeBaseballZ(config)
+    local weapons = BanditCreator.MakeWeaponsGeneric(config)
+    local loot = BanditCreator.MakeLootGeneric()
+    local bandit = BanditCreator.MakeBanditGeneric()
+    bandit.health = 12
+    bandit.weapons = weapons
+    bandit.loot = loot
+    bandit.clan = 99
+  
+    -- overwrite defaults with details specific to this group below
+    bandit.outfit = BanditUtils.Choice({"BaseballPlayer_Z"})
+    bandit.femaleChance = 0
+    bandit.weapons.melee = BanditUtils.Choice({"Base.BaseballBat"})
+
+    return bandit
+end
 
 
 
@@ -413,22 +492,22 @@ end
 BanditCreator.GroupMap = BanditCreator.GroupMap or {}
 
 BanditCreator.GroupMap[1] = BanditCreator.MakeDesperateCitizen
-BanditCreator.GroupMap[2] = BanditCreator.MakeCarpenterClan
-BanditCreator.GroupMap[3] = BanditCreator.MakeAngryFarmers
-BanditCreator.GroupMap[4] = BanditCreator.MakeMadDoctors
-BanditCreator.GroupMap[5] = BanditCreator.MakeYakuza
-BanditCreator.GroupMap[6] = BanditCreator.MakeInmates
-BanditCreator.GroupMap[7] = BanditCreator.MakeSecurityGuards
-BanditCreator.GroupMap[8] = BanditCreator.MakePolice
-BanditCreator.GroupMap[9] = BanditCreator.MakeStatePolice
-BanditCreator.GroupMap[10] = BanditCreator.MakeRiotPolice
-BanditCreator.GroupMap[11] = BanditCreator.MakeRangers
-BanditCreator.GroupMap[12] = BanditCreator.MakeBandits
-BanditCreator.GroupMap[13] = BanditCreator.MakePrivateMilitia
-BanditCreator.GroupMap[14] = BanditCreator.MakeVeterans
-BanditCreator.GroupMap[15] = BanditCreator.MakeArmy
-BanditCreator.GroupMap[16] = BanditCreator.MakeHazardSuit
-BanditCreator.GroupMap[17] = BanditCreator.MakeSurvivalist
+BanditCreator.GroupMap[2] = BanditCreator.MakePsychopath
+BanditCreator.GroupMap[3] = BanditCreator.MakeCannibal
+BanditCreator.GroupMap[4] = BanditCreator.MakeCrimial
+BanditCreator.GroupMap[5] = BanditCreator.MakeInmate
+BanditCreator.GroupMap[6] = BanditCreator.MakePolice
+BanditCreator.GroupMap[7] = BanditCreator.MakePrepper
+BanditCreator.GroupMap[8] = BanditCreator.MakeVeteran
+BanditCreator.GroupMap[9] = BanditCreator.MakeBiker
+BanditCreator.GroupMap[10] = BanditCreator.MakeHunter
+BanditCreator.GroupMap[11] = BanditCreator.MakeReclaimer
+BanditCreator.GroupMap[12] = BanditCreator.MakeScientist
+BanditCreator.GroupMap[13] = BanditCreator.MakeDoomRider
+BanditCreator.GroupMap[14] = BanditCreator.MakePrivateMilitia
+BanditCreator.GroupMap[15] = BanditCreator.MakeDeathLegion
+BanditCreator.GroupMap[16] = BanditCreator.MakeNewOrder
+
 
 --
 -- BanditCreator.GroupMap[18] = BanditCreator.MakeForeman

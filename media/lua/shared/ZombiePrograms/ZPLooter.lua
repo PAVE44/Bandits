@@ -6,11 +6,46 @@ ZombiePrograms.Looter.Stages = {}
 ZombiePrograms.Looter.Init = function(bandit)
 end
 
+ZombiePrograms.Looter.GetCapabilities = function()
+    -- capabilities are program decided
+    local capabilities = {}
+    capabilities.melee = true
+    capabilities.shoot = true
+    capabilities.smashWindow = true
+    capabilities.openDoor = true
+    capabilities.breakDoor = true
+    capabilities.breakObjects = true
+    capabilities.unbarricade = true
+    capabilities.disableGenerators = false
+    capabilities.sabotageCars = false
+    return capabilities
+end
+
 ZombiePrograms.Looter.Prepare = function(bandit)
+    local tasks = {}
+    local world = getWorld()
+    local cell = getCell()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
 
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
 
-    return {status=true, next="Operate", tasks={}}
+    local primary = Bandit.GetBestWeapon(bandit)
+
+    local secondary
+    if dls < 0.3 then
+        if SandboxVars.Bandits.General_CarryTorches then
+            local hands = bandit:getVariableString("BanditPrimaryType")
+            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
+                secondary = "Base.HandTorch"
+            end
+        end
+    end
+
+    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
+    table.insert(tasks, task)
+
+    return {status=true, next="Operate", tasks=tasks}
 end
 
 ZombiePrograms.Looter.Operate = function(bandit)
@@ -26,7 +61,11 @@ ZombiePrograms.Looter.Operate = function(bandit)
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local hands = bandit:getVariableString("BanditPrimaryType")
  
-    local walkType = "WalkAim"
+    local walkType = "Run"
+    if hands == "rifle" or hands =="handgun" then
+        walkType = "WalkAim"
+    end
+
     local endurance = 0 -- -0.02
     local secondary
     if dls < 0.3 then
@@ -56,7 +95,6 @@ ZombiePrograms.Looter.Operate = function(bandit)
     closestPlayer.x, closestPlayer.y, closestPlayer.z, closestPlayer.dist, closestPlayer.id = BanditUtils.GetClosestPlayerLocation(bandit, true)
 
     if closestPlayer.x and closestPlayer.y and closestPlayer.z then
-        Bandit.Say(bandit, "SPOTTED")
         Bandit.SetProgram(bandit, "Bandit", {})
         return {status=true, next="Follow", tasks={}}
     end

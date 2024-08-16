@@ -6,11 +6,47 @@ ZombiePrograms.Bandit.Stages = {}
 ZombiePrograms.Bandit.Init = function(bandit)
 end
 
+ZombiePrograms.Bandit.GetCapabilities = function()
+    -- capabilities are program decided
+    local capabilities = {}
+    capabilities.melee = true
+    capabilities.shoot = true
+    capabilities.smashWindow = true
+    capabilities.openDoor = true
+    capabilities.breakDoor = true
+    capabilities.breakObjects = true
+    capabilities.unbarricade = true
+    capabilities.disableGenerators = true
+    capabilities.sabotageCars = true
+    return capabilities
+end
+
 ZombiePrograms.Bandit.Prepare = function(bandit)
+    local tasks = {}
+    local world = getWorld()
+    local cell = getCell()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
 
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
+    
+    -- weapons are spawn, not program decided
+    local primary = Bandit.GetBestWeapon(bandit)
 
-    return {status=true, next="Follow", tasks={}}
+    local secondary
+    if dls < 0.3 then
+        if SandboxVars.Bandits.General_CarryTorches then
+            local hands = bandit:getVariableString("BanditPrimaryType")
+            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
+                secondary = "Base.HandTorch"
+            end
+        end
+    end
+
+    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
+    table.insert(tasks, task)
+
+    return {status=true, next="Follow", tasks=tasks}
 end
 
 ZombiePrograms.Bandit.Follow = function(bandit)
@@ -30,12 +66,6 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local endurance = -0.07
     local secondary
     if dls < 0.3 then
-        if SandboxVars.Bandits.General_CarryTorches then
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
-                secondary = "Base.HandTorch"
-            end
-        end
-
         if SandboxVars.Bandits.General_SneakAtNight then
             walkType = "SneakWalk"
             endurance = 0
@@ -90,12 +120,18 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local closestZombie = {}
     closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(bandit)
 
+    local closestBandit = {}
+    closestBandit.x, closestBandit.y, closestBandit.z, closestBandit.dist, closestBandit.id = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+
     local closestPlayer = {}
     closestPlayer.x, closestPlayer.y, closestPlayer.z, closestPlayer.dist, closestPlayer.id = BanditUtils.GetClosestPlayerLocation(bandit, false)
 
-    if closestZombie.dist + 4 < closestPlayer.dist then
-        target = closestZombie
-    else
+    target = closestZombie
+    if closestBandit.dist < closestZombie.dist then
+        target = closestBandit
+    end
+
+    if closestPlayer.dist < closestBandit.dist then
         target = closestPlayer
     end
 
@@ -108,15 +144,14 @@ ZombiePrograms.Bandit.Follow = function(bandit)
             local playerBuilding = playerSquare:getBuilding()
             local banditBuilding = banditSquare:getBuilding()
             local x = 100
-            if bandit:CanSee(player) then x = x - 60 end
 
-            if  playerBuilding and not banditBuilding and ZombRand(x) == 1 then
+            if  playerBuilding and not banditBuilding then
                 Bandit.Say(bandit, "INSIDE")
             end
-            if not playerBuilding and banditBuilding and ZombRand(x) == 1 then
+            if not playerBuilding and banditBuilding then
                 Bandit.Say(bandit, "OUTSIDE")
             end
-            if playerBuilding and banditBuilding and ZombRand(x) == 1 then
+            if playerBuilding and banditBuilding then
                 if bandit:getZ() < player:getZ() then
                     Bandit.Say(bandit, "UPSTAIRS")
                 else
@@ -142,6 +177,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
         end
 
         if target.dist > minDist then
+
+            -- if target.dist < 3 then walkType = "Walk" end
 
             -- must be deterministic, not random (same for all clients)
             local id = BanditUtils.GetCharacterID(bandit)
@@ -169,6 +206,9 @@ ZombiePrograms.Bandit.Follow = function(bandit)
             table.insert(tasks, task)
 
         end
+    else
+        local task = {action="Time", anim="Shrug", time=200}
+        table.insert(tasks, task)
     end
 
     return {status=true, next="Follow", tasks=tasks}

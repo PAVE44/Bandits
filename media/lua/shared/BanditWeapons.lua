@@ -1,10 +1,6 @@
-BanditWeapons = BanditWeapons or {}
+-- register modded weapons options by adding them to tables below
 
-BanditWeapons.MakeMelee = function(name) 
-    local melee = {}
-    melee.name = name
-    return melee.name
-end
+BanditWeapons = BanditWeapons or {}
 
 BanditWeapons.MakeHandgun = function(name, magName, magSize, shotSound, shotDelay) 
     local handgun = {}
@@ -18,25 +14,135 @@ BanditWeapons.MakeHandgun = function(name, magName, magSize, shotSound, shotDela
     return handgun
 end
 
--- vanilla weapons here
+BanditWeapons.Melee = BanditWeapons.Melee or {}
 
-BanditWeapons.MeleeWeak = BanditWeapons.MeleeWeak or {}
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.MeatCleaver"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.BreadKnife"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.Scalpel"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.Pan"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.RollingPin"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.SmashedBottle"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.HandScythe"))
-table.insert(BanditWeapons.MeleeWeak, BanditWeapons.MakeMelee("Base.WoodenLance"))
+-- wave 1
+BanditWeapons.Melee.DesperateCitizen = BanditWeapons.Melee.DesperateCitizen or {}
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.BreadKnife")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Pan")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.RollingPin")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.SmashedBottle")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.HandScythe")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.WoodenLance")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Banjo")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.ChairLeg")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.GardenFork")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.GridlePan")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Hammer")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.HockeyStick")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.MetalPipe")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.PipeWrench")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Plunger")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.GuitarElectricRed")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Saucepan")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.TableLeg")
+table.insert(BanditWeapons.Melee.DesperateCitizen, "Base.Wrench")
 
-BanditWeapons.MeleeStrong = BanditWeapons.MeleeStrong  or {}
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.BaseballBat"))
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.BaseballBatNails"))
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.Crowbar"))
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.LeadPipe"))
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.Machete"))
-table.insert(BanditWeapons.MeleeStrong, BanditWeapons.MakeMelee("Base.HandAxe"))
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditWeapons.Melee.DesperateCitizen, "AuthenticZClothing.Stop_Sign")
+    table.insert(BanditWeapons.Melee.DesperateCitizen, "AuthenticZClothing.TrashCanLid_MNG")
+    table.insert(BanditWeapons.Melee.DesperateCitizen, "AuthenticZClothing.RotaryPhone_AZ")
+    table.insert(BanditWeapons.Melee.DesperateCitizen, "AuthenticZClothing.AuthenticWalkingCaneGrandFather")
+end    
+
+-- wave 2
+BanditWeapons.Melee.Psychopath = BanditWeapons.Melee.Psychopath or {}
+table.insert(BanditWeapons.Melee.Psychopath, "Base.WoodAxe")
+table.insert(BanditWeapons.Melee.Psychopath, "Base.HammerStone")
+table.insert(BanditWeapons.Melee.Psychopath, "Base.PlankNail")
+table.insert(BanditWeapons.Melee.Psychopath, "Base.PickAxe")
+table.insert(BanditWeapons.Melee.Psychopath, "Base.MetalBar")
+table.insert(BanditWeapons.Melee.Psychopath, "Base.LeadPipe")
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditWeapons.Melee.Psychopath, "AuthenticZClothing.Chainsaw")
+end
+
+-- wave 3
+BanditWeapons.Melee.Cannibal = BanditWeapons.Melee.Cannibal or {}
+table.insert(BanditWeapons.Melee.Cannibal, "Base.MeatCleaver")
+table.insert(BanditWeapons.Melee.Cannibal, "Base.KitchenKnife")
+table.insert(BanditWeapons.Melee.Cannibal, "Base.BreadKnife")
+
+-- wave 4
+BanditWeapons.Melee.Criminal = BanditWeapons.Melee.Criminal or {}
+table.insert(BanditWeapons.Melee.Criminal, "Base.Crowbar")
+table.insert(BanditWeapons.Melee.Criminal, "Base.MetalBar")
+table.insert(BanditWeapons.Melee.Criminal, "Base.BaseballBat")
+table.insert(BanditWeapons.Melee.Criminal, "Base.KitchenKnife")
+
+-- wave 5
+BanditWeapons.Melee.Inmate = BanditWeapons.Melee.Inmate or {}
+table.insert(BanditWeapons.Melee.Inmate, "Base.BreadKnife")
+table.insert(BanditWeapons.Melee.Inmate, "Base.KitchenKnife")
+table.insert(BanditWeapons.Melee.Inmate, "Base.MetalBar")
+table.insert(BanditWeapons.Melee.Inmate, "Base.Shovel2") 
+table.insert(BanditWeapons.Melee.Inmate, "Base.SmashedBottle")
+
+-- wave 6
+BanditWeapons.Melee.Police = BanditWeapons.Melee.Police or {}
+table.insert(BanditWeapons.Melee.Police, "Base.Nightstick")
+
+-- wave 7
+BanditWeapons.Melee.Prepper = BanditWeapons.Melee.Prepper or {}
+table.insert(BanditWeapons.Melee.Prepper, "Base.SpearHuntingKnife")
+table.insert(BanditWeapons.Melee.Prepper, "Base.WoodenLance")
+table.insert(BanditWeapons.Melee.Prepper, "Base.HuntingKnife")
+table.insert(BanditWeapons.Melee.Prepper, "Base.Machete")
+table.insert(BanditWeapons.Melee.Prepper, "Base.Axe")
+
+-- wave 8
+BanditWeapons.Melee.Veteran = BanditWeapons.Melee.Veteran or {}
+table.insert(BanditWeapons.Melee.Veteran, "Base.Machete")
+table.insert(BanditWeapons.Melee.Veteran, "Base.HuntingKnife")
+
+-- wave 9
+BanditWeapons.Melee.Biker = BanditWeapons.Melee.Biker or {}
+table.insert(BanditWeapons.Melee.Biker, "Base.BaseballBat")
+table.insert(BanditWeapons.Melee.Biker, "Base.BaseballBatNails")
+
+-- wave 10
+BanditWeapons.Melee.Hunter = BanditWeapons.Melee.Hunter or {}
+table.insert(BanditWeapons.Melee.Hunter, "Base.KitchenKnife")
+table.insert(BanditWeapons.Melee.Hunter, "Base.Machete")
+
+-- wave 11
+BanditWeapons.Melee.Reclaimer = BanditWeapons.Melee.Reclaimer or {}
+table.insert(BanditWeapons.Melee.Reclaimer, "Base.Katana")
+table.insert(BanditWeapons.Melee.Reclaimer, "Base.HandScythe")
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditWeapons.Melee.Reclaimer, "AuthenticZClothing.MandoSpear")
+    table.insert(BanditWeapons.Melee.Reclaimer, "AuthenticZClothing.Chainsaw")
+end
+
+-- wave 12
+BanditWeapons.Melee.Scientist = BanditWeapons.Melee.Scientist or {}
+table.insert(BanditWeapons.Melee.Scientist, "Base.Scalpel")
+
+-- wave 13
+BanditWeapons.Melee.DoomRider = BanditWeapons.Melee.DoomRider or {}
+table.insert(BanditWeapons.Melee.DoomRider, "Base.BaseballBatNails")
+table.insert(BanditWeapons.Melee.DoomRider, "Base.Katana")
+table.insert(BanditWeapons.Melee.DoomRider, "Base.Machete")
+table.insert(BanditWeapons.Melee.DoomRider, "Base.HandAxe")
+table.insert(BanditWeapons.Melee.DoomRider, "Base.Crowbar")
+
+-- wave 14
+BanditWeapons.Melee.PrivateMilitia = BanditWeapons.Melee.PrivateMilitia or {}
+table.insert(BanditWeapons.Melee.PrivateMilitia, "Base.Machete")
+table.insert(BanditWeapons.Melee.PrivateMilitia, "Base.HuntingKnife")
+
+-- wave 15
+BanditWeapons.Melee.DeathLegion = BanditWeapons.Melee.DeathLegion or {}
+table.insert(BanditWeapons.Melee.DeathLegion, "Base.Machete")
+table.insert(BanditWeapons.Melee.DeathLegion, "Base.HuntingKnife")
+
+-- wave 16
+BanditWeapons.Melee.NewOrder = BanditWeapons.Melee.NewOrder or {}
+table.insert(BanditWeapons.Melee.NewOrder, "Base.HuntingKnife")
+
+--
 
 BanditWeapons.Primary = BanditWeapons.Primary or {}
 table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AssaultRifle2", "Base.M14Clip", 20, "M14Shoot", 38))
@@ -46,8 +152,6 @@ BanditWeapons.Secondary = BanditWeapons.Secondary or {}
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol", "Base.9mmClip", 15, "M9Shoot", 35))
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol2", "Base.45Clip", 7, "M9Shoot", 47))
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol3", "Base.44Clip", 8, "M9Shoot", 45))
-
--- register modded weapons options by adding them to tables below
 
 if getActivatedMods():contains("Brita") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK103", "Base.AKClip", 30, "[1]Shot_762x39", 4))
@@ -66,11 +170,11 @@ if getActivatedMods():contains("Brita") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.UZI_Micro", "Base.9mmExtClip", 20, "[1]Shot_9", 10))
 end
 
-if getActivatedMods():contains("firearmmod") then
+if getActivatedMods():contains("firearmmod") or getActivatedMods():contains("firearmmodRevamp") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK47", "Base.AK_Mag", 30, "M14Shoot", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AR15", "Base.556Clip", 30, "M14Shoot", 30))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M733", "Base.556Clip", 30, "M14Shoot", 10))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M733", "Base.FN_FAL_Mag", 20, "M14Shoot", 30))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.FN_FAL", "Base.FN_FAL_Mag", 20, "M14Shoot", 30))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mac10", "Base.Mac10Mag", 30, "M9Shoot", 2))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5", "Base.MP5Mag", 30, "M9Shoot", 4))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.UZI", "Base.UZIMag", 20, "M9Shoot", 3))

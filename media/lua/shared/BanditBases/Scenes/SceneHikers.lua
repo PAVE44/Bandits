@@ -17,7 +17,7 @@ function BanditScenes.Hikers (player, square)
 
     BanditProc.CampTentSmall(sx, sy, sz)
 
-    BanditBasePlacements.Fireplace("camping_01_6", sx+4, sy+4, sz)
+    -- BanditBasePlacements.Fireplace("camping_01_6", sx+4, sy+4, sz)
     BanditBasePlacements.Item ("Base.Pot", sx+4, sy+4, sz, 1)
 
     local container
@@ -41,7 +41,7 @@ function BanditScenes.Hikers (player, square)
 
     local gameTime = getGameTime()
     local hour = gameTime:getHour() 
-    if gameTime:getHour() >= 0 and gameTime:getHour() < 23 then
+    if gameTime:getHour() >= 0 and gameTime:getHour() < 7 then
         event.program.stage = "Sleep"
     else
         event.program.stage = "Wait"

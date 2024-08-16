@@ -6,6 +6,21 @@ ZombiePrograms.Defend.Stages = {}
 ZombiePrograms.Defend.Init = function(bandit)
 end
 
+ZombiePrograms.Defend.GetCapabilities = function()
+    -- capabilities are program decided
+    local capabilities = {}
+    capabilities.melee = true
+    capabilities.shoot = true
+    capabilities.smashWindow = false
+    capabilities.openDoor = true
+    capabilities.breakDoor = false
+    capabilities.breakObjects = false
+    capabilities.unbarricade = false
+    capabilities.disableGenerators = false
+    capabilities.sabotageCars = false
+    return capabilities
+end
+
 ZombiePrograms.Defend.Prepare = function(bandit)
 
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
@@ -27,7 +42,7 @@ ZombiePrograms.Defend.Defend = function(bandit)
     end
 
     local player = getPlayer()
-    if bandit:CanSee(player) and ZombRand(2) == 1 then
+    if bandit:CanSee(player) then
         local playerSquare = player:getSquare()
         local banditSquare = bandit:getSquare()
         if playerSquare and banditSquare then
@@ -106,7 +121,6 @@ ZombiePrograms.Defend.Sleep = function(bandit)
         table.insert(tasks, task)
         return {status=true, next="Sleep", tasks=tasks}
     else
-        if ZombRand(4) == 1 then Bandit.Say(bandit, "SPOTTED") end
         local task = {action="Time", lock=true, anim="GetUp", time=150}
         Bandit.ClearTasks(bandit)
         Bandit.AddTask(bandit, task)

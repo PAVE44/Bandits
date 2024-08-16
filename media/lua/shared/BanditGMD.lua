@@ -10,6 +10,7 @@ function InitBanditModData(isNewGame)
 
     --if not modData.Queue then modData.modData = {} end
     modData.Queue = {}
+    modData.OnlinePlayers = {}
     if not modData.Scenes then modData.Scenes = {} end
     if not modData.Bandits then modData.Bandits = {} end
 

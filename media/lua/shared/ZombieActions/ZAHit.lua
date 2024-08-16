@@ -1,22 +1,41 @@
 ZombieActions = ZombieActions or {}
 
-local function Hit (attacker, item, victim)
-    local dist = math.sqrt(math.pow(attacker:getX() - victim:getX(), 2) + math.pow(attacker:getY() - victim:getY(), 2))
-    -- print ("RANGE:" .. item:getMaxRange() .. " DIST:" .. dist)
+local function Hit(attacker, item, victim)
+    -- Clone the attacker to create a temporary IsoPlayer
+    local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
+
+    -- Calculate distance between attacker and victim
+    local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
+    
     if dist < item:getMaxRange() + 0.4 then
+        victim:forceAwake()
+
+        local hitSound
         local veh = victim:getVehicle()
         
-        local hitSound
         if veh then
             hitSound = "HitVehicleWindowWithWeapon"
         else
-            victim:Hit(item, attacker, 10 + ZombRand(40), false, 1, false)
+            local chainsaw = tempAttacker:isPrimaryEquipped("AuthenticZClothing.Chainsaw")
+            if chainsaw then
+                hitSound = "BloodSplatter"
+            else
+                hitSound = item:getZombieHitSound()
+            end
+            victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
             victim:addBlood(0.6)
-            SwipeStatePlayer.splash(victim, item, attacker)
-            hitSound = item:getZombieHitSound()
+            SwipeStatePlayer.splash(victim, item, tempAttacker)
+            
+            if victim:getHealth() <= 0 then 
+                victim:Kill(getCell():getFakeZombieForHit(), true) 
+            end
         end
         victim:playSound(hitSound)
     end
+
+    -- Clean up the temporary player after use
+    tempAttacker:removeFromWorld()
+    tempAttacker = nil
 end
 
 ZombieActions.Hit = {}
@@ -39,6 +58,10 @@ ZombieActions.Hit.onStart = function(zombie, task)
             attacks = {"AttackS1", "AttackS2"}
         else
             print ("this should not happen")
+        end
+
+        if zombie:isPrimaryEquipped("AuthenticZClothing.Chainsaw") then
+            attacks = {"AttackChainsaw1", "AttackChainsaw2"}
         end
         if attacks then 
             anim = attacks[1+ZombRand(#attacks)]
@@ -68,7 +91,7 @@ ZombieActions.Hit.onWorking = function(zombie, task)
             if enemy then
                 local brainAttacker = BanditBrain.Get(zombie)
                 local brainEnemy = BanditBrain.Get(enemy)
-                if not brainEnemy or not brainEnemy.clan or brainAttacker.clan ~= brainEnemy.clan then 
+                if not brainEnemy or not brainEnemy.clan or brainAttacker.clan ~= brainEnemy.clan or (brainAttacker.hostile and not brainEnemy.hostile) then 
                     Hit (zombie, item, enemy)
                 end
             end

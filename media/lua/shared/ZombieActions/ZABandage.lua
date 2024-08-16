@@ -33,11 +33,11 @@ end
 
 ZombieActions.Bandage = {}
 ZombieActions.Bandage.onStart = function(zombie, task)
-    local bpi = 1 + BanditUtils.GetCharacterID(zombie) % 17
+    local bpi = 1 + math.abs(BanditUtils.GetCharacterID(zombie)) % 17
     local bodyParts = GetBodyParts()
     local bodyPart = bodyParts[bpi]
 
-    print ("BANDAGING: " .. tostring(bodyPart.name) .. " WITH ANIM: " .. bodyPart.anim)
+    -- print ("BANDAGING: " .. tostring(bodyPart.name) .. " WITH ANIM: " .. bodyPart.anim)
     zombie:setBumpType(bodyPart.anim)
 
     return true

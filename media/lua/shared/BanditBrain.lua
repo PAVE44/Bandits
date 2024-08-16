@@ -9,13 +9,18 @@ function BanditBrain.Create(zombie, master)
     local brain = {}
     brain.id = BanditUtils.GetCharacterID(zombie)
     brain.master = BanditUtils.GetCharacterID(master)
-    brain.endurance = 1.00
-    brain.speech = 0.00
+    brain.clan = 0
+    brain.fullname = "Unknown"
+    brain.hostile = true
     brain.sleeping = false
     brain.enslaved = true
     brain.combat = false
     brain.firing = false
-    brain.enemy = false
+    brain.endurance = 1.00
+    brain.speech = 0.00
+
+    brain.capabilities = {}
+    brain.inventory = {}
     brain.world = {}
     brain.tasks = {}
 

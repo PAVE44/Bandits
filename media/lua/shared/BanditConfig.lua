@@ -7,18 +7,19 @@ function BanditConfig.GetWaveDataAll()
         local wave = {}
 
 
-        wave.enabled = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_WaveEnabled"]
-        wave.firstDay = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_FirstDay"]
-        wave.lastDay = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_LastDay"]
-        wave.spawnDistance = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_SpawnDistance"]
-        wave.spawnHourlyChance = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_SpawnHourlyChance"]
-        wave.groupSize = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_GroupSize"]
-        wave.isFriendly = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_IsFriendly"]
-        wave.groupName = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_GroupName"]
-        wave.hasPistolChance = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_HasPistolChance"]
-        wave.pistolMagCount = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_PistolMagCount"]
-        wave.hasRifleChance = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_HasRifleChance"]
-        wave.rifleMagCount = SandboxVars.Bandits["Wave_" .. tostring(i) .. "_RifleMagCount"]
+        wave.enabled = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_WaveEnabled"]
+        wave.friendlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FriendlyChance"]
+        wave.enemyBehaviour = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_EnemyBehaviour"]
+        wave.firstDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FirstDay"]
+        wave.lastDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_LastDay"]
+        wave.spawnDistance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnDistance"]
+        wave.spawnHourlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnHourlyChance"]
+        wave.groupSize = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupSize"]
+        wave.groupName = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupName"]
+        wave.hasPistolChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasPistolChance"]
+        wave.pistolMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_PistolMagCount"]
+        wave.hasRifleChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasRifleChance"]
+        wave.rifleMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_RifleMagCount"]
 
         table.insert(waveData, wave)
     end

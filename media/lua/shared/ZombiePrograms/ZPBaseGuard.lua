@@ -6,6 +6,21 @@ ZombiePrograms.BaseGuard.Stages = {}
 ZombiePrograms.BaseGuard.Init = function(bandit)
 end
 
+ZombiePrograms.BaseGuard.GetCapabilities = function()
+    -- capabilities are program decided
+    local capabilities = {}
+    capabilities.melee = true
+    capabilities.shoot = true
+    capabilities.smashWindow = true
+    capabilities.openDoor = true
+    capabilities.breakDoor = true
+    capabilities.breakObjects = true
+    capabilities.unbarricade = true
+    capabilities.disableGenerators = false
+    capabilities.sabotageCars = false
+    return capabilities
+end
+
 ZombiePrograms.BaseGuard.Prepare = function(bandit)
 
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
@@ -68,7 +83,6 @@ ZombiePrograms.BaseGuard.Sleep = function(bandit)
         table.insert(tasks, task)
         return {status=true, next="Sleep", tasks=tasks}
     else
-        if ZombRand(4) == 1 then Bandit.Say(bandit, "SPOTTED") end
         local task = {action="Time", lock=true, anim="GetUp", time=150}
         Bandit.ClearTasks(bandit)
         Bandit.AddTask(bandit, task)

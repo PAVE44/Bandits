@@ -2,6 +2,12 @@ BanditServer = {}
 BanditServer.Commands = {}
 BanditServer.Broadcaster = {}
 
+BanditServer.Commands.UpdatePlayer = function(player, args)
+    local gmd = GetBanditModData()
+    local id = args.id
+    gmd.OnlinePlayers[id] = args
+end
+
 BanditServer.Commands.SyncBrainToClients = function(player, args)
     sendServerCommand('Commands', 'SyncBrainToClients', args)
 end
@@ -44,16 +50,34 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
             local brain = {}
             brain.id = id
-            brain.enslaved = true
             brain.master = BanditUtils.GetCharacterID(player)
+            brain.fullname = BanditNames.GenerateName(zombie:isFemale())
             brain.hostile = event.hostile
             brain.clan = bandit.clan
             brain.loot = bandit.loot
+            brain.enslaved = true
+            brain.sleeping = false
+            brain.combat = false
+            brain.firing = false
+            brain.endurance = 1.00
+            brain.speech = 0.00
+
             brain.weapons = bandit.weapons
+
             brain.program = {}
             brain.program.name = event.program.name
             brain.program.stage = event.program.stage
             brain.program.params = {}
+
+            -- capabilities are program specific, not clan specific
+            brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
+            
+            brain.inventory = {}
+            table.insert(brain.inventory, "weldingGear")
+            table.insert(brain.inventory, "crowbar")
+            
+            brain.world = {}
+            
             brain.tasks = {}
 
             gmd.Queue[id] = brain
@@ -124,7 +148,7 @@ local onClientCommand = function(module, command, player, args)
         for k, v in pairs(args) do
             argStr = argStr .. " " .. k .. "=" .. tostring(v)
         end
-        print ("received " .. module .. "." .. command .. " "  .. argStr)
+        -- print ("received " .. module .. "." .. command .. " "  .. argStr)
         BanditServer[module][command](player, args)
         TransmitBanditModData()
     end

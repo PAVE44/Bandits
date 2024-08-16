@@ -82,6 +82,55 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
     local px = player:getX()
     local py = player:getY()
     
+     -- Function to check if a point is within a basement region
+    local function isInBasement(x, y, basement)
+        return x >= basement.x and x < basement.x + basement.width and
+               y >= basement.y and y < basement.y + basement.height
+    end
+
+    local function isTooCloseToPlayer(x, y)
+        local gamemode = getWorld():getGameMode()
+        local playerList = {}
+        if gamemode == "Multiplayer" then
+            playerList = getOnlinePlayers()
+        else
+            playerList = IsoPlayer.getPlayers()
+        end
+
+        for i=0, playerList:size()-1 do
+            local player = playerList:get(i)
+            if player and not BanditPlayer.IsGhost(player) then
+                local dist = math.sqrt(math.pow(x - player:getX(), 2) + math.pow(y - player:getY(), 2))
+                if dist < 30 then
+                    return true
+                end
+            end
+        end
+        return false
+    end
+
+    -- Check if BasementAPI exists before using it
+    if BasementAPI then
+        -- Get the list of basements
+        local basements = BasementAPI.GetBasements()
+
+        -- Check if the player is inside any basement region
+        for _, basement in ipairs(basements) do
+            if isInBasement(px, py, basement) then
+                print("[INFO] Player is inside a basement region. Wave will not be spawned.")
+                return
+            end
+        end
+    end
+
+    -- Check if RVInterior exists before using it
+    if RVInterior then
+        if RVInterior.playerInsideInterior(player) then
+            print("[INFO] Player is inside an RV interior. Wave will not be spawned.")
+            return
+        end
+    end
+
     table.insert(spawnPoints, {x=px+d, y=py+d})
     table.insert(spawnPoints, {x=px+d, y=py-d})
     table.insert(spawnPoints, {x=px-d, y=py+d})
@@ -95,19 +144,25 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
     for i, sp in pairs(spawnPoints) do
         local square = cell:getGridSquare(sp.x, sp.y, 0)
         if square then
-            if square:isFree(false) then
+            if SafeHouse.isSafeHouse(square, nil, true) then
+                print("[INFO] Spawn point is inside a safehouse, skipping.")
+            elseif not square:isFree(false) then
+                print("[INFO] Square is occupied, skipping.")
+            elseif isTooCloseToPlayer(sp.x, sp.y) then
+                print("[INFO] Spawn is too close to one of the players, skipping.")
+            else
                 table.insert(validSpawnPoints, sp)
             end
         end
     end
 
-    -- if px > 22500 and py > 12000 then player is in RV
-    if #validSpawnPoints >= 1 and px < 22500 and py < 12000 then
+    if #validSpawnPoints >= 1 then
         local p = 1 + ZombRand(#validSpawnPoints)
         return validSpawnPoints[p]
     else
-        print ("[ERR] No valid spawn points available")
+        print ("[ERR] No valid spawn points available. Wave will not be spawned.")
     end
+
     return false
 end
 
@@ -173,15 +228,27 @@ end
 function BanditScheduler.SpawnWave(player, wave)
     local event = {}
     event.name = wave.groupName
-    event.hostile = not wave.isFriendly
     event.occured = false
     event.program = {}
-    
-    if ZombRand(10) > 5 then
-        event.program.name = "Bandit"
+
+    event.hostile = true
+    if ZombRand(100) < wave.friendlyChance then
+        event.hostile = false
+        event.program.name = "Companion"
     else
-        event.program.name = "Looter"
+        if wave.enemyBehaviour == 1 then
+            event.program.name = BanditUtils.Choice({"Bandit", "Looter"})
+        elseif wave.enemyBehaviour == 2 then
+            event.program.name = "Bandit"
+        elseif wave.enemyBehaviour == 3 then
+            event.program.name = "Looter"
+        elseif wave.enemyBehaviour == 4 then
+            event.program.name = "BaseGuard"
+        else
+            event.program.name = "Bandit"
+        end
     end
+
     event.program.stage = "Prepare"
     event.bandits = {}
     
@@ -269,7 +336,7 @@ function BanditScheduler.RaiseDefences(x, y)
     if building then
         local buildingDef = building:getDef()
         if buildingDef then
-            BanditBaseGroupPlacements.Junk(buildingDef:getX(), buildingDef:getY(), 0, buildingDef:getX2() - buildingDef:getX(), buildingDef:getY2() - buildingDef:getY(), 8)
+            BanditBaseGroupPlacements.Junk(buildingDef:getX(), buildingDef:getY(), 0, buildingDef:getX2() - buildingDef:getX(), buildingDef:getY2() - buildingDef:getY(), 3)
 
             local genSquare = cell:getGridSquare(buildingDef:getX()-1, buildingDef:getY()-1, 0)
             if genSquare then
@@ -309,10 +376,13 @@ function BanditScheduler.RaiseDefences(x, y)
                                             object:ToggleDoorSilent()
                                         end
                                     end
+
+                                    --[[
                                     if instanceof(object, "IsoWindow") then
                                         local args = {x=x, y=y, z=z, index=object:getObjectIndex()}
                                         sendClientCommand(getPlayer(), 'Commands', 'Barricade', args)
                                     end
+                                    ]]
 
                                     local fridge = object:getContainerByType("fridge")
                                     if fridge then
@@ -375,6 +445,10 @@ function BanditScheduler.FindBuilding(character, min, max)
                                 end
                             end
                         end
+                    end
+
+                    if SafeHouse.isSafeHouse(testSquare, nil, true) then
+                        occupied = true
                     end
 
                     if not occupied then
@@ -488,7 +562,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
             config.rifleMagCount = 0
             config.pistolMagCount = 3
 
-            bandit = BanditCreator.MakeMadDoctors(config)
+            bandit = BanditCreator.MakeMadDoctor(config)
 
         elseif spawn.type == "police" then
 
@@ -507,7 +581,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
             config.rifleMagCount = 16
             config.pistolMagCount = 12
 
-            bandit = BanditCreator.MakeVeterans(config)
+            bandit = BanditCreator.MakeVeteran(config)
             cnt = 5
 
         elseif spawn.type == "bank" then
@@ -517,7 +591,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
             config.rifleMagCount = 0
             config.pistolMagCount = 4
 
-            bandit = BanditCreator.MakeSecurityGuards(config)
+            bandit = BanditCreator.MakeSecurityGuard(config)
             cnt = 6
 
         elseif spawn.type == "store" then
@@ -527,7 +601,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
             config.rifleMagCount = 0
             config.pistolMagCount = 3
 
-            bandit = BanditCreator.MakeSecurityGuards(config)
+            bandit = BanditCreator.MakeSecurityGuard(config)
             cnt = 3
 
         elseif spawn.type == "warehouse" then
@@ -602,71 +676,42 @@ function BanditScheduler.SpawnBase(player, sceneNo)
     end
 end
 
-function BanditScheduler.DayOne(player)
+function BanditScheduler.BaseballMatch(player)
     local event = {}
     event.name = 1
     event.hostile = false
     event.occured = false
     event.program = {}
-    event.program.name = "Civilian"
+    event.program.name = "Bandit"
     event.program.stage = "Prepare"
+    
+    config = {}
+    config.hasRifleChance = 0
+    config.hasPistolChance = 0
+    config.rifleMagCount = 0
+    config.pistolMagCount = 0
 
-
-    getCell():getGridSquare(player:getX()+30, player:getY()+30, 0):playSound("DOSiren")
-    getCell():getGridSquare(player:getX()+30, player:getY()+30, 0):playSound("DOChopper")
-
-    for i=1, 40 do
-        local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, 10 + ZombRand(25))
-        if spawnPoint then
-
-            event.x = spawnPoint.x
-            event.y = spawnPoint.y
-            event.bandits = {}
-
-            local group = ZombRand(100)
-
-            if group < 70 then
-                config = {}
-                config.hasRifleChance = 5
-                config.hasPistolChance = 50
-                config.rifleMagCount = 1
-                config.pistolMagCount = 3
-
-                local bandit = BanditCreator.GroupMap[1](config)
-                table.insert(event.bandits, bandit)
-            elseif group < 80 then
-                config = {}
-                config.hasRifleChance = 25
-                config.hasPistolChance = 100
-                config.rifleMagCount = 2
-                config.pistolMagCount = 5
-
-                local bandit = BanditCreator.GroupMap[8](config)
-                table.insert(event.bandits, bandit)
-                table.insert(event.bandits, bandit)
-            elseif group < 90 then
-                config = {}
-                config.hasRifleChance = 35
-                config.hasPistolChance = 100
-                config.rifleMagCount = 3
-                config.pistolMagCount = 5
-
-                local bandit = BanditCreator.GroupMap[11](config)
-                table.insert(event.bandits, bandit)
-                table.insert(event.bandits, bandit)
-            else
-                config = {}
-                config.hasRifleChance = 100
-                config.hasPistolChance = 100
-                config.rifleMagCount = 7
-                config.pistolMagCount = 5
-
-                local bandit = BanditCreator.GroupMap[14](config)
-                table.insert(event.bandits, bandit)
-            end
-            sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-        end
+    -- FIRST TEAM
+    event.bandits = {}
+    event.x = player:getX()
+    event.y = player:getY() - 14
+    
+    local bandit = BanditCreator.MakeBaseballKY(config)
+    for i=1, 10 do
+        table.insert(event.bandits, bandit)
     end
+    sendClientCommand(player, 'Commands', 'SpawnGroup', event)
+
+    -- FIRST TEAM
+    event.bandits = {}
+    event.x = player:getX() 
+    event.y = player:getY() + 14
+    
+    local bandit = BanditCreator.MakeBaseballZ(config)
+    for i=1, 10 do
+        table.insert(event.bandits, bandit)
+    end
+    sendClientCommand(player, 'Commands', 'SpawnGroup', event)
 end
 
 function BanditScheduler.SpawnCivilian(player)
@@ -724,14 +769,13 @@ function BanditScheduler.BroadcastTV(cx, cy)
 
     if #tvs then
         local lines = {}
-        table.insert(lines, {text="This is an automated emergency broadcast system. ", sound="ZSRadio_Group_Medium"})
-        table.insert(lines, {text="Attention, residents!"})
-        table.insert(lines, {text="Authorities have identified a group "})
-        table.insert(lines, {text="of armed bandits operating within the region."})
-        table.insert(lines, {text="These individuals are engaging in theft and violent activities."})
-        table.insert(lines, {text="For your safety, remain indoors and secure all entry points."})
+        table.insert(lines, {text="This is an automated emergency broadcast system. "})
+        table.insert(lines, {text="Authorities have identified a group..."})
+        table.insert(lines, {text="...of armed bandits operating within the region..."})
+        table.insert(lines, {text="...engaging in theft and violent activities."})
+        table.insert(lines, {text="Remain indoors and secure all entry points."})
         table.insert(lines, {text="Do not travel alone or engage with suspicious individuals."})
-        table.insert(lines, {text="This message will repeat. Stay alert and stay safe."})
+        table.insert(lines, {text="This message will repeat. "})
         table.insert(lines, {text="END"})
 
         for _, line in pairs(lines) do

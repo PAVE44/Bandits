@@ -1,3 +1,5 @@
+-- register modded loot items by adding them to tables below
+
 BanditLoot = BanditLoot or {}
 
 BanditLoot.MakeItem = function(name, chance, quantity) 
@@ -17,7 +19,9 @@ BanditLoot.FillContainer = function(container, itemTab, itemNo)
                 -- container:addItem(item)
 
                 local item = container:AddItem(v.name)
-                container:addItemOnServer(item)
+                if item then
+                    container:addItemOnServer(item)
+                end
             end
         end
     end

@@ -53,7 +53,7 @@ function BanditUtils.GetClosestPlayerLocation(bandit, mustSee)
 
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
-        if player then
+        if player and not BanditPlayer.IsGhost(player) then
             local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
             if dist < bestDist and (not mustSee or (bandit:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
                 bestDist = dist
@@ -86,6 +86,47 @@ function BanditUtils.GetClosestZombieLocation(bandit)
     end
 
     return bestX, bestY, bestZ, bestDist, bestZombieId
+end
+
+function BanditUtils.GetClosestEnemyBanditLocation(bandit)
+    local bestDist = 10000
+    local bestX = false
+    local bestY = false
+    local bestZ = false
+    local bestZombieId = false
+    local brain = BanditBrain.Get(bandit)
+
+    for i, coords in pairs(BanditMap.BMap) do
+        if brain.clan ~= coords.clan and (brain.hostile or coords.hostile) then
+            local dist = math.sqrt(math.pow(bandit:getX() - coords.x, 2) + math.pow(bandit:getY() - coords.y, 2))
+            if dist < bestDist then
+                bestDist = dist
+                bestX = coords.x
+                bestY = coords.y
+                bestZ = coords.z
+                bestZombieId = 0
+            end
+        end
+    end
+
+    return bestX, bestY, bestZ, bestDist, bestZombieId
+end
+
+function BanditUtils.CloneIsoPlayer(originalCharacter)
+    -- Create a new temporary IsoPlayer at the same position as the original player
+    local tempPlayer = IsoPlayer.new(nil, nil, originalCharacter:getX(), originalCharacter:getY(), originalCharacter:getZ())
+
+    -- Copy relevant properties from the original player to the temporary player
+    -- tempPlayer:setForname(originalCharacter:getForname())
+    -- tempPlayer:setSurname(originalCharacter:getSurname())
+    tempPlayer:setGhostMode(true) -- Ensure the temp player is not interactable
+    tempPlayer:setGodMod(true)    -- Ensure the temp player cannot die
+    tempPlayer:setPrimaryHandItem(originalCharacter:getPrimaryHandItem())
+    tempPlayer:setSecondaryHandItem(originalCharacter:getSecondaryHandItem())
+
+    -- You can copy more properties as needed, depending on what you need for the Hit function
+
+    return tempPlayer
 end
 
 --[[

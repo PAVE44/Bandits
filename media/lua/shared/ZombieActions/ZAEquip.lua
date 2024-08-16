@@ -13,7 +13,7 @@ ZombieActions.Equip.onStart = function(zombie, task)
             zombie:setVariable("BanditHasPrimary", true)
             zombie:setVariable("BanditPrimary", task.itemPrimary)
         end
-        
+
         local hands
         if primaryItemType == WeaponType.barehand then
             hands = "barehand"
@@ -58,14 +58,27 @@ ZombieActions.Equip.onStart = function(zombie, task)
                 print ("ERROR: Cannot equip secondary item because primary item occupies both hands")
             end
         end
+
+        local anim
+        if primaryItemType == WeaponType.firearm or primaryItemType == WeaponType.spear or primaryItemType == WeaponType.heavy or primaryItemType == WeaponType.twohanded then
+            anim = "AttachBackOut"
+        elseif primaryItemType == WeaponType.handgun then
+            anim = "AttachHolsterRightOut"
+        else
+            anim = "AttachHolsterLeftOut"
+        end
+        zombie:setBumpType(anim)
     end
-    
-    -- zombie:setSecondaryHandItem(item)
     return true
 end
 
 ZombieActions.Equip.onWorking = function(zombie, task)
-    return true
+    local asn = zombie:getActionStateName()
+    if asn == "bumped" then
+        return false
+    else
+        return true
+    end
 end
 
 ZombieActions.Equip.onComplete = function(zombie, task)

@@ -22,7 +22,7 @@ function BanditScenes.MilitaryDeserters (player, square)
     BanditBasePlacements.IsoLightSwitch("lighting_outdoor_01_48", sx+4, sy+18, sz)
     
     BanditBasePlacements.WaterContainer("carpentry_02_52", sx+11, sy+14, sz)
-    BanditBasePlacements.Fireplace("camping_01_6", sx+13, sy+11, sz)
+    -- BanditBasePlacements.Fireplace("camping_01_6", sx+13, sy+11, sz)
     BanditBasePlacements.Item ("Base.Pot", sx+13, sy+11, sz, sz)
 
     local container
@@ -55,6 +55,8 @@ function BanditScenes.MilitaryDeserters (player, square)
     config.pistolMagCount = 4
 
     local bandit = BanditCreator.MakeVeterans(config)
+    table.insert(event.bandits, bandit)
+    table.insert(event.bandits, bandit)
     table.insert(event.bandits, bandit)
     table.insert(event.bandits, bandit)
     table.insert(event.bandits, bandit)

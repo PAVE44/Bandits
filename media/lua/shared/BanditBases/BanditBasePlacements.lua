@@ -36,6 +36,7 @@ end
 -- objects
 function BanditBasePlacements.IsoObject (sprite, x, y, z)
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
     local obj = IsoObject.new(square, sprite, "")
 	square:AddSpecialObject(obj)
 	obj:transmitCompleteItemToServer()
@@ -44,6 +45,7 @@ end
 function BanditBasePlacements.IsoThumpable (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
     local obj = IsoThumpable.new(cell, square, sprite, false, {})
     -- obj:setHoppable(false)
 	square:AddTileObject(obj)
@@ -53,7 +55,8 @@ end
 function BanditBasePlacements.IsoDoor (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
-
+    if not square then return end
+    
     for s, number in string.gmatch(sprite, "(.+)_(%d+)") do
         local north = true
         if (number % 2 == 0) then
@@ -69,6 +72,7 @@ end
 function BanditBasePlacements.IsoWindow (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
 
     for s, number in string.gmatch(sprite, "(.+)_(%d+)") do
         local north = true
@@ -111,7 +115,7 @@ end
 function BanditBasePlacements.IsoCurtain (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
-
+    if not square then return end
 
     obj = IsoCurtain.new(cell, square, sprite, false)
     square:AddSpecialObject(obj)
@@ -121,6 +125,8 @@ end
 function BanditBasePlacements.IsoLightSwitch (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     local spriteObj = getSprite(sprite)
     local spriteProps = spriteObj:getProperties()
     spriteProps:Set("lightR", "110")
@@ -138,6 +144,8 @@ end
 function BanditBasePlacements.IsoGenerator (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     local genItem = InventoryItemFactory.CreateItem("Base.Generator")
     local obj = IsoGenerator.new(genItem, cell, square)
     obj:setConnected(true)
@@ -152,6 +160,8 @@ end
 function BanditBasePlacements.Container (sprite, x, y, z, items)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     local obj = IsoThumpable.new(cell, square, sprite, false, {})
     obj:setIsContainer(true)
 	square:AddSpecialObject(obj)
@@ -162,6 +172,8 @@ end
 function BanditBasePlacements.WaterContainer (sprite, x, y, z, items)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     obj = IsoThumpable.new(cell, square, sprite, false, {})
     obj:setWaterAmount(100+ZombRand(260))
     obj:setTaintedWater(true)
@@ -172,6 +184,7 @@ end
 function BanditBasePlacements.Fireplace (sprite, x, y, z, items)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
 
     local obj = IsoObject.new(square, sprite, "")
 	square:AddSpecialObject(obj)
@@ -186,6 +199,8 @@ end
 function BanditBasePlacements.Fridge (sprite, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     local obj = IsoObject.new(square, sprite, "")
     local sprite = getSprite(sprite);
     obj:createContainersFromSpriteProperties()
@@ -197,9 +212,9 @@ end
 function BanditBasePlacements.Journal (title, story, x, y, z)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
 
     local surfaceOffset = GetSurfaceOffset(x, y, z)
-
     
     item = square:AddWorldInventoryItem("Base.Journal", ZombRandFloat(0.3, 0.7), ZombRandFloat(0.3, 0.7), surfaceOffset)
     item:setName(title)
@@ -214,6 +229,8 @@ end
 function BanditBasePlacements.Item (item, x, y, z, q)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+
     local surfaceOffset = GetSurfaceOffset(x, y, z)
 
     for i=1, q do
@@ -224,6 +241,8 @@ end
 
 function BanditBasePlacements.Blood (x, y, z, q)
     local square = GetOrCreateSquare(x, y, z)
+    if not square then return end
+    
     local surfaceOffset = GetSurfaceOffset(x, y, z)
 
     for i=1, q do

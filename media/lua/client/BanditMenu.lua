@@ -8,6 +8,11 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.SwitchProgram (player, zombie, program)
+    Bandit.SetProgram(zombie, program, {})
+    Bandit.SetMaster(zombie, BanditUtils.GetCharacterID(player))
+end
+
 function BanditMenu.SpawnGroup (player, waveId)
 
     local waveData = BanditConfig.GetWaveDataAll()
@@ -38,8 +43,12 @@ function BanditMenu.SpawnCivilian (player, square)
     BanditScheduler.SpawnCivilian(player)
 end
 
-function BanditMenu.EventDayOne (player, square)
-    BanditScheduler.DayOne(player)
+function BanditMenu.BaseballMatch (player, square)
+    BanditScheduler.BaseballMatch(player)
+end
+
+function BanditMenu.ClearSpace (player, square)
+    BanditBaseGroupPlacements.ClearSpace (player:getX(), player:getY(), player:getZ(), 50, 50)
 end
 
 function BanditMenu.BroadcastTV (player, square)
@@ -109,8 +118,6 @@ function BanditMenu.VehicleTest (player, vehicle)
         print (cf)
     end
 
-
-
     --carController:accelerator(true)
     --local t = carController:getClientControls()
 
@@ -158,6 +165,33 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local player = getSpecificPlayer(playerID)
     -- print ("INVISIBILITY:" .. tostring(player:isInvisible()))
    
+
+    local zombie = square:getZombie()
+    if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
+        local brain = BanditBrain.Get(zombie)
+        local banditOption = context:addOption(brain.fullname)
+        local banditMenu = context:getNew(context)
+        context:addSubMenu(banditOption, banditMenu)
+
+        banditMenu:addOption("Stay Here!", player, BanditMenu.SwitchProgram, zombie, "CompanionGuard")
+        banditMenu:addOption("Follow Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
+
+    end
+
+    local r = square:getLampostTotalR()
+    local g = square:getLampostTotalG()
+    local b = square:getLampostTotalB()
+
+    local r2 = square:getLightInfluenceR()
+    local g2 = square:getLightInfluenceG()
+    local b2 = square:getLightInfluenceB()
+
+    local d = square:getTargetDarkMulti(playerID)
+    local d2 = square:getDarkMulti(playerID)
+    
+    local l = square:getLightLevel(0)
+    local n = 1
+
     if isDebugEnabled() or isAdmin() then
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
@@ -176,7 +210,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             spawnMenuFar:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroupFar, i)
         end
 
-        local zombie = square:getZombie()
+        
         
         if zombie then
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
@@ -189,12 +223,14 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         local spawnBaseOption = context:addOption("[DGB] Spawn Base Far")
         local spawnBaseMenu = context:getNew(context)
         context:addSubMenu(spawnBaseOption, spawnBaseMenu)
-        for i=1, 10 do
+        for i=1, 2 do
             spawnBaseMenu:addOption("Base " .. tostring(i), player, BanditMenu.SpawnBase, square, i)
         end
 
         context:addOption("[DGB] Spawn Defenders", player, BanditMenu.SpawnDefenders, square)
-        context:addOption("[DGB] Spawn Event: Day One", player, BanditMenu.EventDayOne, square)
+        context:addOption("[DGB] Spawn Event: Baseball Match", player, BanditMenu.BaseballMatch, square)
+        
+        context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
         context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         
