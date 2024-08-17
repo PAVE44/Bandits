@@ -109,6 +109,7 @@ table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps2", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps3", 1))
 
 -- valuables
+table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.PetrolCan", 1))
 
 -- BANDIT BASE LOOT
 BanditLoot.FridgeItems = BanditLoot.FridgeItems or {}
