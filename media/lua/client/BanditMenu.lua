@@ -166,6 +166,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local player = getSpecificPlayer(playerID)
 
     local zombie = square:getZombie()
+    
+    --[[
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
         local brain = BanditBrain.Get(zombie)
         local banditOption = context:addOption(brain.fullname)
@@ -176,6 +178,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         banditMenu:addOption("Follow Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
 
     end
+    ]]
 
     if isDebugEnabled() or isAdmin() then
         print (BanditUtils.GetCharacterID(player))
