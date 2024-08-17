@@ -23,6 +23,7 @@ end
 
 ZombiePrograms.BaseGuard.Prepare = function(bandit)
 
+    Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
 
     return {status=true, next="Wait", tasks={}}

@@ -210,7 +210,7 @@ function BanditUpdate.ActionState(bandit)
         local world = getWorld()
         local gamemode = world:getGameMode()
 
-        if gamemode == "Multiplayer" then
+        if gamemode == "Multiplayer" and not Bandit.IsForceStationary(bandit) then
             bandit:setUseless(false)
         else
             bandit:setUseless(true)

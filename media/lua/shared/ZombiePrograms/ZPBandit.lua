@@ -28,6 +28,7 @@ ZombiePrograms.Bandit.Prepare = function(bandit)
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
 
+    Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
     
     -- weapons are spawn, not program decided

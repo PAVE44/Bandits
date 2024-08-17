@@ -28,6 +28,7 @@ ZombiePrograms.Companion.Prepare = function(bandit)
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
 
+    Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
     
     local primary = Bandit.GetBestWeapon(bandit)
@@ -85,10 +86,24 @@ ZombiePrograms.Companion.Follow = function(bandit)
             endurance = 0
         end 
 
+        local objects = bandit:getSquare():getObjects()
+        for i=0, objects:size()-1 do
+            local object = objects:get(i)
+            local sprite = object:getSprite()
+            if sprite then
+                local spriteName = sprite:getName()
+                if spriteName == "location_community_cemetary_01_31" then
+                    Bandit.SetProgram(bandit, "CompanionGuard", {})
+                    return {status=true, next="Prepare", tasks=tasks}
+                end
+            end
+        end
+
         local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
 
+        --[[
         local vehicle = master:getVehicle()
-        if false and vehicle then
+        if vehicle then
             print (vehicle:isStopped())
             if dist < 1.6 then
                 local bvehicle = bandit:getVehicle()
@@ -115,6 +130,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 -- bandit:setBumpType("Cough")
             end
         end
+        ]]
 
         local minDist = 4
         if dist > minDist then
@@ -139,7 +155,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                     task = {action="GoTo", time=50, endurance=endurance, x=master:getX()+dx+dxf, y=master:getY()+dy+dyf, z=master:getZ(), walkType=walkType}
                 end
             else
-                task = {action="Move", time=50, endurance=endurance, x=master:getX() - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), y=master:getY() - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), z=master:getZ(), walkType=walkType}
+                task = {action="Move", time=50, endurance=endurance, x=master:getX() - 2 + ZombRand(5) + ZombRandFloat(-0.5, 0.5), y=master:getY() - 2 + ZombRand(5) + ZombRandFloat(-0.5, 0.5), z=master:getZ(), walkType=walkType}
                 -- task = {action="Move", time=50, x=x+dx+dxf, y=y+dy+dyf, z=z, walkType=walkType}
             end
             table.insert(tasks, task)

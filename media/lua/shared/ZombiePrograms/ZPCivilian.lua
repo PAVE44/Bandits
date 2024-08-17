@@ -23,6 +23,7 @@ end
 
 ZombiePrograms.Civilian.Prepare = function(civilian)
 
+    Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(civilian, Bandit.GetWeapons(civilian))
 
     return {status=true, next="Defend", tasks={}}

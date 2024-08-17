@@ -28,6 +28,8 @@ ZombiePrograms.CompanionGuard.Prepare = function(bandit)
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
 
+    Bandit.ForceStationary(bandit, true)
+
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
     
     local primary = Bandit.GetBestWeapon(bandit)
@@ -46,11 +48,37 @@ end
 ZombiePrograms.CompanionGuard.Guard = function(bandit)
     local tasks = {}
 
+    -- GUARD POST MUST BE PRESENT OTHERWISE SWITH PROGRAM
+    local guardpost = false
+    local objects = bandit:getSquare():getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        local sprite = object:getSprite()
+        if sprite then
+            local spriteName = sprite:getName()
+            if spriteName == "location_community_cemetary_01_31" then
+                guardpost = true
+                
+            end
+        end
+    end
+
+    if not guardpost then
+        Bandit.SetProgram(bandit, "Companion", {})
+        return {status=true, next="Prepare", tasks=tasks}
+    end
+    
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
 
-    local action = ZombRand(10)
+    local action = ZombRand(50)
 
-    bandit:faceLocation(bandit:getX() - 5 + ZombRand(11), bandit:getY()  -5 + ZombRand(11))
+    local gameTime = getGameTime()
+    local alfa = gameTime:getMinutes() * 4
+    local theta = alfa * math.pi / 180
+    local x1 = bandit:getX() + 3 * math.cos(theta)
+    local y1 = bandit:getY() + 3 * math.sin(theta)
+
+    -- bandit:faceLocation(x1, y1)
 
     if action == 0 then
         local task = {action="Time", anim="ShiftWeight", time=200}
@@ -67,7 +95,8 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         table.insert(tasks, task)
         table.insert(tasks, task)
     elseif not outOfAmmo then
-        local task = {action="Time", anim="AimRifle", time=200}
+
+        local task = {action="FaceLocation", anim="AimRifle", x=x1, y=y1, time=100}
         table.insert(tasks, task)
     end
 
