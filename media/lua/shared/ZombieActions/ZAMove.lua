@@ -3,11 +3,16 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
     if BanditUtils.IsController(zombie) then
-        local x = task.x + 0.5
-        local y = task.y + 0.5
-        local z = task.z
 
-        zombie:getPathFindBehavior2():pathToLocation(x, y, z)
+        if task.vehiclePartArea then
+            local vehicle = getCell():getGridSquare(task.x, task.y, task.z):getVehicleContainer()
+            if vehicle then
+                zombie:getPathFindBehavior2():pathToVehicleArea(vehicle, task.vehiclePartArea)
+            end
+        else
+            zombie:getPathFindBehavior2():pathToLocation(task.x + 0.5, task.y + 0.5, task.z)
+        end
+        
         zombie:getPathFindBehavior2():cancel()
         zombie:setPath2(nil)
         -- zombie:setWalkType(task.walkType)
