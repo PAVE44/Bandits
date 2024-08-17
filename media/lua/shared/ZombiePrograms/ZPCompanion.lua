@@ -33,13 +33,8 @@ ZombiePrograms.Companion.Prepare = function(bandit)
     local primary = Bandit.GetBestWeapon(bandit)
 
     local secondary
-    if dls < 0.3 then
-        if SandboxVars.Bandits.General_CarryTorches then
-            local hands = bandit:getVariableString("BanditPrimaryType")
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
-                secondary = "Base.HandTorch"
-            end
-        end
+    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
+        secondary = "Base.HandTorch"
     end
 
     local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
@@ -69,7 +64,6 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     if master then
-
         walkType = "Walk"
         local endurance = 0.00
         if master:isRunning() or master:isSprinting() then
@@ -92,6 +86,35 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end 
 
         local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
+
+        local vehicle = master:getVehicle()
+        if false and vehicle then
+            print (vehicle:isStopped())
+            if dist < 1.6 then
+                local bvehicle = bandit:getVehicle()
+                if not bvehicle then
+                    print ("ENTER VEH")
+                    local vx = bandit:getForwardDirection():getX()
+                    local vy = bandit:getForwardDirection():getY()
+                    local forwardVector = Vector3f.new(vx, vy, 0)
+                    bandit:enterVehicle(vehicle, 1, forwardVector)
+                end
+                if vehicle:isStopped() then
+                    -- 
+                else
+                    bandit:changeState(ZombieOnGroundState.instance())
+                end
+            end
+        else
+            local bvehicle = bandit:getVehicle()
+            if bvehicle then
+                print ("EXIT VEH")
+                --ZombieOnGroundState.instance():exit(bandit)
+                --bandit:changeState(ZombieIdleState.instance())
+                bvehicle:exit(bandit)
+                -- bandit:setBumpType("Cough")
+            end
+        end
 
         local minDist = 4
         if dist > minDist then

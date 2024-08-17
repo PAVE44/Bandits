@@ -32,6 +32,7 @@ BanditLoot.Items = BanditLoot.Items or {}
 -- BANDIT INVENTORY LOOT
 -- essentials
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.WaterBottleFull", 80))
+table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.HandTorch", 100))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.TinOpener", 11))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Hammer", 20))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Wrench", 20))

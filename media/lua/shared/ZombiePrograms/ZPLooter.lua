@@ -33,13 +33,8 @@ ZombiePrograms.Looter.Prepare = function(bandit)
     local primary = Bandit.GetBestWeapon(bandit)
 
     local secondary
-    if dls < 0.3 then
-        if SandboxVars.Bandits.General_CarryTorches then
-            local hands = bandit:getVariableString("BanditPrimaryType")
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
-                secondary = "Base.HandTorch"
-            end
-        end
+    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
+        secondary = "Base.HandTorch"
     end
 
     local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}

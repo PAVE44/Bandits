@@ -173,8 +173,13 @@ function BanditUpdate.ActionState(bandit)
     local continue = true
     -- print(asn)
     if asn == "onground" or asn == "getup" or asn =="staggerback" then
-        Bandit.ClearTasks(bandit)
-        continue = false
+        
+        -- bandits car passangers are in ongroundstate
+        local vehicle = bandit:getVehicle()
+        if not vehicle then
+            Bandit.ClearTasks(bandit)
+            continue = false
+        end
         
     elseif asn == "turnalerted"  then
         -- bandits dont bite pls
@@ -1106,38 +1111,6 @@ function BanditUpdate.OnZombieDead(zombie)
     end
 end
 
-function BanditUpdate.OnWeaponSwing(character, handWeapon)
-    if instanceof(character, "IsoPlayer") then
-        if handWeapon:isRanged() then
-            print (#BanditMap.BMap)
-            for _, b in pairs(BanditMap.BMap) do
-                if b then
-                    print ("FPUND")
-                    local dist = math.sqrt(math.pow(character:getX() - b.x, 2) + math.pow(character:getY() - b.y, 2))
-                    if dist < 12 then
-
-                        local zombie = getCell():getGridSquare(b.x, b.y, b.z):getZombie()
-                        if zombie then
-                            local brain = BanditBrain.Get(zombie)
-                            if brain then
-                                if Bandit.IsSleeping(zombie) then
-                                    Bandit.Say(zombie, "SPOTTED")
-                                    local task = {action="Time", lock=true, anim="GetUp", time=150}
-                                    Bandit.ClearTasks(zombie)
-                                    Bandit.AddTask(zombie, task)
-                                    Bandit.SetSleeping(zombie, false)
-                                    Bandit.SetProgramStage(zombie, "Prepare")
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-
 Events.OnZombieUpdate.Add(BanditUpdate.OnBanditUpdate)
 Events.OnHitZombie.Add(BanditUpdate.OnHitZombie)
 Events.OnZombieDead.Add(BanditUpdate.OnZombieDead)
--- Events.OnWeaponSwing.Add(BanditUpdate.OnWeaponSwing)

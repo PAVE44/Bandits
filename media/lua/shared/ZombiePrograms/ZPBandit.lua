@@ -34,13 +34,8 @@ ZombiePrograms.Bandit.Prepare = function(bandit)
     local primary = Bandit.GetBestWeapon(bandit)
 
     local secondary
-    if dls < 0.3 then
-        if SandboxVars.Bandits.General_CarryTorches then
-            local hands = bandit:getVariableString("BanditPrimaryType")
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
-                secondary = "Base.HandTorch"
-            end
-        end
+    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
+        secondary = "Base.HandTorch"
     end
 
     local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
@@ -63,7 +58,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local hands = bandit:getVariableString("BanditPrimaryType")
  
     local walkType = "Run"
-    local endurance = -0.07
+    local endurance = -0.06
     local secondary
     if dls < 0.3 then
         if SandboxVars.Bandits.General_SneakAtNight then
