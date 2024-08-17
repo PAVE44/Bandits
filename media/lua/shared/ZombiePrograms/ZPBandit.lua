@@ -110,6 +110,27 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                         table.insert(tasks, task)
                         return {status=true, next="TurnOffGenerator", tasks=tasks}
                     end
+
+                    local vehicle = square:getVehicleContainer()
+                    if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
+                        local vx = square:getX()
+                        local vy = square:getY()
+                        local vz = square:getZ()
+                        local test0 = vehicle:isHotwired()
+                        local test1 = vehicle:isEngineRunning()
+                        local vehiclePart = vehicle:getPartById("TireRearLeft")
+                        local vehiclePartSquare = vehiclePart:getSquare()
+                        local vpx = vehiclePartSquare:getX()
+                        local vpy = vehiclePartSquare:getY()
+                        local vpz = vehiclePartSquare:getZ()
+                        if gamemode == "Multiplayer" then
+                            task = {action="GoTo", time=50, x=vx, y=vy, z=vz, walkType=walkType}
+                        else
+                            task = {action="Move", time=50, x=vx, y=vy, z=vz, walkType=walkType}
+                        end
+                        table.insert(tasks, task)
+                        return {status=true, next="SabotageVehicle", tasks=tasks}
+                    end
                 end
             end
         end
@@ -309,5 +330,66 @@ ZombiePrograms.Bandit.TurnOffGenerator = function(bandit)
     end
 
     return {status=true, next="Follow", tasks=tasks}
+end
+
+ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
+    local tasks = {}
+
+    local carfound = false
+    for y=-12, 12 do
+        for x=-12, 12 do
+            local square = getCell():getGridSquare(bandit:getX() + x, bandit:getY() + y, 0)
+            if square then
+                local vehicle = square:getVehicleContainer()
+                if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
+                    local vx = square:getX()
+                    local vy = square:getY()
+                    local vz = square:getZ()
+                    
+                    local uninstallPart
+                    local uninstallPartList = {"Battery", "TireRearLeft", "TireRearRight", "TireFrontRight", "TireFrontLeft"}
+                    for _, p in pairs(uninstallPartList) do
+                        local vehiclePart = vehicle:getPartById(p)
+                        if vehiclePart and vehiclePart:getInventoryItem() then
+                            uninstallPart = vehiclePart
+                            break
+                        end
+                    end
+
+                    if uninstallPart then
+                        carfound = true
+                        local uninstallPartId = uninstallPart:getId()
+                        local uninstallPartArea = uninstallPart:getArea()
+                        local uninstallPartSquare = uninstallPart:getSquare()
+                        local vpx = uninstallPartSquare:getX()
+                        local vpy = uninstallPartSquare:getY()
+
+                        local dist = vehicle:getAreaDist(uninstallPartArea, bandit)
+                        local minDist = 2.5
+                        if uninstallPartArea == "Engine" then minDist = 6.4 end
+                        -- AdjacentFreeTileFinder.Find(source:getSquare(), bandit)
+                        if dist > minDist then
+                            task = {action="Move", vehiclePartArea=uninstallPartArea, time=50, x=vx, y=vy, z=0, walkType=walkType}
+                            table.insert(tasks, task)
+                        else
+                            local task = {action="VehicleAction", subaction="Uninstall", id=uninstallPartId, area=uninstallPartArea, vx=vx, vy=vy, px=vpx, py=vpy, time=250}
+                            table.insert(tasks, task)
+                        end
+                        break
+                    else
+                        vehicle:setHotwired(false)
+                    end
+                end
+            end
+            if carfound then break end
+        end
+        if carfound then break end
+    end
+
+    if carfound then
+        return {status=true, next="SabotageVehicle", tasks=tasks}
+    else
+        return {status=true, next="Follow", tasks=tasks}
+    end
 end
 
