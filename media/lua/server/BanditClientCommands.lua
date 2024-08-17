@@ -8,9 +8,6 @@ BanditServer.Commands.UpdatePlayer = function(player, args)
     gmd.OnlinePlayers[id] = args
 end
 
-BanditServer.Commands.SyncBrainToClients = function(player, args)
-    sendServerCommand('Commands', 'SyncBrainToClients', args)
-end
 
 BanditServer.Commands.BanditRemove  = function(player, args)
     local gmd = GetBanditModData()
@@ -56,6 +53,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.clan = bandit.clan
             brain.loot = bandit.loot
             brain.enslaved = true
+            brain.stationary = false
             brain.sleeping = false
             brain.combat = false
             brain.firing = false
