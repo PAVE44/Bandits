@@ -789,10 +789,10 @@ function BanditUpdate.Zombie(zombie)
     local zz = zombie:getZ()
 
     -- this item determines the strenght of the zombie attach on bandit
-    local teeth = InventoryItemFactory.CreateItem("Base.Pencil")
+    local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
 
     local asn = zombie:getActionStateName()
-    if not zombie:getVariableBoolean("Bandit") and asn ~= "bumped" then
+    if not zombie:getVariableBoolean("Bandit") and asn ~= "bumped" and not zombie:isProne() then
         for _, b in pairs(BanditMap.BMap) do
             if b then
                 local dist = math.sqrt(math.pow(zx - b.x, 2) + math.pow(zy - b.y, 2))
@@ -809,13 +809,13 @@ function BanditUpdate.Zombie(zombie)
                             if bandit:getVariableBoolean("Bandit") then
                                 local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
-                                if dist < 0.8 and not isWallTo then
+                                if dist < 0.7 and not isWallTo then
 
                                     if zombie:isFacingObject(bandit, 0.5) then
                                         local attackingZombiesNumber = 0
                                         for _, z in pairs(BanditMap.ZMap) do 
                                             local dist = math.sqrt(math.pow(z.x - b.x, 2) + math.pow(z.y - b.y, 2))
-                                            if dist < 0.8 then
+                                            if dist < 0.7 then
                                                 attackingZombiesNumber = attackingZombiesNumber +1
                                             end
                                         end
@@ -836,7 +836,7 @@ function BanditUpdate.Zombie(zombie)
                                             local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
                                             Bandit.AddTask(bandit, task)
                                         else
-                                            bandit:Hit(teeth, zombie, 0.01, false, 1, false)
+                                            bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                                         end
                                     else
                                         zombie:faceThisObject(bandit)
