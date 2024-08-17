@@ -80,6 +80,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             
             brain.tasks = {}
 
+            print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
             gmd.Queue[id] = brain
         end
     end
