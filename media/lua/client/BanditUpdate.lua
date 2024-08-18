@@ -1156,7 +1156,7 @@ local function adjustPanicIncreaseBasedOnProximity(player)
 end
 
 -- Function to be called every game tick
-local function onTick()
+function BanditUpdate.PanicHandler()
     local player = getPlayer()
     adjustPanicIncreaseBasedOnProximity(player)
 end
