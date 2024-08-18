@@ -1,5 +1,20 @@
 ZombiePrograms = ZombiePrograms or {}
 
+local function GetMoveTask(endurance, x, y, z, walkType, dist)
+    local gamemode = getWorld():getGameMode()
+    local task
+    if gamemode == "Multiplayer" then
+        if dist > 30 then
+            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        else
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        end
+    else
+        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+    end
+    return task
+end
+
 ZombiePrograms.Companion = {}
 ZombiePrograms.Companion.Stages = {}
 
@@ -64,42 +79,68 @@ ZombiePrograms.Companion.Follow = function(bandit)
         master = getPlayer()
     end
 
-    if master then
-        walkType = "Walk"
-        local endurance = 0.00
-        if master:isRunning() or master:isSprinting() then
-            walkType = "Run"
-            endurance = -0.07
-        elseif master:isSneaking() then
-            walkType = "SneakWalk"
-            endurance = -0.01
-        end
+    if not master then
+        local task = {action="Time", anim="Shrug", time=200}
+        table.insert(tasks, task)
+        return {status=true, next="Follow", tasks=tasks}
+    end
 
-        if master:isAiming() and not outOfAmmo then
-            walkType = "WalkAim"
-            endurance = 0
-        end
+    local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
+
+    walkType = "Walk"
+    local endurance = 0.00
+    if master:isRunning() or master:isSprinting() then
+        walkType = "Run"
+        endurance = -0.07
+    elseif master:isSneaking() and dist<12 then
+        walkType = "SneakWalk"
+        endurance = -0.01
+    end
+
+    if master:isAiming() and not outOfAmmo and dist<8 then
+        walkType = "WalkAim"
+        endurance = 0
+    end
+
+    local health = bandit:getHealth()
+    if health < 0.4 then
+        walkType = "Limp"
+        endurance = 0
+    end 
+
+    -- at guardpost, switch program
+    local atGuardpost = BanditGuardpost.At(bandit)
+    if atGuardpost then
+        print ("AT GUARDPOST")
+        Bandit.SetProgram(bandit, "CompanionGuard", {})
+        return {status=true, next="Prepare", tasks=tasks}
+    end
     
-        local health = bandit:getHealth()
-        if health < 0.4 then
-            walkType = "Limp"
-            endurance = 0
-        end 
+    -- look for guardpost
+    local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
+    if guardpost then
+        table.insert(tasks, GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
+        return {status=true, next="Follow", tasks=tasks}
+    end
 
-        local objects = bandit:getSquare():getObjects()
-        for i=0, objects:size()-1 do
-            local object = objects:get(i)
-            local sprite = object:getSprite()
-            if sprite then
-                local spriteName = sprite:getName()
-                if spriteName == "location_community_cemetary_01_31" then
-                    Bandit.SetProgram(bandit, "CompanionGuard", {})
-                    return {status=true, next="Prepare", tasks=tasks}
-                end
-            end
+    -- go to player
+    if true then
+        local minDist = 4
+        if dist > minDist then
+            local id = BanditUtils.GetCharacterID(bandit)
+            local dx = master:getX() + (id % 4) - 2
+            local dy = master:getY() + (id % 5) - 2.5
+            local dz = master:getZ()
+            local dxf = ((id % 10) - 5) / 10
+            local dyf = ((id % 11) - 5) / 10
+            table.insert(tasks, GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
         end
+    end
 
-        local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
+    return {status=true, next="Follow", tasks=tasks}
+end
+
+
 
         --[[
         local vehicle = master:getVehicle()
@@ -131,43 +172,3 @@ ZombiePrograms.Companion.Follow = function(bandit)
             end
         end
         ]]
-
-        local minDist = 4
-        if dist > minDist then
-
-            -- must be deterministic, not random (same for all clients)
-            local id = BanditUtils.GetCharacterID(bandit)
-
-            local dx = (id % 4) - 2
-            local dy = (id % 5) - 2.5
-            local dxf = ((id % 10) - 5) / 10
-            local dyf = ((id % 11) - 5) / 10
-
-            -- Move and GoTo generally do the same thing with a different method
-            -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
-            -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
-            local gamemode = getWorld():getGameMode()
-            local task
-            if gamemode == "Multiplayer" then
-                if dist > 30 then
-                    task = {action="Move", time=25, endurance=endurance, x=master:getX()+dx+dxf, y=master:getY()+dy+dyf, z=master:getZ(), walkType=walkType}
-                else
-                    task = {action="GoTo", time=50, endurance=endurance, x=master:getX()+dx+dxf, y=master:getY()+dy+dyf, z=master:getZ(), walkType=walkType}
-                end
-            else
-                task = {action="Move", time=50, endurance=endurance, x=master:getX() - 2 + ZombRand(5) + ZombRandFloat(-0.5, 0.5), y=master:getY() - 2 + ZombRand(5) + ZombRandFloat(-0.5, 0.5), z=master:getZ(), walkType=walkType}
-                -- task = {action="Move", time=50, x=x+dx+dxf, y=y+dy+dyf, z=z, walkType=walkType}
-            end
-            table.insert(tasks, task)
-
-        end
-    else
-        local task = {action="Time", anim="Shrug", time=200}
-        table.insert(tasks, task)
-    end
-
-    return {status=true, next="Follow", tasks=tasks}
-end
-
-
-

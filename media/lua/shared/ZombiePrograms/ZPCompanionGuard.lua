@@ -49,21 +49,9 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
     local tasks = {}
 
     -- GUARD POST MUST BE PRESENT OTHERWISE SWITH PROGRAM
-    local guardpost = false
-    local objects = bandit:getSquare():getObjects()
-    for i=0, objects:size()-1 do
-        local object = objects:get(i)
-        local sprite = object:getSprite()
-        if sprite then
-            local spriteName = sprite:getName()
-            if spriteName == "location_community_cemetary_01_31" then
-                guardpost = true
-                
-            end
-        end
-    end
-
-    if not guardpost then
+    -- at guardpost, switch program
+    local atGuardpost = BanditGuardpost.At(bandit)
+    if not atGuardpost then
         Bandit.SetProgram(bandit, "Companion", {})
         return {status=true, next="Prepare", tasks=tasks}
     end
