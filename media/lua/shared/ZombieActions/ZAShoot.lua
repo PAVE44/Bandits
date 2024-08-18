@@ -549,6 +549,9 @@ local function ManageLineOfFire (shooter, victim)
                                 end
                                 return false
                             end
+
+                            vehicle:transmitPartCondition(vehiclePart)
+			                vehicle:updatePartStats()
                         end
 
                         --

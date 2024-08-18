@@ -41,7 +41,11 @@ ZombieActions.VehicleAction.onComplete = function(zombie, task)
                         -- vehiclePart:damage(100)
                         vehiclePart:setInventoryItem(nil)
                         vehicle:transmitPartItem(vehiclePart)
-                        print ("operation complete")
+                        if task.area == "TireRearLeft" or task.area == "TireRearRight" or task.area == "TireFrontLeft" or task.area == "TireFrontRight" then
+                            vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
+                            vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
+                        end
+                        vehicle:updatePartStats()
                     end
                 end
             end
