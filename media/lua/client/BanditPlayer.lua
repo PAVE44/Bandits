@@ -31,7 +31,7 @@ local originalPanicIncreaseValue = nil
 
 -- Function to check nearby entities and set panic increase value
 BanditPlayer.PanicHandler = function(player)
-    local panicRadius = player:getSeeNearbyCharacterDistance()
+    local panicRadius = player:getSeeNearbyCharacterDistance() + 2.0
     
     -- Step 2: Store the original PanicIncreaseValue if it's the first time modifying it
     local bodyDamage = player:getBodyDamage()
