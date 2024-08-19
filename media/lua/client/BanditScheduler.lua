@@ -89,6 +89,10 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
     end
 
     local function isTooCloseToPlayer(x, y)
+        -- Check if the player is in debug mode or admin mode
+        if isDebugEnabled() or isAdmin() then
+            return false
+        end
         local gamemode = getWorld():getGameMode()
         local playerList = {}
         if gamemode == "Multiplayer" then
