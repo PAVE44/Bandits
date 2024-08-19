@@ -5,7 +5,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -16,7 +17,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -27,7 +29,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -38,7 +41,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_4.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -49,7 +53,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_5.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -60,7 +65,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_6.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -71,7 +77,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_7.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -82,7 +89,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/spotted_male_1_8.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -93,7 +101,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -104,7 +113,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -115,7 +125,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -126,7 +137,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_4.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -137,7 +149,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_5.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -148,7 +161,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/reloading_male_1_6.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -159,7 +173,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -170,7 +185,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -181,7 +197,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -192,7 +209,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_4.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -203,7 +221,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_5.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -214,7 +233,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_6.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -225,7 +245,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_7.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -236,7 +257,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_8.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -247,7 +269,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_9.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -258,7 +281,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_10.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -269,7 +293,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_11.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -280,7 +305,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_12.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -291,7 +317,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_13.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -302,7 +329,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/hit_male_1_14.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -313,7 +341,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -324,7 +353,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -335,7 +365,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -346,7 +377,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_4.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -357,7 +389,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_5.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -368,7 +401,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/breach_male_1_6.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -379,7 +413,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/car_male_1_1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -390,7 +425,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/car_male_1_2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -401,7 +437,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/car_male_1_3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
@@ -412,7 +449,8 @@ module BanditsVoiceMale1{
         is3D = true,
         clip { 
             file = media/sound/car_male_1_4.wav, 
-            distanceMax = 4, 
+            distanceMin = 1, 
+            distanceMax = 30, 
             reverbFactor = 0.1, volume = 0.3, 
         } 
     }
