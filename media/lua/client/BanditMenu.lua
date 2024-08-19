@@ -17,7 +17,7 @@ function BanditMenu.SpawnGroup (player, waveId)
 
     local waveData = BanditConfig.GetWaveDataAll()
     local wave = waveData[waveId]
-    wave.spawnDistance = 5
+    wave.spawnDistance = 3
     BanditScheduler.SpawnWave(player, wave)
 
 end
