@@ -319,6 +319,14 @@ function BanditUpdate.Collisions(bandit)
                     local object = objects:get(i)
                     local properties = object:getProperties()
                     if properties then
+
+                        local water = properties:Is(IsoFlagType.water)
+                        if water then
+                            -- print ("water!")
+                            -- local task = {action="Single", anim="WindowSmash", time=250}
+                            -- table.insert(tasks, task)
+                        end
+
                         local lowFence = properties:Val("FenceTypeLow")
                         if lowFence then
                             if bandit:isFacingObject(object, 0.5) then
@@ -926,7 +934,6 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- WALKTYPE
     -- we do ot this way, if walktype get overwritten by game engine we force our animations
     zombie:setWalkType(zombie:getVariableString("BanditWalkType"))
-    
 
     -- NO ZOMBIE SOUNDS
     bandit:getEmitter():stopSoundByName("MaleZombieCombined")
