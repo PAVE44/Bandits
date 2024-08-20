@@ -22,6 +22,7 @@ ZombiePrograms.Defend.GetCapabilities = function()
 end
 
 ZombiePrograms.Defend.Prepare = function(bandit)
+    local tasks = {}
 
     Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
