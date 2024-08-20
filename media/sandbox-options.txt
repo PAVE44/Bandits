@@ -47,6 +47,16 @@ option Bandits.General_DestroyThumpable = {
     page = Bandits_General, translation = Bandits.DestroyThumpable,
 }
 
+option Bandits.General_SabotageVehicles = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SabotageVehicles,
+}
+
+option Bandits.General_GeneratorCutoff = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.GeneratorCutoff,
+}
+
 option Bandits.General_Speak = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.Speak,

@@ -88,44 +88,51 @@ ZombiePrograms.Bandit.Follow = function(bandit)
         return {status=true, next="Escape", tasks=tasks}
     end
 
-    for z=0, 2 do
-        for y=-12, 12 do
-            for x=-12, 12 do
-                local square = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, z)
-                if square then
-                    local gen = square:getGenerator()
-                    if gen and gen:isActivated() then
-                        
-                        local gamemode = getWorld():getGameMode()
-                        local task
-                        if gamemode == "Multiplayer" then
-                            task = {action="GoTo", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
-                        else
-                            task = {action="Move", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
-                        end
-                        table.insert(tasks, task)
-                        return {status=true, next="TurnOffGenerator", tasks=tasks}
-                    end
+    if SandboxVars.Bandits.General_GeneratorCutoff or SandboxVars.Bandits.General_SabotageVehicles then 
+        for z=0, 2 do
+            for y=-12, 12 do
+                for x=-12, 12 do
+                    local square = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, z)
+                    if square then
 
-                    local vehicle = square:getVehicleContainer()
-                    if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
-                        local vx = square:getX()
-                        local vy = square:getY()
-                        local vz = square:getZ()
-                        local test0 = vehicle:isHotwired()
-                        local test1 = vehicle:isEngineRunning()
-                        local vehiclePart = vehicle:getPartById("TireRearLeft")
-                        local vehiclePartSquare = vehiclePart:getSquare()
-                        local vpx = vehiclePartSquare:getX()
-                        local vpy = vehiclePartSquare:getY()
-                        local vpz = vehiclePartSquare:getZ()
-                        if gamemode == "Multiplayer" then
-                            task = {action="GoTo", time=50, x=vx, y=vy, z=vz, walkType=walkType}
-                        else
-                            task = {action="Move", time=50, x=vx, y=vy, z=vz, walkType=walkType}
+                        if SandboxVars.Bandits.General_GeneratorCutoff then
+                            local gen = square:getGenerator()
+                            if gen and gen:isActivated() then
+                                
+                                local gamemode = getWorld():getGameMode()
+                                local task
+                                if gamemode == "Multiplayer" then
+                                    task = {action="GoTo", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
+                                else
+                                    task = {action="Move", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
+                                end
+                                table.insert(tasks, task)
+                                return {status=true, next="TurnOffGenerator", tasks=tasks}
+                            end
                         end
-                        table.insert(tasks, task)
-                        return {status=true, next="SabotageVehicle", tasks=tasks}
+
+                        if SandboxVars.Bandits.General_SabotageVehicles then
+                            local vehicle = square:getVehicleContainer()
+                            if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
+                                local vx = square:getX()
+                                local vy = square:getY()
+                                local vz = square:getZ()
+                                local test0 = vehicle:isHotwired()
+                                local test1 = vehicle:isEngineRunning()
+                                local vehiclePart = vehicle:getPartById("TireRearLeft")
+                                local vehiclePartSquare = vehiclePart:getSquare()
+                                local vpx = vehiclePartSquare:getX()
+                                local vpy = vehiclePartSquare:getY()
+                                local vpz = vehiclePartSquare:getZ()
+                                if gamemode == "Multiplayer" then
+                                    task = {action="GoTo", time=50, x=vx, y=vy, z=vz, walkType=walkType}
+                                else
+                                    task = {action="Move", time=50, x=vx, y=vy, z=vz, walkType=walkType}
+                                end
+                                table.insert(tasks, task)
+                                return {status=true, next="SabotageVehicle", tasks=tasks}
+                            end
+                        end
                     end
                 end
             end
@@ -321,6 +328,9 @@ ZombiePrograms.Bandit.TurnOffGenerator = function(bandit)
     if gen and gen:isActivated() then
         local task = {action="Time", anim="LootLow", time=40}
         table.insert(tasks, task)
+        local task = {action="Time", anim="LootLow", time=40}
+        table.insert(tasks, task)
+        
         gen:setActivated(false)
         bandit:getSquare():playSound("WorldEventElectricityShutdown")
     end
