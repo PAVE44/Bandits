@@ -353,7 +353,7 @@ ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
                     local vz = square:getZ()
                     
                     local uninstallPart
-                    local uninstallPartList = {"Battery", "TireRearLeft", "TireRearRight", "TireFrontRight", "TireFrontLeft"}
+                    local uninstallPartList = {"TireRearLeft", "Battery", "TireFrontRight", "TireRearRight", "TireFrontLeft"}
                     for _, p in pairs(uninstallPartList) do
                         local vehiclePart = vehicle:getPartById(p)
                         if vehiclePart and vehiclePart:getInventoryItem() then
@@ -371,8 +371,8 @@ ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
                         local vpy = uninstallPartSquare:getY()
 
                         local dist = vehicle:getAreaDist(uninstallPartArea, bandit)
-                        local minDist = 2.5
-                        if uninstallPartArea == "Engine" then minDist = 6.4 end
+                        local minDist = 3.1
+                        if uninstallPartArea == "Engine" then minDist = 5.4 end
                         -- AdjacentFreeTileFinder.Find(source:getSquare(), bandit)
                         if dist > minDist then
                             task = {action="Move", vehiclePartArea=uninstallPartArea, time=50, x=vx, y=vy, z=0, walkType=walkType}

@@ -437,7 +437,8 @@ end
 -- Bresenham's line of fire to detect what needs to destroyed between shooter and target
 local function ManageLineOfFire (shooter, victim)
     local cell = getCell()
-
+    local player = getPlayer()
+    
     local x0 = shooter:getX()
     local y0 = shooter:getY()
     local x1 = victim:getX()
