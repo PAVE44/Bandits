@@ -76,6 +76,43 @@ function BanditScheduler.DaysSinceApo()
 
 end
 
+function BanditScheduler.GetWaveDataAll()
+    local waveCnt = 16
+    local waveData = {}
+    for i=1, waveCnt do
+        local wave = {}
+
+        wave.enabled = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_WaveEnabled"]
+        wave.friendlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FriendlyChance"]
+        wave.enemyBehaviour = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_EnemyBehaviour"]
+        wave.firstDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FirstDay"]
+        wave.lastDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_LastDay"]
+        wave.spawnDistance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnDistance"]
+        wave.spawnHourlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnHourlyChance"]
+        wave.groupSize = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupSize"]
+        wave.groupName = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupName"]
+        wave.hasPistolChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasPistolChance"]
+        wave.pistolMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_PistolMagCount"]
+        wave.hasRifleChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasRifleChance"]
+        wave.rifleMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_RifleMagCount"]
+
+        table.insert(waveData, wave)
+    end
+    return waveData
+end
+
+function BanditScheduler.GetWaveDataForDay(day)
+    local waveData = BanditScheduler.GetWaveDataAll()
+    local waveDataForDay = {}
+
+    for k, wave in pairs(waveData) do
+        if wave.enabled and day >= wave.firstDay and day <= wave.lastDay then
+            table.insert(waveDataForDay, wave)
+        end
+    end
+    return waveDataForDay
+end
+
 function BanditScheduler.GenerateSpawnPoint(player, d)
     local spawnPoints = {}
     local validSpawnPoints = {}
@@ -195,7 +232,7 @@ function BanditScheduler.CheckEvent()
 
         -- SPAWN ATTACKING FORCE
         local daysPassed = currentPlayer:getHoursSurvived() / 24
-        local waveData = BanditConfig.GetWaveDataForDay(daysPassed)
+        local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
 
         -- print ("SPAWN ATTEMPT" .. daysPassed)
         for _, wave in pairs(waveData) do

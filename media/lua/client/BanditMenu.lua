@@ -15,7 +15,7 @@ end
 
 function BanditMenu.SpawnGroup (player, waveId)
 
-    local waveData = BanditConfig.GetWaveDataAll()
+    local waveData = BanditScheduler.GetWaveDataAll()
     local wave = waveData[waveId]
     wave.spawnDistance = 3
     BanditScheduler.SpawnWave(player, wave)
@@ -24,7 +24,7 @@ end
 
 function BanditMenu.SpawnGroupFar (player, waveId)
 
-    local waveData = BanditConfig.GetWaveDataAll()
+    local waveData = BanditScheduler.GetWaveDataAll()
     local wave = waveData[waveId]
     wave.spawnDistance = 50
     BanditScheduler.SpawnWave(player, wave)
@@ -158,7 +158,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local walktype2 = zombie:getVariableString("BanditWalkType")
     local zx = zombie:getX()
     local zy = zombie:getY()
-    local waveData = BanditConfig.GetWaveDataForDay(daysPassed)
+    local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
 end
 
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
