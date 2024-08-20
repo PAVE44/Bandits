@@ -8,7 +8,8 @@ ZombieActions.GoTo.onStart = function(zombie, task)
             print ("PATH DISTANCE REACHED")
         else
             zombie:pathToLocationF(task.x, task.y, task.z)
-            zombie:setWalkType(task.walkType)
+            zombie:setVariable("BanditWalkType", task.walkType)
+            --zombie:setWalkType(task.walkType)
         end
     end
    
@@ -16,7 +17,8 @@ ZombieActions.GoTo.onStart = function(zombie, task)
 end
 
 ZombieActions.GoTo.onWorking = function(zombie, task)
-    zombie:setWalkType(task.walkType)
+    zombie:setVariable("BanditWalkType", task.walkType)
+    -- zombie:setWalkType(task.walkType)
     return false
 end
 

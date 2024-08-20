@@ -13,6 +13,7 @@ table.insert(BanditOutfits.DesperateCitizen, "Tourist")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditOutfits.DesperateCitizen, "AuthenticHomeless")
+    table.insert(BanditOutfits.DesperateCitizen, "AuthenticElderly")
     table.insert(BanditOutfits.DesperateCitizen, "AuthenticPostalDude")
     table.insert(BanditOutfits.DesperateCitizen, "AuthenticSurvivorCovid")
 end
@@ -23,11 +24,11 @@ table.insert(BanditOutfits.Psychopath, "Naked")
 table.insert(BanditOutfits.Psychopath, "HockeyPsycho")
 table.insert(BanditOutfits.Psychopath, "HospitalPatient")
 table.insert(BanditOutfits.Psychopath, "Trader")
-table.insert(BanditOutfits.Psychopath, "NakedVeil")
 table.insert(BanditOutfits.Psychopath, "TinFoilHat")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditOutfits.Psychopath, "AuthenticJasonPart3")
+    table.insert(BanditOutfits.Psychopath, "AuthenticFat01")
     table.insert(BanditOutfits.Psychopath, "AuthenticFat02")
     table.insert(BanditOutfits.Psychopath, "AuthenticFat03")
     table.insert(BanditOutfits.Psychopath, "AuthenticGhostFace")
@@ -56,6 +57,7 @@ table.insert(BanditOutfits.Crimial, "Redneck")
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditOutfits.Crimial, "AuthenticBankRobber")
     table.insert(BanditOutfits.Crimial, "AuthenticNMRIHMolotov")
+    table.insert(BanditOutfits.Crimial, "AuthenticPoncho")
 end
 
 if getActivatedMods():contains("Brita_2") then
@@ -142,12 +144,15 @@ end
 
 -- WAVE 14
 BanditOutfits.PrivateMilitia = BanditOutfits.PrivateMilitia or {}
-table.insert(BanditOutfits.PrivateMilitia, "PrivateMilitia")
-table.insert(BanditOutfits.PrivateMilitia, "Camper")
-
-if getActivatedMods():contains("Brita_2") then
+if getActivatedMods():contains("USMilitaryPack") then
+    table.insert(BanditOutfits.PrivateMilitia, "INFANTRY_USMP1")
+    table.insert(BanditOutfits.PrivateMilitia, "INFANTRY_USMP2")
+elseif getActivatedMods():contains("Brita_2") then
     table.insert(BanditOutfits.PrivateMilitia, "Brita_Gorka")
     table.insert(BanditOutfits.PrivateMilitia, "Brita_Hunter_2")
+else
+    table.insert(BanditOutfits.PrivateMilitia, "PrivateMilitia")
+    table.insert(BanditOutfits.PrivateMilitia, "Camper")
 end
 
 -- WAVE 15
@@ -163,9 +168,6 @@ end
 
 -- WAVE 16
 BanditOutfits.NewOrder = BanditOutfits.NewOrder or {}
-table.insert(BanditOutfits.NewOrder, "ArmyCamoGreen")
-table.insert(BanditOutfits.NewOrder, "Ghillie")
-
 if getActivatedMods():contains("KATTAJ1_Military") then
     table.insert(BanditOutfits.NewOrder, "KATTAJ1_Army_Black_Patriot")
     table.insert(BanditOutfits.NewOrder, "KATTAJ1_Army_Black_Defender")
@@ -173,5 +175,7 @@ if getActivatedMods():contains("KATTAJ1_Military") then
     table.insert(BanditOutfits.NewOrder, "KATTAJ1_Army_Green_Patriot")
     table.insert(BanditOutfits.NewOrder, "KATTAJ1_Army_Green_Defender")
     table.insert(BanditOutfits.NewOrder, "KATTAJ1_Army_Green_Vanguard")
+else
+    table.insert(BanditOutfits.NewOrder, "ArmyCamoGreen")
+    table.insert(BanditOutfits.NewOrder, "Ghillie")
 end
-

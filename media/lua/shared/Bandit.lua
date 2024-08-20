@@ -117,6 +117,17 @@ function Bandit.SetProgramStage(zombie, stage)
     BanditBrain.Update(zombie, brain)
 end
 
+function Bandit.ForceStationary(zombie, stationary)
+    local brain = BanditBrain.Get(zombie)
+    brain.stationary = stationary
+    BanditBrain.Update(zombie, brain)
+end
+
+function Bandit.IsForceStationary(zombie)
+    local brain = BanditBrain.Get(zombie)
+    return brain.stationary
+end
+
 function Bandit.SetHostile(zombie, hostile)
     local brain = BanditBrain.Get(zombie)
     brain.hostile = hostile

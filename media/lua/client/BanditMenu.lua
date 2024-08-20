@@ -17,7 +17,7 @@ function BanditMenu.SpawnGroup (player, waveId)
 
     local waveData = BanditConfig.GetWaveDataAll()
     local wave = waveData[waveId]
-    wave.spawnDistance = 5
+    wave.spawnDistance = 3
     BanditScheduler.SpawnWave(player, wave)
 
 end
@@ -26,7 +26,7 @@ function BanditMenu.SpawnGroupFar (player, waveId)
 
     local waveData = BanditConfig.GetWaveDataAll()
     local wave = waveData[waveId]
-    wave.spawnDistance = 60
+    wave.spawnDistance = 50
     BanditScheduler.SpawnWave(player, wave)
 
 end
@@ -154,7 +154,8 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local daysPassed = BanditScheduler.DaysSinceApo()
     local isUseless = zombie:isUseless()
     local isBandit = zombie:getVariableBoolean("Bandit")
-    local walktype = zombie:getVariableBoolean("zombieWalkType")
+    local walktype = zombie:getVariableString("zombieWalkType")
+    local walktype2 = zombie:getVariableString("BanditWalkType")
     local zx = zombie:getX()
     local zy = zombie:getY()
     local waveData = BanditConfig.GetWaveDataForDay(daysPassed)
@@ -163,10 +164,10 @@ end
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local square = clickedSquare
     local player = getSpecificPlayer(playerID)
-    -- print ("INVISIBILITY:" .. tostring(player:isInvisible()))
-   
 
     local zombie = square:getZombie()
+    
+    --[[
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
         local brain = BanditBrain.Get(zombie)
         local banditOption = context:addOption(brain.fullname)
@@ -177,20 +178,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         banditMenu:addOption("Follow Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
 
     end
-
-    local r = square:getLampostTotalR()
-    local g = square:getLampostTotalG()
-    local b = square:getLampostTotalB()
-
-    local r2 = square:getLightInfluenceR()
-    local g2 = square:getLightInfluenceG()
-    local b2 = square:getLightInfluenceB()
-
-    local d = square:getTargetDarkMulti(playerID)
-    local d2 = square:getDarkMulti(playerID)
-    
-    local l = square:getLightLevel(0)
-    local n = 1
+    ]]
 
     if isDebugEnabled() or isAdmin() then
         print (BanditUtils.GetCharacterID(player))
@@ -209,9 +197,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         for i=1, 16 do
             spawnMenuFar:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroupFar, i)
         end
-
-        
-        
+    
         if zombie then
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
             print ("this zombie outfit id: " .. zombie:getPersistentOutfitID())
@@ -220,6 +206,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
 
         end
+
         local spawnBaseOption = context:addOption("[DGB] Spawn Base Far")
         local spawnBaseMenu = context:getNew(context)
         context:addSubMenu(spawnBaseOption, spawnBaseMenu)
@@ -234,26 +221,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         
-        local building = square:getBuilding()
-        if building then
-            local room = building:getRandomRoom()
-            if room then
-                local roomDef = room:getRoomDef()
-                if roomDef then
-                    print (roomDef:getName())
-                end
-            end
-        end
-
-        local zones = getWorld():getMetaGrid():getZonesAt(square:getX(), square:getY(), 0)
-        if zones then
-            for i = zones:size(), 1, -1 do
-                local zone = zones:get(i-1)
-                if zone then
-                    print (zone:getType())
-                end
-            end
-        end
     end
 end
 

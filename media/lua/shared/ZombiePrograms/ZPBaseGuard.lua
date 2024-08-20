@@ -23,12 +23,7 @@ end
 
 ZombiePrograms.BaseGuard.Prepare = function(bandit)
 
-    local tasks = {}
-    local world = getWorld()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
-
+    Bandit.ForceStationary(bandit, false)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
     
     -- weapons are spawn, not program decided

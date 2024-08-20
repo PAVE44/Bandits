@@ -54,7 +54,7 @@ function BanditScenes.MilitaryDeserters (player, square)
     config.rifleMagCount = 6
     config.pistolMagCount = 4
 
-    local bandit = BanditCreator.MakeVeterans(config)
+    local bandit = BanditCreator.MakeVeteran(config)
     table.insert(event.bandits, bandit)
     table.insert(event.bandits, bandit)
     table.insert(event.bandits, bandit)

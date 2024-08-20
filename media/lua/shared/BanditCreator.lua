@@ -106,7 +106,7 @@ function BanditCreator.MakeCannibal(config)
      
     -- overwrite defaults with details specific to this group below
     bandit.outfit = BanditUtils.Choice(BanditOutfits.Cannibal)
-    bandit.femaleChance = 10
+    bandit.femaleChance = 0
     bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Cannibal)
 
     return bandit
@@ -192,7 +192,7 @@ function BanditCreator.MakeVeteran(config)
    
     -- overwrite defaults with details specific to this group below
     bandit.outfit = BanditUtils.Choice(BanditOutfits.Veteran)
-    bandit.femaleChance = 20
+    bandit.femaleChance = 0
     bandit.weapons.melee = BanditUtils.Choice(BanditWeapons.Melee.Veteran)
 
     return bandit

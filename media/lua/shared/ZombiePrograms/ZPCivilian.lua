@@ -23,29 +23,8 @@ end
 
 ZombiePrograms.Civilian.Prepare = function(civilian)
 
-    local tasks = {}
-    local world = getWorld()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
-
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    -- weapons are spawn, not program decided
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local secondary
-    if dls < 0.3 then
-        if SandboxVars.Bandits.General_CarryTorches then
-            local hands = bandit:getVariableString("BanditPrimaryType")
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" then
-                secondary = "Base.HandTorch"
-            end
-        end
-    end
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task)
+    Bandit.ForceStationary(bandit, false)
+    Bandit.SetWeapons(civilian, Bandit.GetWeapons(civilian))
 
     return {status=true, next="Defend", tasks={}}
 end

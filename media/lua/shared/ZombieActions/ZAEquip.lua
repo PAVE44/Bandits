@@ -31,6 +31,8 @@ ZombieActions.Equip.onStart = function(zombie, task)
             hands = "twohanded"
         elseif primaryItemType == WeaponType.throwing then
             hands = "throwing"
+        elseif primaryItemType == WeaponType.chainsaw then
+            hands = "chainsaw"
         else
             hands = "onehanded"
         end
@@ -38,7 +40,7 @@ ZombieActions.Equip.onStart = function(zombie, task)
         zombie:setVariable("BanditPrimaryType", hands)
 
         if task.itemSecondary then
-            if hands == "" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
+            if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
                 local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
                 if oldSecondaryPrimary ~= task.itemSecondary then
                     local secondaryItem = InventoryItemFactory.CreateItem(task.itemSecondary)

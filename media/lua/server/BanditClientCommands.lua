@@ -2,14 +2,23 @@ BanditServer = {}
 BanditServer.Commands = {}
 BanditServer.Broadcaster = {}
 
+BanditServer.Commands.GuardpostToggle = function(player, args)
+    local gmd = GetBanditModData()
+    if not (args.x and args.y and args.z) then return end
+
+    local id = args.x .. "-" .. args.y .. "-" .. args.z
+    
+    if gmd.Guardposts[id] then
+        gmd.Guardposts[id] = nil
+    else
+        gmd.Guardposts[id] = args
+    end
+end
+
 BanditServer.Commands.UpdatePlayer = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
     gmd.OnlinePlayers[id] = args
-end
-
-BanditServer.Commands.SyncBrainToClients = function(player, args)
-    sendServerCommand('Commands', 'SyncBrainToClients', args)
 end
 
 BanditServer.Commands.BanditRemove  = function(player, args)
@@ -56,6 +65,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.clan = bandit.clan
             brain.loot = bandit.loot
             brain.enslaved = true
+            brain.stationary = false
             brain.sleeping = false
             brain.combat = false
             brain.firing = false
@@ -80,6 +90,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             
             brain.tasks = {}
 
+            print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
             gmd.Queue[id] = brain
         end
     end
