@@ -38,14 +38,15 @@ ZombieActions.VehicleAction.onComplete = function(zombie, task)
                     local item = vehiclePart:getInventoryItem()
                     if item then
                         zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                        -- vehiclePart:damage(100)
                         vehiclePart:setInventoryItem(nil)
-                        vehicle:transmitPartItem(vehiclePart)
                         if task.area == "TireRearLeft" or task.area == "TireRearRight" or task.area == "TireFrontLeft" or task.area == "TireFrontRight" then
                             vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
                             vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
                         end
                         vehicle:updatePartStats()
+
+                        local args = {x=task.vx, y=task.vy, id=task.id}
+                        sendClientCommand(player, 'Commands', 'VehiclePartRemove', args)
                     end
                 end
             end

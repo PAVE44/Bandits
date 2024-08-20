@@ -152,6 +152,42 @@ BanditServer.Commands.ToggleDoor = function(player, args)
     end
 end
 
+BanditServer.Commands.VehiclePartRemove = function(player, args)
+    local sq = getCell():getGridSquare(args.x, args.y, 0)
+    if sq then
+        local vehicle = sq:getVehicleContainer()
+        if vehicle then
+            local vehiclePart = vehicle:getPartById(args.id)
+            if vehiclePart then
+                vehiclePart:setInventoryItem(nil)
+                vehicle:transmitPartItem(vehiclePart)
+                vehicle:updatePartStats()
+            end
+        end
+    end
+end
+
+BanditServer.Commands.VehiclePartDamage = function(player, args)
+    local sq = getCell():getGridSquare(args.x, args.y, 0)
+    if sq then
+        local vehicle = sq:getVehicleContainer()
+        if vehicle then
+            local vehiclePart = vehicle:getPartById(args.id)
+            if vehiclePart then
+                vehiclePart:damage(args.dmg)
+
+                if vehiclePart:getCondition() <= 0 then
+                    vehiclePart:setInventoryItem(nil)
+                    vehicle:transmitPartItem(vehiclePart)
+                else
+                    vehicle:transmitPartCondition(vehiclePart)
+                end
+                vehicle:updatePartStats()
+            end
+        end
+    end
+end
+
 -- main
 local onClientCommand = function(module, command, player, args)
     if BanditServer[module] and BanditServer[module][command] then

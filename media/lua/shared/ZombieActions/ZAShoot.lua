@@ -519,17 +519,26 @@ local function ManageLineOfFire (shooter, victim)
 
                         if vehiclePart and vehiclePart:getInventoryItem() then
                             
+                            local vehiclePartId = vehiclePart:getId()
+
                             if vehiclePart:getCondition() <= 0 then
                                 vehiclePart:setInventoryItem(nil)
-                                vehicle:transmitPartItem(vehiclePart)
                             end
 
                             if partRandom <= 4 then
-                                vehiclePart:damage(20+ZombRand(5))
+                                local dmg = 20 + ZombRand(5)
+                                vehiclePart:damage(dmg)
+                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+
                                 square:playSound("BreakGlassItem")
                                 return false
                             elseif partRandom <= 12 then
-                                vehiclePart:damage(20+ZombRand(10))
+                                local dmg = 20 + ZombRand(10)
+                                vehiclePart:damage(dmg)
+                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+
                                 if vehiclePart:getCondition() <= 0 then
                                     square:playSound("SmashWindow")
                                 else
@@ -537,20 +546,27 @@ local function ManageLineOfFire (shooter, victim)
                                     return false
                                 end
                             elseif partRandom <= 17 then
-                                vehiclePart:damage(15+ZombRand(5))
+                                local dmg = 15 + ZombRand(5)
+                                vehiclePart:damage(dmg)
+                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+
                                 square:playSound("HitVehiclePartWithWeapon")
                                 if vehiclePart:getCondition() > 0 then
                                     return false
                                 end
                             elseif partRandom <= 21 then
-                                vehiclePart:damage(10+ZombRand(30))
+                                local dmg = 10 + ZombRand(30)
+                                vehiclePart:damage(dmg)
+                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+
                                 if vehiclePart:getCondition() <= 0 then
                                     square:playSound("VehicleTireExplode")
                                 end
                                 return false
                             end
 
-                            vehicle:transmitPartCondition(vehiclePart)
 			                vehicle:updatePartStats()
                         end
 
