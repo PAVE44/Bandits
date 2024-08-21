@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSdefaultStaggerBack</m_Name>
+	<m_AnimName>Bob_StaggerBack_3m</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_Looped>false</m_Looped>
+	<m_SpeedScale>0.75</m_SpeedScale>
+	<m_BlendTime>0.40</m_BlendTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>hitforce</m_Name>
+		<m_Type>GTR</m_Type>
+		<m_FloatValue>0.4</m_FloatValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>SetState</m_EventName>
+		<m_Time>Start</m_Time>
+		<m_ParameterValue></m_ParameterValue>
+	</m_Events>
+</animNode>

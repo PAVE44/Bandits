@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSdefaultStaggerBack.xml">
+	<m_Name>ZSfromleft</m_Name>
+	<m_AnimName>Bob_StrafeLeft</m_AnimName>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions />
+	<m_Conditions>
+		<m_Name>playerattackposition</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>LEFT</m_StringValue>
+	</m_Conditions>
+</animNode>
