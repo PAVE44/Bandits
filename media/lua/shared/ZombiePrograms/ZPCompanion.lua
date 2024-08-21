@@ -128,8 +128,13 @@ ZombiePrograms.Companion.Follow = function(bandit)
         local minDist = 4
         if dist > minDist then
             local id = BanditUtils.GetCharacterID(bandit)
-            local dx = master:getX() + (id % 4) - 2
-            local dy = master:getY() + (id % 5) - 2.5
+
+            local theta = master:getDirectionAngle() * math.pi / 180
+            local lx = 3 * math.cos(theta)
+            local ly = 3 * math.sin(theta)
+
+            local dx = master:getX() - lx
+            local dy = master:getY() - ly
             local dz = master:getZ()
             local dxf = ((id % 10) - 5) / 10
             local dyf = ((id % 11) - 5) / 10
