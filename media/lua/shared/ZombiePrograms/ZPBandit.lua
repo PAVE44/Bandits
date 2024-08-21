@@ -1,5 +1,39 @@
 ZombiePrograms = ZombiePrograms or {}
 
+local function GetMoveTask(endurance, x, y, z, walkType, dist)
+    -- Move and GoTo generally do the same thing with a different method
+    -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
+    -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
+
+    local gamemode = getWorld():getGameMode()
+    local task
+    if gamemode == "Multiplayer" then
+        if dist > 30 then
+            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        else
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        end
+    else
+        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+    end
+    return task
+end
+
+local function IsWater(square)
+    local objects = square:getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        local properties = object:getProperties()
+        if properties then
+            local water = properties:Is(IsoFlagType.water)
+            if water then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 ZombiePrograms.Bandit = {}
 ZombiePrograms.Bandit.Stages = {}
 
@@ -98,15 +132,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                         if SandboxVars.Bandits.General_GeneratorCutoff then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
-                                
-                                local gamemode = getWorld():getGameMode()
-                                local task
-                                if gamemode == "Multiplayer" then
-                                    task = {action="GoTo", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
-                                else
-                                    task = {action="Move", time=50, x=bandit:getX() + x, y=bandit:getY() + y, z=z, walkType=walkType}
-                                end
-                                table.insert(tasks, task)
+                                table.insert(tasks, GetMoveTask(endurance, bandit:getX()+x, bandit:getY()+y, z, walkType, 12))
                                 return {status=true, next="TurnOffGenerator", tasks=tasks}
                             end
                         end
@@ -124,12 +150,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                                 local vpx = vehiclePartSquare:getX()
                                 local vpy = vehiclePartSquare:getY()
                                 local vpz = vehiclePartSquare:getZ()
-                                if gamemode == "Multiplayer" then
-                                    task = {action="GoTo", time=50, x=vx, y=vy, z=vz, walkType=walkType}
-                                else
-                                    task = {action="Move", time=50, x=vx, y=vy, z=vz, walkType=walkType}
-                                end
-                                table.insert(tasks, task)
+
+                                table.insert(tasks, GetMoveTask(endurance, vx, vy, vz, walkType, 12))
                                 return {status=true, next="SabotageVehicle", tasks=tasks}
                             end
                         end
@@ -202,7 +224,34 @@ ZombiePrograms.Bandit.Follow = function(bandit)
 
         if target.dist > minDist then
 
-            -- if target.dist < 3 then walkType = "Walk" end
+            -- detect water to build a bridge
+            if SandboxVars.Bandits.General_BuildBridge then 
+                local path = BanditUtils.Bresenham(math.floor(bandit:getX() + 0.5), math.floor(bandit:getY() + 0.5), math.floor(target.x + 0.5), math.floor(target.y + 0.5))
+                local last = {}
+                for _, coords in pairs(path) do
+                    local square = cell:getGridSquare(coords.x, coords.y, 0)
+                    if square then
+                        if IsWater(square) then
+                            -- local as = AdjacentFreeTileFinder.Find(square, bandit)
+                            if last.x and last.y then
+                                -- print ("go build bridge from x: " .. last.x .. " y: " .. last.y .. " to x:" .. coords.x .. " y:" .. coords.y)
+                                table.insert(tasks, GetMoveTask(endurance, last.x, last.y, 0, walkType, target.dist))
+
+                                if math.floor(bandit:getX()) == last.x and math.floor(bandit:getY()) == last.y then
+                                    -- in position
+                                    return {status=true, next="BuildBridge", tasks=tasks}
+                                else
+                                    --not there yet
+                                    return {status=true, next="Follow", tasks=tasks}
+                                end
+                            end
+                        else
+                            last = coords
+                        end
+                        
+                    end
+                end
+            end
 
             -- must be deterministic, not random (same for all clients)
             local id = BanditUtils.GetCharacterID(bandit)
@@ -212,23 +261,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
             local dxf = ((id % 10) - 5) / 10
             local dyf = ((id % 11) - 5) / 10
 
-            -- Move and GoTo generally do the same thing with a different method
-            -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
-            -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
-            local gamemode = getWorld():getGameMode()
-            local task
-            if gamemode == "Multiplayer" then
-                if target.dist > 30 then
-                    task = {action="Move", time=25, endurance=endurance, x=target.x+dx+dxf, y=target.y+dy+dyf, z=target.z, walkType=walkType}
-                else
-                    task = {action="GoTo", time=50, endurance=endurance, x=target.x+dx+dxf, y=target.y+dy+dyf, z=target.z, walkType=walkType}
-                end
-            else
-                task = {action="Move", time=50, endurance=endurance, x=target.x - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), y=target.y - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), z=target.z, walkType=walkType}
-                -- task = {action="Move", time=50, x=x+dx+dxf, y=y+dy+dyf, z=z, walkType=walkType}
-            end
-            table.insert(tasks, task)
 
+            table.insert(tasks, GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist))
         end
     else
         local task = {action="Time", anim="Shrug", time=200}
@@ -275,9 +309,11 @@ ZombiePrograms.Bandit.Escape = function(bandit)
         return {status=true, next="Surrender", tasks=tasks}
     end
 
+    local endurance = -0.06
     local walkType = "Run"
     if health < 0.4 then
         walkType = "Limp"
+        endurance = 0
     end
 
     local handweapon = bandit:getVariableString("BanditWeapon")
@@ -295,14 +331,7 @@ ZombiePrograms.Bandit.Escape = function(bandit)
         if rx == 1 then deltaX = -deltaX end
         if ry == 1 then deltaY = -deltaY end
 
-        local gamemode = getWorld():getGameMode()
-        local task
-        if gamemode == "Multiplayer" then
-            task = {action="GoTo", time=250, x=x+deltaX, y=y+deltaY, z=0, walkType=walkType}
-        else
-            task = {action="Move", time=250, x=x+deltaX, y=y+deltaY, z=0, walkType=walkType}
-        end
-        table.insert(tasks, task)
+        table.insert(tasks, GetMoveTask(endurance, x+deltaX, y+deltaY, 0, walkType, 12))
     end
     return {status=true, next="Escape", tasks=tasks}
 end
@@ -399,3 +428,23 @@ ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
     end
 end
 
+ZombiePrograms.Bandit.BuildBridge = function(bandit)
+    local tasks = {}
+
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            local square = getCell():getGridSquare(bandit:getX() + dx, bandit:getY() + dy, bandit:getZ())
+            if square then
+                if IsWater(square) then
+                    local task = {action="Equip", itemPrimary="Base.Hammer", itemSecondary=nil}
+                    table.insert(tasks, task)
+                
+                    local task = {action="BuildFloor", anim="HammerLow", sound="Hammering", x=square:getX(), y=square:getY(), time=500}
+                    table.insert(tasks, task)
+                    return {status=true, next="BuildBridge", tasks=tasks}
+                end
+            end
+        end
+    end
+    return {status=true, next="Follow", tasks=tasks}
+end

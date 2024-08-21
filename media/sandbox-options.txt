@@ -57,6 +57,11 @@ option Bandits.General_GeneratorCutoff = {
     page = Bandits_General, translation = Bandits.GeneratorCutoff,
 }
 
+option Bandits.General_BuildBridge = {
+    type = boolean, default = false,
+    page = Bandits_General, translation = Bandits.BuildBridge,
+}
+
 option Bandits.General_Speak = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.Speak,
