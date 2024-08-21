@@ -84,7 +84,7 @@ function BanditMenu.SetHumanVisuals (player, zombie)
     end
 end
 
-function BanditMenu.VehicleTest (player, vehicle)
+function BanditMenu.VehicleTest (player, square)
     -- vehicle:tryStartEngine(true)
     -- vehicle:engineDoStartingSuccess()
     -- vehicle:engineDoRunning()
@@ -96,6 +96,7 @@ function BanditMenu.VehicleTest (player, vehicle)
     local forwardVector = Vector3f.new(vx, vy, 0)
     zombie:enterVehicle(vehicle, 0, forwardVector)]]
 
+    --[[
     local square = getCell():getGridSquare(player:getX(), player:getY(), player:getZ())
     local obj = IsoObject.new(square, "Base.Generator", "")
 
@@ -120,6 +121,7 @@ function BanditMenu.VehicleTest (player, vehicle)
 
     --carController:accelerator(true)
     --local t = carController:getClientControls()
+    ]]
 
 end
 
@@ -220,6 +222,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
         context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
+        -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
         
     end
 end

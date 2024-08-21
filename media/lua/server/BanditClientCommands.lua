@@ -152,6 +152,28 @@ BanditServer.Commands.ToggleDoor = function(player, args)
     end
 end
 
+BanditServer.Commands.VehicleSpawn = function(player, args)
+    local square = getCell():getGridSquare(args.x, args.y, 0)
+    if square then
+        local vehicle = addVehicleDebug(args.type, IsoDirections.S, nil, square)
+        if vehicle then
+            for i = 0, vehicle:getPartCount() - 1 do
+                local container = vehicle:getPartByIndex(i):getItemContainer()
+                if container then
+                    container:removeAllItems()
+                end
+            end
+            vehicle:repair()
+            vehicle:tryStartEngine(true)
+            vehicle:engineDoStartingSuccess()
+            vehicle:engineDoRunning()
+            vehicle:setHeadlightsOn(true)
+            vehicle:setLightbarLightsMode(3)
+            vehicle:setLightbarSirenMode(3)
+        end
+    end
+end
+
 BanditServer.Commands.VehiclePartRemove = function(player, args)
     local sq = getCell():getGridSquare(args.x, args.y, 0)
     if sq then

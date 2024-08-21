@@ -37,6 +37,7 @@ end
 function BanditBasePlacements.IsoObject (sprite, x, y, z)
     local square = GetOrCreateSquare(x, y, z)
     if not square then return end
+    if not square:isFree(false) then return end
     local obj = IsoObject.new(square, sprite, "")
 	square:AddSpecialObject(obj)
 	obj:transmitCompleteItemToServer()

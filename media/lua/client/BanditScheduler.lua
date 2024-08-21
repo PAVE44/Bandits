@@ -113,6 +113,27 @@ function BanditScheduler.GetWaveDataForDay(day)
     return waveDataForDay
 end
 
+function BanditScheduler.GetGroundType(square)
+    local groundType = "generic"
+    local objects = square:getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        if object then
+            local sprite = object:getSprite()
+            if sprite then
+                local spriteName = sprite:getName()
+                if spriteName then
+                    if spriteName:embodies("street") then
+                        groundType = "street"
+                    end
+                end
+            end
+        end
+    end
+    return groundType
+end
+
+
 function BanditScheduler.GenerateSpawnPoint(player, d)
     local spawnPoints = {}
     local validSpawnPoints = {}
@@ -192,6 +213,7 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
             elseif isTooCloseToPlayer(sp.x, sp.y) then
                 print("[INFO] Spawn is too close to one of the players, skipping.")
             else
+                sp.groundType = BanditScheduler.GetGroundType(square)
                 table.insert(validSpawnPoints, sp)
             end
         end
@@ -342,12 +364,12 @@ function BanditScheduler.SpawnWave(player, wave)
                 emitter:playSound(arrivalSound)
             end
 
-            if SandboxVars.Bandits.General_ArrivalWakeUp then
+            if SandboxVars.Bandits.General_ArrivalWakeUp and event.hostile then
                 player:forceAwake()
             end
             -- player:Say("Bandits are coming!")
 
-            if SandboxVars.Bandits.General_ArrivaPanic then
+            if SandboxVars.Bandits.General_ArrivaPanic and event.hostile then
                 local stats = player:getStats()
                 stats:setPanic(80)
             end
@@ -365,6 +387,47 @@ function BanditScheduler.SpawnWave(player, wave)
                 end
 
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/crew.png", 10, event.x, event.y, color)
+            end
+
+            if event.hostile and spawnPoint.groundType == "street" then
+
+                local xcnt = 0
+                for x=spawnPoint.x-20, spawnPoint.x+20 do
+                    local square = getCell():getGridSquare(x, spawnPoint.y, 0)
+                    if square then
+                        local gt = BanditScheduler.GetGroundType(square)
+                        if gt == "street" then xcnt = xcnt + 1 end
+                    end
+                end
+
+                local ycnt = 0
+                for y=spawnPoint.y-20, spawnPoint.y+20 do
+                    local square = getCell():getGridSquare(spawnPoint.x, y, 0)
+                    if square then
+                        local gt = BanditScheduler.GetGroundType(square)
+                        if gt == "street" then ycnt = ycnt + 1 end
+                    end
+                end
+
+                local xm = 0
+                local ym = 0
+                local sprite
+                if xcnt > ycnt then 
+                    -- ywide
+                    ym = 1
+                    sprite = "construction_01_9"
+                else
+                    -- xwide
+                    xm = 1
+                    sprite = "construction_01_8"
+                end
+
+                local args = {type="Base.PickUpTruckLightsFire", x=spawnPoint.x-ym*3, y=spawnPoint.y-xm*3}
+
+                sendClientCommand(player, 'Commands', 'VehicleSpawn', args)
+                for b=-4, 4, 2 do
+                    BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
+                end
             end
         end
     end  
@@ -531,13 +594,15 @@ function BanditScheduler.FindBuilding(character, min, max)
                                                 local object = objects:get(i)
                                                 if object then
                                                     local sprite = object:getSprite()
-                                                    local spriteName = sprite:getName()
-                                                    if sprite then 
-                                                        local isBed = sprite:getProperties():Is(IsoFlagType.bed)
-                                                        if isBed then
-                                                            ret.bed.x = x
-                                                            ret.bed.y = y-1
-                                                            break
+                                                    if sprite then
+                                                        local spriteName = sprite:getName()
+                                                        if spriteName then 
+                                                            local isBed = sprite:getProperties():Is(IsoFlagType.bed)
+                                                            if isBed then
+                                                                ret.bed.x = x
+                                                                ret.bed.y = y-1
+                                                                break
+                                                            end
                                                         end
                                                     end
                                                 end
