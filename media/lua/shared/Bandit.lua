@@ -389,10 +389,13 @@ function Bandit.Say(zombie, phrase)
                 sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
                 length = 4
             elseif phrase == "CAR" then
-                sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
+                sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
                 length = 4
             elseif phrase == "DEATH" then
                 sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
+                length = 6
+            elseif phrase == "DEAD" then
+                sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
                 length = 6
             elseif phrase == "INSIDE" then
                 sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
