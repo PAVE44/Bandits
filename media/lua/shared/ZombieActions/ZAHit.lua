@@ -7,7 +7,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
     
-    if dist < item:getMaxRange() + 0.4 then
+    if dist < item:getMaxRange() + 0.5 then
         victim:forceAwake()
 
         local hitSound
@@ -53,8 +53,8 @@ ZombieActions.Hit.onStart = function(zombie, task)
         local attacks = false
         if meleeItemType == WeaponType.twohanded then
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
-        elseif meleeItemType == WeaponType.heavy then
-            attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
+        -- elseif meleeItemType == WeaponType.heavy then
+        --    attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
         elseif meleeItemType == WeaponType.onehanded then
             attacks = {"Attack1H1", "Attack1H2", "Attack1H3", "Attack1H4", "Attack1H5"}
         elseif meleeItemType == WeaponType.spear then
@@ -88,7 +88,7 @@ end
 ZombieActions.Hit.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
 
-    if task.time == 45 then
+    if task.time == 38 then
         local cell = zombie:getSquare():getCell()
         local square = cell:getGridSquare(task.x, task.y, task.z)
         if square then
@@ -113,8 +113,7 @@ ZombieActions.Hit.onWorking = function(zombie, task)
         return false
     elseif task.time < 50 then
 
-        local asn = zombie:getActionStateName()
-        if asn == "bumped" then
+        if not zombie:getVariableString("BumpAnimFinished") then
             return false
         else
             return true

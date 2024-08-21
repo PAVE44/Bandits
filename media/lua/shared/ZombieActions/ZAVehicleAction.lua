@@ -19,8 +19,7 @@ end
 
 ZombieActions.VehicleAction.onWorking = function(zombie, task)
     zombie:faceLocation(task.px, task.py)
-    local asn = zombie:getActionStateName()
-    if asn == "bumped" then
+    if not zombie:getVariableString("BumpAnimFinished") then
         return false
     else
         return true

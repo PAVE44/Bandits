@@ -44,11 +44,9 @@ ZombieActions.Bandage.onStart = function(zombie, task)
 end
 
 ZombieActions.Bandage.onWorking = function(zombie, task)
-    local asn = zombie:getActionStateName()
-    if asn == "bumped" then
+    if not zombie:getVariableString("BumpAnimFinished") then
         return false
     else
-        Heal(zombie)
         return true
     end
 end

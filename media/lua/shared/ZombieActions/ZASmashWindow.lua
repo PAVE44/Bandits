@@ -6,7 +6,11 @@ ZombieActions.SmashWindow.onStart = function(zombie, task)
 end
 
 ZombieActions.SmashWindow.onWorking = function(zombie, task)
-    return false
+    if not zombie:getVariableString("BumpAnimFinished") then
+        return false
+    else
+        return true
+    end
 end
 
 ZombieActions.SmashWindow.onComplete = function(zombie, task)

@@ -18,6 +18,7 @@ end
 
 ZombieActions.GoTo.onWorking = function(zombie, task)
     zombie:setVariable("BanditWalkType", task.walkType)
+
     -- zombie:setWalkType(task.walkType)
     return false
 end
