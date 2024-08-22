@@ -563,6 +563,77 @@ module BanditsVoiceMale5 {
         } 
     }
 
+    sound ZSBurn_Male_5_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/burn_male_5_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBurn_Male_5_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/burn_male_5_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBurn_Male_5_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/burn_male_5_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_5_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/dragdown_male_5_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_5_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/dragdown_male_5_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_5_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_5/dragdown_male_5_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
 
     sound ZSInside_Male_5_1 {
         category = Object, 

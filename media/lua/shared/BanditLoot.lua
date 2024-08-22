@@ -52,12 +52,14 @@ table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Pills", 9))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Lighter", 21))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.HolsterSimple", 11))
 
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+if not getActivatedMods():contains("Smoker") then
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+end
 
 -- food items
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.TinnedBeans", 1))

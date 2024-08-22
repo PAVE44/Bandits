@@ -10,7 +10,7 @@ BanditMap.Update = function(numberTicks)
     BanditMap.ZMap = {}
     BanditMap.BMap = {}
 
-    for i=1, zombieList:size()-1 do
+    for i=0, zombieList:size()-1 do
         local zombie = zombieList:get(i)
         if zombie:isAlive() then
             local id = BanditUtils.GetCharacterID(zombie)

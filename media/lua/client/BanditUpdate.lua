@@ -695,7 +695,8 @@ function BanditUpdate.Combat(bandit)
             local anim
             if enemyCharacter:isAlive() then
                 local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground"
-                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.2, weapon=weapons.melee, prone=prone, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local eid = BanditUtils.GetCharacterID(enemyCharacter)
+                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.2, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             elseif instanceof(enemyCharacter, "IsoPlayer") then
                 local task = {action="Time", anim="Smoke", time=250}
@@ -797,7 +798,36 @@ function BanditUpdate.Combat(bandit)
     return tasks
 end
 
+function BanditUpdate.SocialDistance(bandit)
+    local world = getWorld()
+    local gamemode = world:getGameMode()
+
+    local playerList = {}
+    if gamemode == "Multiplayer" then
+        playerList = getOnlinePlayers()
+    else
+        playerList = IsoPlayer.getPlayers()
+    end
+
+    if not Bandit.IsHostile(bandit) then
+        for i=0, playerList:size()-1 do
+            local player = playerList:get(i)
+            if player then
+                local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
+                
+                if bandit:getZ() == player:getZ() and dist < 4 then
+                    if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
+                        Bandit.SetProgram(bandit, "CompanionGuard", {})
+                    end
+                end
+            end
+        end
+    end
+end
+
 function BanditUpdate.Zombie(zombie)
+
+    zombie:setVariable("NoLungeAttack", true)
 
     local zx = zombie:getX()
     local zy = zombie:getY()
@@ -868,7 +898,7 @@ function BanditUpdate.Zombie(zombie)
                         end
                     end
                 else
-                    zombie:setVariable("NoLungeAttack", false)
+                    -- zombie:setVariable("NoLungeAttack", false)
                 end
             end
         end
@@ -965,6 +995,9 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- ACTION STATE TWEAKS
     local continue = BanditUpdate.ActionState(bandit)
     if not continue then return end
+
+    -- COMPANION SOCIAL DISTANCE HACK
+    BanditUpdate.SocialDistance(bandit)
 
      ------------------------------------------------------------------------------------------------------------------------------------
     -- TASKBUILDER

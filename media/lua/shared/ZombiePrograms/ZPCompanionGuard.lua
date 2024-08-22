@@ -52,8 +52,36 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
     -- at guardpost, switch program
     local atGuardpost = BanditGuardpost.At(bandit)
     if not atGuardpost then
-        Bandit.SetProgram(bandit, "Companion", {})
-        return {status=true, next="Prepare", tasks=tasks}
+
+        --maybe this is a temporary guard post used for social distance
+        local temporaryGuardpost = false
+        local world = getWorld()
+        local gamemode = world:getGameMode()
+
+        local playerList = {}
+        if gamemode == "Multiplayer" then
+            playerList = getOnlinePlayers()
+        else
+            playerList = IsoPlayer.getPlayers()
+        end
+
+        if not Bandit.IsHostile(bandit) then
+            for i=0, playerList:size()-1 do
+                local player = playerList:get(i)
+                if player then
+                    local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
+                    
+                    if bandit:getZ() == player:getZ() and dist < 4 then
+                        temporaryGuardpost = true
+                    end
+                end
+            end
+        end
+        
+        if not temporaryGuardpost then
+            Bandit.SetProgram(bandit, "Companion", {})
+            return {status=true, next="Prepare", tasks=tasks}
+        end
     end
     
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
