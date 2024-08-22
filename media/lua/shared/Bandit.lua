@@ -247,6 +247,8 @@ function Bandit.Has(zombie, item)
 end
 
 function Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    if not BanditUtils.IsController(zombie) then return end
+    
     local brain = BanditBrain.Get(zombie)
     local weapons = brain.weapons
     --zombie:setPrimaryHandItem(nil)

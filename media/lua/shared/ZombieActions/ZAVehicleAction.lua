@@ -27,30 +27,28 @@ ZombieActions.VehicleAction.onWorking = function(zombie, task)
 end
 
 ZombieActions.VehicleAction.onComplete = function(zombie, task)
-    if BanditUtils.IsController(zombie) then
-        
-        local vehicle = getCell():getGridSquare(task.vx, task.vy, 0):getVehicleContainer()
-        if vehicle then
-            local vehiclePart = vehicle:getPartById(task.id)
-            if vehiclePart then
-                if task.subaction == "Uninstall" then
-                    local item = vehiclePart:getInventoryItem()
-                    if item then
+    local vehicle = getCell():getGridSquare(task.vx, task.vy, 0):getVehicleContainer()
+    if vehicle then
+        local vehiclePart = vehicle:getPartById(task.id)
+        if vehiclePart then
+            if task.subaction == "Uninstall" then
+                local item = vehiclePart:getInventoryItem()
+                if item then
+                    if BanditUtils.IsController(zombie) then
                         zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-
-                        if task.area == "TireRearLeft" or task.area == "TireRearRight" or task.area == "TireFrontLeft" or task.area == "TireFrontRight" then
-                            vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
-                            vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
-                        end
-                        vehicle:updatePartStats()
-
-                        local args = {x=task.vx, y=task.vy, id=task.id}
-                        sendClientCommand(getPlayer(), 'Commands', 'VehiclePartRemove', args)
                     end
+
+                    if task.area == "TireRearLeft" or task.area == "TireRearRight" or task.area == "TireFrontLeft" or task.area == "TireFrontRight" then
+                        vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
+                        vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
+                    end
+                    vehicle:updatePartStats()
+
+                    local args = {x=task.vx, y=task.vy, id=task.id}
+                    sendClientCommand(getPlayer(), 'Commands', 'VehiclePartRemove', args)
                 end
             end
         end
-        
     end
     
     return true
