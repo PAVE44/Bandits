@@ -124,23 +124,23 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     -- go to player
-    if true then
-        local minDist = 4
-        if dist > minDist then
-            local id = BanditUtils.GetCharacterID(bandit)
 
-            local theta = master:getDirectionAngle() * math.pi / 180
-            local lx = 3 * math.cos(theta)
-            local ly = 3 * math.sin(theta)
+    local minDist = 4
+    if dist > minDist then
+        local id = BanditUtils.GetCharacterID(bandit)
 
-            local dx = master:getX() - lx
-            local dy = master:getY() - ly
-            local dz = master:getZ()
-            local dxf = ((id % 10) - 5) / 10
-            local dyf = ((id % 11) - 5) / 10
-            table.insert(tasks, GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
-        end
+        local theta = master:getDirectionAngle() * math.pi / 180
+        local lx = 3 * math.cos(theta)
+        local ly = 3 * math.sin(theta)
+
+        local dx = master:getX() - lx
+        local dy = master:getY() - ly
+        local dz = master:getZ()
+        local dxf = ((id % 10) - 5) / 10
+        local dyf = ((id % 11) - 5) / 10
+        table.insert(tasks, GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
     end
+
 
     return {status=true, next="Follow", tasks=tasks}
 end

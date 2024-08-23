@@ -2,4 +2,3 @@ name=Bandits
 poster=poster.png
 id=Bandits
 description=Adds armed hostile bandits to the game
-require=modoptions
