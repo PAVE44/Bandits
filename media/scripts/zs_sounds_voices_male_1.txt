@@ -623,6 +623,78 @@ module BanditsVoiceMale1 {
         } 
     }
 
+    sound ZSBurn_Male_1_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/burn_male_1_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBurn_Male_1_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/burn_male_1_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSBurn_Male_1_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/burn_male_1_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_1_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dragdown_male_1_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_1_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dragdown_male_1_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDragdown_Male_1_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dragdown_male_1_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
     sound ZSInside_Male_1_1 {
         category = Object, 
         loop = false
