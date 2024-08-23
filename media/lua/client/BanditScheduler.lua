@@ -389,44 +389,64 @@ function BanditScheduler.SpawnWave(player, wave)
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/crew.png", 10, event.x, event.y, color)
             end
 
-            if event.hostile and spawnPoint.groundType == "street" then
+            -- road block spawn
+            if event.hostile and spawnPoint.groundType == "street" and ZombRand(4) == 1 then
 
-                local xcnt = 0
-                for x=spawnPoint.x-20, spawnPoint.x+20 do
-                    local square = getCell():getGridSquare(x, spawnPoint.y, 0)
-                    if square then
-                        local gt = BanditScheduler.GetGroundType(square)
-                        if gt == "street" then xcnt = xcnt + 1 end
+                -- check space
+                local allfree = true
+                for x=spawnPoint.x-4, spawnPoint.x+4 do
+                    for y=spawnPoint.y-4, spawnPoint.y+4 do
+                        local testSquare = getCell():getGridSquare(x, y, 0)
+                        if testSquare then
+                            if not testSquare:isFree(false) then allfree = false end
+                            
+                            local testVeh = testSquare:getVehicleContainer()
+                            if testVeh then allfree = false end
+                        else
+                            allfree = false
+                        end
                     end
                 end
-
-                local ycnt = 0
-                for y=spawnPoint.y-20, spawnPoint.y+20 do
-                    local square = getCell():getGridSquare(spawnPoint.x, y, 0)
-                    if square then
-                        local gt = BanditScheduler.GetGroundType(square)
-                        if gt == "street" then ycnt = ycnt + 1 end
+                
+                if allfree then
+                    local xcnt = 0
+                    for x=spawnPoint.x-20, spawnPoint.x+20 do
+                        local square = getCell():getGridSquare(x, spawnPoint.y, 0)
+                        if square then
+                            local gt = BanditScheduler.GetGroundType(square)
+                            if gt == "street" then xcnt = xcnt + 1 end
+                        end
                     end
-                end
 
-                local xm = 0
-                local ym = 0
-                local sprite
-                if xcnt > ycnt then 
-                    -- ywide
-                    ym = 1
-                    sprite = "construction_01_9"
-                else
-                    -- xwide
-                    xm = 1
-                    sprite = "construction_01_8"
-                end
+                    local ycnt = 0
+                    for y=spawnPoint.y-20, spawnPoint.y+20 do
+                        local square = getCell():getGridSquare(spawnPoint.x, y, 0)
+                        if square then
+                            local gt = BanditScheduler.GetGroundType(square)
+                            if gt == "street" then ycnt = ycnt + 1 end
+                        end
+                    end
 
-                local args = {type="Base.PickUpTruckLightsFire", x=spawnPoint.x-ym*3, y=spawnPoint.y-xm*3}
+                    local xm = 0
+                    local ym = 0
+                    local sprite
+                    if xcnt > ycnt then 
+                        -- ywide
+                        ym = 1
+                        sprite = "construction_01_9"
+                    else
+                        -- xwide
+                        xm = 1
+                        sprite = "construction_01_8"
+                    end
 
-                sendClientCommand(player, 'Commands', 'VehicleSpawn', args)
-                for b=-4, 4, 2 do
-                    BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
+                    local carOpts = {"Base.PickUpTruck", "Base.PickUpVan", "Base.VanSeats"}
+                    local args = {type=BanditUtils.Choice(carOpts), x=spawnPoint.x-ym*3, y=spawnPoint.y-xm*3, engine=true, lights=true, lightbar=true}
+                    sendClientCommand(player, 'Commands', 'VehicleSpawn', args)
+                    
+                    for b=-4, 4, 2 do
+                        BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
+                    end
                 end
             end
         end

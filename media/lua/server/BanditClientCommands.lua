@@ -164,12 +164,28 @@ BanditServer.Commands.VehicleSpawn = function(player, args)
                 end
             end
             vehicle:repair()
-            vehicle:tryStartEngine(true)
-            vehicle:engineDoStartingSuccess()
-            vehicle:engineDoRunning()
-            vehicle:setHeadlightsOn(true)
-            vehicle:setLightbarLightsMode(3)
-            vehicle:setLightbarSirenMode(3)
+            vehicle:setColor(0, 0, 0)
+
+            if ZombRand(3) == 1 then
+                vehicle:setAlarmed(true)
+            end
+
+            local cond = (2 + ZombRand(8)) / 10
+            vehicle:setGeneralPartCondition(cond, 80)
+            if args.engine then
+                vehicle:tryStartEngine(true)
+                vehicle:engineDoStartingSuccess()
+                vehicle:engineDoRunning()
+            end
+
+            if args.lights then
+                vehicle:setHeadlightsOn(true)
+            end
+
+            if args.lightbar or args.siren or args.alarm then
+                local newargs = {id=vehicle:getId(), lightbar=args.lightbar, siren=args.siren, alarm=args.alarm}
+                sendServerCommand('Commands', 'UpdateVehicle', newargs)
+            end
         end
     end
 end
