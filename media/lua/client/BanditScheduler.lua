@@ -390,7 +390,7 @@ function BanditScheduler.SpawnWave(player, wave)
             end
 
             -- road block spawn
-            if event.hostile and spawnPoint.groundType == "street" then
+            if event.hostile and spawnPoint.groundType == "street" and ZombRand(4) == 1 then
 
                 -- check space
                 local allfree = true
