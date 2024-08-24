@@ -90,7 +90,7 @@ function BanditScheduler.GetWaveDataAll()
         wave.spawnDistance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnDistance"]
         wave.spawnHourlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnHourlyChance"]
         wave.groupSize = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupSize"]
-        wave.groupName = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupName"]
+        wave.clanId = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupName"]
         wave.hasPistolChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasPistolChance"]
         wave.pistolMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_PistolMagCount"]
         wave.hasRifleChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasRifleChance"]
@@ -290,7 +290,6 @@ end
 
 function BanditScheduler.SpawnWave(player, wave)
     local event = {}
-    event.name = wave.groupName
     event.occured = false
     event.program = {}
 
@@ -316,15 +315,14 @@ function BanditScheduler.SpawnWave(player, wave)
     event.bandits = {}
     
     for i=1, wave.groupSize do
-        local groupName = wave.groupName
-        local bandit = BanditCreator.GroupMap[groupName](wave)
+        local bandit = BanditCreator.Make(wave)
         table.insert(event.bandits, bandit)
     end
 
     if #event.bandits > 0 then
         local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, wave.spawnDistance)
         if spawnPoint then
-            print ("SPAWNING ATTACK GROUP " .. event.name .. " FOR PLAYER: " .. BanditUtils.GetCharacterID(player))
+            print ("SPAWNING ATTACK CLAN AGAINST PLAYER: " .. BanditUtils.GetCharacterID(player))
             event.x = spawnPoint.x
             event.y = spawnPoint.y
 
