@@ -44,7 +44,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
     local gameTime = getGameTime()
     local hour = gameTime:getHour()
     local spotDist = 30
-    if true or (gameTime:getHour() >= 0 and gameTime:getHour() < 7) or (gameTime:getHour() >= 13 and gameTime:getHour() < 14) then
+    if (gameTime:getHour() >= 0 and gameTime:getHour() < 7) or (gameTime:getHour() >= 13 and gameTime:getHour() < 14) then
         -- sleeping
         spotDist = 10
         Bandit.SetSleeping(bandit, true)

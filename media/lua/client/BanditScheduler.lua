@@ -312,26 +312,6 @@ function BanditScheduler.SpawnWave(player, wave)
                 stats:setPanic(80)
             end
 
-            sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-            if SandboxVars.Bandits.General_ArrivalIcon then
-                local color
-                local icon
-                if event.hostile then
-                    if event.program.name == "Bandit" then
-                        icon = "media/ui/raid.png"
-                        color = {r=1, g=0.5, b=0.5}
-                    else
-                        icon = "media/ui/loot.png"
-                        color = {r=1, g=1, b=0.5}
-                    end
-                else
-                    icon = "media/ui/friend.png"
-                    color = {r=0.5, g=1, b=0.5}
-                end
-
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
-            end
-
             -- road block spawn
             if event.hostile and spawnPoint.groundType == "street" and ZombRand(4) == 1 then
 
@@ -352,6 +332,8 @@ function BanditScheduler.SpawnWave(player, wave)
                 end
                 
                 if allfree then
+                    event.program.name = "BaseGuard"
+
                     local xcnt = 0
                     for x=spawnPoint.x-20, spawnPoint.x+20 do
                         local square = getCell():getGridSquare(x, spawnPoint.y, 0)
@@ -391,6 +373,27 @@ function BanditScheduler.SpawnWave(player, wave)
                         BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
                     end
                 end
+            end
+
+            -- spawn now
+            sendClientCommand(player, 'Commands', 'SpawnGroup', event)
+            if SandboxVars.Bandits.General_ArrivalIcon then
+                local color
+                local icon
+                if event.hostile then
+                    if event.program.name == "Bandit" then
+                        icon = "media/ui/raid.png"
+                        color = {r=1, g=0.5, b=0.5}
+                    else
+                        icon = "media/ui/loot.png"
+                        color = {r=1, g=1, b=0.5}
+                    end
+                else
+                    icon = "media/ui/friend.png"
+                    color = {r=0.5, g=1, b=0.5}
+                end
+
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
             end
         end
     end  
