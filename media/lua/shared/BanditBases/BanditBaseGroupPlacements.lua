@@ -121,11 +121,11 @@ function BanditBaseGroupPlacements.Item (item, x, y, z, w, h, intensity)
                 if n < 3 then q = 1
                 elseif n == 3 then q = 2
                 elseif n == 4 then q = 3
-                elseif n == 5 then q = 5
-                elseif n == 6 then q = 8
-                elseif n == 7 then q = 13
-                elseif n == 8 then q = 21
-                elseif n == 9 then q = 34
+                elseif n == 5 then q = 4
+                elseif n == 6 then q = 6
+                elseif n == 7 then q = 9
+                elseif n == 8 then q = 14
+                elseif n == 9 then q = 17
                 end
 
                 BanditBasePlacements.Item (item, x+cx, y+cy, z, q)
@@ -141,13 +141,13 @@ function BanditBaseGroupPlacements.Blood (x, y, z, w, h, intensity)
 
                 local n = ZombRand(10)
                 if n < 3 then q = 3
-                elseif n == 3 then q = 5
-                elseif n == 4 then q = 8
-                elseif n == 5 then q = 13
-                elseif n == 6 then q = 21
-                elseif n == 7 then q = 34
-                elseif n == 8 then q = 55
-                elseif n == 9 then q = 80
+                elseif n == 3 then q = 2
+                elseif n == 4 then q = 3
+                elseif n == 5 then q = 4
+                elseif n == 6 then q = 6
+                elseif n == 7 then q = 9
+                elseif n == 8 then q = 14
+                elseif n == 9 then q = 17
                 end
 
                 BanditBasePlacements.Blood(x+cx, y+cy, z, q) 

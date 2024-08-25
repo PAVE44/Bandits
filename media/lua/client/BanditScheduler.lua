@@ -133,7 +133,6 @@ function BanditScheduler.GetGroundType(square)
     return groundType
 end
 
-
 function BanditScheduler.GenerateSpawnPoint(player, d)
     local spawnPoints = {}
     local validSpawnPoints = {}
@@ -229,65 +228,6 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
     return false
 end
 
-function BanditScheduler.CheckEvent()
-    
-    local world = getWorld()
-    local gamemode = world:getGameMode()
-    local playerList = {}
-    local currentPlayer = getPlayer()
-    local onlinePlayer 
-
-    -- if true then return end 
-
-    local pid
-    if gamemode == "Multiplayer" then
-        playerList = getOnlinePlayers()
-        pid = ZombRand(playerList:size())
-
-        onlinePlayer = playerList:get(pid)
-    else
-        onlinePlayer = getPlayer()
-    end
-    
-
-    if BanditUtils.GetCharacterID(currentPlayer) == BanditUtils.GetCharacterID(onlinePlayer) then
-
-        -- SPAWN ATTACKING FORCE
-        local daysPassed = currentPlayer:getHoursSurvived() / 24
-        local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
-
-        -- print ("SPAWN ATTEMPT" .. daysPassed)
-        for _, wave in pairs(waveData) do
-
-            local spawnRandom = ZombRandFloat(0, 101)
-            -- print ("spawnRandom" .. spawnRandom)
-            -- print ("spawnHourlyChance" .. wave.spawnHourlyChance / 6)
-            if spawnRandom < wave.spawnHourlyChance / 6 then
-                BanditScheduler.SpawnWave(currentPlayer, wave)
-            end
-        end
-
-        -- SPAWN DEFENDERS
-        local spawnRandom = ZombRandFloat(0, 101)
-        -- print ("DEFEND CHANCE:" ..spawnRandom)
-        local spawnChance = SandboxVars.Bandits.General_DefenderSpawnHourlyChanced or 8
-        if spawnRandom < spawnChance / 6 then
-            print ("SPAWNING DEFENDERS")
-            BanditScheduler.SpawnDefenders(currentPlayer, 45, 100)
-        end
-
-        -- SPAWN BASES
-        local spawnRandom = ZombRandFloat(0, 101)
-        -- print ("DEFEND CHANCE:" ..spawnRandom)
-        local spawnChance = SandboxVars.Bandits.General_BaseSpawnHourlyChance or 0.3
-        if spawnRandom < spawnChance / 6 then
-            print ("SPAWNING BASE")
-            local sceneNo = 1 + ZombRand(#BanditBaseScenes)
-            BanditScheduler.SpawnBase(currentPlayer, sceneNo)
-        end
-    end
-end
-
 function BanditScheduler.SpawnWave(player, wave)
     local event = {}
     event.occured = false
@@ -314,14 +254,15 @@ function BanditScheduler.SpawnWave(player, wave)
     event.program.stage = "Prepare"
     event.bandits = {}
     
-    for i=1, wave.groupSize do
-        local bandit = BanditCreator.Make(wave)
-        table.insert(event.bandits, bandit)
-    end
+    local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, wave.spawnDistance)
+    if spawnPoint then
 
-    if #event.bandits > 0 then
-        local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, wave.spawnDistance)
-        if spawnPoint then
+        for i=1, wave.groupSize do
+            local bandit = BanditCreator.MakeFromWave(wave)
+            table.insert(event.bandits, bandit)
+        end
+    
+        if #event.bandits > 0 then
             print ("SPAWNING ATTACK CLAN AGAINST PLAYER: " .. BanditUtils.GetCharacterID(player))
             event.x = spawnPoint.x
             event.y = spawnPoint.y
@@ -342,7 +283,6 @@ function BanditScheduler.SpawnWave(player, wave)
                 else
                     arrivalSound = "ZSAttack_Small_" .. tostring(1 + ZombRand(21))
                 end
-
                 
                 if event.x < getPlayer():getX() then 
                     arrivalSoundX = getPlayer():getX() - 30
@@ -362,29 +302,34 @@ function BanditScheduler.SpawnWave(player, wave)
                 emitter:playSound(arrivalSound)
             end
 
-            if SandboxVars.Bandits.General_ArrivalWakeUp and event.hostile then
+            if SandboxVars.Bandits.General_ArrivalWakeUp and event.hostile and event.program.name == "Bandit" then
                 player:forceAwake()
             end
             -- player:Say("Bandits are coming!")
 
-            if SandboxVars.Bandits.General_ArrivaPanic and event.hostile then
+            if SandboxVars.Bandits.General_ArrivaPanic and event.hostile and event.program.name == "Bandit" then
                 local stats = player:getStats()
                 stats:setPanic(80)
             end
 
             sendClientCommand(player, 'Commands', 'SpawnGroup', event)
             if SandboxVars.Bandits.General_ArrivalIcon then
+                local color
+                local icon
                 if event.hostile then
                     if event.program.name == "Bandit" then
+                        icon = "media/ui/raid.png"
                         color = {r=1, g=0.5, b=0.5}
                     else
+                        icon = "media/ui/loot.png"
                         color = {r=1, g=1, b=0.5}
                     end
                 else
+                    icon = "media/ui/friend.png"
                     color = {r=0.5, g=1, b=0.5}
                 end
 
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/crew.png", 10, event.x, event.y, color)
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
             end
 
             -- road block spawn
@@ -458,7 +403,15 @@ function BanditScheduler.RaiseDefences(x, y)
     if building then
         local buildingDef = building:getDef()
         if buildingDef then
-            BanditBaseGroupPlacements.Junk(buildingDef:getX(), buildingDef:getY(), 0, buildingDef:getX2() - buildingDef:getX(), buildingDef:getY2() - buildingDef:getY(), 3)
+            local x = buildingDef:getX()
+            local y = buildingDef:getY()
+            local w = buildingDef:getX2() - buildingDef:getX()
+            local h = buildingDef:getY2() - buildingDef:getY()
+            BanditBaseGroupPlacements.Junk(x, y, 0, w, h, 3)
+            BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 3)
+            BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 3)
+            BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
+            BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
 
             local genSquare = cell:getGridSquare(buildingDef:getX()-1, buildingDef:getY()-1, 0)
             if genSquare then
@@ -480,8 +433,8 @@ function BanditScheduler.RaiseDefences(x, y)
             end
 
             for z = 0, 7 do
-                for y = buildingDef:getY(), buildingDef:getY2() do
-                    for x = buildingDef:getX(), buildingDef:getX2() do
+                for y = buildingDef:getY()-1, buildingDef:getY2()+1 do
+                    for x = buildingDef:getX()-1, buildingDef:getX2()+1 do
                         local square = cell:getGridSquare(x, y, z)
                         if square then
                             local objects = square:getObjects()
@@ -489,8 +442,15 @@ function BanditScheduler.RaiseDefences(x, y)
                                 local object = objects:get(i)
                                 if object then
                                     if instanceof(object, "IsoLightSwitch") then
-                                        if not object:isActivated() then
-                                            object:setActive(true)  
+                                        local lightList = object:getLights()
+                                        if lightList:size() == 0 then
+                                            object:setActive(false)
+                                        else
+                                            object:setBulbItemRaw("Base.LightBulbRed")
+                                            object:setPrimaryR(1)
+                                            object:setPrimaryG(0)
+                                            object:setPrimaryB(0)
+                                            object:setActive(true)
                                         end
                                     end
                                     if instanceof(object, "IsoCurtain") then
@@ -499,12 +459,13 @@ function BanditScheduler.RaiseDefences(x, y)
                                         end
                                     end
 
-                                    --[[
-                                    if instanceof(object, "IsoWindow") then
-                                        local args = {x=x, y=y, z=z, index=object:getObjectIndex()}
-                                        sendClientCommand(getPlayer(), 'Commands', 'Barricade', args)
+                                    if z == 0 then
+                                        if instanceof(object, "IsoWindow") then
+                                            local args = {x=x, y=y, z=z, index=object:getObjectIndex(), isMetal=true, condition=5000}
+                                            -- tempPlayer:setPerkLevelDebug(Perks.Woodwork, 10)
+                                            sendClientCommand(getPlayer(), 'Commands', 'Barricade', args)
+                                        end
                                     end
-                                    ]]
 
                                     local fridge = object:getContainerByType("fridge")
                                     if fridge then
@@ -515,6 +476,16 @@ function BanditScheduler.RaiseDefences(x, y)
                                     if freezer then
                                         BanditLoot.FillContainer(freezer, BanditLoot.FridgeItems, 5)
                                     end
+
+                                    local counter = object:getContainerByType("counter")
+                                    if counter then
+                                        BanditLoot.FillContainer(counter, BanditLoot.CounterItems, 9)
+                                    end
+
+                                    local crate = object:getContainerByType("crate")
+                                    if crate then
+                                        BanditLoot.FillContainer(crate, BanditLoot.CrateItems, 9)
+                                    end
                                 end
                             end
                         end
@@ -525,264 +496,185 @@ function BanditScheduler.RaiseDefences(x, y)
     end
 end
 
-function BanditScheduler.FindBuilding(character, min, max)
+function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max)
+    local cell = character:getCell()
     local px = character:getX()
     local py = character:getY()
-    local cell = character:getCell()
     local ret = {}
-    ret.random = {}
-    ret.bed = {}
-    --for y=-100, 100, 5 do
-    --    for x=-100, 100, 5 do
-        for i=0, 5000 do
-            local offsetX = ZombRand(min, max)
-            local offsetY = ZombRand(min, max)
-            if ZombRand(2) == 1 then offsetX = -offsetX end
-            if ZombRand(2) == 1 then offsetY = -offsetY end 
 
-            local testSquare = cell:getGridSquare(px + offsetX, py + offsetY, 0)
-            if testSquare then
-                local building = testSquare:getBuilding()
-                if building then
+    -- checks if there is a valid building for a spawn on the square
+    local function getBuilding(square)
+        if not square then return false end
 
-                    -- AVOID PLAYER OCCUPIED BUILDINGS
-                    local occupied = false
-                    local gamemode = getWorld():getGameMode()
-                    if gamemode == "Multiplayer" then
-                        playerList = getOnlinePlayers()
-                    else
-                        playerList = IsoPlayer.getPlayers()
-                    end
-                    for i=0, playerList:size()-1 do
-                        local player = playerList:get(i)
-                        if player then
-                            local playerSquare = player:getSquare()
-                            if playerSquare then
-                                playerBuilding = playerSquare:getBuilding()
-                                if playerBuilding then
-                                    if playerBuilding:getID() == building:getID() then
-                                        print ("THIS IS OCCUPIED")
-                                        occupied = true
-                                    end
-                                end
-                            end
-                        end
-                    end
+        local building = square:getBuilding()
+        if not building then return false end
 
-                    if SafeHouse.isSafeHouse(testSquare, nil, true) then
-                        occupied = true
-                    end
-
-                    if not occupied then
-                        if building:containsRoom("medclinic") or building:containsRoom("medicalstorage") then
-                            ret.type = "medical"
-                        elseif building:containsRoom("policestore") or building:containsRoom("policestorage") or building:containsRoom("cell") then
-                            ret.type = "police"
-                        elseif building:containsRoom("gunstore") then
-                            ret.type = "gunstore"
-                        elseif building:containsRoom("bank") then
-                            ret.type = "bank"
-                        elseif building:containsRoom("warehouse") then
-                            ret.type = "warehouse"
-                        elseif building:containsRoom("grocery") or building:containsRoom("grocerystore") or building:containsRoom("clothingstore") or building:containsRoom("conveniencestore") or building:containsRoom("liquorstore") then
-                            ret.type = "store"
-                        elseif building:containsRoom("motelroom") then
-                            ret.type = "motel"
-                        elseif building:containsRoom("gasstore") then
-                            ret.type = "gasstore"
-                        elseif building:containsRoom("spiffo_dining") then
-                            ret.type = "spiffo"
-                        elseif building:containsRoom("church") then
-                            ret.type = "church"
-                        else
-                            ret.type = "unknown"
-                        end
-                        local room = building:getRandomRoom()
-                        if room then
-                            local roomDef = room:getRoomDef()
-                            if roomDef then
-                                local name = roomDef:getName()
-                                local bed
-                                for x=roomDef:getX(), roomDef:getX2() do
-                                    for y=roomDef:getY(), roomDef:getY2() do
-                                        local testSquare = cell:getGridSquare(x, y, roomDef:getZ())
-                                        if testSquare then
-                                            local objects = testSquare:getObjects()
-                                            for i=0, objects:size()-1 do
-                                                local object = objects:get(i)
-                                                if object then
-                                                    local sprite = object:getSprite()
-                                                    if sprite then
-                                                        local spriteName = sprite:getName()
-                                                        if spriteName then 
-                                                            local isBed = sprite:getProperties():Is(IsoFlagType.bed)
-                                                            if isBed then
-                                                                ret.bed.x = x
-                                                                ret.bed.y = y-1
-                                                                break
-                                                            end
-                                                        end
-                                                    end
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-
-                                local newSquare = roomDef:getFreeSquare()
-                                if newSquare then
-                                    ret.random.x = newSquare:getX()
-                                    ret.random.y = newSquare:getY()
-                                    return ret
-                                end
-
-                            end
-                        end
+        -- avoid safehouses
+        if SafeHouse.isSafeHouse(square, nil, true) then
+            return false
+        end
+        
+        -- avoid player occupied buildings
+        local gamemode = getWorld():getGameMode()
+        if gamemode == "Multiplayer" then
+            playerList = getOnlinePlayers()
+        else
+            playerList = IsoPlayer.getPlayers()
+        end
+        for i=0, playerList:size()-1 do
+            local player = playerList:get(i)
+            if player then
+                local playerSquare = player:getSquare()
+                if playerSquare then
+                    playerBuilding = playerSquare:getBuilding()
+                    if playerBuilding then
+                        if playerBuilding:getID() == building:getID() then return false end
                     end
                 end
             end
         end
-        --end
-    --end
-    print ("NO BUILDING FOUND")
-    return false
+
+        return building
+    end
+
+    -- based on the room types establish general type of the building
+    local function getBuildingType(building)
+        local btype
+        if building:containsRoom("medclinic") or building:containsRoom("medicalstorage") then
+            btype = "medical"
+        elseif building:containsRoom("policestore") or building:containsRoom("policestorage") or building:containsRoom("cell") then
+            btype = "police"
+        elseif building:containsRoom("gunstore") then
+            btype = "gunstore"
+        elseif building:containsRoom("bank") then
+            btype = "bank"
+        elseif building:containsRoom("warehouse") then
+            btype = "warehouse"
+        elseif building:containsRoom("grocery") or building:containsRoom("grocerystore") or building:containsRoom("clothingstore") or building:containsRoom("conveniencestore") or building:containsRoom("liquorstore") then
+            btype = "store"
+        elseif building:containsRoom("motelroom") then
+            btype = "motel"
+        elseif building:containsRoom("gasstore") then
+            btype = "gasstore"
+        elseif building:containsRoom("spiffo_dining") then
+            btype = "spiffo"
+        elseif building:containsRoom("church") then
+            btype = "church"
+        else
+            btype = "unknown"
+        end
+        return btype
+    end
+
+    -- iterates over rooms in a building and finds free squares
+    -- that will be available for the spawn
+    local function getSpawnPoints(building)
+        local spawnPoints = {}
+        local buildingDef = building:getDef()
+        if not buildingDef then return spawnPoints end
+
+        -- this actually return roomDefs
+        local roomDefList = buildingDef:getRooms()
+        for i=0, roomDefList:size()-1 do
+            local roomDef = roomDefList:get(i)
+            local square = roomDef:getFreeSquare()
+
+            -- double-checking
+            if square and square:isFree(false) then
+                table.insert(spawnPoints, {x=square:getX(), y=square:getY(), z=square:getZ()})
+            end
+        end
+        return spawnPoints
+    end
+
+    -- get x, y of a building
+    local function getCenterCoords(building)
+        local coords = {}
+        local buildingDef = building:getDef()
+        if not buildingDef then return coords end
+
+        local x = math.floor((buildingDef:getX() + buildingDef:getX2()) / 2)
+        local y = math.floor((buildingDef:getY() + buildingDef:getY2()) / 2)
+        coords = {x=x, y=y}
+        return coords
+    end
+
+    -- getting the list of buildings in the cell does not work,
+    -- so we are doing "montecarlo" here
+    for i=1, 5000 do
+        local offsetX = ZombRand(min, max)
+        local offsetY = ZombRand(min, max)
+        if ZombRand(2) == 1 then offsetX = -offsetX end
+        if ZombRand(2) == 1 then offsetY = -offsetY end 
+
+        local square = cell:getGridSquare(px + offsetX, py + offsetY, 0)
+        local building = getBuilding(square)
+
+        if building then
+            ret.buildingCoords = {x = px + offsetX, y = py + offsetY}
+            ret.buildingCenterCoords = getCenterCoords(building)
+            ret.buildingType = getBuildingType(building)
+            ret.spawnPoints = getSpawnPoints(building)
+        end
+    end
+    return ret
 end
 
 function BanditScheduler.SpawnDefenders(player, min, max)
     local event = {}
-    event.name = 1
     event.hostile = true
     event.occured = false
     event.program = {}
     event.program.name = "Defend"
+    event.program.stage = "Prepare"
 
-    local gameTime = getGameTime()
-    local hour = gameTime:getHour() 
-    if gameTime:getHour() >= 0 and gameTime:getHour() < 6 then
-        event.program.stage = "Sleep"
-    else
-        event.program.stage = "Prepare"
-    end
-
-    event.bandits = {}
-
-    local spawn = BanditScheduler.FindBuilding(player, min, max)
+    -- get spawn locations per room and shuffle with Fisher-Yates
+    local spawnData = BanditScheduler.GenerateSpawnPointsInRandomBuilding(player, min, max)
     
-    if spawn then
-        BanditScheduler.RaiseDefences(spawn.random.x, spawn.random.y)
+    -- no buildings available
+    if not spawnData.spawnPoints or #spawnData.spawnPoints == 0 then return end
 
-        event.x = spawn.random.x
-        event.y = spawn.random.y
-        
-        print ("SPAWNING DEFENDER X:" .. event.x .. " Y:" .. event.y .. " TYPE:" .. spawn.type)
-
-        local config = {}
-        local cnt = 2
-        local bandit
-        if spawn.type == "medical" then
-            
-            config.hasRifleChance = 0
-            config.hasPistolChance = 100
-            config.rifleMagCount = 0
-            config.pistolMagCount = 3
-
-            bandit = BanditCreator.MakeMadDoctor(config)
-
-        elseif spawn.type == "police" then
-
-            config.hasRifleChance = 40
-            config.hasPistolChance = 100
-            config.rifleMagCount = 3
-            config.pistolMagCount = 5
-
-            bandit = BanditCreator.MakePolice(config)
-            cnt = 5
-
-        elseif spawn.type == "gunstore" then
-
-            config.hasRifleChance = 100
-            config.hasPistolChance = 100
-            config.rifleMagCount = 16
-            config.pistolMagCount = 12
-
-            bandit = BanditCreator.MakeVeteran(config)
-            cnt = 5
-
-        elseif spawn.type == "bank" then
-
-            config.hasRifleChance = 0
-            config.hasPistolChance = 100
-            config.rifleMagCount = 0
-            config.pistolMagCount = 4
-
-            bandit = BanditCreator.MakeSecurityGuard(config)
-            cnt = 6
-
-        elseif spawn.type == "store" then
-
-            config.hasRifleChance = 0
-            config.hasPistolChance = 40
-            config.rifleMagCount = 0
-            config.pistolMagCount = 3
-
-            bandit = BanditCreator.MakeSecurityGuard(config)
-            cnt = 3
-
-        elseif spawn.type == "warehouse" then
-
-            config.hasRifleChance = 50
-            config.hasPistolChance = 80
-            config.rifleMagCount = 3
-            config.pistolMagCount = 4
-
-            bandit = BanditCreator.MakeForeman(config)
-            cnt = 4
-
-        elseif spawn.type == "spiffo" then
-
-            config.hasRifleChance = 100
-            config.hasPistolChance = 100
-            config.rifleMagCount = 5
-            config.pistolMagCount = 5
-
-            bandit = BanditCreator.MakeSpiffo(config)
-            cnt = 1
-
-        elseif spawn.type == "church" then
-
-            config.hasRifleChance = 100
-            config.hasPistolChance = 0
-            config.rifleMagCount = 5
-            config.pistolMagCount = 0
-
-            bandit = BanditCreator.MakePriest(config)
-            cnt = 1
-
-        else
-            config.hasRifleChance = 0
-            config.hasPistolChance = 50
-            config.rifleMagCount = 0
-            config.pistolMagCount = 3
-
-            bandit = BanditCreator.MakeDesperateCitizen(config)
-            cnt = 1 + ZombRand(3)
-        end
-        
-        for i = 1, cnt do
-            table.insert(event.bandits, bandit)
-        end
-
-        sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-
+    for i = #spawnData.spawnPoints, 2, -1 do
+        local j = ZombRand(i) + 1
+        spawnData.spawnPoints[i], spawnData.spawnPoints[j] = spawnData.spawnPoints[j], spawnData.spawnPoints[i]
     end
 
+    -- prepare the building
+    BanditScheduler.RaiseDefences(spawnData.buildingCoords.x, spawnData.buildingCoords.y)
+
+    -- each defender is spawned separately, because we need to spawn it exactly on
+    -- the free square in different rooms, not in one group 
+    local cnt = 0
+    for _, spawnPoint in pairs(spawnData.spawnPoints) do
+        event.x = spawnPoint.x
+        event.y = spawnPoint.y
+        event.z = spawnPoint.z
+        event.bandits = {}
+        
+        local bandit = BanditCreator.MakeFromSpawnType(spawnData)
+        if bandit then
+            print ("SPAWNING DEFENDER X:" .. event.x .. " Y:" .. event.y .. " Z: " .. event.z .. "TYPE:" .. spawnData.buildingType)
+            table.insert(event.bandits, bandit)
+            sendClientCommand(player, 'Commands', 'SpawnGroup', event)
+        end
+
+        -- building probably too big, breaking
+        cnt = cnt + 1
+        if cnt > 24 then break end
+    end
+
+    if SandboxVars.Bandits.General_ArrivalIcon then
+        local color = {r=0.5, g=0.5, b=1}
+        local icon = "media/ui/defend.png"
+        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color)
+    end
 end
 
 function BanditScheduler.SpawnBase(player, sceneNo)
     local cell = getCell()
-    local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, ZombRand(30,60))
+    local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, ZombRand(40,70))
     if spawnPoint then
-        local canPlace = BanditBaseGroupPlacements.CheckSpace (spawnPoint.x-2, spawnPoint.y-2, 32, 32)
+        local canPlace = BanditBaseGroupPlacements.CheckSpace(spawnPoint.x-10, spawnPoint.y-10, 40, 40)
         if canPlace then
             print ("SPAWNING BASE " .. tostring(sceneNo) .. " FOR PLAYER: " .. BanditUtils.GetCharacterID(player))
             local square = cell:getGridSquare(spawnPoint.x, spawnPoint.y, 0)
@@ -790,7 +682,7 @@ function BanditScheduler.SpawnBase(player, sceneNo)
 
             if SandboxVars.Bandits.General_ArrivalIcon then
                 color = {r=1, g=0, b=1}
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/crew.png", 10, spawnPoint.x, spawnPoint.y, color)
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 10, spawnPoint.x, spawnPoint.y, color)
             end
         else
             print ("BASE HAS NO FREE SPACE")
@@ -838,34 +730,6 @@ function BanditScheduler.BaseballMatch(player)
     sendClientCommand(player, 'Commands', 'SpawnGroup', event)
 end
 
-function BanditScheduler.SpawnCivilian(player)
-    local event = {}
-    event.name = 1
-    event.hostile = false
-    event.occured = false
-    event.program = {}
-    event.program.name = "Civilian"
-    event.program.stage = "Prepare"
-
-    event.bandits = {}
-
-    event.x = player:getX() + 1
-    event.y = player:getY() + 1
-
-    config = {}
-    config.hasRifleChance = 5
-    config.hasPistolChance = 15
-    config.rifleMagCount = 2
-    config.pistolMagCount = 4
-
-    local bandit = BanditCreator.GroupMap[1](config)
-    table.insert(event.bandits, bandit)
-
-    print ("SPAWNING CIVILIAN X:" .. event.x .. " Y:" .. event.y .. " TYPE:" )
-    sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-
-end
-
 function BanditScheduler.BroadcastTV(cx, cy)
     local cell = getCell()
 
@@ -905,6 +769,65 @@ function BanditScheduler.BroadcastTV(cx, cy)
         for _, line in pairs(lines) do
             local message = {tvs=tvs, text=line.text, sound=line.sound}
             BanditBroadcaster.AddBroadcast(message)
+        end
+    end
+end
+
+function BanditScheduler.CheckEvent()
+    
+    local world = getWorld()
+    local gamemode = world:getGameMode()
+    local playerList = {}
+    local currentPlayer = getPlayer()
+    local onlinePlayer 
+
+    -- if true then return end 
+
+    local pid
+    if gamemode == "Multiplayer" then
+        playerList = getOnlinePlayers()
+        pid = ZombRand(playerList:size())
+
+        onlinePlayer = playerList:get(pid)
+    else
+        onlinePlayer = getPlayer()
+    end
+    
+
+    if BanditUtils.GetCharacterID(currentPlayer) == BanditUtils.GetCharacterID(onlinePlayer) then
+
+        -- SPAWN ATTACKING FORCE
+        local daysPassed = currentPlayer:getHoursSurvived() / 24
+        local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
+
+        -- print ("SPAWN ATTEMPT" .. daysPassed)
+        for _, wave in pairs(waveData) do
+
+            local spawnRandom = ZombRandFloat(0, 101)
+            -- print ("spawnRandom" .. spawnRandom)
+            -- print ("spawnHourlyChance" .. wave.spawnHourlyChance / 6)
+            if spawnRandom < wave.spawnHourlyChance / 6 then
+                BanditScheduler.SpawnWave(currentPlayer, wave)
+            end
+        end
+
+        -- SPAWN DEFENDERS
+        local spawnRandom = ZombRandFloat(0, 101)
+        -- print ("DEFEND CHANCE:" ..spawnRandom)
+        local spawnChance = SandboxVars.Bandits.General_DefenderSpawnHourlyChanced or 8
+        if spawnRandom < spawnChance / 6 then
+            print ("SPAWNING DEFENDERS")
+            BanditScheduler.SpawnDefenders(currentPlayer, 45, 100)
+        end
+
+        -- SPAWN BASES
+        local spawnRandom = ZombRandFloat(0, 101)
+        -- print ("DEFEND CHANCE:" ..spawnRandom)
+        local spawnChance = SandboxVars.Bandits.General_BaseSpawnHourlyChance or 0.3
+        if spawnRandom < spawnChance / 6 then
+            print ("SPAWNING BASE")
+            local sceneNo = 1 + ZombRand(#BanditBaseScenes)
+            BanditScheduler.SpawnBase(currentPlayer, sceneNo)
         end
     end
 end

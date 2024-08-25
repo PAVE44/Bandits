@@ -33,7 +33,40 @@ function BanditCreator.MakeWeapons(wave, clan)
     return weapons
 end
 
-function BanditCreator.Make(wave)
+function BanditCreator.MakeLoot(loot)
+    local loot = {}
+
+    -- add loot from loot table
+    for k, v in pairs(loot) do
+        local r = ZombRand(101)
+        if r <= v.chance then
+            table.insert(loot, v.name)
+        end
+    end
+
+    -- add clan-independent, individual random personal character loot below
+    
+    -- smoker
+    if not getActivatedMods():contains("Smoker") then
+        if ZombRand(4) == 1 then
+            for i=1, ZombRand(19) do
+                table.insert(loot, "Base.Cigarettes")
+            end
+            table.insert(loot, "Base.Lighter")
+        end
+    end
+
+    -- hotties collector
+    if ZombRand(100) == 1 then
+        for i=1, ZombRand(31) do
+            table.insert(loot,"Base.HottieZ")
+        end
+    end
+
+    return loot
+end
+
+function BanditCreator.MakeFromWave(wave)
     local clan = BanditCreator.GroupMap[wave.clanId]
 
     local bandit = {}
@@ -54,24 +87,73 @@ function BanditCreator.Make(wave)
     bandit.outfit = BanditUtils.Choice(clan.Outfits)
 
     -- loot choice comes from clan file
-    bandit.loot = {}
-    for k, v in pairs(clan.Loot) do
-        local r = ZombRand(101)
-        if r <= v.chance then
-            table.insert(bandit.loot, v.name)
-        end
+    bandit.loot = BanditCreator.MakeLoot(clan.Loot)
+
+    return bandit
+end
+
+function BanditCreator.MakeFromSpawnType(spawnData)
+    local clan
+    local config = {}
+
+    -- clan detection based on building type
+    if spawnData.buildingType == "medical" then
+        clan = BanditClan.Scientist
+        config.hasRifleChance = 0
+        config.hasPistolChance = 50
+        config.rifleMagCount = 0
+        config.pistolMagCount = 3
+    elseif spawnData.buildingType == "police" then
+        clan = BanditClan.Police
+        config.hasRifleChance = 20
+        config.hasPistolChance = 50
+        config.rifleMagCount = 2
+        config.pistolMagCount = 4
+    elseif spawnData.buildingType == "gunstore" then
+        clan = BanditClan.DoomRider
+        config.hasRifleChance = 100
+        config.hasPistolChance = 100
+        config.rifleMagCount = 6
+        config.pistolMagCount = 4
+    elseif spawnData.buildingType == "bank" then
+        clan = BanditClan.Criminal
+        config.hasRifleChance = 0
+        config.hasPistolChance = 80
+        config.rifleMagCount = 0
+        config.pistolMagCount = 3
+    elseif spawnData.buildingType == "church" then
+        clan = BanditClan.Reclaimer
+        config.hasRifleChance = 0
+        config.hasPistolChance = 0
+        config.rifleMagCount = 0
+        config.pistolMagCount = 0
+    else
+        clan = BanditClan.DesperateCitizen
+        config.hasRifleChance = 0
+        config.hasPistolChance = 25
+        config.rifleMagCount = 0
+        config.pistolMagCount = 2
     end
-    
-    -- clan-independent, individual random loot below
-    -- smoker
-    if not getActivatedMods():contains("Smoker") then
-        if ZombRand(4) == 1 then
-            for i=1, 19 do
-                table.insert(bandit.loot, "Base.Cigarettes")
-            end
-            table.insert(bandit.loot, "Base.Lighter")
-        end
-    end
+
+    local bandit = {}
+
+    -- properties to be rewritten from clan file to bandit instance
+    bandit.clan = clan.id
+    bandit.health = clan.health
+    bandit.femaleChance = clan.femaleChance
+    bandit.eatBody = clan.eatBody
+
+    -- gun weapon choice comes from clan file, weapon probability from wave data
+    bandit.weapons = BanditCreator.MakeWeapons(config, clan)
+
+    -- melee weapon choice comes from clan file
+    bandit.weapons.melee = BanditUtils.Choice(clan.Melee)
+
+    -- outfit choice comes from clan file
+    bandit.outfit = BanditUtils.Choice(clan.Outfits)
+
+    -- loot choice comes from clan file
+    bandit.loot = BanditCreator.MakeLoot(clan.Loot)
 
     return bandit
 end

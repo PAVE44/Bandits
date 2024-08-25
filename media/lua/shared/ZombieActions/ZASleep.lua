@@ -6,8 +6,7 @@ ZombieActions.Sleep.onStart = function(zombie, task)
 end
 
 ZombieActions.Sleep.onWorking = function(zombie, task)
-    zombie:setBumpType("Sleep")
-    -- zombie:setDirectionAngle(180)
+    zombie:setBumpType(task.anim)
     return false
 end
 

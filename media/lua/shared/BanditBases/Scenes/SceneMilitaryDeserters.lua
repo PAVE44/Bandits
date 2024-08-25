@@ -7,8 +7,8 @@ function BanditScenes.MilitaryDeserters (player, square)
     local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 16
-    local h = 16
+    local w = 20
+    local h = 20
     
     local items = {}
     
@@ -42,25 +42,24 @@ function BanditScenes.MilitaryDeserters (player, square)
     event.x = sx + 10
     event.y = sy + 10
     event.z = sz
-    event.name = "MilitaryBase"
     event.hostile = true
     event.occured = false
-    event.program = "BaseGuard"
+    event.program = {}
+    event.program.name = "BaseGuard"
+    event.program.stage = "Prepare"
     event.bandits = {}
 
     config = {}
+    config.clanId = 14
     config.hasRifleChance = 100
     config.hasPistolChance = 100
     config.rifleMagCount = 6
     config.pistolMagCount = 4
 
-    local bandit = BanditCreator.MakeVeteran(config)
-    table.insert(event.bandits, bandit)
-    table.insert(event.bandits, bandit)
-    table.insert(event.bandits, bandit)
-    table.insert(event.bandits, bandit)
-    table.insert(event.bandits, bandit)
-    table.insert(event.bandits, bandit)
+    for i=1, 7 do
+        local bandit = BanditCreator.MakeFromWave(config)
+        table.insert(event.bandits, bandit)
+    end
 
     sendClientCommand(player, 'Commands', 'SpawnGroup', event)
 

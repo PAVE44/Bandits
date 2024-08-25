@@ -33,43 +33,35 @@ function BanditScenes.Hikers (player, square)
     -- BanditBasePlacements.IsoLightSwitch ("lighting_outdoor_01_48", sx + 1, sy + 6, sz + 0)
 
     local event = {}
-    event.name = "HikersBase"
     event.hostile = true
     event.occured = false
     event.program = {}
     event.program.name = "BaseGuard"
-
-    local gameTime = getGameTime()
-    local hour = gameTime:getHour() 
-    if gameTime:getHour() >= 0 and gameTime:getHour() < 7 then
-        event.program.stage = "Sleep"
-    else
-        event.program.stage = "Wait"
-    end
-
+    event.program.stage = "Prepare"
     event.bandits = {}
 
     config = {}
-    config.hasRifleChance = 80
-    config.hasPistolChance = 80
+    config.clanId = 13
+    config.hasRifleChance = 90
+    config.hasPistolChance = 100
     config.rifleMagCount = 3
     config.pistolMagCount = 4
 
-    local bandit = BanditCreator.MakeSurvivalist(config)
+    local bandit = BanditCreator.MakeFromWave(config)
     event.bandits = {bandit}
     event.x = sx+5 
     event.y = sy+4
     event.z = sz
     sendClientCommand(player, 'Commands', 'SpawnGroup', event)
 
-    local bandit = BanditCreator.MakeSurvivalist(config)
+    local bandit = BanditCreator.MakeFromWave(config)
     event.bandits = {bandit}
     event.x = sx+3
     event.y = sy+5
     event.z = sz
     sendClientCommand(player, 'Commands', 'SpawnGroup', event)
 
-    local bandit = BanditCreator.MakeSurvivalist(config)
+    local bandit = BanditCreator.MakeFromWave(config)
     event.bandits = {bandit}
     event.x = sx+3
     event.y = sy+2
