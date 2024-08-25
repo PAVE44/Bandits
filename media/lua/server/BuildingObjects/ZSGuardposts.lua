@@ -5,7 +5,7 @@ function ZSGuardposts:create(x, y, z, north, sprite)
 end
 
 function ZSGuardposts:isValid(square)
-	return square:TreatAsSolidFloor()
+	return square:TreatAsSolidFloor() and square:isFree(false)
 end
 
 function ZSGuardposts:render(x, y, z, square)
