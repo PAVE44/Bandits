@@ -696,7 +696,7 @@ function BanditUpdate.Combat(bandit)
             if enemyCharacter:isAlive() then
                 local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground"
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.2, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.13, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             elseif instanceof(enemyCharacter, "IsoPlayer") then
                 local task = {action="Time", anim="Smoke", time=250}
@@ -971,9 +971,8 @@ function BanditUpdate.OnBanditUpdate(zombie)
     bandit:getEmitter():stopSoundByName("MaleZombieCombined")
     bandit:getEmitter():stopSoundByName("FemaleZombieCombined")
 
-        -- CANNIBALS
-    -- hardcoded for now
-    if brain.clan ~= 3 then
+    -- CANNIBALS
+    if not brain.eatBody then
         bandit:setEatBodyTarget(nil, false)
     end
 
@@ -1078,7 +1077,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
             bandit:setBumpType(task.anim)
         end
 
-        if not task.time then task.time = 10000 end
+        if not task.time then task.time = 1000 end
         local done = ZombieActions[task.action].onStart(bandit, task)
 
         if done then 
@@ -1142,8 +1141,6 @@ function BanditUpdate.OnZombieDead(zombie)
         zombie:setPrimaryHandItem(nil)
         zombie:clearAttachedItems()
         zombie:resetEquippedHandsModels()
-        -- brain.enslaved = false
-        -- BanditBrain.Update(bandit, brain)
 
         args = {}
         args.id = id

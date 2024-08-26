@@ -1,12 +1,12 @@
 BanditBasePlacements = BanditBasePlacements or {}
 
 -- private
-local function GetOrCreateSquare (x, y, z)
+local function GetOrCreateSquare(x, y, z)
     local cell = getCell()
     local square = cell:getGridSquare(x, y, z)
-	if square == nil and getWorld():isValidSquare(x, y, z) then
-		square = cell:createNewGridSquare(x, y, z, true)
-	end
+    if square == nil and getWorld():isValidSquare(x, y, z) then
+        square = cell:createNewGridSquare(x, y, z, true)
+    end
     return square
 end
 
@@ -34,13 +34,87 @@ local function GetSurfaceOffset (x, y, z)
 end
 
 -- objects
+
+function BanditBasePlacements.Matress(x, y, z)
+
+    local x = math.floor(x+0.5)
+    local y = math.floor(y+0.5)
+    local matressSpriteList = {}
+    table.insert(matressSpriteList, "carpentry_02_76")
+    table.insert(matressSpriteList, "carpentry_02_77")
+    table.insert(matressSpriteList, "carpentry_02_79")
+    table.insert(matressSpriteList, "carpentry_02_78")
+
+    local function canAddMatress(x, y, z)
+        local square = getCell():getGridSquare(x, y, z)
+        if not square then return false end
+        if not square:isFree(false) then return false end
+        if square:isOutside() then return false end
+
+        local can = true
+        local objects = square:getObjects()
+        for i=0, objects:size()-1 do
+            local object = objects:get(i)
+            if object then
+                local sprite = object:getSprite()
+                if sprite then
+                    local spriteName = sprite:getName()
+                    for _, matressSprite in pairs(matressSpriteList) do
+                        if spriteName == matressSprite then
+                            can = false
+                        end
+                    end
+                    local spriteProps = sprite:getProperties()
+                    local test = spriteProps:Is("BlocksPlacement")
+                    if spriteProps:Is("BlocksPlacement") then
+                        can = false
+                    end
+                end
+            end
+        end
+        return can
+    end
+
+    local m = canAddMatress(x, y, z)
+    local mx1 = canAddMatress(x+1, y, z)
+    local my1 = canAddMatress(x, y+1, z)
+
+    if m then
+        if mx1 then
+            local square1 = GetOrCreateSquare(x, y, z)
+            local square2 = GetOrCreateSquare(x+1, y, z)
+            if not square1:isSomethingTo(square2) then
+                local obj = IsoObject.new(square1, matressSpriteList[1], "")
+                square1:AddSpecialObject(obj)
+                obj:transmitCompleteItemToServer()
+
+                obj = IsoObject.new(square2, matressSpriteList[2], "")
+                square2:AddSpecialObject(obj)
+                obj:transmitCompleteItemToServer()
+            end
+        elseif my1 then
+            local square1 = GetOrCreateSquare(x, y, z)
+            local square2 = GetOrCreateSquare(x, y+1, z)
+            if not square1:isSomethingTo(square2) then
+                local obj = IsoObject.new(square1, matressSpriteList[3], "")
+                square1:AddSpecialObject(obj)
+                obj:transmitCompleteItemToServer()
+                
+                obj = IsoObject.new(square2, matressSpriteList[4], "")
+                square2:AddSpecialObject(obj)
+                obj:transmitCompleteItemToServer()
+            end
+        end
+    end
+end
+
 function BanditBasePlacements.IsoObject (sprite, x, y, z)
     local square = GetOrCreateSquare(x, y, z)
     if not square then return end
     if not square:isFree(false) then return end
     local obj = IsoObject.new(square, sprite, "")
-	square:AddSpecialObject(obj)
-	obj:transmitCompleteItemToServer()
+    square:AddSpecialObject(obj)
+    obj:transmitCompleteItemToServer()
 end
 
 function BanditBasePlacements.IsoThumpable (sprite, x, y, z)
@@ -49,8 +123,8 @@ function BanditBasePlacements.IsoThumpable (sprite, x, y, z)
     if not square then return end
     local obj = IsoThumpable.new(cell, square, sprite, false, {})
     -- obj:setHoppable(false)
-	square:AddTileObject(obj)
-	obj:transmitCompleteItemToServer()
+    square:AddTileObject(obj)
+    obj:transmitCompleteItemToServer()
 end
 
 function BanditBasePlacements.IsoDoor (sprite, x, y, z)
@@ -87,29 +161,29 @@ function BanditBasePlacements.IsoWindow (sprite, x, y, z)
         obj:transmitCompleteItemToServer()
 
         local b = 1 + ZombRand(4)
-		local barricade = IsoBarricade.AddBarricadeToObject(obj, true)
-		if barricade then
-			if b == 1 then
-				local metal = InventoryItemFactory.CreateItem('Base.SheetMetal')
+        local barricade = IsoBarricade.AddBarricadeToObject(obj, true)
+        if barricade then
+            if b == 1 then
+                local metal = InventoryItemFactory.CreateItem('Base.SheetMetal')
                 metal:setCondition(100)
-				barricade:addMetal(nil, metal)
-				barricade:transmitCompleteItemToClients()
+                barricade:addMetal(nil, metal)
+                barricade:transmitCompleteItemToClients()
             elseif b == 2 then
                 local metal = InventoryItemFactory.CreateItem('Base.MetalBar')
                 metal:setCondition(100)
                 barricade:addMetalBar(nil, metal)
                 barricade:transmitCompleteItemToClients()
-			elseif b == 3 then
-				local plank = InventoryItemFactory.CreateItem('Base.Plank')
-				plank:setCondition(100)
-				barricade:addPlank(nil, plank)
-				if barricade:getNumPlanks() == 1 then
-					barricade:transmitCompleteItemToClients()
-				else
-					barricade:sendObjectChange('state')
-				end
-			end
-		end
+            elseif b == 3 then
+                local plank = InventoryItemFactory.CreateItem('Base.Plank')
+                plank:setCondition(100)
+                barricade:addPlank(nil, plank)
+                if barricade:getNumPlanks() == 1 then
+                    barricade:transmitCompleteItemToClients()
+                else
+                    barricade:sendObjectChange('state')
+                end
+            end
+        end
     end
 end
 
@@ -165,8 +239,8 @@ function BanditBasePlacements.Container (sprite, x, y, z, items)
 
     local obj = IsoThumpable.new(cell, square, sprite, false, {})
     obj:setIsContainer(true)
-	square:AddSpecialObject(obj)
-	obj:transmitCompleteItemToServer()
+    square:AddSpecialObject(obj)
+    obj:transmitCompleteItemToServer()
     return obj:getContainer()
 end
 
@@ -188,8 +262,8 @@ function BanditBasePlacements.Fireplace (sprite, x, y, z, items)
     if not square then return end
 
     local obj = IsoObject.new(square, sprite, "")
-	square:AddSpecialObject(obj)
-	obj:transmitCompleteItemToServer()
+    square:AddSpecialObject(obj)
+    obj:transmitCompleteItemToServer()
 
     obj = IsoFire.new(cell, square)
     obj:AttachAnim("Fire", "01", 4, IsoFireManager.FireAnimDelay, -16, -78, true, 0, false, 0.7, IsoFireManager.FireTintMod)
@@ -205,8 +279,8 @@ function BanditBasePlacements.Fridge (sprite, x, y, z)
     local obj = IsoObject.new(square, sprite, "")
     local sprite = getSprite(sprite);
     obj:createContainersFromSpriteProperties()
-	square:AddSpecialObject(obj)
-	obj:transmitCompleteItemToServer()
+    square:AddSpecialObject(obj)
+    obj:transmitCompleteItemToServer()
 end
 
 -- inventory items

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
-	<m_Name>ZSSleep</m_Name>
-	<m_AnimName>Bob_SitGround_SleepIdle</m_AnimName>
+	<m_Name>ZSSitRubHands</m_Name>
+	<m_AnimName>Bob_SitGround_RubHands</m_AnimName>
 	<m_Looped>false</m_Looped>
 	<m_UpperOnly>false</m_UpperOnly>
 	<m_EarlyBlendOut>false</m_EarlyBlendOut>
@@ -12,7 +12,7 @@
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>Sleep</m_StringValue>
+		<m_StringValue>SitRubHands</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>

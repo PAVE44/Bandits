@@ -88,7 +88,7 @@ end
 ZombieActions.Hit.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
 
-    if task.time == 38 then
+    if task.time == 45 then
         local item = InventoryItemFactory.CreateItem(task.weapon)
         local cell = getCell()
         local enemyList = cell:getZombieList()

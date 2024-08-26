@@ -2,9 +2,9 @@ VERSION = 1,
 
 /***** GENERAL *****/
 
-option Bandits.General_StrenghtModel = {
-    type = enum, numValues=3, default = 1,
-    page = Bandits_General, translation = Bandits.StrenghtModel, _tooltip=Bandits.StrenghtModelTooltip, valueTranslation=Bandits.StrenghtModel,
+option Bandits.General_DensityScore = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DensityScore,
 }
 
 option Bandits.General_Surrender = {

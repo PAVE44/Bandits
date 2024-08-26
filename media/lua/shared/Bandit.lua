@@ -1,16 +1,5 @@
 Bandit = Bandit or {}
 
-function Bandit.Enslave(zombie, master)
-    local brain = BanditBrain.Create(zombie, master)
-end
-
-function Bandit.IsEnslaved(zombie)
-    local brain = BanditBrain.Get(zombie)
-    local enslaved = false
-    if brain and brain.enslaved then enslaved = true end
-    return enslaved
-end
-
 function Bandit.AddTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
     table.insert(brain.tasks, task)
@@ -25,7 +14,7 @@ end
 
 function Bandit.GetTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    if brain.enslaved and #brain.tasks > 0 then
+    if #brain.tasks > 0 then
         return brain.tasks[1]
     end
     return nil
@@ -33,7 +22,7 @@ end
 
 function Bandit.HasTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    if brain.enslaved and #brain.tasks > 0 then
+    if #brain.tasks > 0 then
         return true
     end
     return false

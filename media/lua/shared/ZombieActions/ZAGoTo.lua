@@ -4,7 +4,7 @@ ZombieActions.GoTo = {}
 ZombieActions.GoTo.onStart = function(zombie, task)
 
     if BanditUtils.IsController(zombie) then
-        if math.abs(zombie:getX() - task.x) <= 1.0 and math.abs(zombie:getY() - task.y) <= 1.0 and zombie:getZ() == task.z then
+        if math.abs(zombie:getX() - task.x) <= 0.5 and math.abs(zombie:getY() - task.y) <= 1.0 and zombie:getZ() == task.z then
             print ("PATH DISTANCE REACHED")
         else
             zombie:pathToLocationF(task.x, task.y, task.z)

@@ -24,7 +24,7 @@ end
 ZombiePrograms.Defend.Prepare = function(bandit)
     local tasks = {}
 
-    Bandit.ForceStationary(bandit, false)
+    Bandit.ForceStationary(bandit, true)
     Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
     
     -- weapons are spawn, not program decided
@@ -33,73 +33,48 @@ ZombiePrograms.Defend.Prepare = function(bandit)
     local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
     table.insert(tasks, task)
 
-    return {status=true, next="Defend", tasks={}}
+    return {status=true, next="Wait", tasks={}}
 end
 
-ZombiePrograms.Defend.Defend = function(bandit)
+ZombiePrograms.Defend.Wait = function(bandit)
 
     local tasks = {}
 
-    local health = bandit:getHealth()
-    local pace = "Run"
-    local endurance = -0.07
-
-    if health < 0.4 then
-        pace = "Limp"
-        endurance = 0
-    end
-
-    local player = getPlayer()
-    if bandit:CanSee(player) then
-        local playerSquare = player:getSquare()
-        local banditSquare = bandit:getSquare()
-        if playerSquare and banditSquare then
-            local playerBuilding = playerSquare:getBuilding()
-            local banditBuilding = banditSquare:getBuilding()
-            if playerBuilding and banditBuilding then
-                if playerBuilding:getID() == banditBuilding:getID() then
-                    Bandit.Say(bandit, "DEFENDER_SPOTTED")
-                end
-            end
-        end
-    end
-
-    local handweapon = bandit:getVariableString("BanditWeapon")
-    local walkType = pace .. handweapon
-
-    local building = bandit:getSquare():getBuilding()
-    if building then
-        local room = building:getRandomRoom()
-        if room then
-            local roomDef = room:getRoomDef()
-            if roomDef then
-                local newSquare = roomDef:getFreeSquare()
-                if newSquare then
-                    local gamemode = getWorld():getGameMode()
-                    local task
-                    if gamemode == "Multiplayer" then
-                        task = {action="GoTo", endurance=endurance, x=newSquare:getX(), y=newSquare:getY(), z=newSquare:getZ(), walkType=walkType}
-                    else
-                        task = {action="Move", endurance=endurance, x=newSquare:getX(), y=newSquare:getY(), z=newSquare:getZ(), walkType=walkType}
-                    end
-                    table.insert(tasks, task)
-                end
-            end
-        end
+    -- manage sleep
+    local gameTime = getGameTime()
+    local hour = gameTime:getHour()
+    local spotDist = 30
+    if (gameTime:getHour() >= 0 and gameTime:getHour() < 7) or (gameTime:getHour() >= 13 and gameTime:getHour() < 14) then
+        -- sleeping
+        spotDist = 10
+        Bandit.SetSleeping(bandit, true)
+        BanditBasePlacements.Matress(bandit:getX(), bandit:getY(), bandit:getZ())
+        local task = {action="Sleep", anim="Sleep", time=100}
+        table.insert(tasks, task)
     else
-        Bandit.SetProgram(bandit, "Bandit", {})
-        return {status=true, next="Prepare", tasks=tasks}
+        -- guarding
+        Bandit.SetSleeping(bandit, false)
+        local action = ZombRand(50)
+        if action == 0 then
+            local task = {action="Time", anim="Cough", time=200}
+            table.insert(tasks, task)
+        elseif action == 1 then
+            local task = {action="Time", anim="ChewNails", time=200}
+            table.insert(tasks, task)
+        elseif action == 2 then
+            local task = {action="Time", anim="Smoke", time=200}
+            table.insert(tasks, task)
+            table.insert(tasks, task)
+            table.insert(tasks, task)
+        else
+            local task = {action="Time", anim="ShiftWeight", time=200}
+            table.insert(tasks, task)
+        end
     end
 
-    return {status=true, next="Defend", tasks=tasks}
-end
-
-ZombiePrograms.Defend.Sleep = function(bandit)
-
-    local tasks = {}
-
-    local continueSleep = true
+    -- player entered defender's house
     local world = getWorld()
+    local gamemode = world:getGameMode()
     local playerList = {}
     if gamemode == "Multiplayer" then
         playerList = getOnlinePlayers()
@@ -108,34 +83,27 @@ ZombiePrograms.Defend.Sleep = function(bandit)
     end
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
-        
-        if player and bandit:CanSee(player) then -- and not player:isGhostMode()
-            local dist = math.sqrt(math.pow(player:getX() - bandit:getX(), 2) + math.pow(player:getY() - bandit:getY(), 2))
-            if player:isAiming() and dist < 12 then
-                continueSleep = false
-            elseif player:isRunning() and dist < 6 then
-                continueSleep = false
-            elseif player:isSneaking() and dist < 2 then
-                continueSleep = false
-            elseif dist<3 then
-                continueSleep = false
+        if player and not BanditPlayer.IsGhost(player) then
+            local playerSquare = player:getSquare()
+            local banditSquare = bandit:getSquare()
+            if playerSquare and banditSquare and not playerSquare:isOutside() then
+                local playerBuilding = playerSquare:getBuilding()
+                local banditBuilding = banditSquare:getBuilding()
+                if playerBuilding and banditBuilding and playerBuilding:getID() == banditBuilding:getID()then
+                    if player:isSneaking() then spotDist = spotDist - 3 end
+                    local dist = math.sqrt(math.pow(player:getX() - bandit:getX(), 2) + math.pow(player:getY() - bandit:getY(), 2))
+                    if dist <= spotDist then
+                        Bandit.Say(bandit, "DEFENDER_SPOTTED")
+                        Bandit.SetSleeping(bandit, false)
+                        Bandit.ClearTasks(bandit)
+                        Bandit.SetProgram(bandit, "Bandit", {})
+                        return {status=true, next="Prepare", tasks=tasks}
+                    end
+                end
             end
         end
     end
 
-    if continueSleep then
-        Bandit.SetSleeping(bandit, true)
-        local task = {action="Sleep", anim="Sleep", time=100}
-        table.insert(tasks, task)
-        return {status=true, next="Sleep", tasks=tasks}
-    else
-        local task = {action="Time", lock=true, anim="GetUp", time=150}
-        Bandit.ClearTasks(bandit)
-        Bandit.AddTask(bandit, task)
-        Bandit.SetSleeping(bandit, false)
-        return {status=true, next="Defend", tasks=tasks}
-    end
-
-    
+    return {status=true, next="Wait", tasks=tasks}
 end
 

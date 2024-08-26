@@ -40,7 +40,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
     local gx = event.x
     local gy = event.y
-    local gz = 0
+    local gz = event.z or 0
 
     for _, bandit in pairs(event.bandits) do
  
@@ -63,16 +63,14 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.fullname = BanditNames.GenerateName(zombie:isFemale())
             brain.hostile = event.hostile
             brain.clan = bandit.clan
-            brain.loot = bandit.loot
-            brain.enslaved = true
+            brain.eatBody = bandit.eatBody
             brain.stationary = false
             brain.sleeping = false
-            brain.combat = false
-            brain.firing = false
             brain.endurance = 1.00
             brain.speech = 0.00
 
             brain.weapons = bandit.weapons
+            brain.loot = bandit.loot
 
             brain.program = {}
             brain.program.name = event.program.name
@@ -96,23 +94,31 @@ BanditServer.Commands.SpawnGroup = function(player, event)
     end
 end
 
+local _getBarricadeAble = function(x, y, z, index)
+    local sq = getCell():getGridSquare(x, y, z)
+    if sq and index >= 0 and index < sq:getObjects():size() then
+        local o = sq:getObjects():get(index)
+        if instanceof(o, 'BarricadeAble') then
+            return o
+        end
+    end
+    return nil
+end
+
 BanditServer.Commands.Unbarricade = function(player, args)
-    local sq = getCell():getGridSquare(args.x, args.y, args.z)
-    if sq and args.index >= 0 and args.index < sq:getObjects():size() then
-        local object = sq:getObjects():get(args.index)
-        if instanceof(object, 'BarricadeAble') then
-            local barricade = object:getBarricadeOnSameSquare()
-            if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
-		    if barricade then
-                if barricade:isMetal() then
-                    local metal = barricade:removeMetal(nil)
-                elseif barricade:isMetalBar() then
-                    local bar = barricade:removeMetalBar(nil)
-                else
-                    local plank = barricade:removePlank(nil)
-                    if barricade:getNumPlanks() > 0 then
-                        barricade:sendObjectChange('state')
-                    end
+    local object = _getBarricadeAble(args.x, args.y, args.z, args.index)
+    if object then
+        local barricade = object:getBarricadeOnSameSquare()
+        if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
+        if barricade then
+            if barricade:isMetal() then
+                local metal = barricade:removeMetal(nil)
+            elseif barricade:isMetalBar() then
+                local bar = barricade:removeMetalBar(nil)
+            else
+                local plank = barricade:removePlank(nil)
+                if barricade:getNumPlanks() > 0 then
+                    barricade:sendObjectChange('state')
                 end
             end
         end
@@ -120,23 +126,33 @@ BanditServer.Commands.Unbarricade = function(player, args)
 end
 
 BanditServer.Commands.Barricade = function(player, args)
-    local sq = getCell():getGridSquare(args.x, args.y, args.z)
-    if sq and args.index >= 0 and args.index < sq:getObjects():size() then
-        local object = sq:getObjects():get(args.index)
-        if instanceof(object, 'BarricadeAble') then
-            local barricade = object:getBarricadeOnSameSquare()
-            if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
-
-            if not barricade then
-                local barricade = IsoBarricade.AddBarricadeToObject(object, player)
-                if barricade then
-                    local metal = InventoryItemFactory.CreateItem('Base.MetalBar')
-                    metal:setCondition(100)
-                    barricade:addMetalBar(player, metal)
+    local object = _getBarricadeAble(args.x, args.y, args.z, args.index)
+    if object then
+        local barricade = IsoBarricade.AddBarricadeToObject(object, player)
+        if barricade then
+            if not barricade:isMetal() and args.isMetal then
+                local metal = InventoryItemFactory.CreateItem('Base.SheetMetal')
+                metal:setCondition(args.condition)
+                barricade:addMetal(nil, metal)
+                barricade:transmitCompleteItemToClients()
+            elseif not barricade:isMetalBar() and args.isMetalBar then
+                local metal = InventoryItemFactory.CreateItem('Base.MetalBar')
+                metal:setCondition(args.condition)
+                barricade:addMetalBar(nil, metal)
+                barricade:transmitCompleteItemToClients()
+            elseif barricade:getNumPlanks() < 4 then
+                local plank = InventoryItemFactory.CreateItem('Base.Plank')
+                plank:setCondition(args.condition)
+                barricade:addPlank(nil, plank)
+                if barricade:getNumPlanks() == 1 then
                     barricade:transmitCompleteItemToClients()
+                else
+                    barricade:sendObjectChange('state')
                 end
             end
         end
+    else
+        noise('expected BarricadeAble')
     end
 end
 

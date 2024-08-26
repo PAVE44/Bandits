@@ -2,12 +2,8 @@ Sandbox_EN = {
 
     /***** GENERAL *****/
     Sandbox_Bandits_General = "Bandits General"
-    Sandbox_Bandits.StrenghtModel = "Spawning relies on [ONLY PLAYER TIME IMPLEMENTED]"
-    Sandbox_Bandits.StrenghtModelTooltip = "Spawning relies on [ONLY PLAYER TIME IMPLEMENTED]"
-    Sandbox_Bandits.StrenghtModel_option1 = "Player time survived"    
-    Sandbox_Bandits.StrenghtModel_option2 = "World age"
-    Sandbox_Bandits.StrenghtModel_option3 = "Map zone"
 
+    Sandbox_Bandits.DensityScore = "Bandit spawn rate boosted in towns and lowered in secluded areas"
     Sandbox_Bandits.Surrender = "Hurt Bandits may surrender"
     Sandbox_Bandits.BleedOut = "Hurt Bandits may bleed and die"
     Sandbox_Bandits.LimitedEndurance = "Bandits have limited endurance"
