@@ -623,6 +623,51 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
     return ret
 end
 
+function BanditScheduler.GetDensityScore(player, r)
+    local score = 0
+    local px = player:getX()
+    local py = player:getY()
+
+    local zoneScore = {}
+    zoneScore.Forest = -2
+    zoneScore.DeepForest = -3
+    zoneScore.Nav = 2
+    zoneScore.Vegitation = -1
+    zoneScore.TownZone = 4
+    zoneScore.Ranch = 2
+    zoneScore.Farm = 2
+    zoneScore.TrailerPark = 3
+    zoneScore.ZombiesType = 0
+    zoneScore.FarmLand = 2
+    zoneScore.LootZone = 3
+    zoneScore.ZoneStory = 2
+
+    local function isInCircle(x, y, cx, cy, r)
+        local d2 = (x - cx) ^ 2 + (y - cy) ^ 2
+        return d2 <= r ^ 2
+    end
+
+    -- about 1250 iterations
+    local radius = 100
+    for x=px-radius, px+radius, 5 do
+        for y=py-radius, py+radius, 5 do
+            if isInCircle(x, y, px, py, radius) then
+                local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
+                local zoneType = zone:getType()
+                if zoneScore[zoneType] then
+                    score = score + zoneScore[zoneType]
+                else
+                    print ("unknown zone type " .. zoneType)
+                end
+            end
+        end
+    end
+    return score
+end
+
+-------------------------------------------------------------------------------
+-- Spawning function
+-------------------------------------------------------------------------------
 function BanditScheduler.SpawnDefenders(player, min, max)
     local event = {}
     event.hostile = true
@@ -775,6 +820,10 @@ function BanditScheduler.BroadcastTV(cx, cy)
         end
     end
 end
+
+-------------------------------------------------------------------------------
+-- Main function
+-------------------------------------------------------------------------------
 
 function BanditScheduler.CheckEvent()
     
