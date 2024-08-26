@@ -696,7 +696,7 @@ function BanditUpdate.Combat(bandit)
             if enemyCharacter:isAlive() then
                 local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground"
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.2, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.13, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             elseif instanceof(enemyCharacter, "IsoPlayer") then
                 local task = {action="Time", anim="Smoke", time=250}

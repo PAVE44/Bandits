@@ -631,9 +631,9 @@ function BanditScheduler.GetDensityScore(player, r)
     local zoneScore = {}
     zoneScore.Forest = -2
     zoneScore.DeepForest = -3
-    zoneScore.Nav = 2
-    zoneScore.Vegitation = -1
-    zoneScore.TownZone = 4
+    zoneScore.Nav = 4
+    zoneScore.Vegitation = -1.2
+    zoneScore.TownZone = 5
     zoneScore.Ranch = 2
     zoneScore.Farm = 2
     zoneScore.TrailerPark = 3
@@ -648,16 +648,17 @@ function BanditScheduler.GetDensityScore(player, r)
     end
 
     -- about 1250 iterations
-    local radius = 100
-    for x=px-radius, px+radius, 5 do
-        for y=py-radius, py+radius, 5 do
-            if isInCircle(x, y, px, py, radius) then
+    for x=px-r, px+r, 5 do
+        for y=py-r, py+r, 5 do
+            if isInCircle(x, y, px, py, r) then
                 local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
-                local zoneType = zone:getType()
-                if zoneScore[zoneType] then
-                    score = score + zoneScore[zoneType]
-                else
-                    print ("unknown zone type " .. zoneType)
+                if zone then
+                    local zoneType = zone:getType()
+                    if zoneScore[zoneType] then
+                        score = score + zoneScore[zoneType]
+                    else
+                        print ("unknown zone type " .. zoneType)
+                    end
                 end
             end
         end
@@ -852,13 +853,15 @@ function BanditScheduler.CheckEvent()
         local daysPassed = currentPlayer:getHoursSurvived() / 24
         local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
 
-        -- print ("SPAWN ATTEMPT" .. daysPassed)
-        for _, wave in pairs(waveData) do
+        local densityScore = 0
+        if SandboxVars.Bandits.General_DensityScore then
+           densityScore = BanditScheduler.GetDensityScore(currentPlayer, 120)
+        end
 
+        for _, wave in pairs(waveData) do
+            local spawnChance = wave.spawnHourlyChance * (1 + (densityScore / 10000)) / 6
             local spawnRandom = ZombRandFloat(0, 101)
-            -- print ("spawnRandom" .. spawnRandom)
-            -- print ("spawnHourlyChance" .. wave.spawnHourlyChance / 6)
-            if spawnRandom < wave.spawnHourlyChance / 6 then
+            if spawnRandom < spawnChance then
                 BanditScheduler.SpawnWave(currentPlayer, wave)
             end
         end
