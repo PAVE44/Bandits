@@ -647,6 +647,49 @@ function BanditScheduler.GetDensityScore(player, r)
         return d2 <= r ^ 2
     end
 
+    local function calculateDistance(x1, y1, x2, y2)
+        return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+    end
+
+    local function getNearbyBuildingsWithin(radius)
+        local nearbyBuildingCount = 0
+
+
+        -- Count the number of buildings in the cache
+        local buildingCount = 0
+        for _ in pairs(BanditWorldData.Buildings) do
+            buildingCount = buildingCount + 1
+        end
+        print("Number of buildings:", buildingCount)
+
+        for buildingID, buildingDef in pairs(BanditWorldData.Buildings) do
+            local distance = calculateDistance(px, py, buildingDef:getX(), buildingDef:getY())
+            if distance <= radius then
+                nearbyBuildingCount = nearbyBuildingCount + 1
+            end
+        end
+
+        return nearbyBuildingCount
+    end
+
+    local nearbyBuildings = getNearbyBuildingsWithin(1000)
+    print("Number of nearby buildings within 1000 distance: " .. nearbyBuildings)
+
+    -- local buildingDensity = 0
+    -- if nearbyBuildingCount < 10 then -- farm
+    --     buildingDensity = 0
+    -- elseif nearbyBuildingCount >= 10 then -- small residential
+    --     buildingDensity = 1
+    -- elseif nearbyBuildingCount >= 30 then -- small town
+    --     buildingDensity = 2
+    -- elseif nearbyBuildingCount >= 40 then -- small town
+    --     buildingDensity = 3
+    -- elseif nearbyBuildingCount >= 600 then --  riverside
+    --     buildingDensity = 4
+    -- elseif nearbyBuildingCount >= 1000 then -- center louisville
+    --     buildingDensity = 5
+    -- end
+
     -- about 1250 iterations
     for x=px-r, px+r, 5 do
         for y=py-r, py+r, 5 do
