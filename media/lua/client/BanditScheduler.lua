@@ -709,6 +709,22 @@ function BanditScheduler.GetDensityScore(player, r)
     return score
 end
 
+function BanditScheduler.GetSpawnZoneBoost(player, clanId)
+    local zoneBoost = 1
+    local clan = BanditCreator.GroupMap[clanId]
+    local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
+
+    if zone and clan and clan.favoriteZones then
+        local zoneType = zone:getType()
+        for _, zt in pairs(clan.favoriteZones) do
+            if zt == zoneType then
+                zoneBoost = 1.3
+                break
+            end
+        end
+    end
+    return zoneBoost
+end
 -------------------------------------------------------------------------------
 -- Spawning function
 -------------------------------------------------------------------------------
@@ -902,7 +918,8 @@ function BanditScheduler.CheckEvent()
         end
 
         for _, wave in pairs(waveData) do
-            local spawnChance = wave.spawnHourlyChance * (1 + (densityScore / 10000)) / 6
+            local spawnZoneBoost = BanditScheduler.GetSpawnZoneBoost(currentPlayer, wave.clanId)
+            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * (1 + (densityScore / 10000)) / 6
             local spawnRandom = ZombRandFloat(0, 101)
             if spawnRandom < spawnChance then
                 BanditScheduler.SpawnWave(currentPlayer, wave)

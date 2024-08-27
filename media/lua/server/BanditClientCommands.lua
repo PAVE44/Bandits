@@ -64,6 +64,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.hostile = event.hostile
             brain.clan = bandit.clan
             brain.eatBody = bandit.eatBody
+            brain.accuracyBoost = bandit.accuracyBoost
             brain.stationary = false
             brain.sleeping = false
             brain.endurance = 1.00

@@ -76,6 +76,7 @@ function BanditCreator.MakeFromWave(wave)
     bandit.health = clan.health
     bandit.femaleChance = clan.femaleChance
     bandit.eatBody = clan.eatBody
+    bandit.accuracyBoost = clan.accuracyBoost
 
     -- gun weapon choice comes from clan file, weapon probability from wave data
     bandit.weapons = BanditCreator.MakeWeapons(wave, clan)
@@ -142,6 +143,7 @@ function BanditCreator.MakeFromSpawnType(spawnData)
     bandit.health = clan.health
     bandit.femaleChance = clan.femaleChance
     bandit.eatBody = clan.eatBody
+    bandit.accuracyBoost = clan.accuracyBoost
 
     -- gun weapon choice comes from clan file, weapon probability from wave data
     bandit.weapons = BanditCreator.MakeWeapons(config, clan)

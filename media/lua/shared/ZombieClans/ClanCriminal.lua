@@ -17,6 +17,12 @@ BanditClan.Criminal.health = 3
 -- if the bandit will eat player's body after death
 BanditClan.Criminal.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 0.9
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {{"TownZone", "TrailerPark"}}
+
 -- available outfits
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}
 table.insert(BanditClan.Criminal.Outfits, "Thug")

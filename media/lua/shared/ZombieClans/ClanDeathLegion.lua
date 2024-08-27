@@ -17,6 +17,12 @@ BanditClan.DeathLegion.health = 7
 -- if the bandit will eat player's body after death
 BanditClan.DeathLegion.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 1.3
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {{"TownZone", "TrailerPark", "Nav", "Farm", "FarmLand", "Ranch", "Vegitation", "Forest", "DeepForest", "LootZone", "ZoneStory", "ZombiesType"}}
+
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}
 if getActivatedMods():contains("Insurgent") then

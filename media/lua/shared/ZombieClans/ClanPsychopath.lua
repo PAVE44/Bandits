@@ -17,6 +17,12 @@ BanditClan.Psychopath.health = 2
 -- if the bandit will eat player's body after death
 BanditClan.Psychopath.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 0.7
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {}
+
 -- available outfits
 BanditClan.Psychopath.Outfits = BanditClan.Psychopath.Outfits or {}
 table.insert(BanditClan.Psychopath.Outfits, "Naked")

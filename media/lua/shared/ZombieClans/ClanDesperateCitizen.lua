@@ -17,6 +17,12 @@ BanditClan.DesperateCitizen.health = 1
 -- if the bandit will eat player's body after death
 BanditClan.DesperateCitizen.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 0.8
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {"TownZone", "Farm", "FarmLand", "Ranch"}
+
 -- available outfits
 BanditClan.DesperateCitizen.Outfits = BanditClan.DesperateCitizen.Outfits or {}
 table.insert(BanditClan.DesperateCitizen.Outfits, "Bathrobe")

@@ -17,6 +17,12 @@ BanditClan.Prepper.health = 4
 -- if the bandit will eat player's body after death
 BanditClan.Prepper.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 1
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {"Vegitation", "Farm", "FarmLand", "Ranch"}
+
 -- available outfits
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}
 table.insert(BanditClan.Prepper.Outfits, "Survivalist03")

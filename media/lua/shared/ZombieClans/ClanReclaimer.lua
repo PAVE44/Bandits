@@ -17,6 +17,12 @@ BanditClan.Reclaimer.health = 9
 -- if the bandit will eat player's body after death
 BanditClan.Reclaimer.eatBody = true
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 0.8
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {}
+
 -- available outfits
 BanditClan.Reclaimer.Outfits = BanditClan.Reclaimer.Outfits or {}
 table.insert(BanditClan.Reclaimer.Outfits, "Priest")

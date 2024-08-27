@@ -17,6 +17,12 @@ BanditClan.PrivateMilitia.health = 6
 -- if the bandit will eat player's body after death
 BanditClan.PrivateMilitia.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 1.1
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {"Nav"}
+
 -- available outfits
 BanditClan.PrivateMilitia.Outfits = BanditClan.PrivateMilitia.Outfits or {}
 if getActivatedMods():contains("USMilitaryPack") then

@@ -17,6 +17,12 @@ BanditClan.Scientist.health = 4
 -- if the bandit will eat player's body after death
 BanditClan.Scientist.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 0.8
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {}
+
 -- available outfits
 BanditClan.Scientist.Outfits = BanditClan.Scientist.Outfits or {}
 table.insert(BanditClan.Scientist.Outfits, "HazardSuit")

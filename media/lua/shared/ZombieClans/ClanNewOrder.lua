@@ -17,6 +17,12 @@ BanditClan.NewOrder.health = 6
 -- if the bandit will eat player's body after death
 BanditClan.NewOrder.eatBody = false
 
+-- Ranged weapon accuracy multiplayer (1=default)
+BanditClan.Biker.accuracyBoost = 1.2
+
+-- Favorite zones 
+BanditClan.Biker.favoriteZones = {}
+
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}
 if getActivatedMods():contains("KATTAJ1_Military") then

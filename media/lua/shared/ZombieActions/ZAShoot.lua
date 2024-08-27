@@ -389,22 +389,24 @@ local function Hit(shooter, victim)
     -- Calculate the distance between the shooter and the victim
     local dist = math.sqrt(math.pow(tempShooter:getX() - victim:getX(), 2) + math.pow(tempShooter:getY() - victim:getY(), 2))
 
-    -- Determine accuracy based on SandboxVars
+    -- Determine accuracy based on SandboxVars and shooter clan
+    local brainShooter = BanditBrain.Get(shooter)
+    local accuracyBoost = brainShooter.accuracyBoost or 1
     local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
-    local accuracyCoeff = 0.1
+    local accuracyCoeff = 0.11
     if accuracyLevel == 1 then
         accuracyCoeff = 0.5
     elseif accuracyLevel == 2 then
         accuracyCoeff = 0.22
     elseif accuracyLevel == 3 then
-        accuracyCoeff = 0.1
+        accuracyCoeff = 0.11
     elseif accuracyLevel == 4 then
-        accuracyCoeff = 0.042
+        accuracyCoeff = 0.06
     elseif accuracyLevel == 5 then
-        accuracyCoeff = 0.016
+        accuracyCoeff = 0.028
     end
 
-    local accuracyThreshold = 100 / (1 + accuracyCoeff * dist)
+    local accuracyThreshold = 100 / (1 + accuracyCoeff * dist / accuracyBoost)
 
     if ZombRand(100) < accuracyThreshold then
         local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
