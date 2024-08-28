@@ -186,7 +186,7 @@ function BanditUtils.GetNearbyBuildings()
             local distance = math.sqrt((buildingX - playerX)^2 + (buildingY - playerY)^2)
 
             -- Buildings stay in memory even after exiting the cell, so we need to check if the building is within a set distance
-            if distance <= 1000 then
+            if distance <= 1500 then
                 if not buildings[buildingKey] then
                     buildings[buildingKey] = building
                 end
