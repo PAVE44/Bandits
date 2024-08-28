@@ -472,22 +472,22 @@ function BanditScheduler.RaiseDefences(x, y)
 
                                     local fridge = object:getContainerByType("fridge")
                                     if fridge then
-                                        BanditLoot.FillContainer(fridge, BanditLoot.FridgeItems, 6)
+                                        BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 5)
                                     end
 
                                     local freezer = object:getContainerByType("freezer")
                                     if freezer then
-                                        BanditLoot.FillContainer(freezer, BanditLoot.FridgeItems, 5)
+                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
                                     end
 
                                     local counter = object:getContainerByType("counter")
                                     if counter then
-                                        BanditLoot.FillContainer(counter, BanditLoot.CounterItems, 9)
+                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 9)
                                     end
 
                                     local crate = object:getContainerByType("crate")
                                     if crate then
-                                        BanditLoot.FillContainer(crate, BanditLoot.CrateItems, 9)
+                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 9)
                                     end
                                 end
                             end
