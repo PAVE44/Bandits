@@ -602,7 +602,7 @@ option Bandits.Clan_7_HasRifleChance = {
 }
 
 option Bandits.Clan_7_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 2,
+    type = integer, min = 0, max = 25, default = 3,
     page = Bandits_Clan_7, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
 }
 
@@ -1004,7 +1004,7 @@ option Bandits.Clan_13_HasRifleChance = {
 }
 
 option Bandits.Clan_13_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 7,
+    type = integer, min = 0, max = 25, default = 6,
     page = Bandits_Clan_13, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
 }
 
@@ -1071,7 +1071,7 @@ option Bandits.Clan_14_HasRifleChance = {
 }
 
 option Bandits.Clan_14_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 9,
+    type = integer, min = 0, max = 25, default = 8,
     page = Bandits_Clan_14, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
 }
 

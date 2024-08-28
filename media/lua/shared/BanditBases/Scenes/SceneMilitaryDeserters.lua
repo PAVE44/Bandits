@@ -27,16 +27,16 @@ function BanditScenes.MilitaryDeserters (player, square)
 
     local container
     container = BanditBasePlacements.Container("furniture_storage_02_29", sx+3, sy+1, sz)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 12)
+    BanditLoot.FillContainer(container, BanditLoot.CannedFoodItems, 4)
 
     container = BanditBasePlacements.Container("furniture_storage_02_29", sx+3, sy+11, sz)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 12)
+    BanditLoot.FillContainer(container, BanditLoot.CannedFoodItems, 4)
 
     container = BanditBasePlacements.Container("location_military_generic_01_1", sx+10, sy+12, sz)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 12)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
 
     container = BanditBasePlacements.Container("location_military_generic_01_1", sx+11, sy+12, sz)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 12)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
 
     local event = {}
     event.x = sx + 10
