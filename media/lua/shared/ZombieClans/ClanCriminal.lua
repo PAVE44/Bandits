@@ -21,7 +21,7 @@ BanditClan.Criminal.eatBody = false
 BanditClan.Criminal.accuracyBoost = 0.9
 
 -- Favorite zones 
-BanditClan.Criminal.favoriteZones = {"TownZone", "TrailerPark"}
+BanditClan.Criminal.favoriteZones = {"TownZone"}
 
 -- available outfits
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}

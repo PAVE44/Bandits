@@ -1,20 +1,5 @@
 ZombiePrograms = ZombiePrograms or {}
 
-local function GetMoveTask(endurance, x, y, z, walkType, dist)
-    local gamemode = getWorld():getGameMode()
-    local task
-    if gamemode == "Multiplayer" then
-        if dist > 30 then
-            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
-        else
-            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
-        end
-    else
-        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
-    end
-    return task
-end
-
 ZombiePrograms.Companion = {}
 ZombiePrograms.Companion.Stages = {}
 
@@ -119,7 +104,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- look for guardpost
     local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
     if guardpost then
-        table.insert(tasks, GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
         return {status=true, next="Follow", tasks=tasks}
     end
 
@@ -138,7 +123,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         local dz = master:getZ()
         local dxf = ((id % 10) - 5) / 10
         local dyf = ((id % 11) - 5) / 10
-        table.insert(tasks, GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
     end
 
 

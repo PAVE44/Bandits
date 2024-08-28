@@ -143,6 +143,25 @@ function BanditUtils.GetClosestEnemyBanditLocation(bandit)
     return bestX, bestY, bestZ, bestDist, bestZombieId
 end
 
+function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist)
+    -- Move and GoTo generally do the same thing with a different method
+    -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
+    -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
+
+    local gamemode = getWorld():getGameMode()
+    local task
+    if gamemode == "Multiplayer" then
+        if dist > 30 then
+            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        else
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        end
+    else
+        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+    end
+    return task
+end
+
 function BanditUtils.CloneIsoPlayer(originalCharacter)
     -- Create a new temporary IsoPlayer at the same position as the original player
     local tempPlayer = IsoPlayer.new(nil, nil, originalCharacter:getX(), originalCharacter:getY(), originalCharacter:getZ())

@@ -21,7 +21,7 @@ BanditClan.Cannibal.eatBody = true
 BanditClan.Cannibal.accuracyBoost = 0.8
 
 -- Favorite zones 
-BanditClan.Cannibal.favoriteZones = {"TownZone", "TrailerPark", "Farm", "FarmLand", "Ranch"}
+BanditClan.Cannibal.favoriteZones = {}
 
 -- available outfits
 BanditClan.Cannibal.Outfits = BanditClan.Cannibal.Outfits or {}

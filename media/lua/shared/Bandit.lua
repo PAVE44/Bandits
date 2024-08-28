@@ -36,6 +36,16 @@ function Bandit.HasTaskType(zombie, taskType)
     return false
 end
 
+function Bandit.HasMoveTask(zombie)
+    local brain = BanditBrain.Get(zombie)
+    for _, task in pairs(brain.tasks) do
+        if task.action == "Move" or task.action == "GoTo" then
+            return true
+        end
+    end
+    return false
+end
+
 function Bandit.HasActionTask(zombie)
     local brain = BanditBrain.Get(zombie)
     for _, task in pairs(brain.tasks) do
@@ -377,7 +387,7 @@ function Bandit.Say(zombie, phrase)
         
         if dist <= 14 then
             local id = BanditUtils.GetCharacterID(zombie)
-            local voice = 1 + math.abs(id) % 5
+            local voice = 1 -- + math.abs(id) % 5
 
             local sex = "Male"
             if zombie:isFemale() then 
@@ -405,8 +415,8 @@ function Bandit.Say(zombie, phrase)
                 sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
                 length = 6
             elseif phrase == "DEAD" then
-                sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
-                length = 6
+                sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+                length = 8
             elseif phrase == "INSIDE" then
                 sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
                 length = 6

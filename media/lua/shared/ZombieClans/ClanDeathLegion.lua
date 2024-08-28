@@ -21,7 +21,7 @@ BanditClan.DeathLegion.eatBody = false
 BanditClan.DeathLegion.accuracyBoost = 1.3
 
 -- Favorite zones 
-BanditClan.DeathLegion.favoriteZones = {"TownZone", "TrailerPark", "Nav", "Farm", "FarmLand", "Ranch", "Vegitation", "Forest", "DeepForest", "LootZone", "ZoneStory", "ZombiesType"}
+BanditClan.DeathLegion.favoriteZones = {}
 
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}

@@ -22,7 +22,7 @@ ZombieActions.GoTo.onWorking = function(zombie, task)
 
     local dx = math.abs(zombie:getX() - task.x)
     local dy = math.abs(zombie:getY() - task.y)
-    if dx <= 2 and dy <= 2 and zombie:getZ() == task.z then
+    if dx <= 3 and dy <= 3 and zombie:getZ() == task.z then
         zombie:setVariable("BanditWalkType", "WalkAim")
     else
         zombie:setVariable("BanditWalkType", task.walkType)

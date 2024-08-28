@@ -31,8 +31,14 @@ ZombieActions.Move.onWorking = function(zombie, task)
             zombie:getPathFindBehavior2():cancel()
             zombie:setPath2(nil)
         end
-        -- zombie:setWalkType(task.walkType)
-        zombie:setVariable("BanditWalkType", task.walkType)
+        
+        local dx = math.abs(zombie:getX() - task.x)
+        local dy = math.abs(zombie:getY() - task.y)
+        if dx <= 3 and dy <= 3 and zombie:getZ() == task.z then
+            zombie:setVariable("BanditWalkType", "WalkAim")
+        else
+            zombie:setVariable("BanditWalkType", task.walkType)
+        end
 
         local result = zombie:getPathFindBehavior2():update()
         if result == BehaviorResult.Failed then

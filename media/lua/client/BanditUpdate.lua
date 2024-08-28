@@ -56,6 +56,70 @@ local function SwitchWeapon(bandit, itemName)
     return tasks
 end
 
+local function getEscapePoint(bandit, radius)
+    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local brain = BanditBrain.Get(bandit)
+
+    -- Create an array to count enemy characters in radial segments
+    local segmentCount = 4
+    local segments = {}
+    for i = 1, segmentCount do
+        segments[i] = 0
+    end
+
+    -- counters to determine if the bandit is outnumbered
+    local friendlies = 0
+    local enemies = 0
+
+    local potentialEnemyList = getCell():getZombieList()
+    for i=0, potentialEnemyList:size()-1 do
+        local potentialEnemy = potentialEnemyList:get(i)
+        local zx, zy, zz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
+        local potentialEnemyBrain = BanditBrain.Get(potentialEnemy)
+
+        -- Calculate distance between bandit and the enemy character
+        local distance = math.sqrt((zx - bx) ^ 2 + (zy - by) ^ 2)
+        if distance <= radius and bz == zz then
+            -- Calculate angle of the point relative to the circle's center
+            local angle = math.atan2(zy - by, zx - bx)
+            -- Convert angle from radians to degrees
+            local degrees = math.deg(angle)
+            -- Normalize angle to be within the -180 to 180 range
+            if degrees >= 180 then
+                degrees = degrees - 360
+            end
+            -- Determine which segment this angle falls into
+            local segment = math.floor((degrees + 180) / (360 / segmentCount)) + 1
+            
+            -- Increment enemy and friendly counters for that segment
+            if not potentialEnemyBrain or (brain.clan ~= potentialEnemyBrain.clan and (brain.hostile or potentialEnemyBrain.hostile)) then
+                segments[segment] = segments[segment] + 1
+            end
+        end
+    end
+
+    -- Find the segment with the fewest points
+    local minCnt = math.huge
+    local segmentBest = 1
+    for i = 1, segmentCount do
+        if segments[i] < minCnt then
+            minCnt = segments[i]
+            segmentBest = i
+        end
+    end
+
+    -- Calculate the mean threat direction
+    local segmentSize = 360 / segmentCount
+    local segmentStartAngle = -180 + (segmentBest - 1) * segmentSize
+    local segmentEndAngle = segmentStartAngle + segmentSize
+    local dir = (segmentStartAngle + segmentEndAngle) / 2
+
+    -- Find the space point 10 square away
+    local lx = bx + math.floor(10 * math.cos(dir))
+    local ly = by + math.floor(10 * math.sin(dir))
+    return lx, ly, bz
+end
+
 function BanditUpdate.Banditize(zombie, brain)
 
     -- load brain
@@ -573,7 +637,8 @@ function BanditUpdate.Combat(bandit)
                         if Bandit.Can(bandit, "melee") and weapons.melee then
                             local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                             local minRange = itemMelee:getMaxRange()
-                            if dist <= minRange then 
+                            local cryingPlayersHandicap = 0.2
+                            if dist <= minRange - cryingPlayersHandicap then 
                                 enemyCharacter = potentialEnemy
                                 combat = true
                             end
@@ -595,20 +660,21 @@ function BanditUpdate.Combat(bandit)
     local enemyList = cell:getZombieList()
 
     -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
-    for i=1, enemyList:size()-1 do
+    local enemies = 0
+    local friendlies = 0
+    for i=0, enemyList:size()-1 do
         local potentialEnemy = enemyList:get(i)
         if potentialEnemy then
 
             local px = potentialEnemy:getX()
             local py = potentialEnemy:getY()
             local pz = potentialEnemy:getZ()
+            local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
 
             local potentialEnemyBrain = BanditBrain.Get(potentialEnemy)
-
             if not potentialEnemyBrain or (brain.clan ~= potentialEnemyBrain.clan and (brain.hostile or potentialEnemyBrain.hostile)) then
-
                 if bandit:CanSee(potentialEnemy) then
-                    local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+                    if dist < 4 then enemies = enemies + 1 end
                     if dist < bestDist then
                         local potentialEnemySquare = potentialEnemy:getSquare()
                         local lightLevel = potentialEnemySquare:getLightLevel(0)
@@ -634,12 +700,22 @@ function BanditUpdate.Combat(bandit)
                         end
                     end
                 end
+            else
+                if dist < 4 then friendlies = friendlies + 1 end
             end
         end
     end
 
+    -- print ("ENEMIES: " .. enemies .. " FRIENDLIES: " .. friendlies)
+
     if combat and weapons.melee and not bandit:isCrawling() and not Bandit.IsSleeping(bandit) then
-        if not Bandit.HasTaskType(bandit, "Hit") and enemyCharacter:isAlive() then
+        if enemies > friendlies and not Bandit.HasMoveTask(bandit) then
+            local tx, ty, tz = getEscapePoint(bandit, 10)
+            local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 10)
+            table.insert(tasks, task)
+            
+
+        elseif not Bandit.HasTaskType(bandit, "Hit") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
@@ -689,8 +765,10 @@ function BanditUpdate.Combat(bandit)
                             local stasks = SwitchWeapon(bandit, weapons.primary.name)
                             for _, t in pairs(stasks) do table.insert(tasks, t) end
 
+                            local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
                             local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-                            local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
+                            local aimTimeSurp = dist ^ 2
+                            -- local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
                             if aimTimeMin + aimTimeSurp > 0 then
                                 local task = {action="Time", anim="AimRifle", time=aimTimeMin + ZombRand(aimTimeSurp)}
                                 table.insert(tasks, task)
@@ -850,7 +928,8 @@ function BanditUpdate.Zombie(zombie)
                                         SwipeStatePlayer.splash(bandit, teeth, zombie)
 
                                         if attackingZombiesNumber > 2 then
-                                            local sound = "MaleBeingEatenDeath"
+                                            Bandit.Say(bandit, "DEAD")
+                                            local sound
                                             if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
                                             local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
                                             Bandit.AddTask(bandit, task)

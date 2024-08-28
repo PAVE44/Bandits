@@ -21,7 +21,7 @@ BanditClan.DesperateCitizen.eatBody = false
 BanditClan.DesperateCitizen.accuracyBoost = 0.8
 
 -- Favorite zones 
-BanditClan.DesperateCitizen.favoriteZones = {"TownZone", "Farm", "FarmLand", "Ranch"}
+BanditClan.DesperateCitizen.favoriteZones = {"TownZone", "Farm"}
 
 -- available outfits
 BanditClan.DesperateCitizen.Outfits = BanditClan.DesperateCitizen.Outfits or {}
