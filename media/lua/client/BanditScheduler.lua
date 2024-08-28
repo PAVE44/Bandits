@@ -524,6 +524,7 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
         else
             playerList = IsoPlayer.getPlayers()
         end
+
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
             if player then
@@ -571,10 +572,8 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
 
     -- iterates over rooms in a building and finds free squares
     -- that will be available for the spawn
-    local function getSpawnPoints(building)
+    local function getSpawnPoints(buildingDef)
         local spawnPoints = {}
-        local buildingDef = building:getDef()
-        if not buildingDef then return spawnPoints end
 
         -- this actually return roomDefs
         local roomDefList = buildingDef:getRooms()
@@ -591,35 +590,23 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
     end
 
     -- get x, y of a building
-    local function getCenterCoords(building)
+    local function getCenterCoords(buildingDef)
         local coords = {}
-        local buildingDef = building:getDef()
-        if not buildingDef then return coords end
-
         local x = math.floor((buildingDef:getX() + buildingDef:getX2()) / 2)
         local y = math.floor((buildingDef:getY() + buildingDef:getY2()) / 2)
         coords = {x=x, y=y}
         return coords
     end
 
-    -- getting the list of buildings in the cell does not work,
-    -- so we are doing "montecarlo" here
-    for i=1, 5000 do
-        local offsetX = ZombRand(min, max)
-        local offsetY = ZombRand(min, max)
-        if ZombRand(2) == 1 then offsetX = -offsetX end
-        if ZombRand(2) == 1 then offsetY = -offsetY end 
-
-        local square = cell:getGridSquare(px + offsetX, py + offsetY, 0)
-        local building = getBuilding(square)
-
-        if building then
-            ret.buildingCoords = {x = px + offsetX, y = py + offsetY}
-            ret.buildingCenterCoords = getCenterCoords(building)
-            ret.buildingType = getBuildingType(building)
-            ret.spawnPoints = getSpawnPoints(building)
-        end
+    local buildings = BanditUtils.GetBuildingsInCurrentCell()
+    for _, building in pairs(buildings) do
+        local buildingDef = building:getDef()
+        ret.buildingCoords = {x = buildingDef:getX(), y = buildingDef:getY()}
+        ret.buildingCenterCoords = getCenterCoords(buildingDef)
+        ret.spawnPoints = getSpawnPoints(buildingDef)
+        ret.buildingType = getBuildingType(building)
     end
+
     return ret
 end
 
@@ -651,44 +638,8 @@ function BanditScheduler.GetDensityScore(player, r)
         return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
     end
 
-    local function getNearbyBuildingsWithin(radius)
-        local nearbyBuildingCount = 0
-
-
-        -- Count the number of buildings in the cache
-        local buildingCount = 0
-        for _ in pairs(BanditWorldData.Buildings) do
-            buildingCount = buildingCount + 1
-        end
-        print("Number of buildings:", buildingCount)
-
-        for buildingID, buildingDef in pairs(BanditWorldData.Buildings) do
-            local distance = calculateDistance(px, py, buildingDef:getX(), buildingDef:getY())
-            if distance <= radius then
-                nearbyBuildingCount = nearbyBuildingCount + 1
-            end
-        end
-
-        return nearbyBuildingCount
-    end
-
-    local nearbyBuildings = getNearbyBuildingsWithin(1000)
-    print("Number of nearby buildings within 1000 distance: " .. nearbyBuildings)
-
-    -- local buildingDensity = 0
-    -- if nearbyBuildingCount < 10 then -- farm
-    --     buildingDensity = 0
-    -- elseif nearbyBuildingCount >= 10 then -- small residential
-    --     buildingDensity = 1
-    -- elseif nearbyBuildingCount >= 30 then -- small town
-    --     buildingDensity = 2
-    -- elseif nearbyBuildingCount >= 40 then -- small town
-    --     buildingDensity = 3
-    -- elseif nearbyBuildingCount >= 600 then --  riverside
-    --     buildingDensity = 4
-    -- elseif nearbyBuildingCount >= 1000 then -- center louisville
-    --     buildingDensity = 5
-    -- end
+    -- todo use numBuildings for additional scoring
+    local numBuildings = BanditUtils.GetNumNearbyBuildings()
 
     -- about 1250 iterations
     for x=px-r, px+r, 5 do

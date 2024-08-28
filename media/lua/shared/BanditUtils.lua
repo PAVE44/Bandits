@@ -160,6 +160,52 @@ function BanditUtils.CloneIsoPlayer(originalCharacter)
     return tempPlayer
 end
 
+function BanditUtils.GetNearbyBuildings()
+    local player = getPlayer()
+    local cell = player:getCell()  -- Get the player's current cell
+
+    -- Get the player's current position
+    local playerX = player:getX()
+    local playerY = player:getY()
+
+    -- Get the list of all rooms in the player's current cell
+    local rooms = cell:getRoomList()
+    local buildings = {}
+
+    -- Iterate through the rooms and construct our own list of buildings
+    for i = 0, rooms:size() - 1 do
+        local room = rooms:get(i)  -- Get the room at the current index
+        local building = room:getBuilding()
+        if building then
+            local def = building:getDef()
+            local buildingKey = def:getKeyId()
+            
+            -- Calculate the distance between the player and the building
+            local buildingX = def:getX()
+            local buildingY = def:getY()
+            local distance = math.sqrt((buildingX - playerX)^2 + (buildingY - playerY)^2)
+
+            -- Buildings stay in memory even after exiting the cell, so we need to check if the building is within a set distance
+            if distance <= 1000 then
+                if not buildings[buildingKey] then
+                    buildings[buildingKey] = building
+                end
+            end
+        end
+    end
+
+    return buildings
+end
+
+function BanditUtils.GetNumNearbyBuildings()
+    local buildings = BanditUtils.GetNearbyBuildings()
+    local buildingCount = 0    
+    for _, building in pairs(buildings) do
+        buildingCount = buildingCount + 1
+    end
+    return buildingCount
+end
+
 --[[
 local x1 = player:getX()
 local y1 = player:getY()
