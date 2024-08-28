@@ -18,10 +18,10 @@ BanditClan.DesperateCitizen.health = 1
 BanditClan.DesperateCitizen.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 0.8
+BanditClan.DesperateCitizen.accuracyBoost = 0.8
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {"TownZone", "Farm", "FarmLand", "Ranch"}
+BanditClan.DesperateCitizen.favoriteZones = {"TownZone", "Farm", "FarmLand", "Ranch"}
 
 -- available outfits
 BanditClan.DesperateCitizen.Outfits = BanditClan.DesperateCitizen.Outfits or {}

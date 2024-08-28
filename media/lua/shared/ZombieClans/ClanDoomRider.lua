@@ -18,10 +18,10 @@ BanditClan.DoomRider.health = 5
 BanditClan.DoomRider.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1
+BanditClan.DoomRider.accuracyBoost = 1
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
+BanditClan.DoomRider.favoriteZones = {}
 
 -- available outfits
 BanditClan.DoomRider.Outfits = BanditClan.DoomRider.Outfits or {}

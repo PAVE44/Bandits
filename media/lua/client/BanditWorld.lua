@@ -345,4 +345,4 @@ local function onStart()
     -- renderer:addToUIManager()
 end
 
-Events.OnGameStart.Add(onStart)
+-- Events.OnGameStart.Add(onStart)

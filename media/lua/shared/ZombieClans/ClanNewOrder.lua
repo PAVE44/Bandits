@@ -18,10 +18,10 @@ BanditClan.NewOrder.health = 6
 BanditClan.NewOrder.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1.2
+BanditClan.NewOrder.accuracyBoost = 1.2
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
+BanditClan.NewOrder.favoriteZones = {}
 
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}

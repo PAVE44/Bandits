@@ -28,6 +28,14 @@ function Bandit.HasTask(zombie)
     return false
 end
 
+function Bandit.HasTaskType(zombie, taskType)
+    local brain = BanditBrain.Get(zombie)
+    if #brain.tasks > 0 and brain.tasks[1].action == taskType then
+        return true
+    end
+    return false
+end
+
 function Bandit.HasActionTask(zombie)
     local brain = BanditBrain.Get(zombie)
     for _, task in pairs(brain.tasks) do
@@ -53,7 +61,6 @@ function Bandit.RemoveTask(zombie)
 end
 
 function Bandit.ClearTasks(zombie)
-    zombie:getPathFindBehavior2():cancel()
     local brain = BanditBrain.Get(zombie)
     local newtasks = {}
     for _, task in pairs(brain.tasks) do
@@ -64,7 +71,19 @@ function Bandit.ClearTasks(zombie)
 
     brain.tasks = newtasks
     BanditBrain.Update(zombie, brain)
+end
 
+function Bandit.ClearOtherTasks(zombie, exception)
+    local brain = BanditBrain.Get(zombie)
+    local newtasks = {}
+    for _, task in pairs(brain.tasks) do
+        if task.lock == true or task.action == exception then
+            table.insert(newtasks, task)
+        end
+    end
+
+    brain.tasks = newtasks
+    BanditBrain.Update(zombie, brain)
 end
 
 function Bandit.UpdateEndurance(zombie, delta)

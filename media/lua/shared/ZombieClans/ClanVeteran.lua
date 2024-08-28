@@ -18,13 +18,10 @@ BanditClan.Veteran.health = 4
 BanditClan.Veteran.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1.4
+BanditClan.Veteran.accuracyBoost = 1.4
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
-
--- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
+BanditClan.Veteran.favoriteZones = {}
 
 -- available outfits
 BanditClan.Veteran.Outfits = BanditClan.Veteran.Outfits or {}

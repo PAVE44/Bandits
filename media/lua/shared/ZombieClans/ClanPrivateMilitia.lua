@@ -18,10 +18,10 @@ BanditClan.PrivateMilitia.health = 6
 BanditClan.PrivateMilitia.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1.1
+BanditClan.PrivateMilitia.accuracyBoost = 1.1
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {"Nav"}
+BanditClan.PrivateMilitia.favoriteZones = {"Nav"}
 
 -- available outfits
 BanditClan.PrivateMilitia.Outfits = BanditClan.PrivateMilitia.Outfits or {}

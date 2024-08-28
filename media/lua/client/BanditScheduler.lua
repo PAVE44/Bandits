@@ -629,10 +629,10 @@ function BanditScheduler.GetDensityScore(player, r)
     local py = player:getY()
 
     local zoneScore = {}
-    zoneScore.Forest = -2
-    zoneScore.DeepForest = -3
+    zoneScore.Forest = -3.2
+    zoneScore.DeepForest = -4.2
     zoneScore.Nav = 4
-    zoneScore.Vegitation = -1.2
+    zoneScore.Vegitation = -2.5
     zoneScore.TownZone = 5
     zoneScore.Ranch = 2
     zoneScore.Farm = 2
@@ -668,12 +668,12 @@ function BanditScheduler.GetDensityScore(player, r)
                 nearbyBuildingCount = nearbyBuildingCount + 1
             end
         end
-
+        
         return nearbyBuildingCount
     end
 
-    local nearbyBuildings = getNearbyBuildingsWithin(1000)
-    print("Number of nearby buildings within 1000 distance: " .. nearbyBuildings)
+    -- local nearbyBuildings = getNearbyBuildingsWithin(1000)
+    -- print("Number of nearby buildings within 1000 distance: " .. nearbyBuildings)
 
     -- local buildingDensity = 0
     -- if nearbyBuildingCount < 10 then -- farm
@@ -706,13 +706,13 @@ function BanditScheduler.GetDensityScore(player, r)
             end
         end
     end
-    return score
+    return 1 + (score / 10000)
 end
 
 function BanditScheduler.GetSpawnZoneBoost(player, clanId)
     local zoneBoost = 1
     local clan = BanditCreator.GroupMap[clanId]
-    local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
+    local zone = getWorld():getMetaGrid():getZoneAt(player:getX(), player:getY(), 0)
 
     if zone and clan and clan.favoriteZones then
         local zoneType = zone:getType()
@@ -919,7 +919,7 @@ function BanditScheduler.CheckEvent()
 
         for _, wave in pairs(waveData) do
             local spawnZoneBoost = BanditScheduler.GetSpawnZoneBoost(currentPlayer, wave.clanId)
-            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * (1 + (densityScore / 10000)) / 6
+            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * densityScore / 6
             local spawnRandom = ZombRandFloat(0, 101)
             if spawnRandom < spawnChance then
                 BanditScheduler.SpawnWave(currentPlayer, wave)

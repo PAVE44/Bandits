@@ -539,8 +539,9 @@ function BanditUpdate.Combat(bandit)
     local zz = bandit:getZ()
     local brain = BanditBrain.Get(bandit)
     local weapons = Bandit.GetWeapons(bandit)
-
-    local bestDist = 32
+    
+    local bestDist = 40
+    local enemyCharacter
     local combat = false
     local firing = false
 
@@ -556,7 +557,6 @@ function BanditUpdate.Combat(bandit)
         for i=0, playerList:size()-1 do
             local potentialEnemy = playerList:get(i)
             if potentialEnemy and bandit:CanSee(potentialEnemy) and not potentialEnemy:isBehind(bandit) and (instanceof(potentialEnemy, "IsoPlayer") and not BanditPlayer.IsGhost(potentialEnemy)) then
-
                 local px = potentialEnemy:getX()
                 local py = potentialEnemy:getY()
                 local pz = potentialEnemy:getZ()
@@ -573,7 +573,7 @@ function BanditUpdate.Combat(bandit)
                         if Bandit.Can(bandit, "melee") and weapons.melee then
                             local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                             local minRange = itemMelee:getMaxRange()
-                            if dist <= minRange + 0.1 then 
+                            if dist <= minRange then 
                                 enemyCharacter = potentialEnemy
                                 combat = true
                             end
@@ -592,25 +592,30 @@ function BanditUpdate.Combat(bandit)
         end
     end
 
-    -- COMBAT AGAINST BANDITS FROM OTHER CLAN
-    for i, coords in pairs(BanditMap.BMap) do
-        if brain.clan ~= coords.clan and (brain.hostile or coords.hostile) then
+    local enemyList = cell:getZombieList()
 
-            local dist = math.sqrt(math.pow(zx - coords.x, 2) + math.pow(zy - coords.y, 2))
-            if dist < bestDist then
+    -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
+    for i=1, enemyList:size()-1 do
+        local potentialEnemy = enemyList:get(i)
+        if potentialEnemy then
 
-                local square = cell:getGridSquare(coords.x, coords.y, coords.z)
-                if square then
+            local px = potentialEnemy:getX()
+            local py = potentialEnemy:getY()
+            local pz = potentialEnemy:getZ()
 
-                    local lightLevel = bandit:getSquare():getLightLevel(0)
-                    local isWallTo = bandit:getSquare():isSomethingTo(square)
-                    if not isWallTo and lightLevel > 0.31 then
+            local potentialEnemyBrain = BanditBrain.Get(potentialEnemy)
 
-                        local potentialEnemy = square:getZombie()
-                        if potentialEnemy and bandit:CanSee(potentialEnemy) then
+            if not potentialEnemyBrain or (brain.clan ~= potentialEnemyBrain.clan and (brain.hostile or potentialEnemyBrain.hostile)) then
 
+                if bandit:CanSee(potentialEnemy) then
+                    local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+                    if dist < bestDist then
+                        local potentialEnemySquare = potentialEnemy:getSquare()
+                        local lightLevel = potentialEnemySquare:getLightLevel(0)
+                        local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
+                        if not isWallTo and lightLevel > 0.31 then
                             bestDist = dist
-                            if Bandit.Can(bandit, "melee") and weapons.melee then
+                            if Bandit.Can(bandit, "melee") and weapons.melee and zz == pz then
                                 local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                                 local minRange = itemMelee:getMaxRange()
                                 if dist <= minRange then
@@ -633,47 +638,8 @@ function BanditUpdate.Combat(bandit)
         end
     end
 
-    -- COMBAT AGAINST ZOMBIES
-    for i, coords in pairs(BanditMap.ZMap) do
-
-        local dist = math.sqrt(math.pow(zx - coords.x, 2) + math.pow(zy - coords.y, 2))
-        if dist < bestDist then
-
-            local square = cell:getGridSquare(coords.x, coords.y, coords.z)
-            if square then
-
-                local lightLevel = bandit:getSquare():getLightLevel(0)
-                local isWallTo = bandit:getSquare():isSomethingTo(square)
-                if not isWallTo and lightLevel > 0.31 then
-
-                    local potentialEnemy = square:getZombie()
-                    if potentialEnemy and bandit:CanSee(potentialEnemy) then
-
-                        bestDist = dist
-                        if Bandit.Can(bandit, "melee") and weapons.melee then
-                            local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
-                            local minRange = itemMelee:getMaxRange()
-                            if dist <= minRange + 0.4 then
-                                enemyCharacter = potentialEnemy
-                                combat = true
-                            end
-                        end
-
-                        if Bandit.Can(bandit, "shoot") and weapons.primary and (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < SandboxVars.Bandits.General_RifleRange - 6 then 
-                            enemyCharacter = potentialEnemy
-                            firing = true
-                        elseif Bandit.Can(bandit, "shoot") and weapons.secondary and (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < SandboxVars.Bandits.General_PistolRange - 4 then
-                            enemyCharacter = potentialEnemy
-                            firing = true
-                        end
-                    end
-                end
-            end
-        end
-    end
-
     if combat and weapons.melee and not bandit:isCrawling() and not Bandit.IsSleeping(bandit) then
-        if not Bandit.HasActionTask(bandit) then
+        if not Bandit.HasTaskType(bandit, "Hit") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
@@ -692,18 +658,22 @@ function BanditUpdate.Combat(bandit)
                 swingSound = "ChainsawAttack1"
             end
 
-            local anim
-            if enemyCharacter:isAlive() then
+            if bandit:isFacingObject(enemyCharacter, 0.5) then
                 local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground"
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
                 local task = {action="Hit", sound=swingSound, time=60, endurance=-0.13, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
-            elseif instanceof(enemyCharacter, "IsoPlayer") then
-                local task = {action="Time", anim="Smoke", time=250}
-                table.insert(tasks, task)
-                Bandit.Say(bandit, "DEATH")
+            else
+                bandit:faceThisObject(enemyCharacter)
             end
+
+        
+        elseif instanceof(enemyCharacter, "IsoPlayer") and not Bandit.HasActionTask(bandit) then
+            local task = {action="Time", anim="Smoke", time=250}
+            table.insert(tasks, task)
+            Bandit.Say(bandit, "DEATH")
         end
+
 
     elseif firing and not bandit:isCrawling() and not Bandit.IsSleeping(bandit) then
         if not Bandit.HasActionTask(bandit) then
@@ -713,78 +683,82 @@ function BanditUpdate.Combat(bandit)
                 local veh = enemyCharacter:getVehicle()
                 if veh then Bandit.Say(bandit, "CAR") end
 
-                if weapons.primary.name and (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) then
-                    if not bandit:isPrimaryEquipped(weapons.primary.name) then
-                        local stasks = SwitchWeapon(bandit, weapons.primary.name)
-                        for _, t in pairs(stasks) do table.insert(tasks, t) end
+                if bandit:isFacingObject(enemyCharacter, 0.5) then
+                    if weapons.primary.name and (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) then
+                        if not bandit:isPrimaryEquipped(weapons.primary.name) then
+                            local stasks = SwitchWeapon(bandit, weapons.primary.name)
+                            for _, t in pairs(stasks) do table.insert(tasks, t) end
 
-                        local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-                        local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
-                        if aimTimeMin + aimTimeSurp > 0 then
-                            local task = {action="Time", anim="AimRifle", time=aimTimeMin + ZombRand(aimTimeSurp)}
-                            table.insert(tasks, task)
+                            local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
+                            local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
+                            if aimTimeMin + aimTimeSurp > 0 then
+                                local task = {action="Time", anim="AimRifle", time=aimTimeMin + ZombRand(aimTimeSurp)}
+                                table.insert(tasks, task)
+                            end
+                            Bandit.Say(bandit, "SPOTTED")
                         end
-                        Bandit.Say(bandit, "SPOTTED")
-                    end
 
-                    if weapons.primary.bulletsLeft > 0 then
-                        local firingtime = weapons.primary.shotDelay
-                        if ZombRand(5) == 1 then firingtime = 50 end
+                        if weapons.primary.bulletsLeft > 0 then
+                            local firingtime = weapons.primary.shotDelay
+                            if ZombRand(5) == 1 then firingtime = 50 end
 
-                        local task = {action="Shoot", anim="AimRifle", weaponSound=weapons.primary.shotSound, time=firingtime, weapon=weapons.primary.name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
-                        table.insert(tasks, task)
-
-                        weapons.primary.bulletsLeft = weapons.primary.bulletsLeft - 1
-
-                    elseif weapons.primary.magCount > 0 then
-                        local task = {action="Drop", itemType=weapons.primary.magName, anim="UnloadRifle", sound="M14EjectAmmo", time=90}
-                        table.insert(tasks, task)
-
-                        local task = {action="Time", anim="ReloadRifle", sound="M14InsertAmmo", time=90}
-                        table.insert(tasks, task)
-                        Bandit.Say(bandit, "RELOADING")
-
-                        weapons.primary.bulletsLeft = weapons.primary.magSize
-                        weapons.primary.magCount = weapons.primary.magCount - 1
-                    end
-                    Bandit.SetWeapons(bandit, weapons)
-
-                elseif weapons.secondary.name and (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) then
-
-                    if not bandit:isPrimaryEquipped(weapons.secondary.name) then
-                        local stasks = SwitchWeapon(bandit, weapons.secondary.name)
-                        for _, t in pairs(stasks) do table.insert(tasks, t) end
-                
-                        local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-                        local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
-                        if aimTimeMin + aimTimeSurp > 0 then
-                            local task = {action="Time", anim="AimPistol", time=aimTimeMin + ZombRand(aimTimeSurp)}
+                            local task = {action="Shoot", anim="AimRifle", weaponSound=weapons.primary.shotSound, time=firingtime, weapon=weapons.primary.name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                             table.insert(tasks, task)
+
+                            weapons.primary.bulletsLeft = weapons.primary.bulletsLeft - 1
+
+                        elseif weapons.primary.magCount > 0 then
+                            local task = {action="Drop", itemType=weapons.primary.magName, anim="UnloadRifle", sound="M14EjectAmmo", time=90}
+                            table.insert(tasks, task)
+
+                            local task = {action="Time", anim="ReloadRifle", sound="M14InsertAmmo", time=90}
+                            table.insert(tasks, task)
+                            Bandit.Say(bandit, "RELOADING")
+
+                            weapons.primary.bulletsLeft = weapons.primary.magSize
+                            weapons.primary.magCount = weapons.primary.magCount - 1
                         end
-                        Bandit.Say(bandit, "SPOTTED")
+                        Bandit.SetWeapons(bandit, weapons)
+
+                    elseif weapons.secondary.name and (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) then
+
+                        if not bandit:isPrimaryEquipped(weapons.secondary.name) then
+                            local stasks = SwitchWeapon(bandit, weapons.secondary.name)
+                            for _, t in pairs(stasks) do table.insert(tasks, t) end
+                    
+                            local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
+                            local aimTimeSurp = SandboxVars.Bandits.General_GunReflexRand or 35
+                            if aimTimeMin + aimTimeSurp > 0 then
+                                local task = {action="Time", anim="AimPistol", time=aimTimeMin + ZombRand(aimTimeSurp)}
+                                table.insert(tasks, task)
+                            end
+                            Bandit.Say(bandit, "SPOTTED")
+                        end
+
+                        if weapons.secondary.bulletsLeft > 0 then
+
+                            local task = {action="Shoot", anim="AimPistol", weaponSound=weapons.secondary.shotSound, time=weapons.secondary.shotDelay, weapon=weapons.secondary.name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                            table.insert(tasks, task)
+
+                            weapons.secondary.bulletsLeft = weapons.secondary.bulletsLeft - 1
+
+                        elseif weapons.secondary.magCount > 0 then
+                            local task = {action="Drop", itemType=weapons.secondary.magName, anim="UnloadPistol", sound="M9EjectAmmo", time=90}
+                            table.insert(tasks, task)
+
+                            local task = {action="Time", anim="ReloadPistol", sound="M9InsertAmmo", time=90}
+                            table.insert(tasks, task)
+                            Bandit.Say(bandit, "RELOADING")
+
+                            weapons.secondary.bulletsLeft = weapons.secondary.magSize
+                            weapons.secondary.magCount = weapons.secondary.magCount - 1
+
+                        end
+                        Bandit.SetWeapons(bandit, weapons)
+
                     end
-
-                    if weapons.secondary.bulletsLeft > 0 then
-
-                        local task = {action="Shoot", anim="AimPistol", weaponSound=weapons.secondary.shotSound, time=weapons.secondary.shotDelay, weapon=weapons.secondary.name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
-                        table.insert(tasks, task)
-
-                        weapons.secondary.bulletsLeft = weapons.secondary.bulletsLeft - 1
-
-                    elseif weapons.secondary.magCount > 0 then
-                        local task = {action="Drop", itemType=weapons.secondary.magName, anim="UnloadPistol", sound="M9EjectAmmo", time=90}
-                        table.insert(tasks, task)
-
-                        local task = {action="Time", anim="ReloadPistol", sound="M9InsertAmmo", time=90}
-                        table.insert(tasks, task)
-                        Bandit.Say(bandit, "RELOADING")
-
-                        weapons.secondary.bulletsLeft = weapons.secondary.magSize
-                        weapons.secondary.magCount = weapons.secondary.magCount - 1
-
-                    end
-                    Bandit.SetWeapons(bandit, weapons)
-
+                else
+                    bandit:faceThisObject(enemyCharacter)
                 end
 
             elseif instanceof(enemyCharacter, "IsoPlayer") then

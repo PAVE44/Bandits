@@ -18,10 +18,10 @@ BanditClan.Reclaimer.health = 9
 BanditClan.Reclaimer.eatBody = true
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 0.8
+BanditClan.Reclaimer.accuracyBoost = 0.8
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
+BanditClan.Reclaimer.favoriteZones = {}
 
 -- available outfits
 BanditClan.Reclaimer.Outfits = BanditClan.Reclaimer.Outfits or {}

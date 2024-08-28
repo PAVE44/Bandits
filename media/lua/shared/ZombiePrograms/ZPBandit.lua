@@ -256,8 +256,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
             -- must be deterministic, not random (same for all clients)
             local id = BanditUtils.GetCharacterID(bandit)
 
-            local dx = (id % 4) - 2
-            local dy = (id % 5) - 2.5
+            local dx = 0
+            local dy = 0
             local dxf = ((id % 10) - 5) / 10
             local dyf = ((id % 11) - 5) / 10
 

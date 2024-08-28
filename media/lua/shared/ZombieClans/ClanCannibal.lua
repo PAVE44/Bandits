@@ -18,10 +18,10 @@ BanditClan.Cannibal.health = 2
 BanditClan.Cannibal.eatBody = true
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 0.8
+BanditClan.Cannibal.accuracyBoost = 0.8
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {"TownZone", "TrailerPark", "Farm", "FarmLand", "Ranch"}
+BanditClan.Cannibal.favoriteZones = {"TownZone", "TrailerPark", "Farm", "FarmLand", "Ranch"}
 
 -- available outfits
 BanditClan.Cannibal.Outfits = BanditClan.Cannibal.Outfits or {}

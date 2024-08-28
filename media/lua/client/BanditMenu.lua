@@ -185,7 +185,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     if isDebugEnabled() or isAdmin() then
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
-        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) / 10000 .. "%")
+        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
 
         local spawnOption = context:addOption("[DGB] Spawn Group Here")
         local spawnMenu = context:getNew(context)

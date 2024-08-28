@@ -18,10 +18,10 @@ BanditClan.DeathLegion.health = 7
 BanditClan.DeathLegion.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1.3
+BanditClan.DeathLegion.accuracyBoost = 1.3
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {{"TownZone", "TrailerPark", "Nav", "Farm", "FarmLand", "Ranch", "Vegitation", "Forest", "DeepForest", "LootZone", "ZoneStory", "ZombiesType"}}
+BanditClan.DeathLegion.favoriteZones = {"TownZone", "TrailerPark", "Nav", "Farm", "FarmLand", "Ranch", "Vegitation", "Forest", "DeepForest", "LootZone", "ZoneStory", "ZombiesType"}
 
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}

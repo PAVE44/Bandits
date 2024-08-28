@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="slow.xml">
-	<m_Name>Bob_Walk</m_Name>
-	<m_AnimName>Bob_WalkAimRifle</m_AnimName>
+	<m_Name>Bob_WalkAim1Hand</m_Name>
+	<m_AnimName>Bob_WalkAim1Hand</m_AnimName>
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
 		<m_Type>STRING</m_Type>
