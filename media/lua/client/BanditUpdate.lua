@@ -216,9 +216,9 @@ end
 
 function BanditUpdate.Fire(bandit)
     if bandit:isOnFire() then
-        local sound = "MaleBeingEatenDeath"
+        local sound 
         if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-        local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
+        local task = {action="Die", lock=true, anim="Die", fire=true, sound=sound, time=150}
         Bandit.ClearTasks(bandit)
         Bandit.AddTask(bandit, task)
     end
@@ -590,6 +590,10 @@ function BanditUpdate.Collisions(bandit)
 end
 
 function BanditUpdate.Combat(bandit)
+
+    if bandit:isCrawling() then return {} end 
+    if Bandit.IsSleeping(bandit) then return {} end
+
     local tasks = {}
     local world = getWorld()
     local cell = getCell()
@@ -707,7 +711,7 @@ function BanditUpdate.Combat(bandit)
 
     -- print ("ENEMIES: " .. enemies .. " FRIENDLIES: " .. friendlies)
 
-    if combat and weapons.melee and not bandit:isCrawling() and not Bandit.IsSleeping(bandit) then
+    if combat then
         if enemies > friendlies and not Bandit.HasMoveTask(bandit) then
             local tx, ty, tz = getEscapePoint(bandit, 10)
             local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 10)
@@ -750,7 +754,7 @@ function BanditUpdate.Combat(bandit)
         end
 
 
-    elseif firing and not bandit:isCrawling() and not Bandit.IsSleeping(bandit) then
+    elseif firing then
         if not Bandit.HasActionTask(bandit) then
             Bandit.ClearTasks(bandit)
             if enemyCharacter:isAlive() then
@@ -902,14 +906,14 @@ function BanditUpdate.Zombie(zombie)
                     -- zombie:setVariable("NoLungeAttack", true)
                             
                     local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
-                    if dist < 0.4 and not isWallTo then
+                    if dist < 0.6 and not isWallTo then
 
                         if zombie:isFacingObject(bandit, 0.5) then
 
                             -- detect number of attacking zombies
                             local attackingZombiesNumber = 0
                             for id, attackingZombie in pairs(potentialEnemyList) do
-                                if not potentialEnemy.isBandit then
+                                if not attackingZombie.isBandit then
                                     local dist = math.sqrt(math.pow(attackingZombie.x - potentialEnemy.x, 2) + math.pow(attackingZombie.y - potentialEnemy.y, 2))
                                     if dist < 0.6 then
                                         attackingZombiesNumber = attackingZombiesNumber + 1
@@ -918,14 +922,12 @@ function BanditUpdate.Zombie(zombie)
                             end
 
                             if attackingZombiesNumber > 2 then
-                                Bandit.Say(bandit, "DEAD")
-
                                 -- temporary until i get female voices
                                 local sound
                                 if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
+                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
                                 Bandit.AddTask(bandit, task)
-                            else
+                            elseif dist < 0.45 then
                                 zombie:setBumpType("Bite")
 
                                 if ZombRand(4) == 1 then
@@ -1165,7 +1167,6 @@ end
 function BanditUpdate.OnHitZombie(zombie)
     if zombie:getVariableBoolean("Bandit") then
         Bandit.Say(zombie, "HIT")
-
         if Bandit.IsSleeping(zombie) then
             local task = {action="Time", lock=true, anim="GetUp", time=150}
             Bandit.ClearTasks(zombie)
@@ -1180,19 +1181,18 @@ end
 function BanditUpdate.OnZombieDead(zombie)
 
     if zombie:getVariableBoolean("Bandit") then
+        Bandit.Say(zombie, "DEAD", true)
+
         local player = getPlayer()
         local killer = zombie:getAttackedBy()
         if killer then
             if killer == player then
-                local temp_args = {}
-                temp_args.id = 0
-                sendClientCommand(player, 'Commands', 'IncrementBanditKills', temp_args)
+                local args = {}
+                args.id = 0
+                sendClientCommand(player, 'Commands', 'IncrementBanditKills', args)
                 player:setZombieKills(player:getZombieKills() - 1)
             end
         end
-
-        --zombie:getEmitter():stopAll()
-        Bandit.Say(zombie, "DEAD")
 
         local id = BanditUtils.GetCharacterID(zombie)
         local brain = BanditBrain.Get(zombie)

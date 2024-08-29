@@ -376,11 +376,13 @@ function Bandit.GetProgram(zombie)
     return brain.program
 end
 
-function Bandit.Say(zombie, phrase)
+function Bandit.Say(zombie, phrase, force)
     
     if SandboxVars.Bandits.General_Speak then
         local brain = BanditBrain.Get(zombie)
-        if brain.speech and brain.speech > 0 then return end
+        
+        if not force and brain.speech and brain.speech > 0 then return end
+        if force then zombie:getEmitter():stopAll() end
         
         local player = getPlayer()
         local dist = math.sqrt(math.pow(player:getX() - zombie:getX(), 2) + math.pow(player:getY() - zombie:getY(), 2))
@@ -417,6 +419,12 @@ function Bandit.Say(zombie, phrase)
             elseif phrase == "DEAD" then
                 sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
                 length = 8
+            elseif phrase == "BURN" then
+                sound = "ZSBurn_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+                length = 8
+            elseif phrase == "DRAGDOWN" then
+                sound = "ZSDragdown_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+                length = 8
             elseif phrase == "INSIDE" then
                 sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
                 length = 6
@@ -440,7 +448,13 @@ function Bandit.Say(zombie, phrase)
             if sound then
                 -- zombie:getEmitter():stopAll()
                 -- print (sound)
-                zombie:getEmitter():playVocals(sound)
+                if localSound then
+                    local emitter = getWorld():getFreeEmitter(zombie:getX(), zombie:getY(), zombie:getZ())
+                    -- emitter:setVolumeAll(0.2)
+                    emitter:playSoundLocal(sound)
+                else
+                    zombie:getEmitter():playVocals(sound)
+                end
 
                 brain.speech = length
                 BanditBrain.Update(zombie, brain)
