@@ -22,13 +22,13 @@ function BanditScenes.Hikers (player, square)
 
     local container
     container = BanditBasePlacements.Container ("furniture_storage_02_28", sx + 1, sy + 2, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 10)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
 
     container = BanditBasePlacements.Container ("trashcontainers_01_27", sx + 7, sy + 1, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 14)
+    BanditLoot.FillContainer(container, BanditLoot.CannedFoodItems, 5)
 
 	container = BanditBasePlacements.Container ("trashcontainers_01_26", sx + 7, sy + 2, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.Items, 14)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
 
     -- BanditBasePlacements.IsoLightSwitch ("lighting_outdoor_01_48", sx + 1, sy + 6, sz + 0)
 

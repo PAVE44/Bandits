@@ -477,7 +477,7 @@ function BanditScheduler.RaiseDefences(x, y)
 
                                     local freezer = object:getContainerByType("freezer")
                                     if freezer then
-                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
+                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 5)
                                     end
 
                                     local counter = object:getContainerByType("counter")
