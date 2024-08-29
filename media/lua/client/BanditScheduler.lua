@@ -684,7 +684,7 @@ function BanditScheduler.GetDensityScore(player, r)
     end
 
     -- todo use numBuildings for additional scoring
-    local numBuildings = BanditUtils.GetNumNearbyBuildings()
+    -- local numBuildings = BanditUtils.GetNumNearbyBuildings()
 
     -- about 1250 iterations
     for x=px-r, px+r, 5 do
