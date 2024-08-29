@@ -14,6 +14,7 @@ function InitBanditModData(isNewGame)
     if not modData.Scenes then modData.Scenes = {} end
     if not modData.Bandits then modData.Bandits = {} end
     if not modData.Guardposts then modData.Guardposts = {} end
+    if not modData.Kills then modData.Kills = {} end
 
     BanditModData = modData
 end
@@ -33,7 +34,6 @@ end
 function TransmitBanditModData()
     ModData.transmit("Bandit")
 end
-
 
 Events.OnInitGlobalModData.Add(InitBanditModData)
 Events.OnReceiveGlobalModData.Add(LoadBanditModData)
