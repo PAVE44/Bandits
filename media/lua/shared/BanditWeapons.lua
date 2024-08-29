@@ -183,6 +183,24 @@ if getActivatedMods():contains("firearmmod") or getActivatedMods():contains("fir
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Glock17", "Base.Glock17Mag", 17, "M9Shoot", 35))
 end
 
+if getActivatedMods():contains("VFExpansion1") then
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK47", "Base.762Clip", 30, "AK47shoot", 17))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.CAR15", "Base.556Clip", 30, "M14Shoot", 17))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.FAL", "Base.FALClip", 20, "M14Shoot", 17))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MAC10Unfolded", "Base.45Clip32", 32, "M1911Shoot", 10))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M60MMG", "Base.M60Belt", 100, "M1911Shoot", 13))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.CampCarabine", "Base.45Clip", 7, "M1911Shoot", 22))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5Unfolded", "Base.9mmClip30", 7, "M9Shoot", 7))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mini14", "Base.223Clip20", 20, "AK47shoot", 17))
+    
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.CZ75", "Base.9mmClip16", 16, "M9Shoot", 35))
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Glock", "Base.9mmClip16", 16, "M9Shoot", 35))
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Glock18", "Base.9mmClip17", 16, "M9Shoot", 6))
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.MK2", "Base.22ClipPistol", 10, "Mk2shoot", 35))
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.MK23SOCOM", "Base.45Clip12", 12, "Mk2SDshoot", 35))
+    table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.UziUnfolded", "Base.9mmClip32", 32, "M9Shoot", 6))
+end
+
 if getActivatedMods():contains("Guns93") then
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Gov1911", "Base.45Clip", 7, "M1911Shoot", 47))
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Javelina", "Base.DeltaEliteMag", 8, "DesertEagleShoot", 47))
