@@ -715,7 +715,7 @@ function BanditUpdate.Combat(bandit)
             table.insert(tasks, task)
             
 
-        elseif not Bandit.HasTaskType(bandit, "Hit") and enemyCharacter:isAlive() then
+        elseif not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
