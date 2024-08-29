@@ -71,17 +71,13 @@ local function getEscapePoint(bandit, radius)
     local friendlies = 0
     local enemies = 0
 
-    local potentialEnemyList = getCell():getZombieList()
-    for i=0, potentialEnemyList:size()-1 do
-        local potentialEnemy = potentialEnemyList:get(i)
-        local zx, zy, zz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
-        local potentialEnemyBrain = BanditBrain.Get(potentialEnemy)
-
+    local potentialEnemyList = BanditZombie.GetAll()
+    for id, potentialEnemy in pairs(potentialEnemyList) do
         -- Calculate distance between bandit and the enemy character
-        local distance = math.sqrt((zx - bx) ^ 2 + (zy - by) ^ 2)
-        if distance <= radius and bz == zz then
+        local distance = math.sqrt((potentialEnemy.x - bx) ^ 2 + (potentialEnemy.y - by) ^ 2)
+        if distance <= radius and bz == potentialEnemy.z then
             -- Calculate angle of the point relative to the circle's center
-            local angle = math.atan2(zy - by, zx - bx)
+            local angle = math.atan2(potentialEnemy.y - by, potentialEnemy.x - bx)
             -- Convert angle from radians to degrees
             local degrees = math.deg(angle)
             -- Normalize angle to be within the -180 to 180 range
@@ -92,7 +88,7 @@ local function getEscapePoint(bandit, radius)
             local segment = math.floor((degrees + 180) / (360 / segmentCount)) + 1
             
             -- Increment enemy and friendly counters for that segment
-            if not potentialEnemyBrain or (brain.clan ~= potentialEnemyBrain.clan and (brain.hostile or potentialEnemyBrain.hostile)) then
+            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
                 segments[segment] = segments[segment] + 1
             end
         end
@@ -632,8 +628,9 @@ function BanditUpdate.Combat(bandit)
 
                     local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemy:getSquare())
                     if not isWallTo and spottedScore > 0.32 then
-
                         bestDist = dist
+
+                        --determine if bandit will be in combat mode
                         if Bandit.Can(bandit, "melee") and weapons.melee then
                             local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                             local minRange = itemMelee:getMaxRange()
@@ -644,6 +641,7 @@ function BanditUpdate.Combat(bandit)
                             end
                         end
 
+                        --determine if bandit will be in shooting mode
                         if Bandit.Can(bandit, "shoot") and weapons.primary and (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < SandboxVars.Bandits.General_RifleRange then 
                             enemyCharacter = potentialEnemy
                             firing = true
@@ -657,31 +655,31 @@ function BanditUpdate.Combat(bandit)
         end
     end
 
-    local enemyList = cell:getZombieList()
-
     -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
     local enemies = 0
     local friendlies = 0
-    for i=0, enemyList:size()-1 do
-        local potentialEnemy = enemyList:get(i)
-        if potentialEnemy then
+    local potentialEnemyList = BanditZombie.GetAll()
+    for id, potentialEnemy in pairs(potentialEnemyList) do
 
-            local px = potentialEnemy:getX()
-            local py = potentialEnemy:getY()
-            local pz = potentialEnemy:getZ()
-            local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+        local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
 
-            local potentialEnemyBrain = BanditBrain.Get(potentialEnemy)
-            if not potentialEnemyBrain or (brain.clan ~= potentialEnemyBrain.clan and (brain.hostile or potentialEnemyBrain.hostile)) then
-                if bandit:CanSee(potentialEnemy) then
-                    if dist < 4 then enemies = enemies + 1 end
-                    if dist < bestDist then
+        -- hard cap for optimization
+        if dist < 25 then
+            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
+                if dist < 4 then enemies = enemies + 1 end
+                if dist < bestDist then
+        
+                    -- load real instance here
+                    local potentialEnemy = BanditZombie.GetInstanceById(id)
+                    if bandit:CanSee(potentialEnemy) then -- FIXME: add visibility cone
                         local potentialEnemySquare = potentialEnemy:getSquare()
                         local lightLevel = potentialEnemySquare:getLightLevel(0)
                         local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
                         if not isWallTo and lightLevel > 0.31 then
                             bestDist = dist
-                            if Bandit.Can(bandit, "melee") and weapons.melee and zz == pz then
+                            
+                            --determine if bandit will be in combat mode
+                            if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
                                 local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                                 local minRange = itemMelee:getMaxRange()
                                 if dist <= minRange then
@@ -690,6 +688,7 @@ function BanditUpdate.Combat(bandit)
                                 end
                             end
 
+                            --determine if bandit will be in shooting mode
                             if Bandit.Can(bandit, "shoot") and weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < SandboxVars.Bandits.General_RifleRange - 6 then 
                                 enemyCharacter = potentialEnemy
                                 firing = true
@@ -735,9 +734,9 @@ function BanditUpdate.Combat(bandit)
             end
 
             if bandit:isFacingObject(enemyCharacter, 0.5) then
-                local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground"
+                local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground" or enemyCharacter:getActionStateName() == "sitonground" or enemyCharacter:getActionStateName() == "climbfence"
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.13, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.07, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -881,77 +880,76 @@ function BanditUpdate.Zombie(zombie)
 
     zombie:setVariable("NoLungeAttack", true)
 
-    local zx = zombie:getX()
-    local zy = zombie:getY()
-    local zz = zombie:getZ()
+    local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
     -- this item determines the strenght of the zombie attach on bandit
     local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
 
     local asn = zombie:getActionStateName()
     if not zombie:getVariableBoolean("Bandit") and asn ~= "bumped" and not zombie:isProne() then
-        for _, b in pairs(BanditMap.BMap) do
-            if b then
-                local dist = math.sqrt(math.pow(zx - b.x, 2) + math.pow(zy - b.y, 2))
-                if dist < 12 and b.z == zz then
+        local potentialEnemyList = BanditZombie.GetAll()
+        for id, potentialEnemy in pairs(potentialEnemyList) do
+            
+            if potentialEnemy.isBandit then
 
+                local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
+                if dist < 12 and potentialEnemy.z == zz then
+                    local bandit = BanditZombie.GetInstanceById(id)
+
+                    -- (now generally turned off)
                     -- zombie lunge attack on a zombie/bandit results in game crash because of moodle check
                     -- this forces an alternate animation with the checkattack event removed to avoid the crash
-                    zombie:setVariable("NoLungeAttack", true)
+                    -- zombie:setVariable("NoLungeAttack", true)
+                            
+                    local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
+                    if dist < 0.4 and not isWallTo then
 
-                    local square = getCell():getGridSquare(b.x, b.y, b.z)
-                    if square then
-                        local bandit = square:getZombie()
-                        if bandit then
-                            if bandit:getVariableBoolean("Bandit") then
-                                local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
+                        if zombie:isFacingObject(bandit, 0.5) then
 
-                                if dist < 0.6 and not isWallTo then
-
-                                    if zombie:isFacingObject(bandit, 0.5) then
-                                        local attackingZombiesNumber = 0
-                                        for _, z in pairs(BanditMap.ZMap) do 
-                                            local dist = math.sqrt(math.pow(z.x - b.x, 2) + math.pow(z.y - b.y, 2))
-                                            if dist < 0.6 then
-                                                attackingZombiesNumber = attackingZombiesNumber +1
-                                            end
-                                        end
-
-                                        zombie:setBumpType("Bite")
-
-                                        if ZombRand(4) == 1 then
-                                            bandit:playSound("ZombieScratch")
-                                        else
-                                            bandit:playSound("ZombieBite")
-                                        end
-
-                                        SwipeStatePlayer.splash(bandit, teeth, zombie)
-
-                                        if attackingZombiesNumber > 2 then
-                                            Bandit.Say(bandit, "DEAD")
-                                            local sound
-                                            if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-                                            local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
-                                            Bandit.AddTask(bandit, task)
-                                        else
-                                            bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                                        end
-                                    else
-                                        zombie:faceThisObject(bandit)
-                                    end
-                                else
-                                    local asn = zombie:getActionStateName()
-                                    if asn == "idle" then
-                                        zombie:pathToLocationF(b.x, b.y, b.z)
-                                        zombie:spotted(bandit, true)
-                                        zombie:addAggro(bandit, 10)
+                            -- detect number of attacking zombies
+                            local attackingZombiesNumber = 0
+                            for id, attackingZombie in pairs(potentialEnemyList) do
+                                if not potentialEnemy.isBandit then
+                                    local dist = math.sqrt(math.pow(attackingZombie.x - potentialEnemy.x, 2) + math.pow(attackingZombie.y - potentialEnemy.y, 2))
+                                    if dist < 0.6 then
+                                        attackingZombiesNumber = attackingZombiesNumber + 1
                                     end
                                 end
                             end
+
+                            if attackingZombiesNumber > 2 then
+                                Bandit.Say(bandit, "DEAD")
+
+                                -- temporary until i get female voices
+                                local sound
+                                if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
+                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=150}
+                                Bandit.AddTask(bandit, task)
+                            else
+                                zombie:setBumpType("Bite")
+
+                                if ZombRand(4) == 1 then
+                                    bandit:playSound("ZombieScratch")
+                                else
+                                    bandit:playSound("ZombieBite")
+                                end
+    
+                                SwipeStatePlayer.splash(bandit, teeth, zombie)
+    
+                                bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                            end
+                        else
+                            zombie:faceThisObject(bandit)
+                        end
+                    else
+                        local asn = zombie:getActionStateName()
+                        if asn == "idle" then
+                            zombie:setTarget(bandit)
+                            zombie:pathToCharacter(bandit)
+                            zombie:spotted(bandit, true)
+                            -- zombie:addAggro(bandit, 10)
                         end
                     end
-                else
-                    -- zombie:setVariable("NoLungeAttack", false)
                 end
             end
         end
@@ -1208,10 +1206,6 @@ function BanditUpdate.OnZombieDead(zombie)
         args = {}
         args.id = id
         sendClientCommand(player, 'Commands', 'BanditRemove', args)
-
-        BanditMap.BMap[id] = nil
-    else
-        BanditMap.ZMap[id] = nil
     end
 end
 

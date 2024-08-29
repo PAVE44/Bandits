@@ -88,22 +88,15 @@ end
 ZombieActions.Hit.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
 
-    if task.time == 45 then
+    if task.time == 53 then
         local item = InventoryItemFactory.CreateItem(task.weapon)
-        local cell = getCell()
-        local enemyList = cell:getZombieList()
-        for i=0, enemyList:size()-1 do
-            local enemy = enemyList:get(i)
-            if enemy then
-                local eid = BanditUtils.GetCharacterID(enemy)
-                if enemy:isAlive() and eid == task.eid then
-                    local brainBandit = BanditBrain.Get(bandit)
-                    local brainEnemy = BanditBrain.Get(enemy)
-                    if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
-                        Hit (bandit, item, enemy)
-                        return false
-                    end
-                end
+        local enemy = BanditZombie.GetInstanceById(task.eid)
+        if enemy then 
+            local brainBandit = BanditBrain.Get(bandit)
+            local brainEnemy = BanditBrain.Get(enemy)
+            if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
+                Hit (bandit, item, enemy)
+                return false
             end
         end
 

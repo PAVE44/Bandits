@@ -609,9 +609,6 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local shooter = zombie
     local cell = shooter:getSquare():getCell()
 
-    -- local inAngle = BanditUtils.IsInAngle(zombie, task.x, task.y)
-    -- if not inAngle then return true end
-    
     -- local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
     -- ATROShoot(shooter, item)
 
