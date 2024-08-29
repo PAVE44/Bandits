@@ -21,14 +21,15 @@ function ISCharacterInfoWindow:render()
     local viewIndex = self.panel:getActiveViewIndex()
     if viewIndex == 1 then
         local zombieKills = getPlayer():getZombieKills()
+        local banditKills = getBanditKillCount()
         local offset = 0
-        if zombieKills > 0 then
+        if zombieKills > 0 or banditKills > 0 then
             offset = 15
         end
 
         self:drawText("Bandits", 38, 355 + offset, 1, 1, 1, 1, UIFont.Small)
         self:drawText("Killed", 85, 355 + offset, 1, 1, 1, 1, UIFont.Small)
-        self:drawText(tostring(getBanditKillCount()), 125, 355 + offset, 0.5, 0.5, 0.5, 1, UIFont.Small)
+        self:drawText(tostring(banditKills), 125, 355 + offset, 0.5, 0.5, 0.5, 1, UIFont.Small)
     end
 end
 
