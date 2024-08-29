@@ -1189,6 +1189,8 @@ function BanditUpdate.OnZombieDead(zombie)
                 local temp_args = {}
                 temp_args.id = 0
                 sendClientCommand(player, 'Commands', 'IncrementBanditKills', temp_args)
+                local zombieKills = player:getZombieKills()
+                player:setZombieKills(zombieKills - 1)
             end
         end
 
