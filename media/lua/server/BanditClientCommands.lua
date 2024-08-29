@@ -253,6 +253,14 @@ BanditServer.Commands.IncrementBanditKills = function(player, args)
     end
 end
 
+BanditServer.Commands.ResetBanditKills = function(player, args)
+    local gmd = GetBanditModData()
+    local id = BanditUtils.GetCharacterID(player)
+    if gmd.Kills[id] then
+        gmd.Kills[id] = 0
+    end
+end
+
 -- main
 local onClientCommand = function(module, command, player, args)
     if BanditServer[module] and BanditServer[module][command] then
