@@ -1129,6 +1129,16 @@ end
 function BanditUpdate.OnZombieDead(zombie)
 
     if zombie:getVariableBoolean("Bandit") then
+        local player = getPlayer()
+        local killer = zombie:getAttackedBy()
+        if killer then
+            if killer == player then
+                local temp_args = {}
+                temp_args.id = 0
+                sendClientCommand(player, 'Commands', 'IncrementBanditKills', temp_args)
+            end
+        end
+
         --zombie:getEmitter():stopAll()
         Bandit.Say(zombie, "DEAD")
 
@@ -1141,10 +1151,9 @@ function BanditUpdate.OnZombieDead(zombie)
         zombie:setPrimaryHandItem(nil)
         zombie:clearAttachedItems()
         zombie:resetEquippedHandsModels()
-
         args = {}
         args.id = id
-        sendClientCommand(getPlayer(), 'Commands', 'BanditRemove', args)
+        sendClientCommand(player, 'Commands', 'BanditRemove', args)
 
         BanditMap.BMap[id] = nil
     else
