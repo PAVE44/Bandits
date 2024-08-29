@@ -472,7 +472,7 @@ function BanditUpdate.Collisions(bandit)
                                     table.insert(tasks, task)
                                 end
 
-                            else
+                            elseif object:canClimbThrough(bandit) then
                                 local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
                                 local raw = KahluaUtil.rawTostring2(params)
                                 local startx = string.match(raw, "0=(%d+)")
