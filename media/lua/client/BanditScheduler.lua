@@ -505,12 +505,8 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
     local py = character:getY()
     local ret = {}
 
-    -- checks if there is a valid building for a spawn on the square
-    local function getBuilding(square)
-        if not square then return false end
-
-        local building = square:getBuilding()
-        if not building then return false end
+    -- checks if there building is valid for a the spawn
+    local function checkBuilding(building)
 
         -- avoid safehouses
         if SafeHouse.isSafeHouse(square, nil, true) then
@@ -538,7 +534,7 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
             end
         end
 
-        return building
+        return true
     end
 
     -- based on the room types establish general type of the building
@@ -589,7 +585,7 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
         return spawnPoints
     end
 
-    -- get x, y of a building
+    -- get center x, y of a building
     local function getCenterCoords(buildingDef)
         local coords = {}
         local x = math.floor((buildingDef:getX() + buildingDef:getX2()) / 2)
@@ -598,13 +594,62 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
         return coords
     end
 
-    local buildings = BanditUtils.GetBuildingsInCurrentCell()
+    local function getNearbyBuildings(character, min, max)
+        -- Get the character's current cell
+        local cell = character:getCell()  
+
+        -- Get the character's current position
+        local chrX = character:getX()
+        local chrY = character:getY()
+        
+        -- Get the list of all rooms in the character's current cell
+        local rooms = cell:getRoomList()
+        local buildings = {}
+
+        -- Iterate through the rooms and construct our own list of buildings
+        for i = 0, rooms:size() - 1 do
+            local room = rooms:get(i)  -- Get the room at the current index
+            local building = room:getBuilding()
+            if building then
+                local buildingDef = building:getDef()
+                local buildingKey = buildingDef:getKeyId()
+                
+                -- Calculate the distance between the character and the building
+                local coords = getCenterCoords(buildingDef)
+                local distance = math.sqrt((coords.x - chrX)^2 + (coords.y - chrY)^2)
+
+                -- Buildings stay in memory even after exiting the cell, so we need to check if the building is within a set distance
+                if distance >= min and distance <= max then
+                    if not buildings[buildingKey] then
+                        buildings[buildingKey] = building
+                    end
+                end
+            end
+        end
+
+        return buildings
+    end
+
+    -- get building candidates for the spawn
+    local buildings = getNearbyBuildings(character, min, max)
+
+    -- shuffle (Fisher-Yates)
+    for i = #buildings, 2, -1 do
+        local j = ZombRand(i) + 1
+        buildings[i], buildings[j] = buildings[j], buildings[i]
+    end
+
+    -- choose first good building
     for _, building in pairs(buildings) do
-        local buildingDef = building:getDef()
-        ret.buildingCoords = {x = buildingDef:getX(), y = buildingDef:getY()}
-        ret.buildingCenterCoords = getCenterCoords(buildingDef)
-        ret.spawnPoints = getSpawnPoints(buildingDef)
-        ret.buildingType = getBuildingType(building)
+        local valid = checkBuilding(building)
+        if valid then
+            local buildingDef = building:getDef()
+            ret.buildingCoords = {x = buildingDef:getX(), y = buildingDef:getY()}
+            ret.buildingCenterCoords = getCenterCoords(buildingDef)
+            ret.spawnPoints = getSpawnPoints(buildingDef)
+            ret.buildingType = getBuildingType(building)
+            break
+        end
     end
 
     return ret

@@ -32,7 +32,7 @@ function BanditMenu.SpawnGroupFar (player, waveId)
 end
 
 function BanditMenu.SpawnDefenders (player, square)
-    BanditScheduler.SpawnDefenders(player, 1, 6)
+    BanditScheduler.SpawnDefenders(player, 1, 15)
 end
 
 function BanditMenu.RaiseDefences (player, square)
