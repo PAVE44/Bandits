@@ -124,7 +124,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
 
     --[[
     local wornItems = player:getWornItems()
-    for i=1, wornItems:size()-1 do
+    for i=0, wornItems:size()-1 do
         local item = wornItems:get(i)
         print (item:getLocation())
     end

@@ -472,22 +472,22 @@ function BanditScheduler.RaiseDefences(x, y)
 
                                     local fridge = object:getContainerByType("fridge")
                                     if fridge then
-                                        BanditLoot.FillContainer(fridge, BanditLoot.FridgeItems, 6)
+                                        BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 5)
                                     end
 
                                     local freezer = object:getContainerByType("freezer")
                                     if freezer then
-                                        BanditLoot.FillContainer(freezer, BanditLoot.FridgeItems, 5)
+                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
                                     end
 
                                     local counter = object:getContainerByType("counter")
                                     if counter then
-                                        BanditLoot.FillContainer(counter, BanditLoot.CounterItems, 9)
+                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 9)
                                     end
 
                                     local crate = object:getContainerByType("crate")
                                     if crate then
-                                        BanditLoot.FillContainer(crate, BanditLoot.CrateItems, 9)
+                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 9)
                                     end
                                 end
                             end
@@ -616,10 +616,10 @@ function BanditScheduler.GetDensityScore(player, r)
     local py = player:getY()
 
     local zoneScore = {}
-    zoneScore.Forest = -2
-    zoneScore.DeepForest = -3
+    zoneScore.Forest = -3.2
+    zoneScore.DeepForest = -4.2
     zoneScore.Nav = 4
-    zoneScore.Vegitation = -1.2
+    zoneScore.Vegitation = -2.5
     zoneScore.TownZone = 5
     zoneScore.Ranch = 2
     zoneScore.Farm = 2
@@ -657,13 +657,13 @@ function BanditScheduler.GetDensityScore(player, r)
             end
         end
     end
-    return score
+    return 1 + (score / 10000)
 end
 
 function BanditScheduler.GetSpawnZoneBoost(player, clanId)
     local zoneBoost = 1
     local clan = BanditCreator.GroupMap[clanId]
-    local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
+    local zone = getWorld():getMetaGrid():getZoneAt(player:getX(), player:getY(), 0)
 
     if zone and clan and clan.favoriteZones then
         local zoneType = zone:getType()
@@ -870,7 +870,7 @@ function BanditScheduler.CheckEvent()
 
         for _, wave in pairs(waveData) do
             local spawnZoneBoost = BanditScheduler.GetSpawnZoneBoost(currentPlayer, wave.clanId)
-            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * (1 + (densityScore / 10000)) / 6
+            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * densityScore / 6
             local spawnRandom = ZombRandFloat(0, 101)
             if spawnRandom < spawnChance then
                 BanditScheduler.SpawnWave(currentPlayer, wave)

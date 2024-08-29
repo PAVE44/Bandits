@@ -18,10 +18,10 @@ BanditClan.Psychopath.health = 2
 BanditClan.Psychopath.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 0.7
+BanditClan.Psychopath.accuracyBoost = 0.7
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {}
+BanditClan.Psychopath.favoriteZones = {}
 
 -- available outfits
 BanditClan.Psychopath.Outfits = BanditClan.Psychopath.Outfits or {}

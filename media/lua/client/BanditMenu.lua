@@ -185,7 +185,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     if isDebugEnabled() or isAdmin() then
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
-        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) / 10000 .. "%")
+        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
 
         local spawnOption = context:addOption("[DGB] Spawn Group Here")
         local spawnMenu = context:getNew(context)
@@ -204,6 +204,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         if zombie then
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
             print ("this zombie outfit id: " .. zombie:getPersistentOutfitID())
+            print ("this zombie dir is: " .. zombie:getDirectionAngle())
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
             context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)

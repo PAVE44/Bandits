@@ -18,10 +18,10 @@ BanditClan.Criminal.health = 3
 BanditClan.Criminal.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 0.9
+BanditClan.Criminal.accuracyBoost = 0.9
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {{"TownZone", "TrailerPark"}}
+BanditClan.Criminal.favoriteZones = {"TownZone"}
 
 -- available outfits
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}

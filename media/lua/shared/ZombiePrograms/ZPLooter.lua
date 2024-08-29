@@ -87,22 +87,59 @@ ZombiePrograms.Looter.Operate = function(bandit)
     
     local target = {}
 
+    local closestZombie = {}
+    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(bandit)
+
+    local closestBandit = {}
+    closestBandit.x, closestBandit.y, closestBandit.z, closestBandit.dist, closestBandit.id = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+
     local closestPlayer = {}
     closestPlayer.x, closestPlayer.y, closestPlayer.z, closestPlayer.dist, closestPlayer.id = BanditUtils.GetClosestPlayerLocation(bandit, true)
 
-    if closestPlayer.x and closestPlayer.y and closestPlayer.z then
-        Bandit.SetProgram(bandit, "Bandit", {})
-        return {status=true, next="Follow", tasks={}}
+    target = closestZombie
+    if closestBandit.dist < closestZombie.dist then
+        target = closestBandit
     end
 
-    local closestZombie = {}
-    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(bandit)
-    target = closestZombie
+    if closestPlayer.dist < closestBandit.dist then
+        target = closestPlayer
+    end
 
     if target.x and target.y and target.z then
+        
+        local targetSquare = cell:getGridSquare(target.x, target.y, target.z)
+        local banditSquare = bandit:getSquare()
+        if targetSquare and banditSquare then
+            local targetBuilding = targetSquare:getBuilding()
+            local banditBuilding = banditSquare:getBuilding()
+            local x = 100
+
+            if targetBuilding and not banditBuilding then
+                Bandit.Say(bandit, "INSIDE")
+            end
+            if not targetBuilding and banditBuilding then
+                Bandit.Say(bandit, "OUTSIDE")
+            end
+            if targetBuilding and banditBuilding then
+                if bandit:getZ() < target.z then
+                    Bandit.Say(bandit, "UPSTAIRS")
+                else
+                    local room = targetSquare:getRoom()
+                    if room then
+                        local roomName = room:getName()
+                        if roomName == "kitchen" then
+                            Bandit.Say(bandit, "ROOM_KITCHEN")
+                        end
+                        if roomName == "bathroom" then
+                            Bandit.Say(bandit, "ROOM_BATHROOM")
+                        end
+                    end
+                end
+            end
+        end
 
         -- out of ammo, get close
-        local minDist = 6
+        local minDist = 2
         if outOfAmmo then
             minDist = 1.51
         end
@@ -112,29 +149,17 @@ ZombiePrograms.Looter.Operate = function(bandit)
             -- must be deterministic, not random (same for all clients)
             local id = BanditUtils.GetCharacterID(bandit)
 
-            local dx = (id % 4) - 2
-            local dy = (id % 5) - 2.5
+            local dx = 0
+            local dy = 0
             local dxf = ((id % 10) - 5) / 10
             local dyf = ((id % 11) - 5) / 10
 
-            -- Move and GoTo generally do the same thing with a different method
-            -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
-            -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
-            local gamemode = getWorld():getGameMode()
-            local task
-            if gamemode == "Multiplayer" then
-                if target.dist > 30 then
-                    task = {action="Move", time=25, endurance=endurance, x=target.x+dx+dxf, y=target.y+dy+dyf, z=target.z, walkType=walkType}
-                else
-                    task = {action="GoTo", time=50, endurance=endurance, x=target.x+dx+dxf, y=target.y+dy+dyf, z=target.z, walkType=walkType}
-                end
-            else
-                task = {action="Move", time=50, endurance=endurance, x=target.x - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), y=target.y - 1 + ZombRand(3) + ZombRandFloat(-0.5, 0.5), z=target.z, walkType=walkType}
-                -- task = {action="Move", time=50, x=x+dx+dxf, y=y+dy+dyf, z=z, walkType=walkType}
-            end
-            table.insert(tasks, task)
 
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist))
         end
+    else
+        local task = {action="Time", anim="Shrug", time=200}
+        table.insert(tasks, task)
     end
 
     return {status=true, next="Operate", tasks=tasks}

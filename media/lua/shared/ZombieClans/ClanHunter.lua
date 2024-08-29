@@ -18,10 +18,10 @@ BanditClan.Hunter.health = 4
 BanditClan.Hunter.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1.1
+BanditClan.Hunter.accuracyBoost = 1.1
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {"Forest", "DeepForest"}
+BanditClan.Hunter.favoriteZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Hunter.Outfits = BanditClan.Hunter.Outfits or {}

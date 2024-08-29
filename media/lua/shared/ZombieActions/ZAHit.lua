@@ -7,7 +7,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
     
-    if dist < item:getMaxRange() + 0.5 then
+    if dist < item:getMaxRange() then
         victim:forceAwake()
 
         local hitSound
@@ -92,7 +92,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         local item = InventoryItemFactory.CreateItem(task.weapon)
         local cell = getCell()
         local enemyList = cell:getZombieList()
-        for i=1, enemyList:size()-1 do
+        for i=0, enemyList:size()-1 do
             local enemy = enemyList:get(i)
             if enemy then
                 local eid = BanditUtils.GetCharacterID(enemy)

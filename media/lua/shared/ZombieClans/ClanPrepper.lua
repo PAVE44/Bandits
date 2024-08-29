@@ -18,10 +18,10 @@ BanditClan.Prepper.health = 4
 BanditClan.Prepper.eatBody = false
 
 -- Ranged weapon accuracy multiplayer (1=default)
-BanditClan.Biker.accuracyBoost = 1
+BanditClan.Prepper.accuracyBoost = 1
 
 -- Favorite zones 
-BanditClan.Biker.favoriteZones = {"Vegitation", "Farm", "FarmLand", "Ranch"}
+BanditClan.Prepper.favoriteZones = {"Vegitation", "Farm", "FarmLand", "Ranch"}
 
 -- available outfits
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}
