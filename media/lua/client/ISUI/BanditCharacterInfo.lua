@@ -32,20 +32,5 @@ function ISCharacterInfoWindow:render()
     end
 end
 
-local function initializeBanditKillData()
-    local data = ModData.getOrCreate("BanditKillData")
-
-    -- Get the survivor's name (this is the character's name, not the player's username)
-    local survivorName = getPlayer():getFullName()
-
-    -- Initialize the table for the survivor if it's not already present
-    if not data[survivorName] then
-        data[survivorName] = { banditKills = 0 }
-    end
-
-    -- Save the data back to the global mod data
-    ModData.transmit("BanditKillData")
-end
-
 -- Ensure GlobalModData is initialized when the game starts
 Events.OnGameStart.Add(initializeBanditKillData)
