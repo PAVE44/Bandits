@@ -31,6 +31,3 @@ function ISCharacterInfoWindow:render()
         self:drawText(tostring(getBanditKillCount()), 125, 355 + offset, 0.5, 0.5, 0.5, 1, UIFont.Small)
     end
 end
-
--- Ensure GlobalModData is initialized when the game starts
-Events.OnGameStart.Add(initializeBanditKillData)
