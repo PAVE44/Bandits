@@ -31,25 +31,22 @@ local originalPanicIncreaseValue = nil
 
 -- Function to check nearby entities and set panic increase value
 BanditPlayer.PanicHandler = function(player)
+    local px, py = player:getX(), player:getY()
     local panicRadius = player:getSeeNearbyCharacterDistance() + 2.0
     
-    -- Step 2: Store the original PanicIncreaseValue if it's the first time modifying it
+    -- Step 1: Store the original PanicIncreaseValue if it's the first time modifying it
     local bodyDamage = player:getBodyDamage()
     if originalPanicIncreaseValue == nil then
         originalPanicIncreaseValue = bodyDamage:getPanicIncreaseValue()
     end
     
-    -- Step 3: Proceed with checking all zombies within the panicRadius
-    local cell = player:getCell()
-    local zombies = cell:getZombieList()
-    
+    -- Step 2: Proceed with checking all zombies within the panicRadius
     local onlyFriendlies = false  -- Default to false, assume hostiles are present
-
-    for i = 0, zombies:size() - 1 do
-        local zombie = zombies:get(i)
-        if zombie:DistTo(player) <= panicRadius then
-            local brain = BanditBrain.Get(zombie)
-            if brain and not brain.hostile then
+    local zombieList = BanditZombie.GetAll()
+    for id, zombie in pairs(zombieList) do
+        local dist = math.sqrt(math.pow(zombie.x - px, 2) + math.pow(zombie.y - py, 2))
+        if dist <= panicRadius then
+            if zombie.brain and not zombie.brain.hostile then
                 -- Found a friendly Bandit, mark as potentially only friendlies
                 onlyFriendlies = true
             else
@@ -60,7 +57,7 @@ BanditPlayer.PanicHandler = function(player)
         end
     end
 
-    -- Step 4: Adjust or restore panic increase value based on the proximity check
+    -- Step 3: Adjust or restore panic increase value based on the proximity check
     if onlyFriendlies then
         bodyDamage:setPanicIncreaseValue(0.0)  -- Prevent panic increase
         player:getStats():setPanic(0)  -- Set current panic level to 0
@@ -70,5 +67,13 @@ BanditPlayer.PanicHandler = function(player)
     end
 end
 
+BanditPlayer.ResetBanditKills = function(player)
+    local args = {}
+    args.id = 0
+	sendClientCommand(player, 'Commands', 'ResetBanditKills', args)
+end
+
+
 Events.OnPlayerUpdate.Add(BanditPlayer.PanicHandler)
+Events.OnPlayerDeath.Add(BanditPlayer.ResetBanditKills)
 Events.EveryOneMinute.Add(BanditPlayer.UpdatePlayersOnline)
