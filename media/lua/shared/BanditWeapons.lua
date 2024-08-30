@@ -189,7 +189,7 @@ if getActivatedMods():contains("VFExpansion1") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.FAL", "Base.FALClip", 20, "M14Shoot", 17))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MAC10Unfolded", "Base.45Clip32", 32, "M1911Shoot", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M60MMG", "Base.M60Belt", 100, "M1911Shoot", 13))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.CampCarabine", "Base.45Clip", 7, "M1911Shoot", 22))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.CampCarbine", "Base.45Clip", 7, "M1911Shoot", 22))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5Unfolded", "Base.9mmClip30", 7, "M9Shoot", 7))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mini14", "Base.223Clip20", 20, "AK47shoot", 17))
     
