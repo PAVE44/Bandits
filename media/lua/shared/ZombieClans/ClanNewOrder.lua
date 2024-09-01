@@ -22,6 +22,7 @@ BanditClan.NewOrder.accuracyBoost = 1.2
 
 -- Favorite zones 
 BanditClan.NewOrder.favoriteZones = {}
+BanditClan.NewOrder.avoidZones = {}
 
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}

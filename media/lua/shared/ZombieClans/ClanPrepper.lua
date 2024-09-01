@@ -22,6 +22,7 @@ BanditClan.Prepper.accuracyBoost = 1
 
 -- Favorite zones 
 BanditClan.Prepper.favoriteZones = {"Vegitation", "Farm", "FarmLand", "Ranch"}
+BanditClan.Prepper.avoidZones = {"TownZone", "Nav"}
 
 -- available outfits
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}

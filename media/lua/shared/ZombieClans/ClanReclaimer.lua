@@ -22,6 +22,7 @@ BanditClan.Reclaimer.accuracyBoost = 0.8
 
 -- Favorite zones 
 BanditClan.Reclaimer.favoriteZones = {}
+BanditClan.Reclaimer.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Reclaimer.Outfits = BanditClan.Reclaimer.Outfits or {}

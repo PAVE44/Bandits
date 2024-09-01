@@ -22,6 +22,7 @@ BanditClan.PrivateMilitia.accuracyBoost = 1.1
 
 -- Favorite zones 
 BanditClan.PrivateMilitia.favoriteZones = {"Nav"}
+BanditClan.PrivateMilitia.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.PrivateMilitia.Outfits = BanditClan.PrivateMilitia.Outfits or {}

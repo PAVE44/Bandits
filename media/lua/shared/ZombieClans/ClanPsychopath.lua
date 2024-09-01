@@ -22,6 +22,7 @@ BanditClan.Psychopath.accuracyBoost = 0.7
 
 -- Favorite zones 
 BanditClan.Psychopath.favoriteZones = {}
+BanditClan.Psychopath.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Psychopath.Outfits = BanditClan.Psychopath.Outfits or {}

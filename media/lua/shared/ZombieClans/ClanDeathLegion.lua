@@ -22,6 +22,7 @@ BanditClan.DeathLegion.accuracyBoost = 1.3
 
 -- Favorite zones 
 BanditClan.DeathLegion.favoriteZones = {}
+BanditClan.DeathLegion.avoidZones = {"DeepForest"}
 
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}

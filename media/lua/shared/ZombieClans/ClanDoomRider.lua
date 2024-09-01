@@ -22,6 +22,7 @@ BanditClan.DoomRider.accuracyBoost = 1
 
 -- Favorite zones 
 BanditClan.DoomRider.favoriteZones = {}
+BanditClan.DoomRider.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.DoomRider.Outfits = BanditClan.DoomRider.Outfits or {}
