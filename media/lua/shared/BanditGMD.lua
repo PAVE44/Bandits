@@ -8,13 +8,14 @@ function InitBanditModData(isNewGame)
         ModData.request("Bandit")
     end
 
-    --if not modData.Queue then modData.modData = {} end
-    modData.Queue = {}
+    if not modData.Queue then modData.Queue = {} end
+    -- modData.Queue = {}
     modData.OnlinePlayers = {}
     if not modData.Scenes then modData.Scenes = {} end
     if not modData.Bandits then modData.Bandits = {} end
     if not modData.Guardposts then modData.Guardposts = {} end
     if not modData.Kills then modData.Kills = {} end
+    if not modData.VisitedBuildings then modData.VisitedBuildings = {} end
 
     BanditModData = modData
 end

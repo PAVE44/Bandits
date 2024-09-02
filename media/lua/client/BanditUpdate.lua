@@ -153,6 +153,17 @@ function BanditUpdate.Banditize(zombie, brain)
 
 end
 
+function BanditUpdate.Zombify(zombie)
+    zombie:setNoTeeth(false)
+    zombie:setVariable("Bandit", false)
+    zombie:setPrimaryHandItem(nil)
+    zombie:setSecondaryHandItem(nil)
+    zombie:resetEquippedHandsModels()
+    zombie:clearAttachedItems()
+    zombie:setBumpType("trippingFromSprint")
+    BanditBrain.Remove(zombie)
+end
+
 function BanditUpdate.Visuals(bandit)
     local banditVisuals = bandit:getHumanVisual()
     if banditVisuals then
@@ -984,17 +995,18 @@ function BanditUpdate.OnBanditUpdate(zombie)
     local brain = BanditBrain.Get(zombie)
 
     -- BANDITIZE ZOMBIES SPAWNED AND ENQUEUED BY SERVER
-    if not zombie:getVariableBoolean("Bandit") then
-        local gmd = GetBanditModData()
-        if gmd.Queue and gmd.Queue[id] and id ~= 0 then
-            brain = gmd.Queue[id]
-            BanditUpdate.Banditize(zombie, brain)
-        else
-            -- make sure recycled bandits respawned as zombies are not equipped with items
-            if zombie:getPrimaryHandItem() then
-                zombie:setPrimaryHandItem(nil)
+    -- OR ZOMBIFY BANDITS THAT ARE NO LONGER IN THE QUEUE
+    local gmd = GetBanditModData()
+    if gmd.Queue then
+        if gmd.Queue[id] and id ~= 0 then
+            if not zombie:getVariableBoolean("Bandit") then
+                brain = gmd.Queue[id]
+                BanditUpdate.Banditize(zombie, brain)
             end
-            BanditBrain.Remove(zombie)
+        else
+            if zombie:getVariableBoolean("Bandit") then
+                BanditUpdate.Zombify(zombie)
+            end
         end
     end
 

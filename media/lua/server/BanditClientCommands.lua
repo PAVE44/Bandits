@@ -26,7 +26,16 @@ BanditServer.Commands.BanditRemove  = function(player, args)
     local id = args.id
     if gmd.Queue[id] then
         gmd.Queue[id] = nil
-        print ("QUEUE REMOVED: " .. id)
+        print ("[INFO] Bandit removed: " .. id)
+    end
+end
+
+BanditServer.Commands.BanditUpdate  = function(player, args)
+    local gmd = GetBanditModData()
+    local id = args.id
+    if gmd.Queue[id] then
+        gmd.Queue[id] = args
+        print ("[INFO] Bandit sync: " .. id)
     end
 end
 
@@ -259,6 +268,11 @@ BanditServer.Commands.ResetBanditKills = function(player, args)
     if gmd.Kills[id] then
         gmd.Kills[id] = 0
     end
+end
+
+BanditServer.Commands.UpdateVisitedBuilding = function(player, args)
+    local gmd = GetBanditModData()
+    gmd.VisitedBuildings[args.bid] = args.wah 
 end
 
 -- main
