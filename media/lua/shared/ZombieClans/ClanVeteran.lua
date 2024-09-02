@@ -22,6 +22,7 @@ BanditClan.Veteran.accuracyBoost = 1.4
 
 -- Favorite zones 
 BanditClan.Veteran.favoriteZones = {}
+BanditClan.Veteran.avoidZones = {}
 
 -- available outfits
 BanditClan.Veteran.Outfits = BanditClan.Veteran.Outfits or {}

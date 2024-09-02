@@ -22,6 +22,7 @@ BanditClan.Cannibal.accuracyBoost = 0.8
 
 -- Favorite zones 
 BanditClan.Cannibal.favoriteZones = {}
+BanditClan.Cannibal.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Cannibal.Outfits = BanditClan.Cannibal.Outfits or {}

@@ -33,6 +33,26 @@ local function daysFromStartOfYear(year, month, day)
     return days
 end
 
+local function getGroundType(square)
+    local groundType = "generic"
+    local objects = square:getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        if object then
+            local sprite = object:getSprite()
+            if sprite then
+                local spriteName = sprite:getName()
+                if spriteName then
+                    if spriteName:embodies("street") then
+                        groundType = "street"
+                    end
+                end
+            end
+        end
+    end
+    return groundType
+end
+
 function BanditScheduler.DaysSinceApo()
 
     local gameTime = getGameTime()
@@ -111,26 +131,6 @@ function BanditScheduler.GetWaveDataForDay(day)
         end
     end
     return waveDataForDay
-end
-
-function BanditScheduler.GetGroundType(square)
-    local groundType = "generic"
-    local objects = square:getObjects()
-    for i=0, objects:size()-1 do
-        local object = objects:get(i)
-        if object then
-            local sprite = object:getSprite()
-            if sprite then
-                local spriteName = sprite:getName()
-                if spriteName then
-                    if spriteName:embodies("street") then
-                        groundType = "street"
-                    end
-                end
-            end
-        end
-    end
-    return groundType
 end
 
 function BanditScheduler.GenerateSpawnPoint(player, d)
@@ -212,7 +212,7 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
             elseif isTooCloseToPlayer(sp.x, sp.y) then
                 print("[INFO] Spawn is too close to one of the players, skipping.")
             else
-                sp.groundType = BanditScheduler.GetGroundType(square)
+                sp.groundType = getGroundType(square)
                 table.insert(validSpawnPoints, sp)
             end
         end
@@ -338,7 +338,7 @@ function BanditScheduler.SpawnWave(player, wave)
                     for x=spawnPoint.x-20, spawnPoint.x+20 do
                         local square = getCell():getGridSquare(x, spawnPoint.y, 0)
                         if square then
-                            local gt = BanditScheduler.GetGroundType(square)
+                            local gt = getGroundType(square)
                             if gt == "street" then xcnt = xcnt + 1 end
                         end
                     end
@@ -347,7 +347,7 @@ function BanditScheduler.SpawnWave(player, wave)
                     for y=spawnPoint.y-20, spawnPoint.y+20 do
                         local square = getCell():getGridSquare(spawnPoint.x, y, 0)
                         if square then
-                            local gt = BanditScheduler.GetGroundType(square)
+                            local gt = getGroundType(square)
                             if gt == "street" then ycnt = ycnt + 1 end
                         end
                     end
@@ -411,8 +411,8 @@ function BanditScheduler.RaiseDefences(x, y)
             local w = buildingDef:getX2() - buildingDef:getX()
             local h = buildingDef:getY2() - buildingDef:getY()
             BanditBaseGroupPlacements.Junk(x, y, 0, w, h, 3)
-            BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 3)
-            BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 3)
+            BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 2)
+            BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 2)
             BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
             BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
 
@@ -472,22 +472,22 @@ function BanditScheduler.RaiseDefences(x, y)
 
                                     local fridge = object:getContainerByType("fridge")
                                     if fridge then
-                                        BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 5)
+                                        BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 4)
                                     end
 
                                     local freezer = object:getContainerByType("freezer")
                                     if freezer then
-                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 5)
+                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
                                     end
 
                                     local counter = object:getContainerByType("counter")
                                     if counter then
-                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 9)
+                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 7)
                                     end
 
                                     local crate = object:getContainerByType("crate")
                                     if crate then
-                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 9)
+                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 7)
                                     end
                                 end
                             end
@@ -509,8 +509,14 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
     local function checkBuilding(building)
 
         -- avoid safehouses
-        if SafeHouse.isSafeHouse(square, nil, true) then
-            return false
+        local buildingDef = building:getDef()
+        for x=buildingDef:getX(), buildingDef:getX2() do
+            for y=buildingDef:getY(), buildingDef:getY2() do
+                local square = cell:getGridSquare(x, y, 0)
+                if square and SafeHouse.isSafeHouse(square, nil, true) then
+                    return false
+                end
+            end
         end
         
         -- avoid player occupied buildings
@@ -710,12 +716,22 @@ function BanditScheduler.GetSpawnZoneBoost(player, clanId)
     local clan = BanditCreator.GroupMap[clanId]
     local zone = getWorld():getMetaGrid():getZoneAt(player:getX(), player:getY(), 0)
 
-    if zone and clan and clan.favoriteZones then
+    if zone and clan then
         local zoneType = zone:getType()
-        for _, zt in pairs(clan.favoriteZones) do
-            if zt == zoneType then
-                zoneBoost = 1.3
-                break
+        if clan.favoriteZones then
+            for _, zt in pairs(clan.favoriteZones) do
+                if zt == zoneType then
+                    zoneBoost = 1.4
+                    break
+                end
+            end
+        end
+        if clan.avoidZones then
+            for _, zt in pairs(clan.avoidZones) do
+                if zt == zoneType then
+                    zoneBoost = 0.6
+                    break
+                end
             end
         end
     end
@@ -908,7 +924,7 @@ function BanditScheduler.CheckEvent()
         local daysPassed = currentPlayer:getHoursSurvived() / 24
         local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
 
-        local densityScore = 0
+        local densityScore = 1
         if SandboxVars.Bandits.General_DensityScore then
            densityScore = BanditScheduler.GetDensityScore(currentPlayer, 120)
         end
@@ -928,7 +944,7 @@ function BanditScheduler.CheckEvent()
         local spawnChance = SandboxVars.Bandits.General_DefenderSpawnHourlyChanced or 8
         if spawnRandom < spawnChance / 6 then
             print ("SPAWNING DEFENDERS")
-            BanditScheduler.SpawnDefenders(currentPlayer, 45, 100)
+            BanditScheduler.SpawnDefenders(currentPlayer, 55, 100)
         end
 
         -- SPAWN BASES

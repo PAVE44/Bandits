@@ -22,6 +22,7 @@ BanditClan.Inmate.accuracyBoost = 0.9
 
 -- Favorite zones 
 BanditClan.Inmate.favoriteZones = {}
+BanditClan.Inmate.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Inmate.Outfits = BanditClan.Inmate.Outfits or {}

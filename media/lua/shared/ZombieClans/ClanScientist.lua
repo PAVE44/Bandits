@@ -22,6 +22,7 @@ BanditClan.Scientist.accuracyBoost = 0.8
 
 -- Favorite zones 
 BanditClan.Scientist.favoriteZones = {}
+BanditClan.Scientist.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Scientist.Outfits = BanditClan.Scientist.Outfits or {}

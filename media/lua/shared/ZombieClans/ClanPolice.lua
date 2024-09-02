@@ -22,6 +22,7 @@ BanditClan.Police.accuracyBoost = 1
 
 -- Favorite zones 
 BanditClan.Police.favoriteZones = {"Nav"}
+BanditClan.Police.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Police.Outfits = BanditClan.Police.Outfits or {}

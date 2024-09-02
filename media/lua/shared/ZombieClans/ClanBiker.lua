@@ -22,6 +22,7 @@ BanditClan.Biker.accuracyBoost = 0.8 -- these drunks can't aim
 
 -- Favorite zones 
 BanditClan.Biker.favoriteZones = {"TrailerPark"}
+BanditClan.Biker.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Biker.Outfits = BanditClan.Biker.Outfits or {}
