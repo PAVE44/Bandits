@@ -17,6 +17,11 @@ option Bandits.General_BleedOut = {
     page = Bandits_General, translation = Bandits.BleedOut,
 }
 
+option Bandits.General_Infection = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Infection,
+}
+
 option Bandits.General_LimitedEndurance = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.LimitedEndurance,

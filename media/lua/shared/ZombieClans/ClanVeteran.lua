@@ -9,7 +9,7 @@ BanditClan.Veteran.id = 8
 BanditClan.Veteran.name = "Veteran"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.Veteran.femaleChance = 30
+BanditClan.Veteran.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.Veteran.health = 4

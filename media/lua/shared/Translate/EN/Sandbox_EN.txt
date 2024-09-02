@@ -6,6 +6,7 @@ Sandbox_EN = {
     Sandbox_Bandits.DensityScore = "Bandit spawn rate boosted in towns and lowered in secluded areas"
     Sandbox_Bandits.Surrender = "Hurt Bandits may surrender"
     Sandbox_Bandits.BleedOut = "Hurt Bandits may bleed and die"
+    Sandbox_Bandits.Infection = "Bandits may become infected and zombify"
     Sandbox_Bandits.LimitedEndurance = "Bandits have limited endurance"
     Sandbox_Bandits.RunAway = "Hurt Bandits may run away"
     Sandbox_Bandits.DestroyDoor = "Bandits may destroy doors"

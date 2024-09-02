@@ -59,15 +59,19 @@ end
 
 function Bandit.UpdateTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
-    table.remove(brain.tasks, 1)
-    table.insert(brain.tasks, 1, task)
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        table.remove(brain.tasks, 1)
+        table.insert(brain.tasks, 1, task)
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.RemoveTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    table.remove(brain.tasks, 1)
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        table.remove(brain.tasks, 1)
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.ClearTasks(zombie)
@@ -102,6 +106,13 @@ function Bandit.UpdateEndurance(zombie, delta)
     brain.endurance = brain.endurance + delta
     if brain.endurance < 0 then brain.endurance = 0 end
     if brain.endurance > 1 then brain.endurance = 1 end
+    BanditBrain.Update(zombie, brain)
+end
+
+function Bandit.UpdateInfection(zombie, delta)
+    local brain = BanditBrain.Get(zombie)
+    if not brain.infection then brain.infection = 0 end
+    brain.infection = brain.infection + delta
     BanditBrain.Update(zombie, brain)
 end
 

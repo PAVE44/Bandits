@@ -109,8 +109,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     -- go to player
-
-    local minDist = 4
+    local minDist = 1
     if dist > minDist then
         local id = BanditUtils.GetCharacterID(bandit)
 

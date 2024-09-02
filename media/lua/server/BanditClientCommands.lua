@@ -78,6 +78,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.sleeping = false
             brain.endurance = 1.00
             brain.speech = 0.00
+            brain.infection = 0
 
             brain.weapons = bandit.weapons
             brain.loot = bandit.loot

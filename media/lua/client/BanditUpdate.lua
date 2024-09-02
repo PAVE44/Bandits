@@ -155,12 +155,16 @@ end
 
 function BanditUpdate.Zombify(zombie)
     zombie:setNoTeeth(false)
+    zombie:setUseless(false)
     zombie:setVariable("Bandit", false)
+    zombie:setVariable("BanditPrimary", "")
+    zombie:setVariable("BanditSecondary", "")
+    zombie:setWalkType("2")
+    zombie:setVariable("BanditWalkType", "")
     zombie:setPrimaryHandItem(nil)
     zombie:setSecondaryHandItem(nil)
     zombie:resetEquippedHandsModels()
     zombie:clearAttachedItems()
-    zombie:setBumpType("trippingFromSprint")
     BanditBrain.Remove(zombie)
 end
 
@@ -349,6 +353,19 @@ function BanditUpdate.Health(bandit)
         if healing then
             local task = {action="Bandage", time=800}
             table.insert(tasks, task)
+        end
+    end
+
+    if SandboxVars.Bandits.General_Infection then
+        local brain = BanditBrain.Get(bandit)
+        if brain.infection and brain.infection > 0 then
+            -- print ("INFECTION: " .. brain.infection)
+            local delta = 0.001
+            Bandit.UpdateInfection(bandit, delta)
+            if brain.infection > 100 then
+                local task = {action="Zombify", anim="Faint", lock=true, time=200}
+                table.insert(tasks, task)
+            end
         end
     end
     return tasks
@@ -882,8 +899,14 @@ function BanditUpdate.SocialDistance(bandit)
                 local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
                 
                 if bandit:getZ() == player:getZ() and dist < 4 then
-                    if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
-                        Bandit.SetProgram(bandit, "CompanionGuard", {})
+
+                    local closestZombie = {}
+                    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(player)
+            
+                    if closestZombie.dist > 4 then
+                        if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
+                            Bandit.SetProgram(bandit, "CompanionGuard", {})
+                        end
                     end
                 end
             end
@@ -938,7 +961,7 @@ function BanditUpdate.Zombie(zombie)
                                 if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
                                 local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
                                 Bandit.AddTask(bandit, task)
-                            elseif dist < 0.45 then
+                            elseif dist < 0.65 then
                                 zombie:setBumpType("Bite")
 
                                 if ZombRand(4) == 1 then
@@ -950,6 +973,7 @@ function BanditUpdate.Zombie(zombie)
                                 SwipeStatePlayer.splash(bandit, teeth, zombie)
     
                                 bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                                Bandit.UpdateInfection(bandit, 0.001)
                             end
                         else
                             zombie:faceThisObject(bandit)
@@ -995,7 +1019,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     local brain = BanditBrain.Get(zombie)
 
     -- BANDITIZE ZOMBIES SPAWNED AND ENQUEUED BY SERVER
-    -- OR ZOMBIFY BANDITS THAT ARE NO LONGER IN THE QUEUE
+    -- OR ZOMBIFY IF QUEUE HAS BEEN REMOVED
     local gmd = GetBanditModData()
     if gmd.Queue then
         if gmd.Queue[id] and id ~= 0 then

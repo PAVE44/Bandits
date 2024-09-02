@@ -64,9 +64,8 @@ function BanditMenu.TestAction (player, square, zombie)
 end
 
 function BanditMenu.Zombify (player, zombie)
-    local id = BanditUtils.GetCharacterID(zombie)
-    args.id = id
-    sendClientCommand(player, 'Commands', 'BanditRemove', args)
+    local task = {action="Zombify", anim="Faint", time=400}
+    Bandit.AddTask(zombie, task)
 end
 
 function BanditMenu.SetHumanVisuals (player, zombie)
