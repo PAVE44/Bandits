@@ -1,9 +1,24 @@
 ZombiePrograms = ZombiePrograms or {}
 
+local function GetMoveTask(endurance, x, y, z, walkType, dist)
+    local gamemode = getWorld():getGameMode()
+    local task
+    if gamemode == "Multiplayer" then
+        if dist > 30 then
+            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        else
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        end
+    else
+        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+    end
+    return task
+end
+
 ZombiePrograms.Civilian = {}
 ZombiePrograms.Civilian.Stages = {}
 
-ZombiePrograms.Civilian.Init = function(civilian)
+ZombiePrograms.Civilian.Init = function(bandit)
 end
 
 ZombiePrograms.Civilian.GetCapabilities = function()
@@ -21,60 +36,36 @@ ZombiePrograms.Civilian.GetCapabilities = function()
     return capabilities
 end
 
-ZombiePrograms.Civilian.Prepare = function(civilian)
+ZombiePrograms.Civilian.Prepare = function(bandit)
+    local tasks = {}
+    local world = getWorld()
+    local cell = getCell()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
 
     Bandit.ForceStationary(bandit, false)
-    Bandit.SetWeapons(civilian, Bandit.GetWeapons(civilian))
+    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
+    
+    -- weapons are spawn, not program decided
+    local primary = Bandit.GetBestWeapon(bandit)
 
-    return {status=true, next="Defend", tasks={}}
+    local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
+    table.insert(tasks, task)
+
+    return {status=true, next="Operate", tasks={}}
 end
 
-ZombiePrograms.Civilian.Defend = function(civilian)
+ZombiePrograms.Civilian.Operate = function(bandit)
 
     local tasks = {}
 
-    local gamemode = getWorld():getGameMode()
-    local moveAI = "Move"
-    if gamemode == "Multiplayer" then
-        moveAI = "GoTo"
-    end
-
-    local handweapon = civilian:getVariableString("BanditWeapon")
-    local health = civilian:getHealth()
-    local cx = civilian:getX()
-    local cy = civilian:getY()
-    local id = math.abs(civilian:getPersistentOutfitID())
     
-    local target = BanditScheduler.FindBuilding(civilian, 10, 50)
-
-    if target and target.x and target.y then 
-        local pace
-
-        local zeds = 0
-        for _, z in pairs(BanditMap.ZMap) do
-            if z.x > cx - 8 and z.x < cx + 8 and z.y > cx - 8 and z.y < cx + 8 then
-                zeds = zeds + 1
-            end
-        end
-
-        print ("ZOMBIES AROUND:" .. zeds)
-        if zeds < 1 then
-            pace = "Run"
-            print ("i will go to x:" .. target.x .. " y:" .. target.y)
-        else
-            pace = "Run"
-            print ("i will  run to x:" .. target.x .. " y:" .. target.y)
-        end
-
-        if health < 0.4 then
-            pace = "Limp"
-        end
+    -- determine
+    -- seek shelter in the nearest building
     
-        local walkType = pace .. handweapon
-        local task = {action=moveAI, time=75, x=target.x, y=target.y, z=0, walkType=walkType}
-        table.insert(tasks, task)
-    end
 
-    return {status=true, next="Defend", tasks=tasks}
+   
+
+    return {status=true, next="Operate", tasks=tasks}
 end
 
