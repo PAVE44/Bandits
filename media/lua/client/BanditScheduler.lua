@@ -263,7 +263,7 @@ function BanditScheduler.SpawnWave(player, wave)
         end
     
         if #event.bandits > 0 then
-            print ("SPAWNING ATTACK CLAN AGAINST PLAYER: " .. BanditUtils.GetCharacterID(player))
+            print ("[INFO] Spawning a bandit group against player id: " .. BanditUtils.GetCharacterID(player))
             event.x = spawnPoint.x
             event.y = spawnPoint.y
 
@@ -514,29 +514,22 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
             for y=buildingDef:getY(), buildingDef:getY2() do
                 local square = cell:getGridSquare(x, y, 0)
                 if square and SafeHouse.isSafeHouse(square, nil, true) then
+                    print ("[INFO] Defenders are not allowed to spawn in a safehouse.")
                     return false
                 end
             end
         end
         
-        -- avoid player occupied buildings
-        local gamemode = getWorld():getGameMode()
-        if gamemode == "Multiplayer" then
-            playerList = getOnlinePlayers()
-        else
-            playerList = IsoPlayer.getPlayers()
-        end
-
-        for i=0, playerList:size()-1 do
-            local player = playerList:get(i)
-            if player then
-                local playerSquare = player:getSquare()
-                if playerSquare then
-                    playerBuilding = playerSquare:getBuilding()
-                    if playerBuilding then
-                        if playerBuilding:getID() == building:getID() then return false end
-                    end
-                end
+        -- avoid recently visited buildings
+        local bid = building:getID()
+        local gmd = GetBanditModData()
+        if gmd.VisitedBuildings and gmd.VisitedBuildings[bid] then
+            local now = getGameTime():getWorldAgeHours() --  8
+            local lastVisit = gmd.VisitedBuildings[bid] -- 1
+            local coolDown = 7 * 24
+            if now - coolDown < lastVisit then
+                print ("[INFO] Defenders are not allowed to spawn in a building visited by a player in last 7 days.")
+                return false
             end
         end
 
@@ -702,7 +695,7 @@ function BanditScheduler.GetDensityScore(player, r)
                     if zoneScore[zoneType] then
                         score = score + zoneScore[zoneType]
                     else
-                        print ("unknown zone type " .. zoneType)
+                        print ("[WARNING] Unknown zone type " .. zoneType .. ".")
                     end
                 end
             end
@@ -773,7 +766,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
         
         local bandit = BanditCreator.MakeFromSpawnType(spawnData)
         if bandit then
-            print ("SPAWNING DEFENDER X:" .. event.x .. " Y:" .. event.y .. " Z: " .. event.z .. "TYPE:" .. spawnData.buildingType)
+            print ("[INFO] Spawning defenders at X:" .. event.x .. " Y:" .. event.y .. " Z: " .. event.z .. " Type:" .. spawnData.buildingType .. ".")
             table.insert(event.bandits, bandit)
             sendClientCommand(player, 'Commands', 'SpawnGroup', event)
         end
@@ -796,7 +789,7 @@ function BanditScheduler.SpawnBase(player, sceneNo)
     if spawnPoint then
         local canPlace = BanditBaseGroupPlacements.CheckSpace(spawnPoint.x-10, spawnPoint.y-10, 40, 40)
         if canPlace then
-            print ("SPAWNING BASE " .. tostring(sceneNo) .. " FOR PLAYER: " .. BanditUtils.GetCharacterID(player))
+            print ("[INFO] Spawning a camp site " .. tostring(sceneNo) .. " for player id: " .. BanditUtils.GetCharacterID(player) .. ".")
             local square = cell:getGridSquare(spawnPoint.x, spawnPoint.y, 0)
             BanditBaseScenes[sceneNo](player, square)
 
@@ -805,10 +798,10 @@ function BanditScheduler.SpawnBase(player, sceneNo)
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 10, spawnPoint.x, spawnPoint.y, color)
             end
         else
-            print ("BASE HAS NO FREE SPACE")
+            print ("[INFO] Camp site has no space to spawn.")
         end
     else
-        print ("BASE HAS NO FREE POINT")
+        print ("[INFO] Campt site has no free point to spawn.")
     end
 end
 
@@ -940,19 +933,15 @@ function BanditScheduler.CheckEvent()
 
         -- SPAWN DEFENDERS
         local spawnRandom = ZombRandFloat(0, 101)
-        -- print ("DEFEND CHANCE:" ..spawnRandom)
         local spawnChance = SandboxVars.Bandits.General_DefenderSpawnHourlyChanced or 8
         if spawnRandom < spawnChance / 6 then
-            print ("SPAWNING DEFENDERS")
             BanditScheduler.SpawnDefenders(currentPlayer, 55, 100)
         end
 
         -- SPAWN BASES
         local spawnRandom = ZombRandFloat(0, 101)
-        -- print ("DEFEND CHANCE:" ..spawnRandom)
         local spawnChance = SandboxVars.Bandits.General_BaseSpawnHourlyChance or 0.3
         if spawnRandom < spawnChance / 6 then
-            print ("SPAWNING BASE")
             local sceneNo = 1 + ZombRand(#BanditBaseScenes)
             BanditScheduler.SpawnBase(currentPlayer, sceneNo)
         end

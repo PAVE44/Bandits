@@ -73,7 +73,18 @@ BanditPlayer.ResetBanditKills = function(player)
 	sendClientCommand(player, 'Commands', 'ResetBanditKills', args)
 end
 
+BanditPlayer.UpdateVisitedBuildings = function()
+    local player = getPlayer()
+    local building = player:getBuilding()
+    if building then
+        local bid = building:getID()
+        local wah = getGameTime():getWorldAgeHours()
+        local args = {bid=bid, wah=wah}
+        sendClientCommand(player, 'Commands', 'UpdateVisitedBuilding', args)
+    end
+end
 
 Events.OnPlayerUpdate.Add(BanditPlayer.PanicHandler)
 Events.OnPlayerDeath.Add(BanditPlayer.ResetBanditKills)
 Events.EveryOneMinute.Add(BanditPlayer.UpdatePlayersOnline)
+Events.EveryTenMinutes.Add(BanditPlayer.UpdateVisitedBuildings)
