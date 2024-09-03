@@ -1035,9 +1035,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     end
 
     -- ZOMBIES VS BANDITS
-    if uTick % 2 == 1 then
-        BanditUpdate.Zombie(zombie)
-    end
+    BanditUpdate.Zombie(zombie)
 
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
