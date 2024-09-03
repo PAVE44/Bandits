@@ -12,7 +12,7 @@ function BanditUtils.GetCharacterID (character)
         if gamemode == "Multiplayer" then
             id = character:getOnlineID()
         else
-            id = character:getID()
+            id = 1
         end
         return id
     end
