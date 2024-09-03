@@ -17,7 +17,8 @@ local originalRender = ISCharacterScreen.render
 function ISCharacterScreen:render()
     -- Call the original render function to retain existing behavior
     originalRender(self)
-    local h = 334
+
+    local h = self:getHeight() - 24
     local smallFontHgt = getTextManager():getFontFromEnum(UIFont.Small):getLineHeight()
     local offset
 
@@ -29,7 +30,8 @@ function ISCharacterScreen:render()
     end
 
     local banditKills = getBanditKillCount()
-    self:drawTextRight("Bandits Killed", 115, h + offset, 1, 1, 1, 1, UIFont.Small)
+    self:drawTextRight(getText("IGUI_Bandits_Bandits_Killed"), 115, h + offset, 1, 1, 1, 1, UIFont.Small)
     self:drawText(tostring(banditKills), 115 + 10, h + offset, 1, 1, 1, 0.5, UIFont.Small)
+
     self:setHeightAndParentHeight(h + offset + 24)
 end

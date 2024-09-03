@@ -1,0 +1,3 @@
+IGUI_EN = {
+    IGUI_Bandits_Bandits_Killed = "Bandits Killed",
+}
