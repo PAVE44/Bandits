@@ -431,30 +431,6 @@ module BanditsVoiceMale1 {
         } 
     }
 
-    sound ZSCar_Male_1_5 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_1/car_male_1_5.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
-        } 
-    }
-
-    sound ZSCar_Male_1_6 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_1/car_male_1_6.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
-        } 
-    }
-
     sound ZSDeath_Male_1_1 {
         category = Object, 
         loop = false
@@ -521,30 +497,6 @@ module BanditsVoiceMale1 {
         is3D = true,
         clip { 
             file = media/sound/male_1/death_male_1_6.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.4, 
-        } 
-    }
-
-    sound ZSDeath_Male_1_7 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_1/death_male_1_7.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.4, 
-        } 
-    }
-
-    sound ZSDeath_Male_1_8 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_1/death_male_1_8.wav, 
             distanceMin = 4,
             distanceMax = 80, 
             reverbFactor = 0.1, volume = 0.4, 

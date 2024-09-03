@@ -400,7 +400,8 @@ function Bandit.Say(zombie, phrase, force)
         
         if dist <= 14 then
             local id = BanditUtils.GetCharacterID(zombie)
-            local voice = 1 -- + math.abs(id) % 5
+            local voice = math.abs(id) % 5
+            if voice > 2 then voice = 1 end
 
             local sex = "Male"
             if zombie:isFemale() then 
@@ -411,7 +412,7 @@ function Bandit.Say(zombie, phrase, force)
             local sound
             local length = 2
             if phrase == "SPOTTED" then
-                sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
+                sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
             elseif phrase == "HIT" then
                 sound = "ZSHit_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(14))
                 length = 0.5
@@ -422,10 +423,10 @@ function Bandit.Say(zombie, phrase, force)
                 sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
                 length = 4
             elseif phrase == "CAR" then
-                sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+                sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
                 length = 4
             elseif phrase == "DEATH" then
-                sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
+                sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
                 length = 6
             elseif phrase == "DEAD" then
                 sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))

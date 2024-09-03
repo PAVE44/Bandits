@@ -71,30 +71,6 @@ module BanditsVoiceMale2 {
         } 
     }
 
-    sound ZSSpotted_Male_2_7 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/spotted_male_2_7.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
-    sound ZSSpotted_Male_2_8 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/spotted_male_2_8.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
     sound ZSReloading_Male_2_1 {
         category = Object, 
         loop = false
@@ -515,18 +491,6 @@ module BanditsVoiceMale2 {
         } 
     }
 
-    sound ZSDeath_Male_2_5 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/death_male_2_5.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
     sound ZSDeath_Male_6 {
         category = Object, 
         loop = false
@@ -536,6 +500,78 @@ module BanditsVoiceMale2 {
             distanceMin = 4,
             distanceMax = 80, 
             reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSDead_Male_2_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDead_Male_2_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDead_Male_2_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDead_Male_2_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDead_Male_2_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSDead_Male_2_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/dead_male_2_6.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
         } 
     }
 
@@ -611,30 +647,6 @@ module BanditsVoiceMale2 {
         } 
     }
 
-    sound ZSDeath_Male_2_7 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/death_male_2_7.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
-    sound ZSDeath_Male_2_8 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/death_male_2_8.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
     sound ZSInside_Male_2_1 {
         category = Object, 
         loop = false
@@ -671,24 +683,24 @@ module BanditsVoiceMale2 {
         } 
     }
 
-    sound ZSOutside_Male_2_1 {
-        category = Object, 
-        loop = false
-        is3D = true,
-        clip { 
-            file = media/sound/male_2/outside_male_2_1.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
-        } 
-    }
-
     sound ZSUpstairs_Male_2_1 {
         category = Object, 
         loop = false
         is3D = true,
         clip { 
             file = media/sound/male_2/upstairs_male_2_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSOutside_Male_2_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_2/outside_male_2_1.wav, 
             distanceMin = 4,
             distanceMax = 80, 
             reverbFactor = 0.1, volume = 0.3, 
