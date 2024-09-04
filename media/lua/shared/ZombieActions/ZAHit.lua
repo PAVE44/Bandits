@@ -96,7 +96,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
             local brainEnemy = BanditBrain.Get(enemy)
             if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
                 Hit (bandit, item, enemy)
-                return false
+                if task.weapon ~= "AuthenticZClothing.Chainsaw" then return false end
             end
         end
 
@@ -116,7 +116,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
                     local eid = BanditUtils.GetCharacterID(player)
                     if player:isAlive() and eid == task.eid then
                         Hit (bandit, item, player)
-                        return false
+                        if task.weapon ~= "AuthenticZClothing.Chainsaw" then return false end
                     end
                 end
             end
