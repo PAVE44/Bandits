@@ -65,6 +65,9 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
             -- zombie:setUseless(false)
             zombie:setVariable("Bandit", false)
+            zombie:setPrimaryHandItem(nil)
+            zombie:setSecondaryHandItem(nil)
+            zombie:clearAttachedItems()
 
             local brain = {}
             brain.id = id

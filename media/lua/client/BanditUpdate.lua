@@ -921,6 +921,17 @@ function BanditUpdate.Zombie(zombie)
     local asn = zombie:getActionStateName()
     if not zombie:getVariableBoolean("Bandit") and asn ~= "bumped" and not zombie:isProne() then
 
+        -- sometimes recycled bandits zombies have brain not removed, here is a good place to garbage collect it
+        BanditBrain.Remove(zombie)
+        local phi = zombie:getPrimaryHandItem()
+        local shi = zombie:getSecondaryHandItem()
+        if phi then
+            zombie:setPrimaryHandItem(nil)
+        end
+        if shi then
+            zombie:setSecondaryHandItem(nil)
+        end
+
         -- zed coords
         local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
@@ -945,9 +956,6 @@ function BanditUpdate.Zombie(zombie)
 
         -- deal with the found enemy, zombies are interrested in bandits that are not further than 15 squares away
         if bestDist < 15 and enemy then
-
-            -- sometimes recycled bandits zombies have brain not removed, here is a good place to garbage collect it
-            BanditBrain.Remove(zombie)
 
             local bandit = BanditZombie.GetInstanceById(enemy.id)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
