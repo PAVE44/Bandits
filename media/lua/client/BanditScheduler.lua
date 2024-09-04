@@ -565,19 +565,24 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
         return btype
     end
 
+    local function getRoomSize(roomDef)
+        local roomSize = (roomDef:getX2() - roomDef:getX()) * (roomDef:getY2() - roomDef:getY())
+        return roomSize
+    end
+
     -- iterates over rooms in a building and finds free squares
     -- that will be available for the spawn
     local function getSpawnPoints(buildingDef)
         local spawnPoints = {}
 
-        -- this actually return roomDefs
+        -- getRooms actually returns roomDefs
         local roomDefList = buildingDef:getRooms()
         for i=0, roomDefList:size()-1 do
             local roomDef = roomDefList:get(i)
             local square = roomDef:getFreeSquare()
 
-            -- double-checking
-            if square and square:isFree(false) then
+            -- double-checking, and roomsize must be > 1 otherwise they spawn in columns of the buildings :)
+            if square and square:isFree(false) and getRoomSize(roomDef) > 1 then
                 table.insert(spawnPoints, {x=square:getX(), y=square:getY(), z=square:getZ()})
             end
         end
