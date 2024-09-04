@@ -16,8 +16,8 @@ BanditZombie.Update = function(numberTicks)
     -- if not numberTicks % 4 == 1 then return end
     
     -- adaptive pefrormance
-    local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    if numberTicks % skip ~= 0 then return end
+    -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
+    -- if numberTicks % skip ~= 0 then return end
 
     local cell = getCell()
     local zombieList = cell:getZombieList()
@@ -55,6 +55,11 @@ end
 -- returns all zombies
 BanditZombie.GetAll = function()
     return BanditZombie.CacheLight
+end
+
+-- returns size of zombie cache
+BanditZombie.GetAllCnt = function()
+    return BanditZombie.LastSize
 end
 
 Events.OnTick.Add(BanditZombie.Update)

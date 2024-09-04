@@ -945,11 +945,15 @@ function BanditUpdate.Zombie(zombie)
 
         -- deal with the found enemy, zombies are interrested in bandits that are not further than 15 squares away
         if bestDist < 15 and enemy then
+
+            -- sometimes recycled bandits zombies have brain not removed, here is a good place to garbage collect it
+            BanditBrain.Remove(zombie)
+
             local bandit = BanditZombie.GetInstanceById(enemy.id)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
             -- the enemy is close, proceed with the attack
-            if bestDist < 0.65 and not isWallTo then
+            if bestDist < 0.55 and not isWallTo then
 
                 -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
                 if zombie:isFacingObject(bandit, 0.5) then
@@ -975,6 +979,9 @@ function BanditUpdate.Zombie(zombie)
                         local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
                         Bandit.AddTask(bandit, task)
                     else
+                        if asn == "attack" then
+                            zombie:changeState(ZombieIdleState.instance())
+                        end
                         zombie:setBumpType("Bite")
 
                         if ZombRand(4) == 1 then
@@ -1050,10 +1057,11 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- The more zombies in player's cell, the less frequent updates.
     -- Up to 100 zombies, update every tick, 
     -- 800+ zombies, update every 1/16 tick. 
-    local zcnt = #BanditZombie.GetAll()
+    local zcnt = BanditZombie.GetAllCnt()
     if zcnt > 1500 then zcnt = 1500 end
     local skip = math.floor(zcnt / 100) + 1
     if uTick % skip == 0 then
+        -- print (skip)
         BanditUpdate.Zombie(zombie)
     end
 
@@ -1260,6 +1268,7 @@ function BanditUpdate.OnZombieDead(zombie)
         args = {}
         args.id = id
         sendClientCommand(player, 'Commands', 'BanditRemove', args)
+        BanditBrain.Remove(zombie)
     end
 end
 
