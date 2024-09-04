@@ -17,7 +17,6 @@ BanditZombie.Update = function(numberTicks)
     
     -- adaptive pefrormance
     local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    -- print (skip)
     if numberTicks % skip ~= 0 then return end
 
     local cell = getCell()
@@ -34,6 +33,7 @@ BanditZombie.Update = function(numberTicks)
             BanditZombie.Cache[id] = zombie
             
             local light = {}
+            light.id = id
             light.isBandit = zombie:getVariableBoolean("Bandit")
             light.x = zombie:getX()
             light.y = zombie:getY()

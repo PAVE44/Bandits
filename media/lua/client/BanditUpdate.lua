@@ -918,75 +918,86 @@ function BanditUpdate.Zombie(zombie)
 
     zombie:setVariable("NoLungeAttack", true)
 
-    local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
-
-    -- this item determines the strenght of the zombie attach on bandit
-    local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
-
     local asn = zombie:getActionStateName()
     if not zombie:getVariableBoolean("Bandit") and asn ~= "bumped" and not zombie:isProne() then
+
+        -- zed coords
+        local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+
+        -- this item determines the strenght of the zombie attack on bandit
+        local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
+
+        -- fetch the RAM-based lightweight zombie cache
         local potentialEnemyList = BanditZombie.GetAll()
+
+        -- find bandit that is closest to the zombie
+        local enemy = false
+        local bestDist = math.huge
         for id, potentialEnemy in pairs(potentialEnemyList) do
-            
             if potentialEnemy.isBandit then
-
                 local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
-                if dist < 12 and potentialEnemy.z == zz then
-                    local bandit = BanditZombie.GetInstanceById(id)
+                if dist < bestDist and potentialEnemy.z == zz then
+                    enemy = potentialEnemy
+                    bestDist = dist
+                end
+            end
+        end
 
-                    -- (now generally turned off)
-                    -- zombie lunge attack on a zombie/bandit results in game crash because of moodle check
-                    -- this forces an alternate animation with the checkattack event removed to avoid the crash
-                    -- zombie:setVariable("NoLungeAttack", true)
-                            
-                    local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
-                    if dist < 0.6 and not isWallTo then
+        -- deal with the found enemy, zombies are interrested in bandits that are not further than 15 squares away
+        if bestDist < 15 and enemy then
+            local bandit = BanditZombie.GetInstanceById(enemy.id)
+            local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
-                        if zombie:isFacingObject(bandit, 0.5) then
+            -- the enemy is close, proceed with the attack
+            if bestDist < 0.65 and not isWallTo then
 
-                            -- detect number of attacking zombies
-                            local attackingZombiesNumber = 0
-                            for id, attackingZombie in pairs(potentialEnemyList) do
-                                if not attackingZombie.isBandit then
-                                    local dist = math.sqrt(math.pow(attackingZombie.x - potentialEnemy.x, 2) + math.pow(attackingZombie.y - potentialEnemy.y, 2))
-                                    if dist < 0.6 then
-                                        attackingZombiesNumber = attackingZombiesNumber + 1
-                                    end
-                                end
+                -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
+                if zombie:isFacingObject(bandit, 0.5) then
+
+                    -- detect number of zombies attacking the bandit at the same time
+                    local attackingZombiesNumber = 0
+                    for id, attackingZombie in pairs(potentialEnemyList) do
+                        if not attackingZombie.isBandit then
+                            local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
+                            if dist < 0.6 then
+                                attackingZombiesNumber = attackingZombiesNumber + 1
+                                
+                                -- if we know there is at least 3, then it's good enough and we can break for the sake of performance
+                                if attackingZombiesNumber > 2 then break end
                             end
-
-                            if attackingZombiesNumber > 2 then
-                                -- temporary until i get female voices
-                                local sound
-                                if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
-                                Bandit.AddTask(bandit, task)
-                            elseif dist < 0.65 then
-                                zombie:setBumpType("Bite")
-
-                                if ZombRand(4) == 1 then
-                                    bandit:playSound("ZombieScratch")
-                                else
-                                    bandit:playSound("ZombieBite")
-                                end
-    
-                                SwipeStatePlayer.splash(bandit, teeth, zombie)
-    
-                                bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                                Bandit.UpdateInfection(bandit, 0.001)
-                            end
-                        else
-                            zombie:faceThisObject(bandit)
-                        end
-                    else
-                        local asn = zombie:getActionStateName()
-                        if asn == "idle" then
-                            zombie:setTarget(bandit)
-                            zombie:pathToCharacter(bandit)
-                            zombie:spotted(bandit, true)
-                            -- zombie:addAggro(bandit, 10)
                         end
                     end
+
+                    -- depending on the number of attacking zombies, initiate a dragown or just a bite 
+                    if attackingZombiesNumber > 2 then
+                        local sound
+                        if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
+                        local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
+                        Bandit.AddTask(bandit, task)
+                    else
+                        zombie:setBumpType("Bite")
+
+                        if ZombRand(4) == 1 then
+                            bandit:playSound("ZombieScratch")
+                        else
+                            bandit:playSound("ZombieBite")
+                        end
+
+                        SwipeStatePlayer.splash(bandit, teeth, zombie)
+
+                        bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                        Bandit.UpdateInfection(bandit, 0.001)
+                    end
+                else
+                    zombie:faceThisObject(bandit)
+                end
+            else
+                local asn = zombie:getActionStateName()
+                if asn == "idle" then
+                    zombie:setTarget(bandit)
+                    zombie:pathToCharacter(bandit)
+                    zombie:spotted(bandit, true)
+                    -- zombie:addAggro(bandit, 10)
                 end
             end
         end
@@ -999,7 +1010,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
 
     if isServer() then return end
 
-    if uTick == 15 then uTick = 0 end
+    if uTick == 16 then uTick = 0 end
     uTick = uTick + 1
 
     if not zombie:isAlive() then return end
@@ -1035,7 +1046,16 @@ function BanditUpdate.OnBanditUpdate(zombie)
     end
 
     -- ZOMBIES VS BANDITS
-    BanditUpdate.Zombie(zombie)
+    -- Using adaptive performance here.
+    -- The more zombies in player's cell, the less frequent updates.
+    -- Up to 100 zombies, update every tick, 
+    -- 800+ zombies, update every 1/16 tick. 
+    local zcnt = #BanditZombie.GetAll()
+    if zcnt > 1500 then zcnt = 1500 end
+    local skip = math.floor(zcnt / 100) + 1
+    if uTick % skip == 0 then
+        BanditUpdate.Zombie(zombie)
+    end
 
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
