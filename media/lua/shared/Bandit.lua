@@ -2,14 +2,18 @@ Bandit = Bandit or {}
 
 function Bandit.AddTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
-    table.insert(brain.tasks, task)
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        table.insert(brain.tasks, task)
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.AddTaskFirst(zombie, task)
     local brain = BanditBrain.Get(zombie)
-    table.insert(brain.tasks, 1, task)
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        table.insert(brain.tasks, 1, task)
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.GetTask(zombie)

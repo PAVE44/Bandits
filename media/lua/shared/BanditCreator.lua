@@ -33,11 +33,11 @@ function BanditCreator.MakeWeapons(wave, clan)
     return weapons
 end
 
-function BanditCreator.MakeLoot(loot)
+function BanditCreator.MakeLoot(clanLoot)
     local loot = {}
 
     -- add loot from loot table
-    for k, v in pairs(loot) do
+    for k, v in pairs(clanLoot) do
         local r = ZombRand(101)
         if r <= v.chance then
             table.insert(loot, v.name)
@@ -59,9 +59,17 @@ function BanditCreator.MakeLoot(loot)
     -- hotties collector
     if ZombRand(100) == 1 then
         for i=1, ZombRand(31) do
-            table.insert(loot,"Base.HottieZ")
+            table.insert(loot, "Base.HottieZ")
         end
     end
+
+    -- ku chwale ojczyzny!
+    if ZombRand(100) == 1 then
+        for i=1, ZombRand(12) do
+            table.insert(loot, "Base.Perogies")
+        end
+    end
+    
 
     return loot
 end
