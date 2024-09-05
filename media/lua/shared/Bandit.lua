@@ -106,18 +106,22 @@ end
 
 function Bandit.UpdateEndurance(zombie, delta)
     local brain = BanditBrain.Get(zombie)
-    if not brain.endurance then brain.endurance = 1.00 end
-    brain.endurance = brain.endurance + delta
-    if brain.endurance < 0 then brain.endurance = 0 end
-    if brain.endurance > 1 then brain.endurance = 1 end
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        if not brain.endurance then brain.endurance = 1.00 end
+        brain.endurance = brain.endurance + delta
+        if brain.endurance < 0 then brain.endurance = 0 end
+        if brain.endurance > 1 then brain.endurance = 1 end
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.UpdateInfection(zombie, delta)
     local brain = BanditBrain.Get(zombie)
-    if not brain.infection then brain.infection = 0 end
-    brain.infection = brain.infection + delta
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        if not brain.infection then brain.infection = 0 end
+        brain.infection = brain.infection + delta
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.GetMaster(zombie)
@@ -474,6 +478,7 @@ function Bandit.Say(zombie, phrase, force)
 
                 brain.speech = length
                 BanditBrain.Update(zombie, brain)
+                addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
             end
         end
     end

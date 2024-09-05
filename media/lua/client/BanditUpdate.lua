@@ -178,7 +178,6 @@ function BanditUpdate.Visuals(bandit)
                 local r = 1 + math.abs(id) % 5 -- deterministc for all clients
                 if bandit:isFemale() then
                     banditVisuals:setSkinTextureName("FemaleBody0" .. tostring(r))
-                    -- banditVisuals:setSkinTextureName("FemaleBody03")
                 else
                     banditVisuals:setSkinTextureName("MaleBody0" .. tostring(r))
                 end
@@ -244,6 +243,15 @@ function BanditUpdate.Speech(bandit)
     if brain.speech and brain.speech > 0 then
         brain.speech = brain.speech - 0.01
         if brain.speech < 0 then brain.speech = 0 end
+        BanditBrain.Update(bandit, brain)
+    end
+end
+
+function BanditUpdate.Sound(bandit)
+    local brain = BanditBrain.Get(bandit)
+    if brain.sound and brain.sound > 0 then
+        brain.sound = brain.sound - 0.01
+        if brain.sound < 0 then brain.sound = 0 end
         BanditBrain.Update(bandit, brain)
     end
 end
@@ -318,7 +326,7 @@ function BanditUpdate.Health(bandit)
     local tasks = {}
     if SandboxVars.Bandits.General_BleedOut then
         local healing = false
-        if bandit:getHealth() < 1 then
+        if bandit:getHealth() < 0.9 then
             local zx = bandit:getX()
             local zy = bandit:getY()
             local zz = bandit:getZ()
@@ -1113,6 +1121,9 @@ function BanditUpdate.OnBanditUpdate(zombie)
 
     -- MANAGE BANDIT SPEECH COOLDOWN
     BanditUpdate.Speech(bandit)
+
+    -- MANAGE BANDIT SOUND COOLDOWN
+    BanditUpdate.Sound(bandit)
 
     -- ACTION STATE TWEAKS
     local continue = BanditUpdate.ActionState(bandit)

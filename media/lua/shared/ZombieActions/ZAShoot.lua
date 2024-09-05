@@ -616,8 +616,13 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     
     shooter:startMuzzleFlash()
     zombie:playSound(task.weaponSound)
-    if ZombRand(10) == 1 then
+    
+    -- this adds world sound that attract zombies, it must be on cooldown
+    -- otherwise too many sounds disorient zombies. 
+    if not brainShooter.sound and brainShooter.sound == 0 then
         addSound(getPlayer(), shooter:getX(), shooter:getY(), shooter:getZ(), 40, 100)
+        brainShooter.sound = 5
+        BanditBrain.Update(shooter, brain)
     end
 
     for dx=-2, 2 do
