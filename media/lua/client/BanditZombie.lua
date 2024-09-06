@@ -5,8 +5,15 @@ BanditZombie = BanditZombie or {}
 -- consists of IsoZombie instances
 BanditZombie.Cache = BanditZombie.Cache or {}
 
--- consists of only necessary properties for fast manipulation
+-- cache light consists of only necessary properties for fast manipulation
+-- this cache has all zombies and bandits
 BanditZombie.CacheLight = BanditZombie.CacheLight or {}
+
+-- this cache has all zombies without bandits
+BanditZombie.CacheLightZ = BanditZombie.CacheLightZ or {}
+
+-- this cache has all bandit without zombies
+BanditZombie.CacheLightB = BanditZombie.CacheLightB or {}
 
 -- used for adaptive perofmance
 BanditZombie.LastSize = 0
@@ -17,13 +24,17 @@ BanditZombie.Update = function(numberTicks)
     
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    -- if numberTicks % skip ~= 0 then return end
+    local skip = 5
+    if numberTicks % skip ~= 0 then return end
 
     local cell = getCell()
     local zombieList = cell:getZombieList()
 
+    -- reset all cache
     BanditZombie.Cache = {}
     BanditZombie.CacheLight = {}
+    BanditZombie.CacheLightB = {}
+    BanditZombie.CacheLightZ = {}
     BanditZombie.LastSize = zombieList:size()
 
     for i=0, zombieList:size()-1 do
@@ -40,6 +51,12 @@ BanditZombie.Update = function(numberTicks)
             light.z = zombie:getZ()
             light.brain = BanditBrain.Get(zombie)
             BanditZombie.CacheLight[id] = light
+
+            if light.isBandit then
+                BanditZombie.CacheLightB[id] = light
+            else
+                BanditZombie.CacheLightZ[id] = light
+            end
         end
     end
 end 
@@ -52,9 +69,19 @@ BanditZombie.GetInstanceById = function(id)
     return nil
 end
 
--- returns all zombies
+-- returns all cache
 BanditZombie.GetAll = function()
     return BanditZombie.CacheLight
+end
+
+-- returns all cached zombies
+BanditZombie.GetAllZ = function()
+    return BanditZombie.CacheLightZ
+end
+
+-- returns all cached bandits
+BanditZombie.GetAllB = function()
+    return BanditZombie.CacheLightB
 end
 
 -- returns size of zombie cache

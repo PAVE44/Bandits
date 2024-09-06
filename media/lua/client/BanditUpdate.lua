@@ -707,7 +707,7 @@ function BanditUpdate.Combat(bandit)
         -- hard cap for optimization
         if dist < 25 then
             if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
-                if dist < 4 then enemies = enemies + 1 end
+                if dist < 6 then enemies = enemies + 1 end
                 if dist < bestDist then
         
                     -- load real instance here
@@ -741,7 +741,7 @@ function BanditUpdate.Combat(bandit)
                     end
                 end
             else
-                if dist < 4 then friendlies = friendlies + 1 end
+                if dist < 6 then friendlies = friendlies + 1 end
             end
         end
     end
@@ -922,7 +922,7 @@ function BanditUpdate.SocialDistance(bandit)
 end
 
 function BanditUpdate.Zombie(zombie)
-
+    
     zombie:setVariable("NoLungeAttack", true)
 
     local asn = zombie:getActionStateName()
@@ -939,30 +939,30 @@ function BanditUpdate.Zombie(zombie)
             zombie:setSecondaryHandItem(nil)
         end
 
+        local emitter = zombie:getEmitter()
+        if emitter:isPlaying("ChainsawIdle") then
+            emitter:stopSoundByName("ChainsawIdle")
+        end
+        
         -- zed coords
         local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
-        -- this item determines the strenght of the zombie attack on bandit
-        local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
-
         -- fetch the RAM-based lightweight zombie cache
-        local potentialEnemyList = BanditZombie.GetAll()
+        local potentialEnemyList = BanditZombie.GetAllB()
 
         -- find bandit that is closest to the zombie
         local enemy = false
-        local bestDist = math.huge
+        local bestDist = 16
         for id, potentialEnemy in pairs(potentialEnemyList) do
-            if potentialEnemy.isBandit then
-                local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
-                if dist < bestDist and potentialEnemy.z == zz then
-                    enemy = potentialEnemy
-                    bestDist = dist
-                end
+            local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
+            if dist < bestDist then
+                enemy = potentialEnemy
+                bestDist = dist
             end
         end
 
         -- deal with the found enemy, zombies are interrested in bandits that are not further than 15 squares away
-        if bestDist < 15 and enemy then
+        if bestDist < 15 and enemy and enemy.z == zz then
 
             local bandit = BanditZombie.GetInstanceById(enemy.id)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
@@ -975,15 +975,14 @@ function BanditUpdate.Zombie(zombie)
 
                     -- detect number of zombies attacking the bandit at the same time
                     local attackingZombiesNumber = 0
-                    for id, attackingZombie in pairs(potentialEnemyList) do
-                        if not attackingZombie.isBandit then
-                            local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
-                            if dist < 0.6 then
-                                attackingZombiesNumber = attackingZombiesNumber + 1
-                                
-                                -- if we know there is at least 3, then it's good enough and we can break for the sake of performance
-                                if attackingZombiesNumber > 2 then break end
-                            end
+                    local attackingZombieList = BanditZombie.GetAllZ()
+                    for id, attackingZombie in pairs(attackingZombieList) do
+                        local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
+                        if dist < 0.6 then
+                            attackingZombiesNumber = attackingZombiesNumber + 1
+                            
+                            -- if we know there is at least 3, then it's good enough and we can break for the sake of performance
+                            if attackingZombiesNumber > 2 then break end
                         end
                     end
 
@@ -1004,6 +1003,9 @@ function BanditUpdate.Zombie(zombie)
                         else
                             bandit:playSound("ZombieBite")
                         end
+
+                        -- this item determines the strenght of the zombie attack on bandit
+                        local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
 
                         SwipeStatePlayer.splash(bandit, teeth, zombie)
 
@@ -1067,6 +1069,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         end
     end
 
+    -- if true then return end 
     -- ZOMBIES VS BANDITS
     -- Using adaptive performance here.
     -- The more zombies in player's cell, the less frequent updates.
@@ -1074,7 +1077,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- 800+ zombies, update every 1/16 tick. 
     local zcnt = BanditZombie.GetAllCnt()
     if zcnt > 1500 then zcnt = 1500 end
-    local skip = math.floor(zcnt / 100) + 1
+    local skip = math.floor(zcnt / 50) + 1
     if uTick % skip == 0 then
         -- print (skip)
         BanditUpdate.Zombie(zombie)
@@ -1085,7 +1088,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     ------------------------------------------------------------------------------------------------------------------------------------
     if not zombie:getVariableBoolean("Bandit") then return end
     if not brain then return end
-
+    
     local bandit = zombie
 
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
@@ -1105,7 +1108,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if not brain.eatBody then
         bandit:setEatBodyTarget(nil, false)
     end
-
+    
     -- ADJUST HUMAN VISUALS
     BanditUpdate.Visuals(bandit)
 
@@ -1130,7 +1133,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- ACTION STATE TWEAKS
     local continue = BanditUpdate.ActionState(bandit)
     if not continue then return end
-
+    
     -- COMPANION SOCIAL DISTANCE HACK
     BanditUpdate.SocialDistance(bandit)
 
@@ -1244,7 +1247,6 @@ function BanditUpdate.OnBanditUpdate(zombie)
         end
 
     end
-
 end
 
 function BanditUpdate.OnHitZombie(zombie)

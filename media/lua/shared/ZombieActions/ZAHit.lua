@@ -22,7 +22,7 @@ local function Hit(attacker, item, victim)
             else
                 hitSound = item:getZombieHitSound()
             end
-            victim:Hit(item, tempAttacker, 10 + ZombRand(40), false, 1, false)
+            victim:Hit(item, tempAttacker, 0.8, false, 0.8, false)
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempAttacker)
             
