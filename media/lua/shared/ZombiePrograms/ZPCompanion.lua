@@ -93,22 +93,24 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- If the player is in the vehicle, the companion should join him.
     -- If the player exits the vehicle, so should the companion.
     if vehicle then
-        if dist < 1.6 then
+        if dist < 2.2 then
             local bvehicle = bandit:getVehicle()
-            if not bvehicle then
+            if bvehicle then
+                bandit:changeState(ZombieOnGroundState.instance())
+                return {status=true, next="Follow", tasks=tasks}
+            else
                 print ("ENTER VEH")
                 local vx = bandit:getForwardDirection():getX()
                 local vy = bandit:getForwardDirection():getY()
                 local forwardVector = Vector3f.new(vx, vy, 0)
-                bandit:enterVehicle(vehicle, 1, forwardVector)
-            end
-            if vehicle:isStopped() then
-                -- 
-            else
-                -- The ongroundstate is the only state in which
-                -- the bandit does not get hurt when the vehicle
-                -- is moving.
-                bandit:changeState(ZombieOnGroundState.instance())
+
+                for seat=1, 10 do
+                    if vehicle:isSeatInstalled(seat) and not vehicle:isSeatOccupied(seat) then
+                        bandit:enterVehicle(vehicle, seat, forwardVector)
+                        bandit:playSound("VehicleDoorOpen")
+                        break
+                    end
+                end
             end
         end
     else
@@ -117,7 +119,9 @@ ZombiePrograms.Companion.Follow = function(bandit)
             print ("EXIT VEH")
             -- After exiting the vehicle, the companion is in the ongroundstate.
             -- Additionally he is under the car. This is fixed in BanditUpdate loop. 
+            bandit:setVariable("BanditImmediateAnim", true)
             bvehicle:exit(bandit)
+            bandit:playSound("VehicleDoorClose")
         end
     end
 
@@ -169,36 +173,3 @@ ZombiePrograms.Companion.Follow = function(bandit)
 
     return {status=true, next="Follow", tasks=tasks}
 end
-
-
-
-        --[[
-        local vehicle = master:getVehicle()
-        if vehicle then
-            print (vehicle:isStopped())
-            if dist < 1.6 then
-                local bvehicle = bandit:getVehicle()
-                if not bvehicle then
-                    print ("ENTER VEH")
-                    local vx = bandit:getForwardDirection():getX()
-                    local vy = bandit:getForwardDirection():getY()
-                    local forwardVector = Vector3f.new(vx, vy, 0)
-                    bandit:enterVehicle(vehicle, 1, forwardVector)
-                end
-                if vehicle:isStopped() then
-                    -- 
-                else
-                    bandit:changeState(ZombieOnGroundState.instance())
-                end
-            end
-        else
-            local bvehicle = bandit:getVehicle()
-            if bvehicle then
-                print ("EXIT VEH")
-                --ZombieOnGroundState.instance():exit(bandit)
-                --bandit:changeState(ZombieIdleState.instance())
-                bvehicle:exit(bandit)
-                -- bandit:setBumpType("Cough")
-            end
-        end
-        ]]

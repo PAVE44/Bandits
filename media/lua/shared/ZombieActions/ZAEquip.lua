@@ -2,17 +2,14 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Equip = {}
 ZombieActions.Equip.onStart = function(zombie, task)
-
-    if task.itemPrimary then
+    local oldItemPrimary = zombie:getVariableString("BanditPrimary")
+    if task.itemPrimary and oldItemPrimary ~= task.itemPrimary then
         local primaryItem = InventoryItemFactory.CreateItem(task.itemPrimary)
         local primaryItemType = WeaponType.getWeaponType(primaryItem)
 
-        local oldItemPrimary = zombie:getVariableString("BanditPrimary")
-        if oldItemPrimary ~= task.itemPrimary then
-            zombie:setPrimaryHandItem(primaryItem)
-            zombie:setVariable("BanditHasPrimary", true)
-            zombie:setVariable("BanditPrimary", task.itemPrimary)
-        end
+        zombie:setPrimaryHandItem(primaryItem)
+        zombie:setVariable("BanditHasPrimary", true)
+        zombie:setVariable("BanditPrimary", task.itemPrimary)
 
         local hands
         if primaryItemType == WeaponType.barehand then

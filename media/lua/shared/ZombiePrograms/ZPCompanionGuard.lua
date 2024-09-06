@@ -63,7 +63,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
                 local player = playerList:get(i)
                 if player then
                     local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
-                    if bandit:getZ() == player:getZ() and dist < 5 then
+                    if bandit:getZ() == player:getZ() and dist < 5 and not player:getVehicle() then
 
                         -- determine if safe
                         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)

@@ -416,7 +416,15 @@ local function Hit(shooter, item, victim)
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)
         else
-            victim:Hit(item, tempShooter, 0.8, false, 0.8, false)
+            if victim:isSprinting() or (victim:isRunning() and ZombRand(8) == 1) then
+                victim:clearVariable("BumpFallType")
+                victim:setBumpType("stagger")
+                victim:setBumpFall(true)
+                victim:setBumpFallType("pushedBehind")
+            else
+                victim:Hit(item, tempShooter, 0.8, false, 0.8, false)
+            end
+
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempShooter)
             if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end

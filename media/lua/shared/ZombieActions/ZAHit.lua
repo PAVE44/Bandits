@@ -6,8 +6,8 @@ local function Hit(attacker, item, victim)
 
     -- Calculate distance between attacker and victim
     local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
-    
-    if dist < item:getMaxRange() then
+    local range = item:getMaxRange()
+    if dist < range + 0.1 then
         victim:forceAwake()
 
         local hitSound
@@ -22,10 +22,17 @@ local function Hit(attacker, item, victim)
             else
                 hitSound = item:getZombieHitSound()
             end
-            victim:Hit(item, tempAttacker, 0.8, false, 0.8, false)
+            if victim:isSprinting() or victim:isRunning() and ZombRand(5) == 1 then
+                victim:clearVariable("BumpFallType")
+                victim:setBumpType("stagger")
+                victim:setBumpFall(true)
+                victim:setBumpFallType("pushedBehind")
+            else
+                victim:Hit(item, tempAttacker, 0.8, false, 0.8, false)
+            end
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempAttacker)
-            
+
             if victim:getHealth() <= 0 then 
                 victim:Kill(getCell():getFakeZombieForHit(), true) 
             end
@@ -77,6 +84,8 @@ ZombieActions.Hit.onStart = function(bandit, task)
     end
 
     if anim then
+        task.anim = anim
+        Bandit.UpdateTask(bandit, task)
         bandit:setBumpType(anim)
     else
         return false
@@ -87,8 +96,11 @@ end
 
 ZombieActions.Hit.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
+    
+    local bumpType = bandit:getBumpType()
+    if bumpType ~= task.anim then return false end
 
-    if task.time == 53 then
+    if task.time == 51 then
         local item = InventoryItemFactory.CreateItem(task.weapon)
         local enemy = BanditZombie.GetInstanceById(task.eid)
         if enemy then 
@@ -115,14 +127,12 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         end
         return false
 
-    elseif task.time < 50 then
-
-        if not bandit:getVariableString("BumpAnimFinished") then
-            return false
-        else
-            return true
-        end
     end
+    
+    if bandit:getVariableString("BumpAnimFinished") then
+        return true
+    end
+
     return false
 end
 

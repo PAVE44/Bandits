@@ -197,7 +197,8 @@ function BanditUpdate.Torch(bandit)
         local zy = bandit:getY()
         local zz = bandit:getZ()
         local ls = bandit:getVariableBoolean("BanditTorch")
-        if ls then
+        local veh = bandit:getVehicle()
+        if ls and not veh then
             local colors = {r=0.8, g=0.8, b=0.8}
             if brain.clan == 11 then
                 colors = {r=0.8, g=0.8, b=0.8}
@@ -256,27 +257,24 @@ function BanditUpdate.Sound(bandit)
     end
 end
 
-function BanditUpdate.VehicleFix(bandit)
-    if bandit:isUnderVehicle() then
-        print ("SHOULD GET UP")
-        bandit:setX(bandit:getX() + 0.05)
-        bandit:setY(bandit:getY() + 0.05)
-    end
-end
-
 function BanditUpdate.ActionState(bandit)
     local asn = bandit:getActionStateName()
     local continue = true
     -- print(asn)
-    if asn == "onground" or asn == "getup" or asn =="staggerback" then
-        
-        -- bandits car passangers are in ongroundstate
-        local vehicle = bandit:getVehicle()
-        if not vehicle then
-            Bandit.ClearTasks(bandit)
+    if asn == "onground" then
+        Bandit.ClearTasks(bandit)
+        if not bandit:getVehicle() and bandit:isUnderVehicle() then
+            print ("SHOULD GET UP")
+            bandit:setX(bandit:getX() + 0.5)
+            bandit:setY(bandit:getY() + 0.5)
+        else
             continue = false
         end
 
+    elseif asn == "getup" or asn =="staggerback" then
+        Bandit.ClearTasks(bandit)
+        continue = false
+        
     elseif asn == "turnalerted"  then
         -- bandits dont bite pls
         bandit:changeState(ZombieIdleState.instance())
@@ -594,9 +592,11 @@ function BanditUpdate.Collisions(bandit)
                                     local radius = 10
                                     for dx = -radius, radius do
                                         for dy = -radius, radius do
-                                            local surroundingSquare = getCell():getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
-                                            if surroundingSquare then
-                                                square:ReCalculateVisionBlocked(surroundingSquare)
+                                            if dx ~= 0 and dy ~= 0 then
+                                                local surroundingSquare = getCell():getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
+                                                if surroundingSquare then
+                                                    square:ReCalculateVisionBlocked(surroundingSquare)
+                                                end
                                             end
                                         end
                                     end
@@ -637,6 +637,7 @@ function BanditUpdate.Combat(bandit)
 
     if bandit:isCrawling() then return {} end 
     if Bandit.IsSleeping(bandit) then return {} end
+    if bandit:getActionStateName() == "bumped" then return {} end
 
     local tasks = {}
     local cell = getCell()
@@ -663,7 +664,7 @@ function BanditUpdate.Combat(bandit)
                 local pz = potentialEnemy:getZ()
 
                 local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
-                if dist < bestDist then
+                if dist < bestDist and pz == zz then
 
                     local spottedScore = CalcSpottedScore(potentialEnemy, dist)
 
@@ -708,7 +709,7 @@ function BanditUpdate.Combat(bandit)
         if dist < 25 then
             if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
                 if dist < 6 then enemies = enemies + 1 end
-                if dist < bestDist then
+                if dist < bestDist and potentialEnemy.z == zz  then
         
                     -- load real instance here
                     local potentialEnemy = BanditZombie.GetInstanceById(id)
@@ -777,7 +778,7 @@ function BanditUpdate.Combat(bandit)
             if bandit:isFacingObject(enemyCharacter, 0.5) then
                 local prone = enemyCharacter:isProne() or enemyCharacter:getActionStateName() == "onground" or enemyCharacter:getActionStateName() == "sitonground" or enemyCharacter:getActionStateName() == "climbfence"
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.07, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Hit", sound=swingSound, time=60, endurance=-0.03, weapon=weapons.melee, prone=prone, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -903,9 +904,11 @@ function BanditUpdate.SocialDistance(bandit)
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
             if player then
+                local veh = player:getVehicle()
+                local asn = bandit:getActionStateName()
                 local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
                 
-                if bandit:getZ() == player:getZ() and dist < 4 then
+                if bandit:getZ() == player:getZ() and dist < 4 and not veh and asn ~= "onground" then
 
                     local closestZombie = BanditUtils.GetClosestZombieLocation(player)
                     local closestBandit = BanditUtils.GetClosestZombieLocation(player)
@@ -1127,9 +1130,6 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- MANAGE BANDIT SOUND COOLDOWN
     BanditUpdate.Sound(bandit)
 
-    -- MANAGE BANDIT EXITING CARS
-    BanditUpdate.VehicleFix(bandit)
-
     -- ACTION STATE TWEAKS
     local continue = BanditUpdate.ActionState(bandit)
     if not continue then return end
@@ -1259,7 +1259,6 @@ function BanditUpdate.OnHitZombie(zombie)
             Bandit.SetSleeping(zombie, false)
             Bandit.SetProgramStage(zombie, "Prepare")
         end
-
     end
 end
 
@@ -1288,6 +1287,12 @@ function BanditUpdate.OnZombieDead(zombie)
         zombie:setPrimaryHandItem(nil)
         zombie:clearAttachedItems()
         zombie:resetEquippedHandsModels()
+
+        local veh = zombie:getVehicle()
+        if veh then
+            veh:exit(zombie)
+        end
+
         args = {}
         args.id = id
         sendClientCommand(player, 'Commands', 'BanditRemove', args)

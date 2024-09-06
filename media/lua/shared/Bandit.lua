@@ -408,7 +408,7 @@ function Bandit.Say(zombie, phrase, force)
         
         if dist <= 14 then
             local id = BanditUtils.GetCharacterID(zombie)
-            local voice = math.abs(id) % 5
+            local voice = 1 + math.abs(id) % 5
             if voice > 2 then voice = 1 end
 
             local sex = "Male"
