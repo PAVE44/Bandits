@@ -397,6 +397,7 @@ function BanditScheduler.RaiseDefences(x, y)
     local cell = getCell()
     local square = cell:getGridSquare(x, y, 0)
     local building = square:getBuilding()
+    
     if building then
         local buildingDef = building:getDef()
         if buildingDef then
@@ -464,24 +465,27 @@ function BanditScheduler.RaiseDefences(x, y)
                                         end
                                     end
 
-                                    local fridge = object:getContainerByType("fridge")
-                                    if fridge then
-                                        BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 4)
-                                    end
+                                    local roomCnt = building:getRoomsNumber()
+                                    if roomCnt > 2 then
+                                        local fridge = object:getContainerByType("fridge")
+                                        if fridge then
+                                            BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 4)
+                                        end
 
-                                    local freezer = object:getContainerByType("freezer")
-                                    if freezer then
-                                        BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
-                                    end
+                                        local freezer = object:getContainerByType("freezer")
+                                        if freezer then
+                                            BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
+                                        end
 
-                                    local counter = object:getContainerByType("counter")
-                                    if counter then
-                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 7)
-                                    end
+                                        local counter = object:getContainerByType("counter")
+                                        if counter then
+                                            BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 4)
+                                        end
 
-                                    local crate = object:getContainerByType("crate")
-                                    if crate then
-                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 7)
+                                        local crate = object:getContainerByType("crate")
+                                        if crate then
+                                            BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 5)
+                                        end
                                     end
                                 end
                             end

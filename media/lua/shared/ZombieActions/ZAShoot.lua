@@ -416,7 +416,7 @@ local function Hit(shooter, item, victim)
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)
         else
-            victim:Hit(item, tempShooter, 50, false, 1, false)
+            victim:Hit(item, tempShooter, 0.8, false, 0.8, false)
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempShooter)
             if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end
