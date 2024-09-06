@@ -381,7 +381,7 @@ local function ATROShoot(bandit, handWeapon)
     end
 end
 
-local function Hit(shooter, victim)
+local function Hit(shooter, item, victim)
 
     -- Clone the shooter to create a temporary IsoPlayer
     local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
@@ -409,10 +409,7 @@ local function Hit(shooter, victim)
     local accuracyThreshold = 100 / (1 + accuracyCoeff * dist / accuracyBoost)
 
     if ZombRand(100) < accuracyThreshold then
-        local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
-        
         local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
-        
         victim:playSound(hitSound)
         victim:forceAwake()
         
@@ -651,7 +648,8 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                     if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
                         local res = ManageLineOfFire(shooter, victim)
                         if res then
-                            Hit(shooter, victim)
+                            local item = InventoryItemFactory.CreateItem(task.weapon)
+                            Hit(shooter, item, victim)
                         end
                         
                         break
