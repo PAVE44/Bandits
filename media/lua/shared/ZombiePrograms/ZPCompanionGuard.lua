@@ -53,26 +53,24 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
     local atGuardpost = BanditGuardpost.At(bandit)
     if not atGuardpost then
 
-        --maybe this is a temporary guard post used for social distance
+        -- we abandon the temporary guardpost only if the player is endangered
         local temporaryGuardpost = false
-        local world = getWorld()
-        local gamemode = world:getGameMode()
-
-        local playerList = {}
-        if gamemode == "Multiplayer" then
-            playerList = getOnlinePlayers()
-        else
-            playerList = IsoPlayer.getPlayers()
-        end
-
         if not Bandit.IsHostile(bandit) then
+
+            -- loop through players to see who's endangered
+            local playerList = BanditPlayer.GetPlayers()
             for i=0, playerList:size()-1 do
                 local player = playerList:get(i)
                 if player then
                     local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
-                    
-                    if bandit:getZ() == player:getZ() and dist < 4 then
-                        temporaryGuardpost = true
+                    if bandit:getZ() == player:getZ() and dist < 5 then
+
+                        -- determine if safe
+                        local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+                        local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+                        if closestZombie.dist > 7 and closestBandit.dist > 7 then 
+                            temporaryGuardpost = true
+                        end
                     end
                 end
             end

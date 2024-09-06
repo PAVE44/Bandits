@@ -316,7 +316,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 zombie:addItemToSpawnAtDeath(mag)
 
                 local gun = InventoryItemFactory.CreateItem(weapons.primary.name)
-                gun:setCondition(1+ZombRand(10))
+                gun:setCondition(3+ZombRand(8))
                 gun:setClip(nil)
                 zombie:addItemToSpawnAtDeath(gun)
 

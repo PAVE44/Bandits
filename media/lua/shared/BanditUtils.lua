@@ -66,91 +66,101 @@ function BanditUtils.IsInAngle(observer, targetX, targetY)
     end
 end
 
-function BanditUtils.GetClosestPlayerLocation(bandit, mustSee)
-    local world = getWorld()
-    local gamemode = world:getGameMode()
-    local playerList = {}
-    if gamemode == "Multiplayer" then
-        playerList = getOnlinePlayers()
-    else
-        playerList = IsoPlayer.getPlayers()
-    end
+function BanditUtils.GetClosestPlayerLocation(character, mustSee)
+    local result = {}
+    result.dist = math.huge
+    result.x = false
+    result.y = false
+    result.z = false
+    result.id = false
 
-    local bestDist = math.huge
-    local bestX = false
-    local bestY = false
-    local bestZ = false
-    local bestPlayerId = false
+    local cx, cy = character:getX(), character:getY()
+    local playerList = BanditPlayer.GetPlayers()
 
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then
-            local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
-            if dist < bestDist and (not mustSee or (bandit:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
-                bestDist = dist
-                bestX = player:getX()
-                bestY = player:getY()
-                bestZ = player:getZ()
-                bestPlayerId = player:getOnlineID()
+            local px, py = player:getX(), player:getY()
+            local dist = math.sqrt(math.pow(cx - px, 2) + math.pow(cy - py, 2))
+            if dist < result.dist and (not mustSee or (character:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
+                result.dist = dist
+                result.x = player:getX()
+                result.y = player:getY()
+                result.z = player:getZ()
+                result.id = BanditUtils.GetCharacterID(player)
             end
         end
     end
-    return bestX, bestY, bestZ, bestDist, bestPlayerId
+    return result
 end
 
-function BanditUtils.GetClosestZombieLocation(bandit)
-    local bestDist = math.huge
-    local bestX = false
-    local bestY = false
-    local bestZ = false
-    local bestZombieId = false
-    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+function BanditUtils.GetClosestZombieLocation(character)
+    local result = {}
+    result.dist = math.huge
+    result.x = false
+    result.y = false
+    result.z = false
+    result.id = false
+    
+    local cx, cy = character:getX(), character:getY()
 
-    local zombieList = BanditZombie.GetAll()
+    local zombieList = BanditZombie.GetAllZ()
     for id, zombie in pairs(zombieList) do
-        if not zombie.isBandit then
-            local dist = math.sqrt(math.pow(bx - zombie.x, 2) + math.pow(by - zombie.y, 2))
-            if dist < bestDist then
-                bestDist = dist
-                bestX = zombie.x
-                bestY = zombie.y
-                bestZ = zombie.z
-                bestZombieId = 0
-            end
+        local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
+        if dist < result.dist then
+            result.dist = dist
+            result.x = zombie.x
+            result.y = zombie.y
+            result.z = zombie.z
+            result.id = zombie.id
         end
     end
 
-    return bestX, bestY, bestZ, bestDist, bestZombieId
+    return result
 end
 
-function BanditUtils.GetClosestEnemyBanditLocation(bandit)
-    local bestDist = math.huge
-    local bestX = false
-    local bestY = false
-    local bestZ = false
-    local bestZombieId = false
-    local brain = BanditBrain.Get(bandit)
-    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+function BanditUtils.GetClosestEnemyBanditLocation(character)
+    local result = {}
+    result.dist = math.huge
+    result.x = false
+    result.y = false
+    result.z = false
+    result.id = false
 
-    local zombieList = BanditZombie.GetAll()
-    for id, zombie in pairs(zombieList) do
-        if zombie.isBandit then
-            local otherBandit = zombie
+    local cx, cy = character:getX(), character:getY()
 
+    local banditList = BanditZombie.GetAllB()
+    if instanceof(character, "IsoZombie") then
+        local brain = BanditBrain.Get(character)
+        for id, otherBandit in pairs(banditList) do
             if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
-                local dist = math.sqrt(math.pow(bx - otherBandit.x, 2) + math.pow(by - otherBandit.y, 2))
-                if dist < bestDist then
-                    bestDist = dist
-                    bestX = otherBandit.x
-                    bestY = otherBandit.y
-                    bestZ = otherBandit.z
-                    bestZombieId = 0
+                local dist = math.sqrt(math.pow(cx - otherBandit.x, 2) + math.pow(cy - otherBandit.y, 2))
+                if dist < result.dist then
+                    result.dist = dist
+                    result.x = otherBandit.x
+                    result.y = otherBandit.y
+                    result.z = otherBandit.z
+                    result.id = otherBandit.id
                 end
             end
         end
     end
 
-    return bestX, bestY, bestZ, bestDist, bestZombieId
+    if instanceof(character, "IsoPlayer") then
+        for id, otherBandit in pairs(banditList) do
+            if otherBandit.brain.hostile then
+                local dist = math.sqrt(math.pow(cx - otherBandit.x, 2) + math.pow(cy - otherBandit.y, 2))
+                if dist < result.dist then
+                    result.dist = dist
+                    result.x = otherBandit.x
+                    result.y = otherBandit.y
+                    result.z = otherBandit.z
+                    result.id = otherBandit.id
+                end
+            end
+        end
+    end
+    return result
 end
 
 function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist)

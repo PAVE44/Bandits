@@ -26,6 +26,30 @@ BanditPlayer.IsGhost = function(player)
     return false
 end
 
+BanditPlayer.GetPlayers = function()
+    local world = getWorld()
+    local gamemode = world:getGameMode()
+
+    local playerList = {}
+    if gamemode == "Multiplayer" then
+        playerList = getOnlinePlayers()
+    else
+        playerList = IsoPlayer.getPlayers()
+    end
+    return playerList
+end
+
+BanditPlayer.GetMasterPlayer = function(bandit)
+    local gamemode = getWorld():getGameMode()
+    local master
+    if gamemode == "Multiplayer" then
+        master = getPlayerByOnlineID(Bandit.GetMaster(bandit))
+    else
+        master = getPlayer()
+    end
+    return master
+end
+
 -- Global variable to store the original PanicIncreaseValue
 local originalPanicIncreaseValue = nil
 

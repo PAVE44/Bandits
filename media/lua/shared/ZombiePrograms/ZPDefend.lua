@@ -73,14 +73,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
     end
 
     -- player entered defender's house
-    local world = getWorld()
-    local gamemode = world:getGameMode()
-    local playerList = {}
-    if gamemode == "Multiplayer" then
-        playerList = getOnlinePlayers()
-    else
-        playerList = IsoPlayer.getPlayers()
-    end
+    local playerList = BanditPlayer.GetPlayers()
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then

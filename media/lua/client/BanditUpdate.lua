@@ -256,6 +256,14 @@ function BanditUpdate.Sound(bandit)
     end
 end
 
+function BanditUpdate.VehicleFix(bandit)
+    if bandit:isUnderVehicle() then
+        print ("SHOULD GET UP")
+        bandit:setX(bandit:getX() + 0.05)
+        bandit:setY(bandit:getY() + 0.05)
+    end
+end
+
 function BanditUpdate.ActionState(bandit)
     local asn = bandit:getActionStateName()
     local continue = true
@@ -631,9 +639,7 @@ function BanditUpdate.Combat(bandit)
     if Bandit.IsSleeping(bandit) then return {} end
 
     local tasks = {}
-    local world = getWorld()
     local cell = getCell()
-    local gamemode = world:getGameMode()
     local zx = bandit:getX()
     local zy = bandit:getY()
     local zz = bandit:getZ()
@@ -647,12 +653,7 @@ function BanditUpdate.Combat(bandit)
 
     -- COMBAT AGAIST PLAYERS 
     if Bandit.IsHostile(bandit) then
-        local playerList = {}
-        if gamemode == "Multiplayer" then
-            playerList = getOnlinePlayers()
-        else
-            playerList = IsoPlayer.getPlayers()
-        end
+        local playerList = BanditPlayer.GetPlayers()
 
         for i=0, playerList:size()-1 do
             local potentialEnemy = playerList:get(i)
@@ -890,17 +891,15 @@ function BanditUpdate.Combat(bandit)
 end
 
 function BanditUpdate.SocialDistance(bandit)
-    local world = getWorld()
-    local gamemode = world:getGameMode()
 
-    local playerList = {}
-    if gamemode == "Multiplayer" then
-        playerList = getOnlinePlayers()
-    else
-        playerList = IsoPlayer.getPlayers()
-    end
+    -- Friendlies will always tend to approach the player
+    -- this is because they switch to lunge mode by game engine automatically.
+    -- The only way to workaround it, is to set the useless flag to true.  
+    -- so here we detect player proximity and we switch the program to CompaningGuard,
+    -- which in practice forces the useless flag.
 
     if not Bandit.IsHostile(bandit) then
+        local playerList = BanditPlayer.GetPlayers()
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
             if player then
@@ -908,10 +907,10 @@ function BanditUpdate.SocialDistance(bandit)
                 
                 if bandit:getZ() == player:getZ() and dist < 4 then
 
-                    local closestZombie = {}
-                    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(player)
+                    local closestZombie = BanditUtils.GetClosestZombieLocation(player)
+                    local closestBandit = BanditUtils.GetClosestZombieLocation(player)
             
-                    if closestZombie.dist > 4 then
+                    if closestZombie.dist > 7 and closestBandit.dist > 7 then
                         if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
                             Bandit.SetProgram(bandit, "CompanionGuard", {})
                         end
@@ -1124,6 +1123,9 @@ function BanditUpdate.OnBanditUpdate(zombie)
 
     -- MANAGE BANDIT SOUND COOLDOWN
     BanditUpdate.Sound(bandit)
+
+    -- MANAGE BANDIT EXITING CARS
+    BanditUpdate.VehicleFix(bandit)
 
     -- ACTION STATE TWEAKS
     local continue = BanditUpdate.ActionState(bandit)

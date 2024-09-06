@@ -24,7 +24,6 @@ end
 ZombiePrograms.Companion.Prepare = function(bandit)
     local tasks = {}
     local world = getWorld()
-    local cell = getCell()
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
 
@@ -46,35 +45,32 @@ end
 
 ZombiePrograms.Companion.Follow = function(bandit)
     local tasks = {}
-    local weapons = Bandit.GetWeapons(bandit)
-
-    -- update walk type
-    local world = getWorld()
-    local gamemode = world:getGameMode()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
-    local weapons = Bandit.GetWeapons(bandit)
-    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
+    -- local weapons = Bandit.GetWeapons(bandit)
  
-    local master
-    if gamemode == "Multiplayer" then
-        master = getPlayerByOnlineID(Bandit.GetMaster(bandit))
-    else
-        master = getPlayer()
+    -- If at guardpost, switch to the CompanionGuard program.
+    local atGuardpost = BanditGuardpost.At(bandit)
+    if atGuardpost then
+        print ("AT GUARDPOST")
+        Bandit.SetProgram(bandit, "CompanionGuard", {})
+        return {status=true, next="Prepare", tasks=tasks}
     end
-
+    
+    -- Companion logic depends on one of the players who is the master od the companion
+    -- if there is no master, there is nothing to do.
+    local master = BanditPlayer.GetMasterPlayer(bandit)
     if not master then
         local task = {action="Time", anim="Shrug", time=200}
         table.insert(tasks, task)
         return {status=true, next="Follow", tasks=tasks}
     end
-
+    
+    -- update walktype
+    local walkType = "Walk"
+    local endurance = 0.00
+    local vehicle = master:getVehicle()
     local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
 
-    walkType = "Walk"
-    local endurance = 0.00
-    if master:isRunning() or master:isSprinting() then
+    if master:isRunning() or master:isSprinting() or vehicle then
         walkType = "Run"
         endurance = -0.07
     elseif master:isSneaking() and dist<12 then
@@ -82,7 +78,8 @@ ZombiePrograms.Companion.Follow = function(bandit)
         endurance = -0.01
     end
 
-    if master:isAiming() and not outOfAmmo and dist<8 then
+    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
+    if master:isAiming() and not outOfAmmo and dist < 8 then
         walkType = "WalkAim"
         endurance = 0
     end
@@ -92,23 +89,68 @@ ZombiePrograms.Companion.Follow = function(bandit)
         walkType = "Limp"
         endurance = 0
     end 
+   
+    -- If the player is in the vehicle, the companion should join him.
+    -- If the player exits the vehicle, so should the companion.
+    if vehicle then
+        if dist < 1.6 then
+            local bvehicle = bandit:getVehicle()
+            if not bvehicle then
+                print ("ENTER VEH")
+                local vx = bandit:getForwardDirection():getX()
+                local vy = bandit:getForwardDirection():getY()
+                local forwardVector = Vector3f.new(vx, vy, 0)
+                bandit:enterVehicle(vehicle, 1, forwardVector)
+            end
+            if vehicle:isStopped() then
+                -- 
+            else
+                -- The ongroundstate is the only state in which
+                -- the bandit does not get hurt when the vehicle
+                -- is moving.
+                bandit:changeState(ZombieOnGroundState.instance())
+            end
+        end
+    else
+        local bvehicle = bandit:getVehicle()
+        if bvehicle then
+            print ("EXIT VEH")
+            -- After exiting the vehicle, the companion is in the ongroundstate.
+            -- Additionally he is under the car. This is fixed in BanditUpdate loop. 
+            bvehicle:exit(bandit)
+        end
+    end
 
-    -- at guardpost, switch program
-    local atGuardpost = BanditGuardpost.At(bandit)
-    if atGuardpost then
-        print ("AT GUARDPOST")
-        Bandit.SetProgram(bandit, "CompanionGuard", {})
-        return {status=true, next="Prepare", tasks=tasks}
+    -- Companions intention is to generally stay with the player
+    -- however, if the enemy is close, the companion should engage
+    -- but only if player is not too far, kind of a proactive defense.
+    if dist < 12 then
+        local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+        local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+        local closestEnemy = closestZombie
+
+        if closestBandit.dist < closestZombie.dist then 
+            closestEnemy = closestBandit 
+        end
+
+        if closestEnemy.dist < 8 then
+            -- We are trying to save the player, so the friendly should act with high motivation
+            -- that translates to running pace (even despite limping) and minimal endurance loss.
+            walkType = "Run"
+            endurance = -0.01
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist))
+            return {status=true, next="Follow", tasks=tasks}
+        end
     end
     
-    -- look for guardpost
+    -- If there is a guardpost in the vicinity, take it.
     local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
     if guardpost then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
         return {status=true, next="Follow", tasks=tasks}
     end
 
-    -- go to player
+    -- No enemies, no guardposts, so follow the player.
     local minDist = 1
     if dist > minDist then
         local id = BanditUtils.GetCharacterID(bandit)
@@ -124,7 +166,6 @@ ZombiePrograms.Companion.Follow = function(bandit)
         local dyf = ((id % 11) - 5) / 10
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
     end
-
 
     return {status=true, next="Follow", tasks=tasks}
 end

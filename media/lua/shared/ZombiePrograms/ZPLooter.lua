@@ -87,14 +87,9 @@ ZombiePrograms.Looter.Operate = function(bandit)
     
     local target = {}
 
-    local closestZombie = {}
-    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(bandit)
-
-    local closestBandit = {}
-    closestBandit.x, closestBandit.y, closestBandit.z, closestBandit.dist, closestBandit.id = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-
-    local closestPlayer = {}
-    closestPlayer.x, closestPlayer.y, closestPlayer.z, closestPlayer.dist, closestPlayer.id = BanditUtils.GetClosestPlayerLocation(bandit, true)
+    local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit, true)
 
     target = closestZombie
     if closestBandit.dist < closestZombie.dist then

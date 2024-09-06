@@ -146,14 +146,9 @@ ZombiePrograms.Bandit.Follow = function(bandit)
 
     local target = {}
 
-    local closestZombie = {}
-    closestZombie.x, closestZombie.y, closestZombie.z, closestZombie.dist, closestZombie.id = BanditUtils.GetClosestZombieLocation(bandit)
-
-    local closestBandit = {}
-    closestBandit.x, closestBandit.y, closestBandit.z, closestBandit.dist, closestBandit.id = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-
-    local closestPlayer = {}
-    closestPlayer.x, closestPlayer.y, closestPlayer.z, closestPlayer.dist, closestPlayer.id = BanditUtils.GetClosestPlayerLocation(bandit, false)
+    local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit, false)
 
     target = closestZombie
     if closestBandit.dist < closestZombie.dist then
@@ -299,9 +294,9 @@ ZombiePrograms.Bandit.Escape = function(bandit)
 
     local handweapon = bandit:getVariableString("BanditWeapon")
 
-    local x, y, z, dist, playerId = BanditUtils.GetClosestPlayerLocation(bandit)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit)
 
-    if x and y and z then
+    if closestPlayer.x and closestPlayer.y and closestPlayer.z then
 
         -- calculate random escape direction
         local deltaX = 100 + ZombRand(100)
@@ -312,7 +307,7 @@ ZombiePrograms.Bandit.Escape = function(bandit)
         if rx == 1 then deltaX = -deltaX end
         if ry == 1 then deltaY = -deltaY end
 
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, x+deltaX, y+deltaY, 0, walkType, 12))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestPlayer.x+deltaX, closestPlayer.y+deltaY, 0, walkType, 12))
     end
     return {status=true, next="Escape", tasks=tasks}
 end

@@ -100,16 +100,8 @@ ZombieActions.Hit.onWorking = function(bandit, task)
             end
         end
 
-        local world = getWorld()
-        local gamemode = world:getGameMode()
-        local playerList = {}
-        if gamemode == "Multiplayer" then
-            playerList = getOnlinePlayers()
-        else
-            playerList = IsoPlayer.getPlayers()
-        end
- 
         if Bandit.IsHostile(bandit) then
+            local playerList = BanditPlayer.GetPlayers()
             for i=0, playerList:size()-1 do
                 local player = playerList:get(i)
                 if player then

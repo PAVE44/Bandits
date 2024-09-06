@@ -63,6 +63,28 @@ function BanditCreator.MakeLoot(clanLoot)
         end
     end
 
+    -- perv
+    if ZombRand(100) == 1 then
+        for i=1, ZombRand(44) do
+            local i = ZombRand(7)
+            if i == 1 then
+                table.insert(loot, "Base.Underpants_White")
+            elseif i == 2 then
+                table.insert(loot, "Base.Underpants_Black")
+            elseif i == 3 then
+                table.insert(loot, "Base.FrillyUnderpants_Black")
+            elseif i == 4 then
+                table.insert(loot, "Base.FrillyUnderpants_Pink")
+            elseif i == 5 then
+                table.insert(loot, "Base.FrillyUnderpants_Red")
+            elseif i == 6 then
+                table.insert(loot, "Base.Underpants_RedSpots")
+            else
+                table.insert(loot, "Base.Underpants_AnimalPrint")
+            end
+        end
+    end
+
     -- ku chwale ojczyzny!
     if ZombRand(100) == 1 then
         for i=1, ZombRand(12) do
