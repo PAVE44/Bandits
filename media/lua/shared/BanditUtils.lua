@@ -1,8 +1,45 @@
 BanditUtils = BanditUtils or {}
 
 function BanditUtils.GetCharacterID (character)
+
+    local function toBits(num)
+        -- returns a table of bits, least significant first.
+        local bits = {} -- will contain the bits
+        while num > 0 do
+            rest=math.fmod(num, 2)
+            bits[#bits+1] = math.floor(rest)
+            num=(num-rest)/2
+        end
+        return bits
+    end
+    
+    local function toDec(bits)
+        local decimal = 0
+        local length = #bits
+        
+        -- Reverse the bits table
+        for i = 1, math.floor(length / 2) do
+            bits[i], bits[length - i + 1] = bits[length - i + 1], bits[i]
+        end
+        
+        -- Convert the reversed bits to a decimal number
+        for i = 1, length do
+            decimal = decimal + bits[i] * 2^(length - i)
+        end
+    
+        return math.floor(decimal)
+    end
+
     if instanceof(character, "IsoZombie") then
-        return character:getPersistentOutfitID()
+        local dec = character:getPersistentOutfitID()
+        if dec < 0 then
+            return dec
+        end
+
+        local bits = toBits(dec)
+        bits[16] = 0
+        local id = toDec(bits)
+        return id
     end
     
     if instanceof(character, "IsoPlayer") then
@@ -105,6 +142,31 @@ function BanditUtils.GetClosestZombieLocation(character)
     local cx, cy = character:getX(), character:getY()
 
     local zombieList = BanditZombie.GetAllZ()
+    for id, zombie in pairs(zombieList) do
+        local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
+        if dist < result.dist then
+            result.dist = dist
+            result.x = zombie.x
+            result.y = zombie.y
+            result.z = zombie.z
+            result.id = zombie.id
+        end
+    end
+
+    return result
+end
+
+function BanditUtils.GetClosestBanditLocation(character)
+    local result = {}
+    result.dist = math.huge
+    result.x = false
+    result.y = false
+    result.z = false
+    result.id = false
+    
+    local cx, cy = character:getX(), character:getY()
+
+    local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
         local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
         if dist < result.dist then

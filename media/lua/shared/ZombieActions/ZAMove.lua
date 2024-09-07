@@ -26,6 +26,8 @@ ZombieActions.Move.onWorking = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         local cell = getCell()
 
+        --local dist = math.sqrt(math.pow(zombie:getX() - task.x, 2) + math.pow(zombie:getY() - task.y, 2))
+        --print(dist)
         if ZombRand(1000) == 1 then
             zombie:getPathFindBehavior2():pathToLocation(task.x+1, task.y+1, task.z)
             zombie:getPathFindBehavior2():cancel()

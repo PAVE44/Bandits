@@ -28,7 +28,14 @@ local function Hit(attacker, item, victim)
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             else
-                victim:Hit(item, tempAttacker, 0.8, false, 0.8, false)
+                victim:Hit(item, tempAttacker, 3, false, 1, false)
+                local bodyDamage = victim:getBodyDamage()
+                if bodyDamage then
+                    local health = bodyDamage:getOverallBodyHealth()
+                    health = health + 8
+                    if health > 100 then health = 100 end
+                    bodyDamage:setOverallBodyHealth(health)
+                end
             end
             victim:addBlood(0.6)
             SwipeStatePlayer.splash(victim, item, tempAttacker)

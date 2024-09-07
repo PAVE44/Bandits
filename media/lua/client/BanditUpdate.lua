@@ -262,13 +262,23 @@ function BanditUpdate.ActionState(bandit)
     local continue = true
     -- print(asn)
     if asn == "onground" then
-        Bandit.ClearTasks(bandit)
-        if not bandit:getVehicle() and bandit:isUnderVehicle() then
-            print ("SHOULD GET UP")
-            bandit:setX(bandit:getX() + 0.5)
-            bandit:setY(bandit:getY() + 0.5)
+        
+        if bandit:getVehicle() then
+            -- the character is a passanger of a car
+            continue = true
         else
-            continue = false
+            if bandit:isUnderVehicle() then
+                -- the character exited the car and his position must be fixed
+                -- to not be under the car
+                bandit:setX(bandit:getX() + 0.5)
+                bandit:setY(bandit:getY() + 0.5)
+                Bandit.ClearTasks(bandit)
+                continue = false
+            else
+                -- the character is simply on the ground
+                Bandit.ClearTasks(bandit)
+                continue = false
+            end
         end
 
     elseif asn == "getup" or asn =="staggerback" then
@@ -723,7 +733,10 @@ function BanditUpdate.Combat(bandit)
                             --determine if bandit will be in combat mode
                             if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
                                 local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
-                                local minRange = itemMelee:getMaxRange()
+                                
+                                -- the bandit may need to swich to melee weapon so we need to switch earier
+                                -- before target is in range
+                                local minRange = itemMelee:getMaxRange() + 1
                                 if dist <= minRange then
                                     enemyCharacter = potentialEnemy
                                     combat = true
@@ -819,7 +832,6 @@ function BanditUpdate.Combat(bandit)
 
                         if weapons.primary.bulletsLeft > 0 then
                             local firingtime = weapons.primary.shotDelay
-                            if ZombRand(5) == 1 then firingtime = 50 end
 
                             local task = {action="Shoot", anim="AimRifle", weaponSound=weapons.primary.shotSound, time=firingtime, weapon=weapons.primary.name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                             table.insert(tasks, task)
@@ -951,27 +963,21 @@ function BanditUpdate.Zombie(zombie)
         local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
         -- fetch the RAM-based lightweight zombie cache
-        local potentialEnemyList = BanditZombie.GetAllB()
+        local enemy = BanditUtils.GetClosestBanditLocation(zombie)
 
-        -- find bandit that is closest to the zombie
-        local enemy = false
-        local bestDist = 16
-        for id, potentialEnemy in pairs(potentialEnemyList) do
-            local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
-            if dist < bestDist then
-                enemy = potentialEnemy
-                bestDist = dist
-            end
-        end
+        -- deal with the found if it is in range
+        if enemy.dist < 15 then
 
-        -- deal with the found enemy, zombies are interrested in bandits that are not further than 15 squares away
-        if bestDist < 15 and enemy and enemy.z == zz then
+            -- fetch visible players
+            -- if player is closer than the bandit, dont do anything, game engine will manage attack on player by itself
+            local player = BanditUtils.GetClosestPlayerLocation(zombie, true)
+            if player.dist < enemy.dist then return end
 
             local bandit = BanditZombie.GetInstanceById(enemy.id)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
             -- the enemy is close, proceed with the attack
-            if bestDist < 0.55 and not isWallTo then
+            if enemy.dist < 0.55 and not isWallTo then
 
                 -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
                 if zombie:isFacingObject(bandit, 0.5) then
@@ -996,9 +1002,6 @@ function BanditUpdate.Zombie(zombie)
                         local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
                         Bandit.AddTask(bandit, task)
                     else
-                        if asn == "attack" then
-                            zombie:changeState(ZombieIdleState.instance())
-                        end
                         zombie:setBumpType("Bite")
 
                         if ZombRand(4) == 1 then
@@ -1019,12 +1022,10 @@ function BanditUpdate.Zombie(zombie)
                     zombie:faceThisObject(bandit)
                 end
             else
-                local asn = zombie:getActionStateName()
-                if asn == "idle" then
+                if zombie:CanSee(bandit) then
                     zombie:setTarget(bandit)
                     zombie:pathToCharacter(bandit)
                     zombie:spotted(bandit, true)
-                    -- zombie:addAggro(bandit, 10)
                 end
             end
         end
@@ -1079,7 +1080,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- Up to 100 zombies, update every tick, 
     -- 800+ zombies, update every 1/16 tick. 
     local zcnt = BanditZombie.GetAllCnt()
-    if zcnt > 1500 then zcnt = 1500 end
+    if zcnt > 600 then zcnt = 600 end
     local skip = math.floor(zcnt / 50) + 1
     if uTick % skip == 0 then
         -- print (skip)

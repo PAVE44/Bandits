@@ -66,12 +66,18 @@ ZombieActions.Equip.onStart = function(zombie, task)
         else
             anim = "AttachHolsterLeftOut"
         end
+        task.anim = anim
+        Bandit.UpdateTask(zombie, task)
+
         zombie:setBumpType(anim)
     end
     return true
 end
 
 ZombieActions.Equip.onWorking = function(zombie, task)
+    local bumpType = zombie:getBumpType()
+    if bumpType ~= task.anim then return true end
+
     if not zombie:getVariableString("BumpAnimFinished") then
         return false
     else

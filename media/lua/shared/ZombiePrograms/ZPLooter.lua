@@ -136,7 +136,7 @@ ZombiePrograms.Looter.Operate = function(bandit)
         -- out of ammo, get close
         local minDist = 2
         if outOfAmmo then
-            minDist = 1.51
+            minDist = 0.5
         end
 
         if target.dist > minDist then
