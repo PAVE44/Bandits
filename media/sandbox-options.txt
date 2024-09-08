@@ -72,6 +72,12 @@ option Bandits.General_Speak = {
     page = Bandits_General, translation = Bandits.Speak,
 }
 
+option Bandits.General_Captions = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Captions,
+}
+
+
 option Bandits.General_SneakAtNight = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.SneakAtNight,
