@@ -50,6 +50,18 @@ BanditPlayer.GetMasterPlayer = function(bandit)
     return master
 end
 
+BanditPlayer.WakeEveryone = function()
+    -- We always need to wake up all players
+    -- to avoid time pardoxes
+    local playerList = BanditPlayer.GetPlayers()
+    for i=0, playerList:size()-1 do
+        local player = playerList:get(i)
+        if player then
+            player:forceAwake()
+        end
+    end
+end
+
 -- Global variable to store the original PanicIncreaseValue
 local originalPanicIncreaseValue = nil
 

@@ -8,7 +8,7 @@ local function Hit(attacker, item, victim)
     local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
     local range = item:getMaxRange()
     if dist < range + 0.1 then
-        victim:forceAwake()
+        BanditPlayer.WakeEveryone()
 
         local hitSound
         local veh = victim:getVehicle()
@@ -45,6 +45,7 @@ local function Hit(attacker, item, victim)
             end
         end
         victim:playSound(hitSound)
+        addSound(getPlayer(), victim:getX(), victim:getY(), victim:getZ(), 4, 50)
     end
 
     -- Clean up the temporary player after use

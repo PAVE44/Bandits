@@ -408,10 +408,12 @@ local function Hit(shooter, item, victim)
 
     local accuracyThreshold = 100 / (1 + accuracyCoeff * dist / accuracyBoost)
 
+    -- Warning, this is not perfect, local player mand remote players will not generate the same 
+    -- random number.
     if ZombRand(100) < accuracyThreshold then
         local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
         victim:playSound(hitSound)
-        victim:forceAwake()
+        BanditPlayer.WakeEveryone()
         
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)

@@ -297,7 +297,7 @@ function BanditScheduler.SpawnWave(player, wave)
             end
 
             if SandboxVars.Bandits.General_ArrivalWakeUp and event.hostile and event.program.name == "Bandit" then
-                player:forceAwake()
+                BanditPlayer.WakeEveryone()
             end
             -- player:Say("Bandits are coming!")
 
