@@ -1,4 +1,4 @@
-Sandbox_EN = {
+Sandbox_NL = {
 
     /***** GENERAL *****/
     Sandbox_Bandits_General = "Bandits General"

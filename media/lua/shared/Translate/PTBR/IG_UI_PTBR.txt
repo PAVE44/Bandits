@@ -1,4 +1,4 @@
-IGUI_EN = {
+IGUI_PTBR = {
     IGUI_Bandits_Bandits_Killed = "Bandits Killed",
 
     IGUI_Bandits_Speech_ZSSpotted_Male_1_1 = "I see them!",

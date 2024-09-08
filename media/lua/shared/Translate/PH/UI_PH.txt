@@ -1,0 +1,4 @@
+UI_PH = {
+    UI_optionscreen_binding_Bandits = "Bandits",
+    UI_optionscreen_binding_GUARDPOSTS = "Manage Guardposts",
+}

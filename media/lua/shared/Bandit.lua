@@ -316,7 +316,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 zombie:addItemToSpawnAtDeath(mag)
 
                 local gun = InventoryItemFactory.CreateItem(weapons.primary.name)
-                gun:setCondition(3+ZombRand(8))
+                gun:setCondition(3+ZombRand(15))
                 gun:setClip(nil)
                 zombie:addItemToSpawnAtDeath(gun)
 
@@ -341,7 +341,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
                 local gun = InventoryItemFactory.CreateItem(weapons.secondary.name)
                 gun:setClip(nil)
-                gun:setCondition(1+ZombRand(10))
+                gun:setCondition(3+ZombRand(22))
                 zombie:addItemToSpawnAtDeath(gun)
 
                 for i=1, weapons.secondary.magCount do
@@ -396,78 +396,86 @@ function Bandit.GetProgram(zombie)
 end
 
 function Bandit.Say(zombie, phrase, force)
+    local brain = BanditBrain.Get(zombie)
     
-    if SandboxVars.Bandits.General_Speak then
-        local brain = BanditBrain.Get(zombie)
-        
-        if not force and brain.speech and brain.speech > 0 then return end
-        if force then zombie:getEmitter():stopAll() end
-        
-        local player = getPlayer()
-        local dist = math.sqrt(math.pow(player:getX() - zombie:getX(), 2) + math.pow(player:getY() - zombie:getY(), 2))
-        
-        if dist <= 14 then
-            local id = BanditUtils.GetCharacterID(zombie)
-            local voice = 1 + math.abs(id) % 5
-            if voice > 2 then voice = 1 end
+    if not force and brain.speech and brain.speech > 0 then return end
+    if force then zombie:getEmitter():stopAll() end
+    
+    local player = getPlayer()
+    local dist = math.sqrt(math.pow(player:getX() - zombie:getX(), 2) + math.pow(player:getY() - zombie:getY(), 2))
+    
+    if dist <= 14 then
+        local id = BanditUtils.GetCharacterID(zombie)
+        local voice = 1 + math.abs(id) % 5
+        if voice > 2 then voice = 1 end
 
-            local sex = "Male"
-            if zombie:isFemale() then 
-                sex = "Female" 
-                voice = 3
+        local sex = "Male"
+        if zombie:isFemale() then 
+            sex = "Female" 
+            voice = 3
+        end
+
+        local sound
+        local length = 2
+        if phrase == "SPOTTED" then
+            sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+        elseif phrase == "HIT" then
+            sound = "ZSHit_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(14))
+            length = 0.5
+        elseif phrase == "BREACH" then
+            sound = "ZSBreach_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+            length = 4
+        elseif phrase == "RELOADING" then
+            sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+            length = 4
+        elseif phrase == "CAR" then
+            sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+            length = 4
+        elseif phrase == "DEATH" then
+            sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
+            length = 6
+        elseif phrase == "DEAD" then
+            sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
+            length = 8
+        elseif phrase == "BURN" then
+            sound = "ZSBurn_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+            length = 8
+        elseif phrase == "DRAGDOWN" then
+            sound = "ZSDragdown_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+            length = 8
+        elseif phrase == "INSIDE" then
+            sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+            length = 6
+        elseif phrase == "OUTSIDE" then
+            sound = "ZSOutside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
+            length = 6
+        elseif phrase == "UPSTAIRS" then
+            sound = "ZSUpstairs_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+            length = 6
+        elseif phrase == "ROOM_KITCHEN" then
+            sound = "ZSRoom_Kitchen_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+            length = 6
+        elseif phrase == "ROOM_BATHROOM" then
+            sound = "ZSRoom_Bathroom_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
+            length = 6
+        elseif phrase == "DEFENDER_SPOTTED" then
+            sound = "ZSDefender_Spot_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
+            length = 5
+        end
+
+        if sound then
+            -- text captions
+            if SandboxVars.Bandits.General_Captions then
+                local text = "IGUI_Bandits_Speech_" .. sound
+                if brain.hostile then
+                    zombie:addLineChatElement(getText(text), 0.8, 0.1, 0.1)
+                else
+                    zombie:addLineChatElement(getText(text), 0.1, 0.8, 0.1)
+                end
             end
 
-            local sound
-            local length = 2
-            if phrase == "SPOTTED" then
-                sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            elseif phrase == "HIT" then
-                sound = "ZSHit_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(14))
-                length = 0.5
-            elseif phrase == "BREACH" then
-                sound = "ZSBreach_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-                length = 4
-            elseif phrase == "RELOADING" then
-                sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-                length = 4
-            elseif phrase == "CAR" then
-                sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
-                length = 4
-            elseif phrase == "DEATH" then
-                sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-                length = 6
-            elseif phrase == "DEAD" then
-                sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-                length = 8
-            elseif phrase == "BURN" then
-                sound = "ZSBurn_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-                length = 8
-            elseif phrase == "DRAGDOWN" then
-                sound = "ZSDragdown_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-                length = 8
-            elseif phrase == "INSIDE" then
-                sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-                length = 6
-            elseif phrase == "OUTSIDE" then
-                sound = "ZSOutside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-                length = 6
-            elseif phrase == "UPSTAIRS" then
-                sound = "ZSUpstairs_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-                length = 6
-            elseif phrase == "ROOM_KITCHEN" then
-                sound = "ZSRoom_Kitchen_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-                length = 6
-            elseif phrase == "ROOM_BATHROOM" then
-                sound = "ZSRoom_Bathroom_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-                length = 6
-            elseif phrase == "DEFENDER_SPOTTED" then
-                sound = "ZSDefender_Spot_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
-                length = 5
-            end
-
-            if sound then
-                -- zombie:getEmitter():stopAll()
-                -- print (sound)
+            -- audiable speech
+            if SandboxVars.Bandits.General_Speak then
                 if localSound then
                     local emitter = getWorld():getFreeEmitter(zombie:getX(), zombie:getY(), zombie:getZ())
                     -- emitter:setVolumeAll(0.2)
@@ -475,12 +483,13 @@ function Bandit.Say(zombie, phrase, force)
                 else
                     zombie:getEmitter():playVocals(sound)
                 end
-
-                brain.speech = length
-                BanditBrain.Update(zombie, brain)
-                addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
             end
+
+            brain.speech = length
+            BanditBrain.Update(zombie, brain)
+            addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
         end
     end
+
 end
 

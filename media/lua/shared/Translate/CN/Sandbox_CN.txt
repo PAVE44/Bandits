@@ -1,4 +1,4 @@
-Sandbox_EN = {
+Sandbox_CN = {
 
     /***** GENERAL *****/
     Sandbox_Bandits_General = "Bandits General"
@@ -17,7 +17,6 @@ Sandbox_EN = {
     Sandbox_Bandits.GeneratorCutoff = "Bandits may disable power generators"
     Sandbox_Bandits.BuildBridge = "Bandits may build bridges on water"
     Sandbox_Bandits.Speak = "Bandits speak"
-    Sandbox_Bandits.Captions = "Bandits speech text captions"
     Sandbox_Bandits.SneakAtNight = "Bandits sneak during night-time"
     Sandbox_Bandits.CarryTorches = "Bandits carry flashflights during night-time"
     Sandbox_Bandits.ArrivalSoundLevel = "Attacking bandits sound volume"
