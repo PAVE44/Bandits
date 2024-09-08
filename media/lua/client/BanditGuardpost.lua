@@ -9,7 +9,7 @@ function BanditGuardpost.At(character)
     local gmd = GetBanditModData()
     local px = math.floor(character:getX() )
     local py = math.floor(character:getY())
-    local pz =character:getZ()
+    local pz = character:getZ()
     for id, gp in pairs(gmd.Guardposts) do
         --[[local dist = math.sqrt(math.pow(gp.x - px, 2) + math.pow(gp.y - py, 2))
         if dist < 0.8 then
