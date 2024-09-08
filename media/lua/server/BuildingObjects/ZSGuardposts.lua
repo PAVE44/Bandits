@@ -4,6 +4,10 @@ function ZSGuardposts:create(x, y, z, north, sprite)
 	BanditGuardpost.Toggle(getPlayer(), x, y, z)
 end
 
+function ZSGuardposts:walkTo(x, y, z)
+	return true
+end
+
 function ZSGuardposts:isValid(square)
 	return square:TreatAsSolidFloor() and square:isFree(false)
 end
