@@ -736,7 +736,7 @@ function BanditUpdate.Combat(bandit)
                                 
                                 -- the bandit may need to swich to melee weapon so we need to switch earier
                                 -- before target is in range
-                                local minRange = itemMelee:getMaxRange() + 1
+                                local minRange = itemMelee:getMaxRange()
                                 if dist <= minRange then
                                     enemyCharacter = potentialEnemy
                                     combat = true
@@ -1021,8 +1021,9 @@ function BanditUpdate.Zombie(zombie)
                 else
                     zombie:faceThisObject(bandit)
                 end
-            else
-                if zombie:CanSee(bandit) then
+            elseif enemy.dist > 1 then
+                local asn = zombie:getActionStateName()
+                if zombie:CanSee(bandit) and asn ~= "lunge" then
                     zombie:setTarget(bandit)
                     zombie:pathToCharacter(bandit)
                     zombie:spotted(bandit, true)
