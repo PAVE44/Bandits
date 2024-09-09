@@ -2,6 +2,11 @@ VERSION = 1,
 
 /***** GENERAL *****/
 
+option Bandits.General_KillCounter = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.KillCounter,
+}
+
 option Bandits.General_DensityScore = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.DensityScore,
@@ -146,6 +151,11 @@ option Bandits.General_DefenderSpawnHourlyChanced = {
 option Bandits.General_BaseSpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 0.3,
     page = Bandits_General, translation = Bandits.BaseSpawnHourlyChance,
+}
+
+option Bandits.General_DefenderLootAmount = {
+    type = enum, numValues=7, default = 5,
+    page = Bandits_General, translation = Bandits.DefenderLootAmount, valueTranslation=Rarity,
 }
 
 /***** WAVE 1 *****/

@@ -3,7 +3,7 @@
 	<m_Name>Default</m_Name>
 	<m_AnimName>Bob_IdleRifle</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
-	<m_SpeedScale>0.23</m_SpeedScale>
+	<m_SpeedScale>30.23</m_SpeedScale>
 	<m_BlendTime>0.35</m_BlendTime>
 	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
 	<m_Looped>false</m_Looped>

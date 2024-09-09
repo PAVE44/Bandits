@@ -1,4 +1,4 @@
 UI_RU = {
-    UI_optionscreen_binding_Bandits = "Bandits",
-    UI_optionscreen_binding_GUARDPOSTS = "Manage Guardposts",
+    UI_optionscreen_binding_Bandits = "Бандиты",
+    UI_optionscreen_binding_GUARDPOSTS = "Настройка зоны постов охраны",
 }

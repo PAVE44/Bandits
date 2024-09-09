@@ -61,7 +61,7 @@ local function getEscapePoint(bandit, radius)
     local brain = BanditBrain.Get(bandit)
 
     -- Create an array to count enemy characters in radial segments
-    local segmentCount = 4
+    local segmentCount = 16
     local segments = {}
     for i = 1, segmentCount do
         segments[i] = 0
@@ -111,8 +111,8 @@ local function getEscapePoint(bandit, radius)
     local dir = (segmentStartAngle + segmentEndAngle) / 2
 
     -- Find the space point 10 square away
-    local lx = bx + math.floor(10 * math.cos(dir))
-    local ly = by + math.floor(10 * math.sin(dir))
+    local lx = bx + math.floor(15 * math.cos(dir))
+    local ly = by + math.floor(15 * math.sin(dir))
     return lx, ly, bz
 end
 
@@ -251,7 +251,7 @@ end
 function BanditUpdate.Sound(bandit)
     local brain = BanditBrain.Get(bandit)
     if brain.sound and brain.sound > 0 then
-        brain.sound = brain.sound - 0.01
+        brain.sound = brain.sound - 0.001
         if brain.sound < 0 then brain.sound = 0 end
         BanditBrain.Update(bandit, brain)
     end
@@ -280,6 +280,9 @@ function BanditUpdate.ActionState(bandit)
                 continue = false
             end
         end
+
+    elseif asn == "turnalerted" then
+        bandit:changeState(ZombieIdleState.instance())
 
     elseif asn == "getup" or asn =="staggerback" then
         Bandit.ClearTasks(bandit)
@@ -598,16 +601,27 @@ function BanditUpdate.Collisions(bandit)
                                     -- Get the square of the object
                                     local square = getPlayer():getSquare()
 
-                                    -- Recalculate vision blocked for the surrounding tiles in a 10-tile radius
-                                    local radius = 10
+                                    -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
+                                    local radius = 5
                                     for dx = -radius, radius do
                                         for dy = -radius, radius do
-                                            if dx ~= 0 and dy ~= 0 then
+                                            -- if dx ~= 0 and dy ~= 0 then
                                                 local surroundingSquare = getCell():getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
+                                                --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
                                                 if surroundingSquare then
+                                                    --[[
+                                                    square:ReCalculateCollide(surroundingSquare)
+                                                    square:ReCalculatePathFind(surroundingSquare)
                                                     square:ReCalculateVisionBlocked(surroundingSquare)
+                                                    surroundingSquare:ReCalculateCollide(square)
+                                                    surroundingSquare:ReCalculatePathFind(square)
+                                                    surroundingSquare:ReCalculateVisionBlocked(square)
+                                                    ]]
+                                                    surroundingSquare:InvalidateSpecialObjectPaths()
+                                                    surroundingSquare:RecalcProperties()
+                                                    surroundingSquare:RecalcAllWithNeighbours(true)
                                                 end
-                                            end
+                                            -- end
                                         end
                                     end
 
@@ -640,6 +654,44 @@ function BanditUpdate.Collisions(bandit)
             end
         end
     end
+    return tasks
+end
+
+function BanditUpdate.Avoidance(bandit)
+    local tasks = {}
+    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local brain = BanditBrain.Get(bandit)
+
+    -- counters to determine the balance of power in a given radius
+    local friendlies = 0
+    local enemies = 0
+    local radius = 9
+
+    local potentialEnemyList = BanditZombie.GetAll()
+    for id, potentialEnemy in pairs(potentialEnemyList) do
+        -- Calculate distance between bandit and the enemy character
+        local distance = math.sqrt((potentialEnemy.x - bx) ^ 2 + (potentialEnemy.y - by) ^ 2)
+        if distance <= radius and bz == potentialEnemy.z then
+            -- Calculate angle of the point relative to the circle's center
+            
+            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
+                enemies = enemies + 1
+            else
+                friendlies = friendlies + 1
+            end
+        end
+    end
+
+    if enemies > friendlies + 3 and not Bandit.HasMoveTask(bandit) then
+        local tx, ty, tz = getEscapePoint(bandit, 10)
+        -- bandit:addLineChatElement("evade to")
+        local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 30)
+        task.panic = true
+        task.lock = true
+        table.insert(tasks, task)
+    end 
+
+    -- print ("BALANCE: F: " .. friendlies .. " E: " .. enemies)
     return tasks
 end
 
@@ -763,13 +815,7 @@ function BanditUpdate.Combat(bandit)
     -- print ("ENEMIES: " .. enemies .. " FRIENDLIES: " .. friendlies)
 
     if combat then
-        if enemies > friendlies and not Bandit.HasMoveTask(bandit) then
-            local tx, ty, tz = getEscapePoint(bandit, 10)
-            local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 10)
-            table.insert(tasks, task)
-            
-
-        elseif not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
+        if not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
@@ -977,7 +1023,7 @@ function BanditUpdate.Zombie(zombie)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
             -- the enemy is close, proceed with the attack
-            if enemy.dist < 0.55 and not isWallTo then
+            if enemy.dist < 0.47 and not isWallTo then
 
                 -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
                 if zombie:isFacingObject(bandit, 0.5) then
@@ -1102,7 +1148,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     end
 
     -- WALKTYPE
-    -- we do ot this way, if walktype get overwritten by game engine we force our animations
+    -- we do it this way, if walktype get overwritten by game engine we force our animations
     zombie:setWalkType(zombie:getVariableString("BanditWalkType"))
 
     -- NO ZOMBIE SOUNDS
@@ -1139,6 +1185,10 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- COMPANION SOCIAL DISTANCE HACK
     BanditUpdate.SocialDistance(bandit)
 
+    -- CRAWLERS SCREAM OCASSINALLY
+    if bandit:isCrawling() then
+        Bandit.Say(bandit, "DEAD")
+    end
      ------------------------------------------------------------------------------------------------------------------------------------
     -- TASKBUILDER
     ------------------------------------------------------------------------------------------------------------------------------------
@@ -1156,6 +1206,14 @@ function BanditUpdate.OnBanditUpdate(zombie)
         local healingTasks = BanditUpdate.Health(bandit)
         if #healingTasks > 0 then
             for _, t in pairs(healingTasks) do table.insert(tasks, t) end
+        end
+    end
+
+    -- AVOIDANCE
+    if #tasks == 0 and uTick % 4 == 0 then
+        local avoidanceTasks = BanditUpdate.Avoidance(bandit)
+        if #avoidanceTasks > 0 then
+            for _, t in pairs(avoidanceTasks) do table.insert(tasks, t) end
         end
     end
 
@@ -1267,6 +1325,7 @@ end
 function BanditUpdate.OnZombieDead(zombie)
 
     if zombie:getVariableBoolean("Bandit") then
+   
         Bandit.Say(zombie, "DEAD", true)
 
         local player = getPlayer()

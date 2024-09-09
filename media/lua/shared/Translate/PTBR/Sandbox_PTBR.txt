@@ -3,6 +3,7 @@ Sandbox_PTBR = {
     /***** GENERAL *****/
     Sandbox_Bandits_General = "Bandits General"
 
+    Sandbox_Bandits.KillCounter = "Bandit kill counter"
     Sandbox_Bandits.DensityScore = "Bandit spawn rate boosted in towns and lowered in secluded areas"
     Sandbox_Bandits.Surrender = "Hurt Bandits may surrender"
     Sandbox_Bandits.BleedOut = "Hurt Bandits may bleed and die"
@@ -44,6 +45,7 @@ Sandbox_PTBR = {
 
     Sandbox_Bandits.DefenderSpawnHourlyChance = "Bandit defenders hourly spawn chance [%]"
     Sandbox_Bandits.BaseSpawnHourlyChance = "Bandit base/camp hourly spawn chance (if location allows) [%]"
+    Sandbox_Bandits.DefenderLootAmount = "Defender/Base loot amount"
 
     /***** WAVES *****/
     Sandbox_Bandits = "Bandits"

@@ -9,7 +9,7 @@ BanditClan.Biker.id = 9
 BanditClan.Biker.name = "Biker"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.Biker.femaleChance = 40
+BanditClan.Biker.femaleChance = 20
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.Biker.health = 3

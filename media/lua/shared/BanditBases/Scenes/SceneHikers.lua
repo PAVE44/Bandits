@@ -20,15 +20,16 @@ function BanditScenes.Hikers (player, square)
     -- BanditBasePlacements.Fireplace("camping_01_6", sx+4, sy+4, sz)
     BanditBasePlacements.Item ("Base.Pot", sx+4, sy+4, sz, 1)
 
+    local lootAmount = SandboxVars.Bandits.General_DefenderLootAmount - 1
     local container
     container = BanditBasePlacements.Container ("furniture_storage_02_28", sx + 1, sy + 2, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, lootAmount)
 
     container = BanditBasePlacements.Container ("trashcontainers_01_27", sx + 7, sy + 1, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.CannedFoodItems, 5)
+    BanditLoot.FillContainer(container, BanditLoot.CannedFoodItems, lootAmount)
 
 	container = BanditBasePlacements.Container ("trashcontainers_01_26", sx + 7, sy + 2, sz + 0)
-    BanditLoot.FillContainer(container, BanditLoot.Ammo, 4)
+    BanditLoot.FillContainer(container, BanditLoot.Ammo, lootAmount)
 
     -- BanditBasePlacements.IsoLightSwitch ("lighting_outdoor_01_48", sx + 1, sy + 6, sz + 0)
 

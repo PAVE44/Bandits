@@ -94,14 +94,14 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     end
 
     local health = bandit:getHealth()
-    if health < 0.4 then
+    if health < 0.5 then
         walkType = "Limp"
         endurance = 0
     end 
  
     local handweapon = bandit:getVariableString("BanditWeapon") 
     
-    if SandboxVars.Bandits.General_RunAway and health < 0.6 then
+    if SandboxVars.Bandits.General_RunAway and health < 0.7 then
         return {status=true, next="Escape", tasks=tasks}
     end
 

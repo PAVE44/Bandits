@@ -24,7 +24,7 @@ BanditZombie.Update = function(numberTicks)
     
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    local skip = 5
+    local skip = 4
     if numberTicks % skip ~= 0 then return end
 
     local cell = getCell()
@@ -54,6 +54,13 @@ BanditZombie.Update = function(numberTicks)
 
             if light.isBandit then
                 BanditZombie.CacheLightB[id] = light
+                -- zombies in hitreaction state are not processed by onzombieupdate
+                -- so we need to make them shut their zombie sound here too
+                local asn = zombie:getActionStateName()
+                if asn == "hitreaction" or asn == "hitreaction-hit" then
+                    zombie:getEmitter():stopSoundByName("MaleZombieCombined")
+                    zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
+                end
             else
                 BanditZombie.CacheLightZ[id] = light
             end

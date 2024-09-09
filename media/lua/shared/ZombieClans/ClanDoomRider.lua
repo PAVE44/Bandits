@@ -9,7 +9,7 @@ BanditClan.DoomRider.id = 13
 BanditClan.DoomRider.name = "Doomrider"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.DoomRider.femaleChance = 60
+BanditClan.DoomRider.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.DoomRider.health = 5

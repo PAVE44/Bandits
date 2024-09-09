@@ -465,26 +465,27 @@ function BanditScheduler.RaiseDefences(x, y)
                                         end
                                     end
 
+                                    local lootAmount = SandboxVars.Bandits.General_DefenderLootAmount - 1
                                     local roomCnt = building:getRoomsNumber()
-                                    if roomCnt > 2 then
+                                    if lootAmount > 0 and roomCnt > 2 then
                                         local fridge = object:getContainerByType("fridge")
                                         if fridge then
-                                            BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, 4)
+                                            BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, lootAmount)
                                         end
 
                                         local freezer = object:getContainerByType("freezer")
                                         if freezer then
-                                            BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, 4)
+                                            BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, lootAmount)
                                         end
 
                                         local counter = object:getContainerByType("counter")
                                         if counter then
-                                            BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, 4)
+                                            BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, lootAmount)
                                         end
 
                                         local crate = object:getContainerByType("crate")
                                         if crate then
-                                            BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, 5)
+                                            BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, lootAmount)
                                         end
                                     end
                                 end

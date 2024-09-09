@@ -436,7 +436,7 @@ function Bandit.Say(zombie, phrase, force)
             length = 6
         elseif phrase == "DEAD" then
             sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 8
+            length = 3
         elseif phrase == "BURN" then
             sound = "ZSBurn_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
             length = 8
