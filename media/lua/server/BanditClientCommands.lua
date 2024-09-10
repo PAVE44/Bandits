@@ -15,7 +15,7 @@ BanditServer.Commands.GuardpostToggle = function(player, args)
     end
 end
 
-BanditServer.Commands.UpdatePlayer = function(player, args)
+BanditServer.Commands.PlayerUpdate = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
     gmd.OnlinePlayers[id] = args
@@ -34,7 +34,15 @@ BanditServer.Commands.BanditUpdate  = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
     if gmd.Queue[id] then
-        gmd.Queue[id] = args
+
+        -- The brain is stored in zombie moddata, but that works only for one player
+        -- global moddata plays as a central repository of truth for other clients to synchronize
+        -- once they get in contact with the same bandit
+        -- Tasks are temporary and handled individually by clients so we do not sync them.        
+        local brain = args
+        brain.tasks = {}
+
+        gmd.Queue[id] = brain
         print ("[INFO] Bandit sync: " .. id)
     end
 end
@@ -63,20 +71,44 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             local zombie = zombieList:get(i)
             local id = BanditUtils.GetCharacterID(zombie)
 
-            -- zombie:setUseless(false)
+            -- clients will change that flag to true once they recognize the bandit by its ID
             zombie:setVariable("Bandit", false)
+
+            -- just in case
             zombie:setPrimaryHandItem(nil)
             zombie:setSecondaryHandItem(nil)
             zombie:clearAttachedItems()
 
             local brain = {}
+
+            -- unique bandit id based on outfit
             brain.id = id
+
+            -- the player that spawned the bandit becomes his master, 
+            -- this plays a role in particular programs like Companion
             brain.master = BanditUtils.GetCharacterID(player)
+
+            -- for keyring
             brain.fullname = BanditNames.GenerateName(zombie:isFemale())
+
+            -- hostility towards human players
             brain.hostile = event.hostile
+
+            -- copy clan abilities to the bandit
             brain.clan = bandit.clan
             brain.eatBody = bandit.eatBody
             brain.accuracyBoost = bandit.accuracyBoost
+
+            -- the AI program to follow at start
+            brain.program = {}
+            brain.program.name = event.program.name
+            brain.program.stage = event.program.stage
+            brain.program.params = {}
+
+            -- program specific capabilities independent from clan
+            brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
+
+            -- action and state flags
             brain.stationary = false
             brain.sleeping = false
             brain.endurance = 1.00
@@ -84,24 +116,18 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.sound = 0.00
             brain.infection = 0
 
+            -- inventory
             brain.weapons = bandit.weapons
             brain.loot = bandit.loot
-
-            brain.program = {}
-            brain.program.name = event.program.name
-            brain.program.stage = event.program.stage
-            brain.program.params = {}
-
-            -- capabilities are program specific, not clan specific
-            brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
-            
             brain.inventory = {}
             table.insert(brain.inventory, "weldingGear")
             table.insert(brain.inventory, "crowbar")
             
-            brain.world = {}
-            
+            -- empty task table, will be populated during bandit life
             brain.tasks = {}
+
+            -- not used
+            brain.world = {}
 
             print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
             gmd.Queue[id] = brain

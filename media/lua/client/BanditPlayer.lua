@@ -1,5 +1,10 @@
 BanditPlayer = BanditPlayer or {}
 
+-- This function is neccessary to synchronize the ghost state of players in multiplayer game 
+-- Game anti-cheat system does not allow other clients or the server to check the status of ghost mode of other players
+-- so each client has to report individually their status to the server
+--
+-- each client needs status of all players so that the bandits will not attack any of the ghosted players
 BanditPlayer.UpdatePlayersOnline = function ()
     if not isServer() then
         local player = getPlayer()
@@ -8,7 +13,7 @@ BanditPlayer.UpdatePlayersOnline = function ()
             playerData.id = BanditUtils.GetCharacterID(player)
             playerData.name = player:getDisplayName()
             playerData.isGhost = player:isGhostMode()
-            sendClientCommand(player, 'Commands', 'UpdatePlayer', playerData)
+            sendClientCommand(player, 'Commands', 'PlayerUpdate', playerData)
         end
         local gmd = GetBanditModData()
         for _, p in pairs(gmd.OnlinePlayers) do
@@ -50,9 +55,9 @@ BanditPlayer.GetMasterPlayer = function(bandit)
     return master
 end
 
+-- A function to wake up all players on the server.
+-- We always need to wake up all players to avoid time pardoxes
 BanditPlayer.WakeEveryone = function()
-    -- We always need to wake up all players
-    -- to avoid time pardoxes
     local playerList = BanditPlayer.GetPlayers()
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)

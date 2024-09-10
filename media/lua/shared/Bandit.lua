@@ -60,7 +60,6 @@ function Bandit.HasActionTask(zombie)
     return false
 end
 
-
 function Bandit.UpdateTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -124,36 +123,6 @@ function Bandit.UpdateInfection(zombie, delta)
     end
 end
 
-function Bandit.GetMaster(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.master
-end
-
-function Bandit.SetMaster(zombie, master)
-    local brain = BanditBrain.Get(zombie)
-    brain.master = master
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.SetProgram(zombie, program, programParams)
-    local brain = BanditBrain.Get(zombie)
-    brain.program = {}
-    brain.program.name = program
-    brain.program.stage = "Prepare"
-    brain.program.params = {}
-    for k, v in pairs(programParams) do
-        brain.program.params[k] = v
-    end
-
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.SetProgramStage(zombie, stage)
-    local brain = BanditBrain.Get(zombie)
-    brain.program.stage = stage
-    BanditBrain.Update(zombie, brain)
-end
-
 function Bandit.ForceStationary(zombie, stationary)
     local brain = BanditBrain.Get(zombie)
     brain.stationary = stationary
@@ -165,28 +134,6 @@ function Bandit.IsForceStationary(zombie)
     return brain.stationary
 end
 
-function Bandit.SetHostile(zombie, hostile)
-    local brain = BanditBrain.Get(zombie)
-    brain.hostile = hostile
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsHostile(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.hostile
-end
-
-function Bandit.SetCombat(zombie, combat)
-    local brain = BanditBrain.Get(zombie)
-    brain.combat = combat
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsCombat(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.combat
-end
-
 function Bandit.SetSleeping(zombie, sleeping)
     local brain = BanditBrain.Get(zombie)
     brain.sleeping = sleeping
@@ -196,64 +143,6 @@ end
 function Bandit.IsSleeping(zombie)
     local brain = BanditBrain.Get(zombie)
     return brain.sleeping
-end
-
-function Bandit.SetCollidedAction(zombie, collidedAction)
-    local brain = BanditBrain.Get(zombie)
-    brain.collidedAction = collidedAction
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsCollidedAction(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.collidedAction
-end
-
-function Bandit.SetSmash(zombie, smash)
-    local brain = BanditBrain.Get(zombie)
-    brain.smash = smash
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsSmash(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.smash
-end
-
-function Bandit.SetDestroy(zombie, destroy)
-    local brain = BanditBrain.Get(zombie)
-    brain.destroy = destroy
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsDestroy(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.destroy
-end
-
-function Bandit.SetFiring(zombie, firing)
-    local brain = BanditBrain.Get(zombie)
-    brain.firing = firing
-    BanditBrain.Update(zombie, brain)
-end
-
-function Bandit.IsFiring(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.firing
-end
-
-function Bandit.SetLoot(zombie, loot)
-    local brain = BanditBrain.Get(zombie)
-    brain.loot = loot
-    BanditBrain.Update(zombie, brain)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
-end
-
-function Bandit.SetWeapons(zombie, weapons)
-    local brain = BanditBrain.Get(zombie)
-    brain.weapons = weapons
-    BanditBrain.Update(zombie, brain)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 end
 
 function Bandit.SetCapabilities(zombie, capabilities)
@@ -268,11 +157,104 @@ function Bandit.Can(zombie, capability)
     return false
 end
 
+-- Functions that require brain sync below
+
+-- Bandit ownership
+function Bandit.GetMaster(zombie)
+    local brain = BanditBrain.Get(zombie)
+    return brain.master
+end
+
+function Bandit.SetMaster(zombie, master)
+    local brain = BanditBrain.Get(zombie)
+    brain.master = master
+    BanditBrain.Update(zombie, brain)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+
+-- Bandit Programs
+function Bandit.GetProgram(zombie)
+    local brain = BanditBrain.Get(zombie)
+    return brain.program
+end
+
+function Bandit.SetProgram(zombie, program, programParams)
+    local brain = BanditBrain.Get(zombie)
+    brain.program = {}
+    brain.program.name = program
+    brain.program.stage = "Prepare"
+    brain.program.params = {}
+    for k, v in pairs(programParams) do
+        brain.program.params[k] = v
+    end
+
+    BanditBrain.Update(zombie, brain)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+function Bandit.SetProgramStage(zombie, stage)
+    local brain = BanditBrain.Get(zombie)
+    brain.program.stage = stage
+    BanditBrain.Update(zombie, brain)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+-- Bandit hostility
+function Bandit.SetHostile(zombie, hostile)
+    local brain = BanditBrain.Get(zombie)
+    brain.hostile = hostile
+    BanditBrain.Update(zombie, brain)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+function Bandit.IsHostile(zombie)
+    local brain = BanditBrain.Get(zombie)
+    return brain.hostile
+end
+
+-- Bandit weapons
+function Bandit.GetWeapons(zombie)
+    local brain = BanditBrain.Get(zombie)
+    return brain.weapons
+end
+
+function Bandit.GetBestWeapon(zombie)
+    local brain = BanditBrain.Get(zombie)
+    local weapons = brain.weapons
+    if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
+        return weapons.primary.name
+    elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
+        return weapons.secondary.name
+    else
+        return weapons.melee
+    end
+end
+
+function Bandit.IsOutOfAmmo(zombie)
+    local brain = BanditBrain.Get(zombie)
+    local weapons = brain.weapons
+    if weapons.primary.bulletsLeft == 0 and weapons.primary.magCount == 0 and weapons.secondary.bulletsLeft == 0 and weapons.secondary.magCount == 0 then
+        return true
+    end
+    return false
+end
+
+function Bandit.SetWeapons(zombie, weapons)
+    local brain = BanditBrain.Get(zombie)
+    brain.weapons = weapons
+    BanditBrain.Update(zombie, brain)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+-- Inventory
 function Bandit.SetInventory(zombie, inventory)
     local brain = BanditBrain.Get(zombie)
     brain.inventory = inventory
     BanditBrain.Update(zombie, brain)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 function Bandit.Has(zombie, item)
@@ -283,6 +265,17 @@ function Bandit.Has(zombie, item)
     return false
 end
 
+-- Bandit loot inventory
+function Bandit.SetLoot(zombie, loot)
+    local brain = BanditBrain.Get(zombie)
+    brain.loot = loot
+    BanditBrain.Update(zombie, brain)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+end
+
+-- This translates weapons, loot, inventory to actual items to be
+-- spawned at bandit death
 function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if not BanditUtils.IsController(zombie) then return end
     
@@ -362,37 +355,6 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             zombie:addItemToSpawnAtDeath(item)
         end
     end
-end
-
-function Bandit.GetWeapons(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.weapons
-end
-
-function Bandit.GetBestWeapon(zombie)
-    local brain = BanditBrain.Get(zombie)
-    local weapons = brain.weapons
-    if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
-        return weapons.primary.name
-    elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
-        return weapons.secondary.name
-    else
-        return weapons.melee
-    end
-end
-
-function Bandit.IsOutOfAmmo(zombie)
-    local brain = BanditBrain.Get(zombie)
-    local weapons = brain.weapons
-    if weapons.primary.bulletsLeft == 0 and weapons.primary.magCount == 0 and weapons.secondary.bulletsLeft == 0 and weapons.secondary.magCount == 0 then
-        return true
-    end
-    return false
-end
-
-function Bandit.GetProgram(zombie)
-    local brain = BanditBrain.Get(zombie)
-    return brain.program
 end
 
 function Bandit.Say(zombie, phrase, force)
