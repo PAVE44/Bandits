@@ -3,38 +3,18 @@ BanditUtils = BanditUtils or {}
 function BanditUtils.GetCharacterID (character)
 
     local function toBits(num)
-        -- returns a table of bits, least significant first.
-        local bits = {} -- will contain the bits
-        while num > 0 do
-            rest=math.fmod(num, 2)
-            bits[#bits+1] = math.floor(rest)
-            num=(num-rest)/2
-        end
+        local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
+        while #bits < 16 do bits[#bits+1] = "0" end
         return bits
     end
     
     local function toDec(bits)
-        local decimal = 0
-        local length = #bits
-        
-        -- Reverse the bits table
-        for i = 1, math.floor(length / 2) do
-            bits[i], bits[length - i + 1] = bits[length - i + 1], bits[i]
-        end
-        
-        -- Convert the reversed bits to a decimal number
-        for i = 1, length do
-            decimal = decimal + bits[i] * 2^(length - i)
-        end
-    
-        return math.floor(decimal)
+        local decimal = Long.parseUnsignedLong(string.reverse(table.concat(bits, "")), 2)
+        return decimal
     end
 
     if instanceof(character, "IsoZombie") then
         local dec = character:getPersistentOutfitID()
-        if dec < 0 then
-            return dec
-        end
 
         local bits = toBits(dec)
         bits[16] = 0

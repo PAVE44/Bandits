@@ -168,7 +168,11 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local veh = zombie:getVehicle()
     local zx = zombie:getX()
     local zy = zombie:getY()
+    local target = zombie:getTarget()
+    local animator = zombie:getAdvancedAnimator()
+    -- local astate = zombie:getAnimationDebug()
     local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
+    
 end
 
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)

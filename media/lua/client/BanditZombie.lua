@@ -52,16 +52,18 @@ BanditZombie.Update = function(numberTicks)
             light.brain = BanditBrain.Get(zombie)
             BanditZombie.CacheLight[id] = light
 
+            
             if light.isBandit then
                 BanditZombie.CacheLightB[id] = light
                 -- zombies in hitreaction state are not processed by onzombieupdate
                 -- so we need to make them shut their zombie sound here too
+                
                 local asn = zombie:getActionStateName()
                 if asn == "hitreaction" or asn == "hitreaction-hit" then
                     zombie:getEmitter():stopSoundByName("MaleZombieCombined")
                     zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
                 end
-            else
+             else
                 BanditZombie.CacheLightZ[id] = light
             end
         end

@@ -1022,8 +1022,21 @@ function BanditUpdate.Zombie(zombie)
             local bandit = BanditZombie.GetInstanceById(enemy.id)
             local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
 
+            -- the enemy is far, proceed with movement
+            if enemy.dist > 1 then
+                local asn = zombie:getActionStateName()
+                if zombie:CanSee(bandit) and asn ~= "lunge" then
+                    zombie:setTarget(bandit)
+                    zombie:pathToCharacter(bandit)
+                    zombie:spotted(bandit, true)
+                end
+
+            elseif enemy.dist > 0.47 and enemy.dist < 0.7 then
+                zombie:setTarget(nil)
+                zombie:setPath2(nil)
+            
             -- the enemy is close, proceed with the attack
-            if enemy.dist < 0.47 and not isWallTo then
+            elseif enemy.dist < 0.47 and not isWallTo then
 
                 -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
                 if zombie:isFacingObject(bandit, 0.5) then
@@ -1048,6 +1061,8 @@ function BanditUpdate.Zombie(zombie)
                         local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
                         Bandit.AddTask(bandit, task)
                     else
+                        zombie:setTarget(nil)
+                        zombie:setPath2(nil)
                         zombie:setBumpType("Bite")
 
                         if ZombRand(4) == 1 then
@@ -1063,16 +1078,16 @@ function BanditUpdate.Zombie(zombie)
 
                         bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                         Bandit.UpdateInfection(bandit, 0.001)
+                        if bandit:getHealth() <= 0 then
+                            bandit:setHealth(0)
+                            bandit:clearAttachedItems()
+                            -- bandit:changeState(ZombieOnGroundState.instance())
+                            bandit:setAttackedBy(getCell():getFakeZombieForHit())
+                            bandit:becomeCorpse()
+                        end
                     end
                 else
                     zombie:faceThisObject(bandit)
-                end
-            elseif enemy.dist > 1 then
-                local asn = zombie:getActionStateName()
-                if zombie:CanSee(bandit) and asn ~= "lunge" then
-                    zombie:setTarget(bandit)
-                    zombie:pathToCharacter(bandit)
-                    zombie:spotted(bandit, true)
                 end
             end
         end
