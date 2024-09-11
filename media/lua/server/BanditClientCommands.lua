@@ -43,7 +43,7 @@ BanditServer.Commands.BanditUpdate  = function(player, args)
         brain.tasks = {}
 
         gmd.Queue[id] = brain
-        print ("[INFO] Bandit sync: " .. id)
+        -- print ("[INFO] Bandit sync: " .. id)
     end
 end
 

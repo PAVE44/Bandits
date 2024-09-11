@@ -19,9 +19,9 @@ function BanditEventMarkerHandler.setOrUpdate(eventID, icon, duration, posX, pos
             BanditEventMarkerHandler.expirations[player] = BanditEventMarkerHandler.expirations[player] or {}
 
             local marker = BanditEventMarkerHandler.markers[player][eventID]
-            BanditEventMarkerHandler.expirations[player][eventID] = getGametimeTimestamp()+duration
+            BanditEventMarkerHandler.expirations[player][eventID] = getGametimeTimestamp() + duration
 
-            if not marker and duration>0 then
+            if not marker and duration > 0 then
 
                 if BanditEventMarker then
 

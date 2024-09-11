@@ -1,4 +1,5 @@
 UI_CN = {
-    UI_optionscreen_binding_Bandits = "Bandits",
-    UI_optionscreen_binding_GUARDPOSTS = "Manage Guardposts",
+    /***** Localized by @Oversights2006_ *****/
+    UI_optionscreen_binding_Bandits = "Bandits(后末日暴徒)",
+    UI_optionscreen_binding_GUARDPOSTS = "变更Bandits模组NPC的警戒位置",
 }
