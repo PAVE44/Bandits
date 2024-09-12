@@ -169,7 +169,7 @@ function Bandit.SetMaster(zombie, master)
     local brain = BanditBrain.Get(zombie)
     brain.master = master
     BanditBrain.Update(zombie, brain)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 
@@ -190,14 +190,14 @@ function Bandit.SetProgram(zombie, program, programParams)
     end
 
     BanditBrain.Update(zombie, brain)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 function Bandit.SetProgramStage(zombie, stage)
     local brain = BanditBrain.Get(zombie)
     brain.program.stage = stage
     BanditBrain.Update(zombie, brain)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 -- Bandit hostility
@@ -205,7 +205,7 @@ function Bandit.SetHostile(zombie, hostile)
     local brain = BanditBrain.Get(zombie)
     brain.hostile = hostile
     BanditBrain.Update(zombie, brain)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 function Bandit.IsHostile(zombie)
@@ -245,7 +245,7 @@ function Bandit.SetWeapons(zombie, weapons)
     brain.weapons = weapons
     BanditBrain.Update(zombie, brain)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 -- Inventory
@@ -254,7 +254,7 @@ function Bandit.SetInventory(zombie, inventory)
     brain.inventory = inventory
     BanditBrain.Update(zombie, brain)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 function Bandit.Has(zombie, item)
@@ -271,7 +271,7 @@ function Bandit.SetLoot(zombie, loot)
     brain.loot = loot
     BanditBrain.Update(zombie, brain)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 -- This translates weapons, loot, inventory to actual items to be
