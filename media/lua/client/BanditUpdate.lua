@@ -1031,7 +1031,7 @@ function BanditUpdate.Zombie(zombie)
                     zombie:spotted(bandit, true)
                 end
 
-            elseif enemy.dist > 0.47 and enemy.dist < 0.7 then
+            elseif enemy.dist > 0.47 and enemy.dist < 0.8 then
                 zombie:setTarget(nil)
                 zombie:setPath2(nil)
             

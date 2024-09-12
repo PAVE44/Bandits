@@ -18,6 +18,7 @@ Sandbox_CH = {
     Sandbox_Bandits.GeneratorCutoff = "Bandits may disable power generators"
     Sandbox_Bandits.BuildBridge = "Bandits may build bridges on water"
     Sandbox_Bandits.Speak = "Bandits speak"
+    Sandbox_Bandits.Captions = "Bandits speech text captions"
     Sandbox_Bandits.SneakAtNight = "Bandits sneak during night-time"
     Sandbox_Bandits.CarryTorches = "Bandits carry flashflights during night-time"
     Sandbox_Bandits.ArrivalSoundLevel = "Attacking bandits sound volume"
@@ -30,12 +31,12 @@ Sandbox_CH = {
     Sandbox_Bandits.RifleRange = "Max Bandit rifle range [squares]"
 
     Sandbox_Bandits.HitModel = "Player damage hit model"
-    Sandbox_Bandits.HitModelTooltip = "How damage is calculated"
+    Sandbox_Bandits.HitModel_tooltip = "How damage is calculated"
     Sandbox_Bandits.HitModel_option1 = "Vanilla (more compatibile)"    
     Sandbox_Bandits.HitModel_option2 = "Bandits"
     
     Sandbox_Bandits.OverallAccuracy = "Bandit global weapon accuracy"
-    Sandbox_Bandits.OverallAccuracyTooltip = "Bandit global weapon accuracy"
+    Sandbox_Bandits.OverallAccuracy_tooltip = "Bandit global weapon accuracy"
     Sandbox_Bandits.OverallAccuracy_option1 = "Stormtrooper Mode"    
     Sandbox_Bandits.OverallAccuracy_option2 = "Can't Hit the Broad Side of a Barn"
     Sandbox_Bandits.OverallAccuracy_option3 = "Occasional Marksman"
@@ -69,32 +70,32 @@ Sandbox_CH = {
     Sandbox_Bandits.WaveEnabledTooltip = "Clan spawning enabled"
 
     Sandbox_Bandits.FriendlyChance = "Friendly chance [%]"
-    Sandbox_Bandits.FriendlyChanceTooltip = "Chance of a bandit group to be friendly toward players"
+    Sandbox_Bandits.FriendlyChance_tooltip = "Chance of a bandit group to be friendly toward players"
 
     Sandbox_Bandits.EnemyBehaviour = "Enemy AI model"
-    Sandbox_Bandits.EnemyBehaviourTooltip = "Enemy AI behaviour model"
+    Sandbox_Bandits.EnemyBehaviour_tooltip = "Enemy AI behaviour model"
     Sandbox_Bandits.EnemyBehaviour_option1 = "Random"
     Sandbox_Bandits.EnemyBehaviour_option2 = "Raider"
     Sandbox_Bandits.EnemyBehaviour_option3 = "Wanderer"
     Sandbox_Bandits.EnemyBehaviour_option4 = "Guard"
 
     Sandbox_Bandits.FirstDay = "Day Start"
-    Sandbox_Bandits.FirstDayTooltip = "The day number after apocalypse when the spawn starts"
+    Sandbox_Bandits.FirstDay_tooltip = "The number of days the player has survived after which the spawn starts"
 
     Sandbox_Bandits.LastDay = "Date End"
-    Sandbox_Bandits.LastDayTooltip = "The day number after apocalypse when the spawn ends"
+    Sandbox_Bandits.LastDay_tooltip = "The number of days the player has survived after which the spawn ends"
 
     Sandbox_Bandits.SpawnDistance = "Spawn Distance"
-    Sandbox_Bandits.SpawnDistanceTooltip = "How far the bandits will spawn from the player[squares]"
+    Sandbox_Bandits.SpawnDistance_tooltip = "How far the bandits will spawn from the player[squares]"
 
     Sandbox_Bandits.SpawnHourlyChance = "Hourly Spawn Chance [%]"
-    Sandbox_Bandits.SpawnHourlyChanceTooltip = "Chance of the clan to spawn in a given hour"
+    Sandbox_Bandits.SpawnHourlyChance_tooltip = "Chance of the clan to spawn in a given hour"
 
     Sandbox_Bandits.GroupSize = "Group Size"
-    Sandbox_Bandits.GroupSizeTooltip = "Number of bandits to spawn"
+    Sandbox_Bandits.GroupSize_tooltip = "Number of bandits to spawn"
 
     Sandbox_Bandits.GroupName = "Group Type"
-    Sandbox_Bandits.GroupNameTooltip = "Character of the group"
+    Sandbox_Bandits.GroupName_tooltip = "Character of the group"
     Sandbox_Bandits.GroupName_option1 = "Desperate Citizens                                                     \n First survivors of the apocalypse. They they owe their lives more to chance than to skill."
     Sandbox_Bandits.GroupName_option2 = "Psychopaths                                                                   \n Incapable of feeling any fear or pain, simply left the Louisville hospital while others died in panic."
     Sandbox_Bandits.GroupName_option3 = "Cannibals                                                                       \n Survived mainly by having high skill in wielding a cleaver, later by having access to high-protein food."
@@ -113,16 +114,16 @@ Sandbox_CH = {
     Sandbox_Bandits.GroupName_option16 = "New Hope Order                                                            \n A New World Government initiative to rebuild and restore order."
 
     Sandbox_Bandits.HasPistolChance = "Pistol Chance [%]"
-    Sandbox_Bandits.HasPistolChanceTooltip = "Chance that the bandits have to carry a loaded pisto"
+    Sandbox_Bandits.HasPistolChance_tooltip = "Chance that the bandits will carry a loaded pisto"
 
     Sandbox_Bandits.PistolMagCount = "Pistol Mag. Count"
-    Sandbox_Bandits.PistolMagCountTooltip = "The number of extra magazines bandit carry for a pistol"
+    Sandbox_Bandits.PistolMagCount_tooltip = "The number of extra magazines bandit will carry for a pistol"
 
     Sandbox_Bandits.HasRifleChance = "Rifle chance [%]"
-    Sandbox_Bandits.HasRifleChanceTooltip = "Chance that the bandits have to carry a loaded rifle"
+    Sandbox_Bandits.HasRifleChance_tooltip = "Chance that the bandits will carry a loaded rifle"
 
     Sandbox_Bandits.RifleMagCount = "Rifle Mag. Count"
-    Sandbox_Bandits.RifleMagCountTooltip = "The number of extra magazines bandit carry for a rifle"
+    Sandbox_Bandits.RifleMagCount_tooltip = "The number of extra magazines bandit will carry for a rifle"
 
 
 
