@@ -957,7 +957,8 @@ function BanditUpdate.SocialDistance(bandit)
     -- so here we detect player proximity and we switch the program to CompaningGuard,
     -- which in practice forces the useless flag.
 
-    if not Bandit.IsHostile(bandit) then
+    local brain = BanditBrain.Get(bandit)
+    if brain.program.name == "Companion" then
         local playerList = BanditPlayer.GetPlayers()
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)

@@ -128,7 +128,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- Companions intention is to generally stay with the player
     -- however, if the enemy is close, the companion should engage
     -- but only if player is not too far, kind of a proactive defense.
-    if dist < 12 then
+    if dist < 20 then
         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
         local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
         local closestEnemy = closestZombie

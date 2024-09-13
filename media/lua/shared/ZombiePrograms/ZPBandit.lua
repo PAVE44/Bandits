@@ -155,7 +155,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
         target = closestBandit
     end
 
-    if closestPlayer.dist < closestBandit.dist then
+    if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist then
         target = closestPlayer
     end
 
