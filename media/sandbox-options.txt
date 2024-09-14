@@ -58,8 +58,13 @@ option Bandits.General_DestroyThumpable = {
 }
 
 option Bandits.General_SabotageVehicles = {
-    type = boolean, default = true,
+    type = boolean, default = false,
     page = Bandits_General, translation = Bandits.SabotageVehicles,
+}
+
+option Bandits.General_EnterVehicles = {
+    type = boolean, default = false,
+    page = Bandits_General, translation = Bandits.EnterVehicles,
 }
 
 option Bandits.General_GeneratorCutoff = {

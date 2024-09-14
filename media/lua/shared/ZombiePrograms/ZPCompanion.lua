@@ -92,36 +92,38 @@ ZombiePrograms.Companion.Follow = function(bandit)
    
     -- If the player is in the vehicle, the companion should join him.
     -- If the player exits the vehicle, so should the companion.
-    if vehicle then
-        if dist < 2.2 then
-            local bvehicle = bandit:getVehicle()
-            if bvehicle then
-                bandit:changeState(ZombieOnGroundState.instance())
-                return {status=true, next="Follow", tasks=tasks}
-            else
-                print ("ENTER VEH")
-                local vx = bandit:getForwardDirection():getX()
-                local vy = bandit:getForwardDirection():getY()
-                local forwardVector = Vector3f.new(vx, vy, 0)
+    if SandboxVars.Bandits.General_EnterVehicles then
+        if vehicle then
+            if dist < 2.2 then
+                local bvehicle = bandit:getVehicle()
+                if bvehicle then
+                    bandit:changeState(ZombieOnGroundState.instance())
+                    return {status=true, next="Follow", tasks=tasks}
+                else
+                    print ("ENTER VEH")
+                    local vx = bandit:getForwardDirection():getX()
+                    local vy = bandit:getForwardDirection():getY()
+                    local forwardVector = Vector3f.new(vx, vy, 0)
 
-                for seat=1, 10 do
-                    if vehicle:isSeatInstalled(seat) and not vehicle:isSeatOccupied(seat) then
-                        bandit:enterVehicle(vehicle, seat, forwardVector)
-                        bandit:playSound("VehicleDoorOpen")
-                        break
+                    for seat=1, 10 do
+                        if vehicle:isSeatInstalled(seat) and not vehicle:isSeatOccupied(seat) then
+                            bandit:enterVehicle(vehicle, seat, forwardVector)
+                            bandit:playSound("VehicleDoorOpen")
+                            break
+                        end
                     end
                 end
             end
-        end
-    else
-        local bvehicle = bandit:getVehicle()
-        if bvehicle then
-            print ("EXIT VEH")
-            -- After exiting the vehicle, the companion is in the ongroundstate.
-            -- Additionally he is under the car. This is fixed in BanditUpdate loop. 
-            bandit:setVariable("BanditImmediateAnim", true)
-            bvehicle:exit(bandit)
-            bandit:playSound("VehicleDoorClose")
+        else
+            local bvehicle = bandit:getVehicle()
+            if bvehicle then
+                print ("EXIT VEH")
+                -- After exiting the vehicle, the companion is in the ongroundstate.
+                -- Additionally he is under the car. This is fixed in BanditUpdate loop. 
+                bandit:setVariable("BanditImmediateAnim", true)
+                bvehicle:exit(bandit)
+                bandit:playSound("VehicleDoorClose")
+            end
         end
     end
 
