@@ -1,5 +1,17 @@
 Bandit = Bandit or {}
 
+-- use only when needed because of required network traffic
+-- the brain will be updated in gmd so that new players who had
+-- no contact with the bandit will fetch the proper brain
+-- but also server will enforce client update so that other players
+-- who do have contact with the bandit will also get updated
+function Bandit.ForceSync(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    end
+end
+
 function Bandit.AddTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
     if brain then

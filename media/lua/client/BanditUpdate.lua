@@ -777,31 +777,33 @@ function BanditUpdate.Combat(bandit)
                     local potentialEnemy = BanditZombie.GetInstanceById(id)
                     if bandit:CanSee(potentialEnemy) then -- FIXME: add visibility cone
                         local potentialEnemySquare = potentialEnemy:getSquare()
-                        local lightLevel = potentialEnemySquare:getLightLevel(0)
-                        local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
-                        if not isWallTo and lightLevel > 0.31 then
-                            bestDist = dist
-                            
-                            --determine if bandit will be in combat mode
-                            if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
-                                local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
+                        if potentialEnemySquare then
+                            local lightLevel = potentialEnemySquare:getLightLevel(0)
+                            local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
+                            if not isWallTo and lightLevel > 0.31 then
+                                bestDist = dist
                                 
-                                -- the bandit may need to swich to melee weapon so we need to switch earier
-                                -- before target is in range
-                                local minRange = itemMelee:getMaxRange()
-                                if dist <= minRange then
-                                    enemyCharacter = potentialEnemy
-                                    combat = true
+                                --determine if bandit will be in combat mode
+                                if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
+                                    local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
+                                    
+                                    -- the bandit may need to swich to melee weapon so we need to switch earier
+                                    -- before target is in range
+                                    local minRange = itemMelee:getMaxRange()
+                                    if dist <= minRange then
+                                        enemyCharacter = potentialEnemy
+                                        combat = true
+                                    end
                                 end
-                            end
 
-                            --determine if bandit will be in shooting mode
-                            if Bandit.Can(bandit, "shoot") and weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < SandboxVars.Bandits.General_RifleRange - 6 then 
-                                enemyCharacter = potentialEnemy
-                                firing = true
-                            elseif Bandit.Can(bandit, "shoot") and weapons.secondary and  (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < SandboxVars.Bandits.General_PistolRange - 4 then
-                                enemyCharacter = potentialEnemy
-                                firing = true
+                                --determine if bandit will be in shooting mode
+                                if Bandit.Can(bandit, "shoot") and weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < SandboxVars.Bandits.General_RifleRange - 6 then 
+                                    enemyCharacter = potentialEnemy
+                                    firing = true
+                                elseif Bandit.Can(bandit, "shoot") and weapons.secondary and  (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < SandboxVars.Bandits.General_PistolRange - 4 then
+                                    enemyCharacter = potentialEnemy
+                                    firing = true
+                                end
                             end
                         end
                     end
@@ -1327,13 +1329,35 @@ end
 
 function BanditUpdate.OnHitZombie(zombie)
     if zombie:getVariableBoolean("Bandit") then
-        Bandit.Say(zombie, "HIT")
-        if Bandit.IsSleeping(zombie) then
+        local bandit = zombie
+        Bandit.Say(bandit, "HIT")
+        if Bandit.IsSleeping(bandit) then
             local task = {action="Time", lock=true, anim="GetUp", time=150}
-            Bandit.ClearTasks(zombie)
-            Bandit.AddTask(zombie, task)
-            Bandit.SetSleeping(zombie, false)
-            Bandit.SetProgramStage(zombie, "Prepare")
+            Bandit.ClearTasks(bandit)
+            Bandit.AddTask(bandit, task)
+            Bandit.SetSleeping(bandit, false)
+            Bandit.SetProgramStage(bandit, "Prepare")
+        end
+   
+        -- friendly attacked by player turns to a bandit
+        local attacker = bandit:getAttackedBy()
+        if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) then
+           
+            -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
+            local witnesses = BanditZombie.GetAllB()
+            for id, witness in pairs(witnesses) do
+                if not witness.brain.hostile then
+                    local dist = math.sqrt(math.pow(attacker:getX() - witness.x, 2) + math.pow(attacker:getY() - witness.y, 2))
+                    if dist < 12 then
+                        local friendly = BanditZombie.GetInstanceById(witness.id)
+                        if friendly:CanSee(attacker) then
+                            Bandit.SetHostile(friendly, true)
+                            Bandit.SetProgram(friendly, "Bandit", {})
+                            Bandit.ForceSync(friendly)
+                        end
+                    end
+                end
+            end
         end
     end
 end

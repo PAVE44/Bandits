@@ -26,6 +26,24 @@ ZSClient.Commands.UpdateVehicle = function(args)
     end
 end
 
+ZSClient.Commands.UpdateBandit = function(args)
+    local id = args.id
+    if id then
+        local brain = args
+        local bandit = BanditZombie.GetInstanceById(id)
+
+        -- update now, or if not loaded update gmd so it gets right when loaded later
+        if bandit then
+            BanditBrain.Update(bandit, brain)
+        else
+            local gmd = GetBanditModData()
+            if gmd.Queue[id] then
+                gmd.Queue[id] = nil
+            end
+        end
+    end
+end
+
 local onServerCommand = function(module, command, args)
     if ZSClient[module] and ZSClient[module][command] then
         local argStr = ""
