@@ -1337,11 +1337,6 @@ function BanditUpdate.OnBanditUpdate(zombie)
         if done or task.time == 0 then 
             task.state = "COMPLETED"
         end
-
-        if task.anim == "AimRifle" then
-            bandit:setIsAiming(true)
-        end
-
         Bandit.UpdateTask(bandit, task)
 
     elseif task.state == "COMPLETED" then
@@ -1349,11 +1344,6 @@ function BanditUpdate.OnBanditUpdate(zombie)
         if task.endurance then
             Bandit.UpdateEndurance(bandit, task.endurance)
         end
-
-        if task.anim == "AimRifle" then
-            bandit:setIsAiming(false)
-        end
-        
 
         local done = ZombieActions[task.action].onComplete(bandit, task)
         if done then 
