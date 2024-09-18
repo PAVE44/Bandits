@@ -45,6 +45,7 @@ end
 
 ZombiePrograms.Companion.Follow = function(bandit)
     local tasks = {}
+    local cell = getCell()
     -- local weapons = Bandit.GetWeapons(bandit)
  
     -- If at guardpost, switch to the CompanionGuard program.
@@ -154,6 +155,70 @@ ZombiePrograms.Companion.Follow = function(bandit)
     if guardpost then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
         return {status=true, next="Follow", tasks=tasks}
+    end
+
+    -- look for guns
+    if Bandit.IsOutOfAmmo(bandit) then
+
+        -- deadbodies
+        for z=0, 2 do
+            for y=-12, 12 do
+                for x=-12, 12 do
+                    local square = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, z)
+                    if square then
+                        local body = square:getDeadBody()
+                        if body then
+
+                            -- we found one body, but there my be more bodies on that square and we need to check all
+                            local objects = square:getStaticMovingObjects()
+                            for i=0, objects:size()-1 do
+                                local object = objects:get(i)
+                                if instanceof (object, "IsoDeadBody") then
+                                    local body = object
+                                    container = body:getContainer()
+                                    if container and not container:isEmpty() then
+                                        local subTasks = BanditPrograms.LootContainer(bandit, body, container)
+                                        if #subTasks > 0 then
+                                            for _, subTask in pairs(subTasks) do
+                                                table.insert(tasks, subTask)
+                                            end
+                                            return {status=true, next="Prepare", tasks=tasks}
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        -- containers in rooms
+        local room = bandit:getSquare():getRoom()
+        if room then
+            local roomDef = room:getRoomDef()
+            for x=roomDef:getX(), roomDef:getX2() do
+                for y=roomDef:getY(), roomDef:getY2() do
+                    local square = cell:getGridSquare(x, y, roomDef:getZ())
+                    if square then
+                        local objects = square:getObjects()
+                        for i=0, objects:size() - 1 do
+                            local object = objects:get(i)
+                            local container = object:getContainer()
+                            if container and not container:isEmpty() then
+                                local subTasks = BanditPrograms.LootContainer(bandit, object, container)
+                                if #subTasks > 0 then
+                                    for _, subTask in pairs(subTasks) do
+                                        table.insert(tasks, subTask)
+                                    end
+                                    return {status=true, next="Prepare", tasks=tasks}
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end 
     end
 
     -- No enemies, no guardposts, so follow the player.

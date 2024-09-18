@@ -55,17 +55,33 @@ end
 
 ZombieActions.Hit = {}
 ZombieActions.Hit.onStart = function(bandit, task)
-    local anim = false
+    local anim 
+    local sound
 
-    if task.prone then
-        local attacks = {"Attack2HFloor", "Attack2HStamp"}
-        anim = attacks[1+ZombRand(#attacks)]
+    local enemy = BanditZombie.GetInstanceById(task.eid) or BanditPlayer.getPlayerById(task.eid)
+    if not enemy then return true end
+    
+    local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
+    local meleeItem = InventoryItemFactory.CreateItem(task.weapon)
+    local meleeItemType = WeaponType.getWeaponType(meleeItem)
+
+    local sound = meleeItem:getSwingSound()
+    if bandit:isPrimaryEquipped("AuthenticZClothing.Chainsaw") then
+        local emitter = bandit:getEmitter()
+        emitter:stopSoundByName("ChainsawIdle")
+        sound = "ChainsawAttack1"
+    end
+
+    if prone then
+        if ZombRand(2) == 0 then
+            anim = "Attack2HFloor"
+        else
+            anim = "Attack2HStamp"
+            sound = "AttackStomp"
+        end
     else
-        local meleeItem = InventoryItemFactory.CreateItem(task.weapon)
-        local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
-        local hands = bandit:getVariableString("BanditPrimaryType")
-        local attacks = false
+        local attacks
         if meleeItemType == WeaponType.twohanded then
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         -- elseif meleeItemType == WeaponType.heavy then
@@ -80,15 +96,14 @@ ZombieActions.Hit.onStart = function(bandit, task)
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         end
 
-        --[[
-        if bandit:isPrimaryEquipped("AuthenticZClothing.Chainsaw") then
-            attacks = {"AttackChainsaw1", "AttackChainsaw2"}
-        end]]
-
         if attacks then 
             anim = attacks[1+ZombRand(#attacks)]
-            -- print (anim)
+
         end
+    end
+
+    if sound then
+        bandit:playSound(sound)
     end
 
     if anim then
@@ -121,15 +136,12 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         end
 
         if Bandit.IsHostile(bandit) then
-            local playerList = BanditPlayer.GetPlayers()
-            for i=0, playerList:size()-1 do
-                local player = playerList:get(i)
-                if player then
-                    local eid = BanditUtils.GetCharacterID(player)
-                    if player:isAlive() and eid == task.eid then
-                        Hit (bandit, item, player)
-                        if task.weapon ~= "AuthenticZClothing.Chainsaw" then return false end
-                    end
+            local player = BanditPlayer.getPlayerById(task.eid)
+            if player then
+                local eid = BanditUtils.GetCharacterID(player)
+                if player:isAlive() and eid == task.eid then
+                    Hit (bandit, item, player)
+                    if task.weapon ~= "AuthenticZClothing.Chainsaw" then return false end
                 end
             end
         end

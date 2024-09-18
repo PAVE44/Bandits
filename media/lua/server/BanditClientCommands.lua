@@ -1,6 +1,13 @@
 BanditServer = {}
 BanditServer.Commands = {}
-BanditServer.Broadcaster = {}
+BanditServer.Players = {}
+
+BanditServer.Players.PlayerUpdate = function(player, args)
+    local gmd = GetBanditModDataPlayers()
+    local id = args.id
+    gmd.OnlinePlayers[id] = args
+end
+
 
 BanditServer.Commands.GuardpostToggle = function(player, args)
     local gmd = GetBanditModData()
@@ -15,12 +22,6 @@ BanditServer.Commands.GuardpostToggle = function(player, args)
     end
 end
 
-BanditServer.Commands.PlayerUpdate = function(player, args)
-    local gmd = GetBanditModData()
-    local id = args.id
-    gmd.OnlinePlayers[id] = args
-end
-
 BanditServer.Commands.BanditRemove  = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
@@ -30,7 +31,7 @@ BanditServer.Commands.BanditRemove  = function(player, args)
     end
 end
 
-BanditServer.Commands.BanditUpdate  = function(player, args)
+BanditServer.Commands.BanditUpdate = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
     if gmd.Queue[id] then
@@ -43,8 +44,25 @@ BanditServer.Commands.BanditUpdate  = function(player, args)
         brain.tasks = {}
 
         gmd.Queue[id] = brain
-        -- print ("[INFO] Bandit sync: " .. id)
+        print ("[INFO] Bandit sync: " .. id)
         sendServerCommand('Commands', 'UpdateBandit', brain)
+    end
+end
+
+BanditServer.Commands.BanditUpdatePart = function(player, args)
+    local gmd = GetBanditModData()
+    local id = args.id
+    if id and gmd.Queue[id] then
+
+        local brain = gmd.Queue[id]
+        for k, v in pairs(args) do
+            brain[k] = v
+            print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
+        end
+
+        gmd.Queue[id] = brain
+
+        sendServerCommand('Commands', 'UpdateBanditPart', args)
     end
 end
 
@@ -316,7 +334,12 @@ local onClientCommand = function(module, command, player, args)
         end
         -- print ("received " .. module .. "." .. command .. " "  .. argStr)
         BanditServer[module][command](player, args)
-        TransmitBanditModData()
+
+        if module == "Commands" then
+            TransmitBanditModData()
+        elseif module == "Players" then
+            TransmitBanditModDataPlayers()
+        end
     end
 end
 

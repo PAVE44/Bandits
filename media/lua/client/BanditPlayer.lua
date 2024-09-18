@@ -13,7 +13,7 @@ BanditPlayer.UpdatePlayersOnline = function ()
             playerData.id = BanditUtils.GetCharacterID(player)
             playerData.name = player:getDisplayName()
             playerData.isGhost = player:isGhostMode()
-            sendClientCommand(player, 'Commands', 'PlayerUpdate', playerData)
+            sendClientCommand(player, 'Players', 'PlayerUpdate', playerData)
         end
         local gmd = GetBanditModData()
         for _, p in pairs(gmd.OnlinePlayers) do
@@ -23,7 +23,7 @@ BanditPlayer.UpdatePlayersOnline = function ()
 end
 
 BanditPlayer.IsGhost = function(player)
-    local gmd = GetBanditModData()
+    local gmd = GetBanditModDataPlayers()
     local id = BanditUtils.GetCharacterID(player)
     if gmd.OnlinePlayers[id] then
         return gmd.OnlinePlayers[id].isGhost
@@ -42,6 +42,19 @@ BanditPlayer.GetPlayers = function()
         playerList = IsoPlayer.getPlayers()
     end
     return playerList
+end
+
+BanditPlayer.getPlayerById = function(id)
+    local playerList = BanditPlayer.GetPlayers()
+    for i=0, playerList:size()-1 do
+        local player = playerList:get(i)
+        if player then
+            local pid = BanditUtils.GetCharacterID(player)
+            if pid == id then
+                return player
+            end
+        end
+    end
 end
 
 BanditPlayer.GetMasterPlayer = function(bandit)

@@ -68,7 +68,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
                         -- determine if safe
                         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
                         local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-                        if closestZombie.dist > 7 and closestBandit.dist > 7 then 
+                        if closestZombie.dist > 3 and closestBandit.dist > 3 then 
                             temporaryGuardpost = true
                         end
                     end
@@ -108,9 +108,29 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         table.insert(tasks, task)
         table.insert(tasks, task)
         table.insert(tasks, task)
-    elseif not outOfAmmo then
+    elseif action == 4 then
+        local task = {action="Time", anim="PullAtCollar", time=200}
+        table.insert(tasks, task)
+    elseif action == 5 then
+        local task = {action="Time", anim="Sneze", time=200}
+        table.insert(tasks, task)
+        addSound(getPlayer(), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
+    elseif action == 6 then
+        local task = {action="Time", anim="WipeBrow", time=200}
+        table.insert(tasks, task)
+    elseif action == 7 then
+        local task = {action="Time", anim="WipeHead", time=200}
+        table.insert(tasks, task)
 
-        local task = {action="FaceLocation", anim="AimRifle", x=x1, y=y1, time=100}
+    elseif not outOfAmmo then
+        local anim
+        local weaponType = bandit:getVariableString("BanditPrimaryType")
+        if weaponType == "rifle" then anim = "AimRifle" end
+        if weaponType == "handgun" then anim = "AimPistol" end
+        local task = {action="FaceLocation", anim=anim, x=x1, y=y1, time=100}
+        table.insert(tasks, task)
+    else
+        local task = {action="Time", anim="ShiftWeight", time=200}
         table.insert(tasks, task)
     end
 

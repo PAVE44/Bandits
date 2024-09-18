@@ -1,20 +1,18 @@
 Bandit = Bandit or {}
 
--- use only when needed because of required network traffic
--- the brain will be updated in gmd so that new players who had
--- no contact with the bandit will fetch the proper brain
--- but also server will enforce client update so that other players
--- who do have contact with the bandit will also get updated
-function Bandit.ForceSync(zombie)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
-    end
+function Bandit.ForceSyncPart(zombie, syncData)
+    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdatePart', syncData)
 end
 
 function Bandit.AddTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
     if brain then
+
+        if #brain.tasks > 9 then
+            print ("[WARN] Task queue too big, flushing!")
+            brain.tasks = {}
+        end
+    
         table.insert(brain.tasks, task)
         BanditBrain.Update(zombie, brain)
     end
@@ -23,6 +21,12 @@ end
 function Bandit.AddTaskFirst(zombie, task)
     local brain = BanditBrain.Get(zombie)
     if brain then
+
+        if #brain.tasks > 9 then
+            print ("[WARN] Task queue too big, flushing!")
+            brain.tasks = {}
+        end
+
         table.insert(brain.tasks, 1, task)
         BanditBrain.Update(zombie, brain)
     end
@@ -30,33 +34,41 @@ end
 
 function Bandit.GetTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    if #brain.tasks > 0 then
-        return brain.tasks[1]
+    if brain then
+        if #brain.tasks > 0 then
+            return brain.tasks[1]
+        end
     end
     return nil
 end
 
 function Bandit.HasTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    if #brain.tasks > 0 then
-        return true
+    if brain then
+        if #brain.tasks > 0 then
+            return true
+        end
     end
     return false
 end
 
 function Bandit.HasTaskType(zombie, taskType)
     local brain = BanditBrain.Get(zombie)
-    if #brain.tasks > 0 and brain.tasks[1].action == taskType then
-        return true
+    if brain then
+        if #brain.tasks > 0 and brain.tasks[1].action == taskType then
+            return true
+        end
     end
     return false
 end
 
 function Bandit.HasMoveTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    for _, task in pairs(brain.tasks) do
-        if task.action == "Move" or task.action == "GoTo" then
-            return true
+    if brain then
+        for _, task in pairs(brain.tasks) do
+            if task.action == "Move" or task.action == "GoTo" then
+                return true
+            end
         end
     end
     return false
@@ -64,9 +76,11 @@ end
 
 function Bandit.HasActionTask(zombie)
     local brain = BanditBrain.Get(zombie)
-    for _, task in pairs(brain.tasks) do
-        if task.action ~= "Move" and task.action ~= "GoTo" then
-            return true
+    if brain then
+        for _, task in pairs(brain.tasks) do
+            if task.action ~= "Move" and task.action ~= "GoTo" then
+                return true
+            end
         end
     end
     return false
@@ -91,28 +105,32 @@ end
 
 function Bandit.ClearTasks(zombie)
     local brain = BanditBrain.Get(zombie)
-    local newtasks = {}
-    for _, task in pairs(brain.tasks) do
-        if task.lock == true then
-            table.insert(newtasks, task)
+    if brain then
+        local newtasks = {}
+        for _, task in pairs(brain.tasks) do
+            if task.lock == true then
+                table.insert(newtasks, task)
+            end
         end
-    end
 
-    brain.tasks = newtasks
-    BanditBrain.Update(zombie, brain)
+        brain.tasks = newtasks
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.ClearOtherTasks(zombie, exception)
     local brain = BanditBrain.Get(zombie)
-    local newtasks = {}
-    for _, task in pairs(brain.tasks) do
-        if task.lock == true or task.action == exception then
-            table.insert(newtasks, task)
+    if brain then
+        local newtasks = {}
+        for _, task in pairs(brain.tasks) do
+            if task.lock == true or task.action == exception then
+                table.insert(newtasks, task)
+            end
         end
-    end
 
-    brain.tasks = newtasks
-    BanditBrain.Update(zombie, brain)
+        brain.tasks = newtasks
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.UpdateEndurance(zombie, delta)
@@ -137,35 +155,47 @@ end
 
 function Bandit.ForceStationary(zombie, stationary)
     local brain = BanditBrain.Get(zombie)
-    brain.stationary = stationary
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        brain.stationary = stationary
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.IsForceStationary(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.stationary
+    if brain then
+        return brain.stationary
+    end
 end
 
 function Bandit.SetSleeping(zombie, sleeping)
     local brain = BanditBrain.Get(zombie)
-    brain.sleeping = sleeping
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        brain.sleeping = sleeping
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.IsSleeping(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.sleeping
+    if brain then
+        return brain.sleeping
+    end
 end
 
 function Bandit.SetCapabilities(zombie, capabilities)
     local brain = BanditBrain.Get(zombie)
-    brain.capabilities = capabilities
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        brain.capabilities = capabilities
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.Can(zombie, capability)
     local brain = BanditBrain.Get(zombie)
-    if brain.capabilities[capability] then return true end
+    if brain then
+        if brain.capabilities[capability] then return true end
+    end
     return false
 end
 
@@ -174,105 +204,130 @@ end
 -- Bandit ownership
 function Bandit.GetMaster(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.master
+    if brain then
+        return brain.master
+    end
 end
 
 function Bandit.SetMaster(zombie, master)
     local brain = BanditBrain.Get(zombie)
-    brain.master = master
-    BanditBrain.Update(zombie, brain)
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    if brain then
+        brain.master = master
+        BanditBrain.Update(zombie, brain)
+        -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    end
 end
 
 
 -- Bandit Programs
 function Bandit.GetProgram(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.program
+    if brain then
+        return brain.program
+    end
 end
 
 function Bandit.SetProgram(zombie, program, programParams)
     local brain = BanditBrain.Get(zombie)
-    brain.program = {}
-    brain.program.name = program
-    brain.program.stage = "Prepare"
-    brain.program.params = {}
-    for k, v in pairs(programParams) do
-        brain.program.params[k] = v
-    end
+    if brain then
+        brain.program = {}
+        brain.program.name = program
+        brain.program.stage = "Prepare"
+        brain.program.params = {}
+        for k, v in pairs(programParams) do
+            brain.program.params[k] = v
+        end
 
-    BanditBrain.Update(zombie, brain)
+        BanditBrain.Update(zombie, brain)
+    end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 function Bandit.SetProgramStage(zombie, stage)
     local brain = BanditBrain.Get(zombie)
-    brain.program.stage = stage
-    BanditBrain.Update(zombie, brain)
+    if brain then
+        brain.program.stage = stage
+        BanditBrain.Update(zombie, brain)
+    end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
 -- Bandit hostility
 function Bandit.SetHostile(zombie, hostile)
     local brain = BanditBrain.Get(zombie)
-    brain.hostile = hostile
-    BanditBrain.Update(zombie, brain)
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    if brain then
+        brain.hostile = hostile
+        BanditBrain.Update(zombie, brain)
+    end
 end
 
 function Bandit.IsHostile(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.hostile
+    if brain then
+        return brain.hostile
+    end
 end
 
 -- Bandit weapons
 function Bandit.GetWeapons(zombie)
     local brain = BanditBrain.Get(zombie)
-    return brain.weapons
+    if brain then
+        return brain.weapons
+    end
 end
 
 function Bandit.GetBestWeapon(zombie)
     local brain = BanditBrain.Get(zombie)
-    local weapons = brain.weapons
-    if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
-        return weapons.primary.name
-    elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
-        return weapons.secondary.name
-    else
-        return weapons.melee
+    if brain then
+        local weapons = brain.weapons
+        if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
+            return weapons.primary.name
+        elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
+            return weapons.secondary.name
+        else
+            return weapons.melee
+        end
     end
 end
 
 function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
-    local weapons = brain.weapons
-    if weapons.primary.bulletsLeft == 0 and weapons.primary.magCount == 0 and weapons.secondary.bulletsLeft == 0 and weapons.secondary.magCount == 0 then
-        return true
+    if brain then
+        local weapons = brain.weapons
+        if weapons.primary.bulletsLeft == 0 and weapons.primary.magCount == 0 and weapons.secondary.bulletsLeft == 0 and weapons.secondary.magCount == 0 then
+            return true
+        end
     end
     return false
 end
 
 function Bandit.SetWeapons(zombie, weapons)
     local brain = BanditBrain.Get(zombie)
-    brain.weapons = weapons
-    BanditBrain.Update(zombie, brain)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    if brain then
+        brain.weapons = weapons
+        BanditBrain.Update(zombie, brain)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
+        -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    end
 end
 
 -- Inventory
 function Bandit.SetInventory(zombie, inventory)
     local brain = BanditBrain.Get(zombie)
-    brain.inventory = inventory
-    BanditBrain.Update(zombie, brain)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    if brain then
+        brain.inventory = inventory
+        BanditBrain.Update(zombie, brain)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
+        -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
+    end
 end
 
 function Bandit.Has(zombie, item)
     local brain = BanditBrain.Get(zombie)
-    for _, i in pairs(brain.inventory) do
-        if i == item then return true end
+    if brain then
+        for _, i in pairs(brain.inventory) do
+            if i == item then return true end
+        end
     end
     return false
 end
@@ -280,9 +335,11 @@ end
 -- Bandit loot inventory
 function Bandit.SetLoot(zombie, loot)
     local brain = BanditBrain.Get(zombie)
-    brain.loot = loot
-    BanditBrain.Update(zombie, brain)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    if brain then
+        brain.loot = loot
+        BanditBrain.Update(zombie, brain)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
@@ -398,7 +455,7 @@ function Bandit.Say(zombie, phrase, force)
             length = 0.5
         elseif phrase == "BREACH" then
             sound = "ZSBreach_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 4
+            length = 10
         elseif phrase == "RELOADING" then
             sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
             length = 4
@@ -419,22 +476,22 @@ function Bandit.Say(zombie, phrase, force)
             length = 8
         elseif phrase == "INSIDE" then
             sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 6
+            length = 25
         elseif phrase == "OUTSIDE" then
             sound = "ZSOutside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 6
+            length = 25
         elseif phrase == "UPSTAIRS" then
             sound = "ZSUpstairs_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 6
+            length = 25
         elseif phrase == "ROOM_KITCHEN" then
             sound = "ZSRoom_Kitchen_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 6
+            length = 25
         elseif phrase == "ROOM_BATHROOM" then
             sound = "ZSRoom_Bathroom_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 6
+            length = 25
         elseif phrase == "DEFENDER_SPOTTED" then
             sound = "ZSDefender_Spot_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
-            length = 5
+            length = 8
         end
 
         if sound then

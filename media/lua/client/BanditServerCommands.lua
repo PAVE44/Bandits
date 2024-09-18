@@ -26,15 +26,21 @@ ZSClient.Commands.UpdateVehicle = function(args)
     end
 end
 
-ZSClient.Commands.UpdateBandit = function(args)
+ZSClient.Commands.UpdateBanditPart = function(args)
     local id = args.id
     if id then
-        local brain = args
         local bandit = BanditZombie.GetInstanceById(id)
-
+        
         -- update now, or if not loaded update gmd so it gets right when loaded later
         if bandit then
-            BanditBrain.Update(bandit, brain)
+            local brain = BanditBrain.Get(bandit)
+            if brain then
+                for k, v in pairs(args) do
+                    brain[k] = v
+                    print ("[INFO] Bandit client sync id: " .. id .. " key: " .. k)
+                end
+                BanditBrain.Update(bandit, brain)
+            end
         else
             local gmd = GetBanditModData()
             if gmd.Queue[id] then

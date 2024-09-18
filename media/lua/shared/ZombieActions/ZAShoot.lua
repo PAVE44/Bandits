@@ -676,5 +676,8 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
         end
     end
 
+    zombie:setBumpDone(true)
+    zombie:setVariable("BumpAnimFinished", true)
+
     return true
 end

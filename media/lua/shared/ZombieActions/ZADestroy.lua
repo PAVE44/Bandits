@@ -34,7 +34,7 @@ ZombieActions.Destroy.onComplete = function(zombie, task)
         if thumpable then
             local health = thumpable:getHealth()
             print ("thumpable health: " .. thumpable:getHealth())
-            health = health - ZombRand(50)
+            health = health - 40
             if health < 0 then health = 0 end
             if health == 0 then
                 thumpable:destroy()

@@ -175,6 +175,23 @@ function BanditMenu.ShowBrain (player, square, zombie)
     
 end
 
+function BanditMenu.RemoveAllBandits(player)
+    -- local args = {a=1}
+    -- sendClientCommand(getPlayer(), 'Commands', 'BanditClear', args)
+    local gmd = GetBanditModData()
+    local cnt = 0
+    for _, q in pairs(gmd.Queue) do
+        cnt = cnt + 1
+    end
+    print ("REGISTERED BANDITS: " .. cnt)
+
+    for _, q in pairs(gmd.Queue) do
+        if #q.tasks > 10 then
+            print (q.id .. ": " .. #q.tasks)
+        end
+    end
+end
+
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local square = clickedSquare
     local player = getSpecificPlayer(playerID)
@@ -231,11 +248,13 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
 
         context:addOption("[DGB] Spawn Defenders", player, BanditMenu.SpawnDefenders, square)
-        context:addOption("[DGB] Spawn Event: Baseball Match", player, BanditMenu.BaseballMatch, square)
+        context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
+
+        -- context:addOption("[DGB] Spawn Event: Baseball Match", player, BanditMenu.BaseballMatch, square)
         
         context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
-        context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
-        context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
+        -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
+        -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
         
     end
