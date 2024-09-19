@@ -1105,6 +1105,7 @@ function BanditUpdate.Zombie(zombie)
 
                         SwipeStatePlayer.splash(bandit, teeth, zombie)
 
+                        -- bandit:setHitFromBehind(zombie:isBehind(bandit))
                         bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                         Bandit.UpdateInfection(bandit, 0.001)
                         if bandit:getHealth() <= 0 then
@@ -1353,7 +1354,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     end
 end
 
-function BanditUpdate.OnHitZombie(zombie)
+function BanditUpdate.OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     if zombie:getVariableBoolean("Bandit") then
         local bandit = zombie
         Bandit.Say(bandit, "HIT")
@@ -1366,8 +1367,7 @@ function BanditUpdate.OnHitZombie(zombie)
         end
    
         -- friendly attacked by player turns to a bandit
-        local attacker = bandit:getAttackedBy()
-        if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and attacker:getDisplayName() ~= "Bob" and attacker:getDisplayName() ~= "Kate" then
+        if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and attacker:getDisplayName() == getPlayer():getDisplayName() then
            
             -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
             local witnesses = BanditZombie.GetAllB()
