@@ -76,7 +76,7 @@ local function AimWeapon(bandit, enemyCharacter, slot)
         end
 
         print ("AIM: " .. (aimTimeMin + aimTimeSurp))
-        local task = {action="Aim", anim=anim, time=aimTimeMin + aimTimeSurp}
+        local task = {action="Aim", anim=anim, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=aimTimeMin + aimTimeSurp}
         table.insert(tasks, task)
     end
     return tasks
