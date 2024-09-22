@@ -1005,7 +1005,6 @@ function BanditUpdate.Combat(bandit)
                             end
 
                             if not Bandit.IsAim(bandit) then
-                                print ("----------- NEED AIM!!!")
                                 local stasks = AimWeapon(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
                             end
@@ -1388,12 +1387,12 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if not task.action then return end
     if not task.state then task.state = "NEW" end
 
-    -- Update aim loss if necessary
-    if task.action ~= "Shoot" and task.action ~= "Aim" then
-        Bandit.SetAim(bandit, false)
-    end
-
     if task.state == "NEW" then
+
+        -- Update aim loss if necessary
+        if task.action ~= "Shoot" and task.action ~= "Aim" then
+            Bandit.SetAim(bandit, false)
+        end
 
         if task.sound then
             bandit:playSound(task.sound)
