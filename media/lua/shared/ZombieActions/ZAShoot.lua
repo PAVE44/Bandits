@@ -418,12 +418,20 @@ local function Hit(shooter, item, victim)
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)
         else
-            if victim:isSprinting() or (victim:isRunning() and ZombRand(8) == 1) then
+            if instanceof(victim, "IsoPlayer") and victim:isSprinting() or (victim:isRunning() and ZombRand(8) == 1) then
                 victim:clearVariable("BumpFallType")
                 victim:setBumpType("stagger")
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             else
+                victim:setAttackedBy(shooter)
+                victim:setHitFromBehind(shooter:isBehind(victim))
+
+                if instanceof(victim, "IsoZombie") then
+                    victim:setHitAngle(shooter:getForwardDirection())
+                    victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+                end
+
                 victim:Hit(item, tempShooter, 6, false, 1, false)
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then
@@ -543,7 +551,7 @@ local function ManageLineOfFire (shooter, victim)
                             end
 
                             if partRandom <= 4 then
-                                local dmg = 20 + ZombRand(5)
+                                local dmg = 12
                                 vehiclePart:damage(dmg)
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
@@ -551,7 +559,7 @@ local function ManageLineOfFire (shooter, victim)
                                 square:playSound("BreakGlassItem")
                                 return false
                             elseif partRandom <= 12 then
-                                local dmg = 20 + ZombRand(10)
+                                local dmg = 12
                                 vehiclePart:damage(dmg)
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
@@ -563,7 +571,7 @@ local function ManageLineOfFire (shooter, victim)
                                     return false
                                 end
                             elseif partRandom <= 17 then
-                                local dmg = 15 + ZombRand(5)
+                                local dmg = 9
                                 vehiclePart:damage(dmg)
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
@@ -573,7 +581,7 @@ local function ManageLineOfFire (shooter, victim)
                                     return false
                                 end
                             elseif partRandom <= 21 then
-                                local dmg = 10 + ZombRand(30)
+                                local dmg = 7
                                 vehiclePart:damage(dmg)
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
@@ -616,10 +624,17 @@ end
 ZombieActions.Shoot.onWorking = function(zombie, task)
     zombie:faceLocationF(task.x, task.y)
 
+    local bumpType = zombie:getBumpType()
+    if bumpType ~= task.anim then return false end
+
     return false
 end
 
 ZombieActions.Shoot.onComplete = function(zombie, task)
+
+    local bumpType = zombie:getBumpType()
+    if bumpType ~= task.anim then return true end
+
     local shooter = zombie
     local cell = shooter:getSquare():getCell()
 

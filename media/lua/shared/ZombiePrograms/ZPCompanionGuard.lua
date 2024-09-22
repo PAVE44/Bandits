@@ -112,7 +112,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         local task = {action="Time", anim="PullAtCollar", time=200}
         table.insert(tasks, task)
     elseif action == 5 then
-        local task = {action="Time", anim="Sneze", time=200}
+        local task = {action="Time", anim="Sneeze", time=200}
         table.insert(tasks, task)
         addSound(getPlayer(), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
     elseif action == 6 then

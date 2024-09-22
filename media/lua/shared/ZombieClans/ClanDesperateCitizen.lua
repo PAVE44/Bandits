@@ -12,7 +12,7 @@ BanditClan.DesperateCitizen.name = "Desperate Cizizen"
 BanditClan.DesperateCitizen.femaleChance = 40
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.DesperateCitizen.health = 1
+BanditClan.DesperateCitizen.health = 2
 
 -- if the bandit will eat player's body after death
 BanditClan.DesperateCitizen.eatBody = false
@@ -32,6 +32,28 @@ table.insert(BanditClan.DesperateCitizen.Outfits, "Generic01")
 table.insert(BanditClan.DesperateCitizen.Outfits, "Punk")
 table.insert(BanditClan.DesperateCitizen.Outfits, "Rocker")
 table.insert(BanditClan.DesperateCitizen.Outfits, "Tourist")
+table.insert(BanditClan.DesperateCitizen.Outfits, "BaseballFan_KY")
+table.insert(BanditClan.DesperateCitizen.Outfits, "BaseballFan_Rangers")
+table.insert(BanditClan.DesperateCitizen.Outfits, "BaseballFan_Z")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Bedroom")
+table.insert(BanditClan.DesperateCitizen.Outfits, "BoxingBlue")
+table.insert(BanditClan.DesperateCitizen.Outfits, "BoxingRed")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Chef")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Cyclist")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Doctor")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Fireman")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Fossoil")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Gas2Go")
+table.insert(BanditClan.DesperateCitizen.Outfits, "GigaMart_Employee")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Hobbo")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Pharmacist")
+table.insert(BanditClan.DesperateCitizen.Outfits, "ShellSuit_Black")
+table.insert(BanditClan.DesperateCitizen.Outfits, "ShellSuit_Blue")
+table.insert(BanditClan.DesperateCitizen.Outfits, "ShellSuit_Green")
+table.insert(BanditClan.DesperateCitizen.Outfits, "ShellSuit_Pink")
+table.insert(BanditClan.DesperateCitizen.Outfits, "ShellSuit_Teal")
+table.insert(BanditClan.DesperateCitizen.Outfits, "SportsFan")
+table.insert(BanditClan.DesperateCitizen.Outfits, "Varsity")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.DesperateCitizen.Outfits, "AuthenticHomeless")
@@ -53,6 +75,7 @@ table.insert(BanditClan.DesperateCitizen.Melee, "Base.GardenFork")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.GridlePan")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Hammer")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.HockeyStick")
+table.insert(BanditClan.DesperateCitizen.Melee, "Base.IceHockeyStick")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.MetalPipe")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.PipeWrench")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Plunger")
@@ -60,6 +83,9 @@ table.insert(BanditClan.DesperateCitizen.Melee, "Base.GuitarElectricRed")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Saucepan")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.TableLeg")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Wrench")
+table.insert(BanditClan.DesperateCitizen.Melee, "Base.Plank")
+table.insert(BanditClan.DesperateCitizen.Melee, "Base.LeadPipe")
+table.insert(BanditClan.DesperateCitizen.Melee, "Base.WoodenMallet")
 
 -- available primary weapons
 BanditClan.DesperateCitizen.Primary = BanditClan.DesperateCitizen.Primary or BanditWeapons.Primary

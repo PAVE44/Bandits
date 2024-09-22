@@ -31,24 +31,6 @@ BanditServer.Commands.BanditRemove  = function(player, args)
     end
 end
 
-BanditServer.Commands.BanditUpdate = function(player, args)
-    local gmd = GetBanditModData()
-    local id = args.id
-    if gmd.Queue[id] then
-
-        -- The brain is stored in zombie moddata, but that works only for one player
-        -- global moddata plays as a central repository of truth for other clients to synchronize
-        -- once they get in contact with the same bandit
-        -- Tasks are temporary and handled individually by clients so we do not sync them.        
-        local brain = args
-        brain.tasks = {}
-
-        gmd.Queue[id] = brain
-        print ("[INFO] Bandit sync: " .. id)
-        sendServerCommand('Commands', 'UpdateBandit', brain)
-    end
-end
-
 BanditServer.Commands.BanditUpdatePart = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
@@ -122,7 +104,15 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.program = {}
             brain.program.name = event.program.name
             brain.program.stage = event.program.stage
-            brain.program.params = {}
+
+            -- random DNA
+            local dna = {}
+            dna.slow = BanditUtils.CoinFlip()
+            dna.blind = BanditUtils.CoinFlip()
+            dna.sneak = BanditUtils.CoinFlip()
+            dna.unfit = BanditUtils.CoinFlip()
+            dna.coward = BanditUtils.CoinFlip()
+            brain.dna = dna
 
             -- program specific capabilities independent from clan
             brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
@@ -130,6 +120,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- action and state flags
             brain.stationary = false
             brain.sleeping = false
+            brain.aiming = false
             brain.endurance = 1.00
             brain.speech = 0.00
             brain.sound = 0.00
@@ -249,6 +240,7 @@ BanditServer.Commands.VehicleSpawn = function(player, args)
             local cond = (2 + ZombRand(8)) / 10
             vehicle:setGeneralPartCondition(cond, 80)
             if args.engine then
+                vehicle:setHotwired(true)
                 vehicle:tryStartEngine(true)
                 vehicle:engineDoStartingSuccess()
                 vehicle:engineDoRunning()

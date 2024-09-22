@@ -28,6 +28,14 @@ local function Hit(attacker, item, victim)
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             else
+                victim:setAttackedBy(attacker)
+                victim:setHitFromBehind(attacker:isBehind(victim))
+
+                if instanceof(victim, "IsoZombie") then
+                    victim:setHitAngle(attacker:getForwardDirection())
+                    victim:setPlayerAttackPosition(victim:testDotSide(attacker))
+                end
+
                 victim:Hit(item, tempAttacker, 3, false, 1, false)
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then

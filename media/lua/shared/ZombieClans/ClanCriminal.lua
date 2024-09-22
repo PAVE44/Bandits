@@ -28,6 +28,7 @@ BanditClan.Criminal.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}
 table.insert(BanditClan.Criminal.Outfits, "Thug")
 table.insert(BanditClan.Criminal.Outfits, "Redneck")
+table.insert(BanditClan.Criminal.Outfits, "Young")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Criminal.Outfits, "AuthenticBankRobber")

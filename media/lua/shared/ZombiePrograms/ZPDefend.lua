@@ -54,7 +54,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
     else
         -- guarding
         Bandit.SetSleeping(bandit, false)
-        local action = ZombRand(50)
+        local action = ZombRand(30)
         if action == 0 then
             local task = {action="Time", anim="Cough", time=200}
             table.insert(tasks, task)
@@ -65,6 +65,18 @@ ZombiePrograms.Defend.Wait = function(bandit)
             local task = {action="Time", anim="Smoke", time=200}
             table.insert(tasks, task)
             table.insert(tasks, task)
+            table.insert(tasks, task)
+        elseif action == 3 then
+            local task = {action="Time", anim="PullAtCollar", time=200}
+            table.insert(tasks, task)
+        elseif action == 4 then
+            local task = {action="Time", anim="Sneeze", time=200}
+            table.insert(tasks, task)
+        elseif action == 5 then
+            local task = {action="Time", anim="WipeBrow", time=200}
+            table.insert(tasks, task)
+        elseif action == 6 then
+            local task = {action="Time", anim="WipeHead", time=200}
             table.insert(tasks, task)
         else
             local task = {action="Time", anim="ShiftWeight", time=200}
@@ -86,10 +98,20 @@ ZombiePrograms.Defend.Wait = function(bandit)
                     if player:isSneaking() then spotDist = spotDist - 3 end
                     local dist = math.sqrt(math.pow(player:getX() - bandit:getX(), 2) + math.pow(player:getY() - bandit:getY(), 2))
                     if dist <= spotDist then
-                        Bandit.Say(bandit, "DEFENDER_SPOTTED")
+                        if Bandit.IsHostile(bandit) then
+                            Bandit.Say(bandit, "DEFENDER_SPOTTED")
+                        end
                         Bandit.SetSleeping(bandit, false)
                         Bandit.ClearTasks(bandit)
                         Bandit.SetProgram(bandit, "Bandit", {})
+
+                        local brain = BanditBrain.Get(bandit)
+                        local syncData = {}
+                        syncData.id = brain.id
+                        syncData.sleeping = brain.sleeping
+                        syncData.program = brain.program
+                        Bandit.ForceSyncPart(friendly, syncData)
+
                         return {status=true, next="Prepare", tasks=tasks}
                     end
                 end

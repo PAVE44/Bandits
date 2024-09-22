@@ -321,3 +321,11 @@ function BanditUtils.Choice(arr)
     local r = 1 + ZombRand(#arr)
     return arr[r]
 end
+
+function BanditUtils.CoinFlip()
+    if ZombRand(2) == 1 then 
+        return true 
+    else 
+        return false 
+    end
+end

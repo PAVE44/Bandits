@@ -15,7 +15,7 @@ BanditPlayer.UpdatePlayersOnline = function ()
             playerData.isGhost = player:isGhostMode()
             sendClientCommand(player, 'Players', 'PlayerUpdate', playerData)
         end
-        local gmd = GetBanditModData()
+        local gmd = GetBanditModDataPlayers()
         for _, p in pairs(gmd.OnlinePlayers) do
             -- print ("PLAYER:" .. p.name .. " (" .. p.id .. ") GHOST: " .. tostring(p.isGhost))
         end

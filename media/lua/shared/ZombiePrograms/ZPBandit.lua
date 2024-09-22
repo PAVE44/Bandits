@@ -80,8 +80,10 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local secondary
     if dls < 0.3 then
         if SandboxVars.Bandits.General_SneakAtNight then
-            walkType = "SneakWalk"
-            endurance = 0
+            if Bandit.IsDNA(bandit, "sneak") then
+                walkType = "SneakWalk"
+                endurance = 0
+            end
         end
     end
 
@@ -94,14 +96,19 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     end
 
     local health = bandit:getHealth()
-    if health < 0.5 then
+    if health < 0.8 then
         walkType = "Limp"
         endurance = 0
     end 
  
     local handweapon = bandit:getVariableString("BanditWeapon") 
     
-    if SandboxVars.Bandits.General_RunAway and health < 0.7 then
+    local healthMin = 0.7
+    if Bandit.IsDNA(bandit, "coward") then
+        healthMin = 1.7
+    end
+
+    if SandboxVars.Bandits.General_RunAway and health < healthMin then
         return {status=true, next="Escape", tasks=tasks}
     end
 
@@ -112,7 +119,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                     local square = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, z)
                     if square then
 
-                        if SandboxVars.Bandits.General_GeneratorCutoff then
+                        -- only if outside to prevent defenders shuting down their own genny
+                        if SandboxVars.Bandits.General_GeneratorCutoff and bandit:isOutside() then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
                                 table.insert(tasks, BanditUtils.GetMoveTask(endurance, bandit:getX()+x, bandit:getY()+y, z, walkType, 12))
@@ -254,11 +262,7 @@ ZombiePrograms.Bandit.Escape = function(bandit)
 
     local health = bandit:getHealth()
 
-    if health >= 1.0 then
-        return {status=true, next="Follow", tasks=tasks}
-    end
-
-    if SandboxVars.Bandits.General_Surrender and health < 0.12 then
+    if SandboxVars.Bandits.General_Surrender and health < 0.16 then
         bandit:setPrimaryHandItem(nil)
         if weapons.melee then
             local item = InventoryItemFactory.CreateItem(weapons.melee)
@@ -287,7 +291,7 @@ ZombiePrograms.Bandit.Escape = function(bandit)
 
     local endurance = -0.06
     local walkType = "Run"
-    if health < 0.4 then
+    if health < 0.8 then
         walkType = "Limp"
         endurance = 0
     end

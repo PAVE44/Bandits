@@ -123,11 +123,6 @@ option Bandits.General_GunReflexMin = {
     page = Bandits_General, translation = Bandits.GunReflexMin,
 }
 
-option Bandits.General_GunReflexRand = {
-    type = integer, min = 0, max = 200, default = 35,
-    page = Bandits_General, translation = Bandits.GunReflexRand,
-}
-
 option Bandits.General_PistolRange = {
     type = integer, min = 8, max = 24, default = 10,
     page = Bandits_General, translation = Bandits.PistolRange,

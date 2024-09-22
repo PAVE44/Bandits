@@ -734,9 +734,7 @@ function BanditScheduler.GetSpawnZoneBoost(player, clanId)
     end
     return zoneBoost
 end
--------------------------------------------------------------------------------
--- Spawning function
--------------------------------------------------------------------------------
+
 function BanditScheduler.SpawnDefenders(player, min, max)
     local event = {}
     event.hostile = true
@@ -809,44 +807,6 @@ function BanditScheduler.SpawnBase(player, sceneNo)
     end
 end
 
-function BanditScheduler.BaseballMatch(player)
-    local event = {}
-    event.name = 1
-    event.hostile = false
-    event.occured = false
-    event.program = {}
-    event.program.name = "Bandit"
-    event.program.stage = "Prepare"
-    
-    config = {}
-    config.hasRifleChance = 0
-    config.hasPistolChance = 0
-    config.rifleMagCount = 0
-    config.pistolMagCount = 0
-
-    -- FIRST TEAM
-    event.bandits = {}
-    event.x = player:getX()
-    event.y = player:getY() - 14
-    
-    local bandit = BanditCreator.MakeBaseballKY(config)
-    for i=1, 10 do
-        table.insert(event.bandits, bandit)
-    end
-    sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-
-    -- FIRST TEAM
-    event.bandits = {}
-    event.x = player:getX() 
-    event.y = player:getY() + 14
-    
-    local bandit = BanditCreator.MakeBaseballZ(config)
-    for i=1, 10 do
-        table.insert(event.bandits, bandit)
-    end
-    sendClientCommand(player, 'Commands', 'SpawnGroup', event)
-end
-
 function BanditScheduler.BroadcastTV(cx, cy)
     local cell = getCell()
 
@@ -898,22 +858,16 @@ function BanditScheduler.CheckEvent()
     
     local world = getWorld()
     local gamemode = world:getGameMode()
-    local playerList = {}
     local currentPlayer = getPlayer()
     local onlinePlayer 
 
-    -- if true then return end 
-
-    local pid
     if gamemode == "Multiplayer" then
-        playerList = getOnlinePlayers()
-        pid = ZombRand(playerList:size())
-
+        local playerList = getOnlinePlayers()
+        local pid = ZombRand(playerList:size())
         onlinePlayer = playerList:get(pid)
     else
         onlinePlayer = getPlayer()
     end
-    
 
     if BanditUtils.GetCharacterID(currentPlayer) == BanditUtils.GetCharacterID(onlinePlayer) then
 

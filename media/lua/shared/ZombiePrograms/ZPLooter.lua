@@ -72,13 +72,15 @@ ZombiePrograms.Looter.Operate = function(bandit)
         end
 
         if SandboxVars.Bandits.General_SneakAtNight then
-            walkType = "SneakWalk"
-            endurance = 0
+            if Bandit.IsDNA(bandit, "sneak") then
+                walkType = "SneakWalk"
+                endurance = 0
+            end
         end
     end
 
     local health = bandit:getHealth()
-    if health < 0.4 then
+    if health < 0.8 then
         walkType = "Limp"
         endurance = 0
     end 

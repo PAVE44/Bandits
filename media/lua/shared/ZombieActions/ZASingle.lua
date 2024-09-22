@@ -6,8 +6,11 @@ ZombieActions.Single.onStart = function(zombie, task)
 end
 
 ZombieActions.Single.onWorking = function(zombie, task)
-    -- will finish immediately on first update
-    return true
+    if not zombie:getVariableString("BumpAnimFinished") then
+        return false
+    else
+        return true
+    end
 end
 
 ZombieActions.Single.onComplete = function(zombie, task)

@@ -221,7 +221,36 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end 
     end
 
-    -- No enemies, no guardposts, so follow the player.
+    -- companion foraging
+    local zoneData = forageSystem.getForageZoneAt(bandit:getX(), bandit:getY())
+    if false and zoneData then
+        local month = getGameTime():getMonth() + 1
+        local timeOfDay = forageSystem.getTimeOfDay() or "isDay"
+        local weatherType = forageSystem.getWeatherType() or "isNormal"
+        local lootTable = forageSystem.lootTables[zoneData.name][month][timeOfDay][weatherType]
+        
+        local itemType, catName = forageSystem.pickRandomItemType(lootTable)
+        if itemType and catName then
+            local item = InventoryItemFactory.CreateItem(itemType)
+            if instanceof (item, "Food") then
+                local test1 = item:getProteins()
+                local test2 = item:getCalories()
+                local test3 = item:getCarbohydrates()
+                local test4 = item:isSpice()
+
+                print ("found: " .. itemType)
+                local task1 = {action="Single", anim="Forage", time=400}
+                table.insert(tasks, task1)
+                local task2 = {action="Single", anim="Eat", time=400}
+                table.insert(tasks, task2)
+                local task3 = {action="Single", anim="Eat", time=400}
+                table.insert(tasks, task3)
+                return {status=true, next="Follow", tasks=tasks}
+            end
+        end
+    end
+
+    -- follow the player.
     local minDist = 1
     if dist > minDist then
         local id = BanditUtils.GetCharacterID(bandit)

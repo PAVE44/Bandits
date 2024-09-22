@@ -8,11 +8,6 @@
 
 BanditMenu = BanditMenu or {}
 
-function BanditMenu.SwitchProgram (player, zombie, program)
-    Bandit.SetProgram(zombie, program, {})
-    Bandit.SetMaster(zombie, BanditUtils.GetCharacterID(player))
-end
-
 function BanditMenu.SpawnGroup (player, waveId)
 
     local waveData = BanditScheduler.GetWaveDataAll()
@@ -192,44 +187,78 @@ function BanditMenu.RemoveAllBandits(player)
     end
 end
 
+function BanditMenu.SwitchProgram(player, bandit, program)
+    local brain = BanditBrain.Get(bandit)
+    if brain then
+        local pid = BanditUtils.GetCharacterID(player)
+
+        brain.master = pid
+        brain.program = {}
+        brain.program.name = program
+        brain.program.stage = "Prepare"
+        BanditBrain.Update(bandit, brain)
+
+        local syncData = {}
+        syncData.id = brain.id
+        syncData.master = brain.master
+        syncData.program = brain.program
+        Bandit.ForceSyncPart(bandit, syncData)
+    end
+end
+
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
+    local world = getWorld()
+    local gamemode = world:getGameMode()
     local square = clickedSquare
     local player = getSpecificPlayer(playerID)
-
     local zombie = square:getZombie()
     
-    --[[
+    -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
         local brain = BanditBrain.Get(zombie)
         local banditOption = context:addOption(brain.fullname)
         local banditMenu = context:getNew(context)
         context:addSubMenu(banditOption, banditMenu)
 
-        banditMenu:addOption("Stay Here!", player, BanditMenu.SwitchProgram, zombie, "CompanionGuard")
-        banditMenu:addOption("Follow Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
-
+        if brain.program.name ~= "Companion" and brain.program.name ~= "CompanionGuard" then
+            banditMenu:addOption("Join Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
+        else     
+            banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
+        end
     end
-    ]]
 
+    -- Admin spawn options
     if isDebugEnabled() or isAdmin() then
-        print (BanditUtils.GetCharacterID(player))
-        print (player:getHoursSurvived() / 24)
-        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
-
-        local spawnOption = context:addOption("[DGB] Spawn Group Here")
+        local spawnOption = context:addOption("Spawn Bandits Here")
         local spawnMenu = context:getNew(context)
         context:addSubMenu(spawnOption, spawnMenu)
         for i=1, 16 do
             spawnMenu:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroup, i)
         end
 
-        local spawnOptionFar = context:addOption("[DGB] Spawn Group Far")
+        local spawnOptionFar = context:addOption("Spawn Bandits Far")
         local spawnMenuFar = context:getNew(context)
         context:addSubMenu(spawnOptionFar, spawnMenuFar)
         for i=1, 16 do
             spawnMenuFar:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroupFar, i)
         end
+
+        context:addOption("Spawn Bandit Defenders", player, BanditMenu.SpawnDefenders, square)
+
+        local spawnBaseOption = context:addOption("Spawn Bandit Base Far")
+        local spawnBaseMenu = context:getNew(context)
+        context:addSubMenu(spawnBaseOption, spawnBaseMenu)
+        for i=1, 2 do
+            spawnBaseMenu:addOption("Base " .. tostring(i), player, BanditMenu.SpawnBase, square, i)
+        end
+    end
     
+    -- Debug options
+    if isDebugEnabled() then
+        print (BanditUtils.GetCharacterID(player))
+        print (player:getHoursSurvived() / 24)
+        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
+
         if zombie then
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
             print ("this zombie dir is: " .. zombie:getDirectionAngle())
@@ -237,26 +266,13 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
             context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
-
         end
 
-        local spawnBaseOption = context:addOption("[DGB] Spawn Base Far")
-        local spawnBaseMenu = context:getNew(context)
-        context:addSubMenu(spawnBaseOption, spawnBaseMenu)
-        for i=1, 2 do
-            spawnBaseMenu:addOption("Base " .. tostring(i), player, BanditMenu.SpawnBase, square, i)
-        end
-
-        context:addOption("[DGB] Spawn Defenders", player, BanditMenu.SpawnDefenders, square)
         context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
-
-        -- context:addOption("[DGB] Spawn Event: Baseball Match", player, BanditMenu.BaseballMatch, square)
-        
         context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
         -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
-        
     end
 end
 

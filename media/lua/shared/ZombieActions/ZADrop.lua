@@ -6,7 +6,11 @@ ZombieActions.Drop.onStart = function(zombie, task)
 end
 
 ZombieActions.Drop.onWorking = function(zombie, task)
-    return false
+    if not zombie:getVariableString("BumpAnimFinished") then
+        return false
+    else
+        return true
+    end
 end
 
 ZombieActions.Drop.onComplete = function(zombie, task)

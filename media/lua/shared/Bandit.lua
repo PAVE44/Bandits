@@ -183,6 +183,21 @@ function Bandit.IsSleeping(zombie)
     end
 end
 
+function Bandit.SetAim(zombie, aim)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        brain.aim = aim
+        BanditBrain.Update(zombie, brain)
+    end
+end
+
+function Bandit.IsAim(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        return brain.aim
+    end
+end
+
 function Bandit.SetCapabilities(zombie, capabilities)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -194,7 +209,19 @@ end
 function Bandit.Can(zombie, capability)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        if brain.capabilities[capability] then return true end
+        if brain.capabilities then
+            if brain.capabilities[capability] then return true end
+        end
+    end
+    return false
+end
+
+function Bandit.IsDNA(zombie, feature)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        if brain.dna then
+            if brain.dna[feature] then return true end
+        end
     end
     return false
 end
@@ -218,7 +245,6 @@ function Bandit.SetMaster(zombie, master)
     end
 end
 
-
 -- Bandit Programs
 function Bandit.GetProgram(zombie)
     local brain = BanditBrain.Get(zombie)
@@ -233,10 +259,6 @@ function Bandit.SetProgram(zombie, program, programParams)
         brain.program = {}
         brain.program.name = program
         brain.program.stage = "Prepare"
-        brain.program.params = {}
-        for k, v in pairs(programParams) do
-            brain.program.params[k] = v
-        end
 
         BanditBrain.Update(zombie, brain)
     end
