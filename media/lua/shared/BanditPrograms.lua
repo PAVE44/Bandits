@@ -7,7 +7,107 @@ end
 
 BanditPrograms = BanditPrograms or {}
 
-BanditPrograms.LootContainer = function(bandit, object, container)
+BanditPrograms.Weapon = BanditPrograms.Weapon or {}
+
+BanditPrograms.Weapon.Switch = function(bandit, itemName)
+
+    local tasks = {}
+    bandit:clearAttachedItems()
+
+    -- check what is equippped that needs to be deattached
+    local old = bandit:getPrimaryHandItem()
+    if old then
+        local task = {action="Unequip", time=200, itemPrimary=old:getFullType()}
+        table.insert(tasks, task)
+    end
+
+    -- grab new weapon
+    local new = InventoryItemFactory.CreateItem(itemName)
+    if new then
+        local task = {action="Equip", itemPrimary=itemName}
+        table.insert(tasks, task)
+    end
+    return tasks
+end
+
+BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
+    local tasks = {}
+
+    local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
+    local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
+    local aimTimeSurp = math.floor(dist ^ 1.2)
+    if Bandit.IsDNA(bandit, "slow") then
+        aimTimeSurp = aimTimeSurp + 15
+    end
+
+    if aimTimeMin + aimTimeSurp > 0 then
+
+        local anim
+        if slot == "primary" then
+            anim = "AimRifle"
+        else
+            anim = "AimPistol"
+        end
+
+        local task = {action="Aim", anim=anim, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=aimTimeMin + aimTimeSurp}
+        table.insert(tasks, task)
+    end
+    return tasks
+end
+
+BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
+    local tasks = {}
+
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+
+    local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
+    local firingtime = weapon.shotDelay + math.floor(dist ^ 1.2)
+    if Bandit.IsDNA(bandit, "slow") then
+        firingtime = firingtime + 5
+    end
+
+    local anim
+    if slot == "primary" then
+        anim = "AimRifle"
+    else
+        anim = "AimPistol"
+    end
+
+    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+    table.insert(tasks, task)
+
+    return tasks
+end
+
+BanditPrograms.Weapon.Reload(bandit, slot)
+    local tasks = {}
+
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+
+    local soundEject
+    local soundInsert
+    if slot == "primary" then
+        soundEject = "M14EjectAmmo"
+        soundInsert = "M14InsertAmmo"
+    else
+        soundEject = "M9EjectAmmo"
+        soundInsert = "M9InsertAmmo"
+    end
+
+    local task = {action="Drop", itemType=weapon.magName, anim="UnloadRifle", sound=soundEject, time=90}
+    table.insert(tasks, task)
+
+    local task = {action="Reload", anim="ReloadRifle", slot=slot, sound=soundInsert, time=90}
+    table.insert(tasks, task)
+
+    return tasks
+end
+
+BanditPrograms.Container = BanditPrograms.Container or {}
+
+BanditPrograms.Container.Loot = function(bandit, object, container)
     local tasks = {}
     local weapons = Bandit.GetWeapons(bandit)
 

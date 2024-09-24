@@ -35,102 +35,6 @@ local function CalcSpottedScore(player, dist)
     return spottedScore
 end
 
-local function SwitchWeapon(bandit, itemName)
-
-    local tasks = {}
-    bandit:clearAttachedItems()
-
-    -- check what is equippped that needs to be deattached
-    local old = bandit:getPrimaryHandItem()
-    if old then
-        local task = {action="Unequip", time=200, itemPrimary=old:getFullType()}
-        table.insert(tasks, task)
-    end
-
-    -- grab new weapon
-    local new = InventoryItemFactory.CreateItem(itemName)
-    if new then
-        local task = {action="Equip", itemPrimary=itemName}
-        table.insert(tasks, task)
-    end
-    return tasks
-end
-
-local function AimWeapon(bandit, enemyCharacter, slot)
-    local tasks = {}
-
-    local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
-    local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-    local aimTimeSurp = math.floor(dist ^ 1.2)
-    if Bandit.IsDNA(bandit, "slow") then
-        aimTimeSurp = aimTimeSurp + 15
-    end
-
-    if aimTimeMin + aimTimeSurp > 0 then
-
-        local anim
-        if slot == "primary" then
-            anim = "AimRifle"
-        else
-            anim = "AimPistol"
-        end
-
-        print ("AIM: " .. (aimTimeMin + aimTimeSurp))
-        local task = {action="Aim", anim=anim, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=aimTimeMin + aimTimeSurp}
-        table.insert(tasks, task)
-    end
-    return tasks
-end
-
-local function ShootWeapon(bandit, enemyCharacter, weapons, slot)
-    local tasks = {}
-
-    local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
-    local firingtime = weapons[slot].shotDelay + math.floor(dist ^ 1.2)
-    if Bandit.IsDNA(bandit, "slow") then
-        firingtime = firingtime + 5
-    end
-
-    local anim
-    if slot == "primary" then
-        anim = "AimRifle"
-    else
-        anim = "AimPistol"
-    end
-
-    local task = {action="Shoot", anim=anim, weaponSound=weapons[slot].shotSound, time=firingtime, weapon=weapons[slot].name, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
-    table.insert(tasks, task)
-
-    weapons[slot].bulletsLeft = weapons[slot].bulletsLeft - 1
-
-    return tasks
-end
-
-local function ReloadWeapon(bandit, weapons, slot)
-    local tasks = {}
-
-    local soundEject
-    local soundInsert
-    if slot == "primary" then
-        soundEject = "M14EjectAmmo"
-        soundInsert = "M14InsertAmmo"
-    else
-        soundEject = "M9EjectAmmo"
-        soundInsert = "M9InsertAmmo"
-    end
-
-    local task = {action="Drop", itemType=weapons[slot].magName, anim="UnloadRifle", sound=soundEject, time=90}
-    table.insert(tasks, task)
-
-    local task = {action="Time", anim="ReloadRifle", sound=soundInsert, time=90}
-    table.insert(tasks, task)
-
-    weapons[slot].bulletsLeft = weapons[slot].magSize
-    weapons[slot].magCount = weapons[slot].magCount - 1
-
-    return tasks
-end
-
 local function GetEscapePoint(bandit, radius)
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
     local brain = BanditBrain.Get(bandit)
@@ -965,7 +869,7 @@ function BanditUpdate.Combat(bandit)
             if veh then Bandit.Say(bandit, "CAR") end
 
             if not bandit:isPrimaryEquipped(weapons.melee) then
-                local stasks = SwitchWeapon(bandit, weapons.melee)
+                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
                 for _, t in pairs(stasks) do table.insert(tasks, t) end
             end
 
@@ -1000,23 +904,23 @@ function BanditUpdate.Combat(bandit)
                             if not bandit:isPrimaryEquipped(weapons[slot].name) then
                                 Bandit.Say(bandit, "SPOTTED")
 
-                                local stasks = SwitchWeapon(bandit, weapons[slot].name)
+                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
                             end
 
                             if not Bandit.IsAim(bandit) then
-                                local stasks = AimWeapon(bandit, enemyCharacter, slot)
+                                local stasks = BanditPrograms.Weapon.Aim(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
                             end
 
                             if weapons[slot].bulletsLeft > 0 then
-                                local stasks = ShootWeapon(bandit, enemyCharacter, weapons, slot)
+                                local stasks = BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
 
                             elseif weapons[slot].magCount > 0 then
                                 Bandit.Say(bandit, "RELOADING")
 
-                                local stasks = ReloadWeapon(bandit, weapons, slot)
+                                local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
                             end
                             -- Bandit.SetWeapons(bandit, weapons)

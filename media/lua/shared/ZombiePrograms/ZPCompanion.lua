@@ -45,6 +45,8 @@ end
 
 ZombiePrograms.Companion.Follow = function(bandit)
     local tasks = {}
+    local world = getWorld()
+    local cm = world:getClimateManager()
     local cell = getCell()
     -- local weapons = Bandit.GetWeapons(bandit)
  
@@ -150,13 +152,6 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
     
-    -- If there is a guardpost in the vicinity, take it.
-    local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
-    if guardpost then
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
-        return {status=true, next="Follow", tasks=tasks}
-    end
-
     -- look for guns
     if Bandit.IsOutOfAmmo(bandit) then
 
@@ -177,7 +172,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                                     local body = object
                                     container = body:getContainer()
                                     if container and not container:isEmpty() then
-                                        local subTasks = BanditPrograms.LootContainer(bandit, body, container)
+                                        local subTasks = BanditPrograms.Container.Loot(bandit, body, container)
                                         if #subTasks > 0 then
                                             for _, subTask in pairs(subTasks) do
                                                 table.insert(tasks, subTask)
@@ -206,7 +201,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                             local object = objects:get(i)
                             local container = object:getContainer()
                             if container and not container:isEmpty() then
-                                local subTasks = BanditPrograms.LootContainer(bandit, object, container)
+                                local subTasks = BanditPrograms.Container.Loot(bandit, object, container)
                                 if #subTasks > 0 then
                                     for _, subTask in pairs(subTasks) do
                                         table.insert(tasks, subTask)
@@ -221,9 +216,81 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end 
     end
 
+    -- If there is a guardpost in the vicinity, take it.
+    local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
+    if guardpost then
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
+    -- companion fishing
+    local gameTime = getGameTime()
+    local hour = gameTime:getHour()
+    if (hour >= 4 and hour < 7) or (hour >= 18 and hour < 22) then
+        local vectors = {}
+        table.insert(vectors, {x=0, y=-1}) --12
+        table.insert(vectors, {x=1, y=-1}) -- 1.30
+        table.insert(vectors, {x=1, y=0}) -- 3
+        table.insert(vectors, {x=1, y=1}) -- 4.30
+        table.insert(vectors, {x=0, y=1}) -- 6
+        table.insert(vectors, {x=-1, y=1}) -- 7.30
+        table.insert(vectors, {x=-1, y=0}) -- 9
+        table.insert(vectors, {x=-1, y=-1}) -- 10.30
+        
+        local bx = bandit:getX()
+        local bx = bandit:getY()
+        local wx
+        local wy
+        local wd = 31
+        local wsqure
+        for _, vector in pairs(vectors) do
+            for i=1, 30 do
+                local x = bx + vector.x * i
+                local y = by + vector.y * i
+                local square = cell:getGridSquare(x, y, 0)
+                if square and BanditUtils.IsWater(square) then
+                    if i < wd then
+                        wx, wy, wd, wsquare = x, y, i, square
+                        break
+                    end
+                end
+            end
+        end
+
+        if wx and wy then
+            local asquare = AdjacentFreeTileFinder.Find(wsqure, bandit)
+            if asquare then
+                wx = asquare:getX()
+                wy = asquare:getY()
+
+                local dist = math.sqrt(math.pow(wx - bx, 2) + math.pow(wy - by, 2))
+                if dist < 2.2 then
+                    print ("should fish")
+                    return {status=true, next="Follow", tasks=tasks}
+                else
+                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, wx, wy, 0, "Run", dist))
+                    return {status=true, next="Follow", tasks=tasks}
+                end
+            end
+        end
+    end
+
     -- companion foraging
+    local dls = cm:getDayLightStrength()
+    local rain = cm:getRainIntensity()
+    local fog = cm:getFogIntensity()
     local zoneData = forageSystem.getForageZoneAt(bandit:getX(), bandit:getY())
-    if false and zoneData then
+
+    local inZone = false
+    local zone = getWorld():getMetaGrid():getZoneAt(bandit:getX(), bandit:getY(), 0)
+    if zone then
+        local zoneType = zone:getType()
+        if zoneType == "Forest" or zoneType="DeepForest" or zoneType="Vegitation" or zoneType == "FarmLand" then
+            inZone = true
+        end
+    end
+
+    if zoneData and inZone and dls > 0.9 and rain < 0.3 and fog < 0.2 then
         local month = getGameTime():getMonth() + 1
         local timeOfDay = forageSystem.getTimeOfDay() or "isDay"
         local weatherType = forageSystem.getWeatherType() or "isNormal"
