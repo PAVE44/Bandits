@@ -5,7 +5,7 @@
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>Walk</m_StringValue>
+		<m_StringValue>WalkBwdAim</m_StringValue>
 	</m_Conditions>
 	<m_Conditions>
 		<m_Name>BanditPrimaryType</m_Name>
