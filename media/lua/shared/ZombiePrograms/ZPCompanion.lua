@@ -285,7 +285,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     local zone = getWorld():getMetaGrid():getZoneAt(bandit:getX(), bandit:getY(), 0)
     if zone then
         local zoneType = zone:getType()
-        if zoneType == "Forest" or zoneType="DeepForest" or zoneType="Vegitation" or zoneType == "FarmLand" then
+        if zoneType == "Forest" or zoneType == "DeepForest" or zoneType == "Vegitation" or zoneType == "FarmLand" then
             inZone = true
         end
     end

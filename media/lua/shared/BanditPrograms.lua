@@ -55,7 +55,7 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     return tasks
 end
 
-BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
+BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local tasks = {}
 
     local brain = BanditBrain.Get(bandit)
@@ -80,7 +80,7 @@ BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
     return tasks
 end
 
-BanditPrograms.Weapon.Reload(bandit, slot)
+BanditPrograms.Weapon.Reload = function(bandit, slot)
     local tasks = {}
 
     local brain = BanditBrain.Get(bandit)
