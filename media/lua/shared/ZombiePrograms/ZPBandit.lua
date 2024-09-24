@@ -1,22 +1,5 @@
 ZombiePrograms = ZombiePrograms or {}
 
-
-
-local function IsWater(square)
-    local objects = square:getObjects()
-    for i=0, objects:size()-1 do
-        local object = objects:get(i)
-        local properties = object:getProperties()
-        if properties then
-            local water = properties:Is(IsoFlagType.water)
-            if water then
-                return true
-            end
-        end
-    end
-    return false
-end
-
 ZombiePrograms.Bandit = {}
 ZombiePrograms.Bandit.Stages = {}
 
@@ -215,7 +198,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                 for _, coords in pairs(path) do
                     local square = cell:getGridSquare(coords.x, coords.y, 0)
                     if square then
-                        if IsWater(square) then
+                        if BanditUtils.IsWater(square) then
                             -- local as = AdjacentFreeTileFinder.Find(square, bandit)
                             if last.x and last.y then
                                 -- print ("go build bridge from x: " .. last.x .. " y: " .. last.y .. " to x:" .. coords.x .. " y:" .. coords.y)
@@ -415,7 +398,7 @@ ZombiePrograms.Bandit.BuildBridge = function(bandit)
         for dy = -1, 1 do
             local square = getCell():getGridSquare(bandit:getX() + dx, bandit:getY() + dy, bandit:getZ())
             if square then
-                if IsWater(square) then
+                if BanditUtils.IsWater(square) then
                     local task = {action="Equip", itemPrimary="Base.Hammer", itemSecondary=nil}
                     table.insert(tasks, task)
                 

@@ -317,6 +317,21 @@ function BanditUtils.Bresenham(x0, y0, x1, y1)
     return points
 end
 
+function BanditUtils.IsWater(square)
+    local objects = square:getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        local properties = object:getProperties()
+        if properties then
+            local water = properties:Is(IsoFlagType.water)
+            if water then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 function BanditUtils.Choice(arr)
     local r = 1 + ZombRand(#arr)
     return arr[r]

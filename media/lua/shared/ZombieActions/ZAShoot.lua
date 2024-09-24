@@ -642,9 +642,11 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     -- ATROShoot(shooter, item)
 
     local brainShooter = BanditBrain.Get(shooter)
+    local weapon = brainShooter.weapons[task.slot]
+    weapon.bulletsLeft = weapon.bulletsLeft - 1
     
     shooter:startMuzzleFlash()
-    shooter:playSound(task.weaponSound)
+    shooter:playSound(weapon.shotSound)
     
     -- this adds world sound that attract zombies, it must be on cooldown
     -- otherwise too many sounds disorient zombies. 
@@ -680,7 +682,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                     if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
                         local res = ManageLineOfFire(shooter, victim)
                         if res then
-                            local item = InventoryItemFactory.CreateItem(task.weapon)
+                            local item = InventoryItemFactory.CreateItem(weapon.name)
                             Hit(shooter, item, victim)
                         end
                         

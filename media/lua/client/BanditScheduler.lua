@@ -698,8 +698,6 @@ function BanditScheduler.GetDensityScore(player, r)
                     local zoneType = zone:getType()
                     if zoneScore[zoneType] then
                         score = score + zoneScore[zoneType]
-                    else
-                        print ("[WARNING] Unknown zone type " .. zoneType .. ".")
                     end
                 end
             end
