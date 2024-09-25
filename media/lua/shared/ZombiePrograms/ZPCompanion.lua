@@ -293,7 +293,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
-    if zoneData and inZone and dls > 0.9 and rain < 0.3 and fog < 0.2 then
+    if zoneData and inZone and dls > 0.8 and rain < 0.3 and fog < 0.2 then
         local month = getGameTime():getMonth() + 1
         local timeOfDay = forageSystem.getTimeOfDay() or "isDay"
         local weatherType = forageSystem.getWeatherType() or "isNormal"
