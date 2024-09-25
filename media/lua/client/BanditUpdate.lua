@@ -521,15 +521,14 @@ function BanditUpdate.Collisions(bandit)
                                     table.insert(tasks, task)
                                 end
 
-                            elseif not object:IsOpen() and not object:isSmashed() then
-                                if SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
-
-                                    local task = {action="FaceLocation", x=fx, y=fy, z=object:getSquare():getZ(), time=30}
-                                    table.insert(tasks, task)
-
+                            elseif not object:IsOpen() and not object:isSmashed() and Bandit.IsHostile(bandit) and SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
                                     task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                     table.insert(tasks, task)
-                                end
+
+                            elseif not object:IsOpen() and not object:isSmashed() then
+                                    task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                    table.insert(tasks, task)
+
 
                             elseif object:canClimbThrough(bandit) then
                                 local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
@@ -1349,6 +1348,7 @@ end
 function BanditUpdate.OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     if zombie:getVariableBoolean("Bandit") then
         local bandit = zombie
+        Bandit.ClearTasks(bandit)
         Bandit.Say(bandit, "HIT")
         if Bandit.IsSleeping(bandit) then
             local task = {action="Time", lock=true, anim="GetUp", time=150}

@@ -92,7 +92,14 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
     local x1 = bandit:getX() + 3 * math.cos(theta)
     local y1 = bandit:getY() + 3 * math.sin(theta)
 
-    -- bandit:faceLocation(x1, y1)
+    local master = BanditPlayer.GetMasterPlayer(bandit)
+    if master then
+        -- be polite, if master is close, face him, otherwise look somewhere else
+        local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
+        if dist < 3 then
+            x1, y1 = master:getX(), master:getY()
+        end
+    end
 
     if action == 0 then
         local task = {action="Time", anim="ShiftWeight", time=200}
@@ -127,6 +134,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         local weaponType = bandit:getVariableString("BanditPrimaryType")
         if weaponType == "rifle" then anim = "AimRifle" end
         if weaponType == "handgun" then anim = "AimPistol" end
+
         local task = {action="FaceLocation", anim=anim, x=x1, y=y1, time=100}
         table.insert(tasks, task)
     else

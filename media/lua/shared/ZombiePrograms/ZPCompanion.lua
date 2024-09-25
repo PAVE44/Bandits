@@ -238,11 +238,11 @@ ZombiePrograms.Companion.Follow = function(bandit)
         table.insert(vectors, {x=-1, y=-1}) -- 10.30
         
         local bx = bandit:getX()
-        local bx = bandit:getY()
+        local by = bandit:getY()
         local wx
         local wy
         local wd = 31
-        local wsqure
+        local wsquare
         for _, vector in pairs(vectors) do
             for i=1, 30 do
                 local x = bx + vector.x * i
@@ -250,7 +250,8 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 local square = cell:getGridSquare(x, y, 0)
                 if square and BanditUtils.IsWater(square) then
                     if i < wd then
-                        wx, wy, wd, wsquare = x, y, i, square
+                        wx, wy, wd = x, y, i
+                        wsquare = square
                         break
                     end
                 end
@@ -258,17 +259,19 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
 
         if wx and wy then
-            local asquare = AdjacentFreeTileFinder.Find(wsqure, bandit)
+            local asquare = AdjacentFreeTileFinder.Find(wsquare, bandit)
             if asquare then
-                wx = asquare:getX()
-                wy = asquare:getY()
+                local tx = asquare:getX()
+                local ty = asquare:getY()
 
-                local dist = math.sqrt(math.pow(wx - bx, 2) + math.pow(wy - by, 2))
-                if dist < 2.2 then
+                local dist = math.sqrt(math.pow(tx - bx, 2) + math.pow(ty - by, 2))
+                if dist < 1.2 then
                     print ("should fish")
+                    local task = {action="Fishing", time=1000, x=wx, y=wy}
+                    table.insert(tasks, task)
                     return {status=true, next="Follow", tasks=tasks}
                 else
-                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, wx, wy, 0, "Run", dist))
+                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, 0, "Run", dist))
                     return {status=true, next="Follow", tasks=tasks}
                 end
             end

@@ -87,7 +87,7 @@ function BanditCreator.MakeLoot(clanLoot)
 
     -- ku chwale ojczyzny!
     if ZombRand(100) == 1 then
-        for i=1, ZombRand(12) do
+        for i=1, ZombRand(18) do
             table.insert(loot, "Base.Perogies")
         end
     end
