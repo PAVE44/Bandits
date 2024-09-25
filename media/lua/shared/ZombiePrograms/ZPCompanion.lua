@@ -309,12 +309,13 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 local test4 = item:isSpice()
 
                 print ("found: " .. itemType)
-                local task1 = {action="Single", anim="Forage", time=400}
-                table.insert(tasks, task1)
-                local task2 = {action="Single", anim="Eat", time=400}
-                table.insert(tasks, task2)
-                local task3 = {action="Single", anim="Eat", time=400}
-                table.insert(tasks, task3)
+                local task = {action="Drop", anim="Forage", itemType=itemType, time=400}
+                table.insert(tasks, task)
+
+                -- local task2 = {action="Single", anim="Eat", time=400}
+                -- table.insert(tasks, task2)
+                -- local task3 = {action="Single", anim="Eat", time=400}
+                -- table.insert(tasks, task3)
                 return {status=true, next="Follow", tasks=tasks}
             end
         end
