@@ -575,7 +575,7 @@ function BanditUpdate.Collisions(bandit)
                                     table.insert(tasks, task)
                                 end
 
-                            elseif object:isLocked() and (not safehouse or Bandit.IsHostile(bandit)) then
+                            elseif object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior) and (not safehouse or Bandit.IsHostile(bandit)) then
                                 if SandboxVars.Bandits.General_DestroyDoor and Bandit.Can(bandit, "breakDoor") then
                                     Bandit.ClearTasks(bandit)
 
@@ -1035,7 +1035,7 @@ function BanditUpdate.Zombie(zombie)
                 zombie:setPath2(nil)
             
             -- the enemy is close, proceed with the attack
-            elseif enemy.dist < 0.49 and not isWallTo then
+            elseif enemy.dist < 0.49 and enemy.z == zz and not isWallTo then
 
                 -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
                 if zombie:isFacingObject(bandit, 0.5) then
@@ -1207,7 +1207,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if not continue then return end
     
     -- COMPANION SOCIAL DISTANCE HACK
-    BanditUpdate.SocialDistance(bandit)
+    -- BanditUpdate.SocialDistance(bandit)
 
     -- CRAWLERS SCREAM OCASSINALLY
     if bandit:isCrawling() then
