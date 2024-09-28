@@ -11,10 +11,10 @@ ZombiePrograms.Companion.GetCapabilities = function()
     local capabilities = {}
     capabilities.melee = true
     capabilities.shoot = true
-    capabilities.smashWindow = true
+    capabilities.smashWindow = false
     capabilities.openDoor = true
-    capabilities.breakDoor = true
-    capabilities.breakObjects = true
+    capabilities.breakDoor = false
+    capabilities.breakObjects = false
     capabilities.unbarricade = false
     capabilities.disableGenerators = false
     capabilities.sabotageCars = false
@@ -51,9 +51,8 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- local weapons = Bandit.GetWeapons(bandit)
  
     -- If at guardpost, switch to the CompanionGuard program.
-    local atGuardpost = BanditGuardpost.At(bandit)
+    local atGuardpost = BanditPost.At(bandit, "guard")
     if atGuardpost then
-        print ("AT GUARDPOST")
         Bandit.SetProgram(bandit, "CompanionGuard", {})
         return {status=true, next="Prepare", tasks=tasks}
     end
@@ -73,10 +72,10 @@ ZombiePrograms.Companion.Follow = function(bandit)
     local vehicle = master:getVehicle()
     local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
 
-    if master:isRunning() or master:isSprinting() or vehicle then
+    if master:isRunning() or master:isSprinting() or vehicle or dist > 10 then
         walkType = "Run"
         endurance = -0.07
-    elseif master:isSneaking() and dist<12 then
+    elseif master:isSneaking() and dist < 12 then
         walkType = "SneakWalk"
         endurance = -0.01
     end
@@ -201,13 +200,21 @@ ZombiePrograms.Companion.Follow = function(bandit)
                             local object = objects:get(i)
                             local container = object:getContainer()
                             if container and not container:isEmpty() then
-                                local subTasks = BanditPrograms.Container.Loot(bandit, object, container)
+                                local subTasks = BanditPrograms.Container.WeaponLoot(bandit, object, container)
                                 if #subTasks > 0 then
                                     for _, subTask in pairs(subTasks) do
                                         table.insert(tasks, subTask)
                                     end
                                     return {status=true, next="Prepare", tasks=tasks}
                                 end
+
+                                --[[local subTasks = BanditPrograms.Container.Loot(bandit, object, container)
+                                if #subTasks > 0 then
+                                    for _, subTask in pairs(subTasks) do
+                                        table.insert(tasks, subTask)
+                                    end
+                                    return {status=true, next="Prepare", tasks=tasks}
+                                end]]
                             end
                         end
                     end
@@ -217,7 +224,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     -- If there is a guardpost in the vicinity, take it.
-    local guardpost = BanditGuardpost.GetClosestFree(bandit, 40)
+    local guardpost = BanditPost.GetClosestFree(bandit, "guard", 40)
     if guardpost then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
         return {status=true, next="Follow", tasks=tasks}
@@ -226,7 +233,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- companion fishing
     local gameTime = getGameTime()
     local hour = gameTime:getHour()
-    if (hour >= 4 and hour < 7) or (hour >= 18 and hour < 22) then
+    if (hour >= 4 and hour < 12) or (hour >= 18 and hour < 22) then
         local vectors = {}
         table.insert(vectors, {x=0, y=-1}) --12
         table.insert(vectors, {x=1, y=-1}) -- 1.30
@@ -293,7 +300,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
-    if zoneData and inZone and dls > 0.8 and rain < 0.3 and fog < 0.2 then
+    if false and zoneData and inZone and dls > 0.8 and rain < 0.3 and fog < 0.2 then
         local month = getGameTime():getMonth() + 1
         local timeOfDay = forageSystem.getTimeOfDay() or "isDay"
         local weatherType = forageSystem.getWeatherType() or "isNormal"
@@ -322,7 +329,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     -- follow the player.
-    local minDist = 1
+    local minDist = 2
     if dist > minDist then
         local id = BanditUtils.GetCharacterID(bandit)
 
@@ -336,6 +343,16 @@ ZombiePrograms.Companion.Follow = function(bandit)
         local dxf = ((id % 10) - 5) / 10
         local dyf = ((id % 11) - 5) / 10
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
+    -- nothing to do, play idle anims
+    local subTasks = BanditPrograms.Idle(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
     end
 
     return {status=true, next="Follow", tasks=tasks}

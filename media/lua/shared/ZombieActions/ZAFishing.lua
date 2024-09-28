@@ -17,7 +17,7 @@ ZombieActions.Fishing.onWorking = function(zombie, task)
 
     if not zombie:isBumped() then
 
-        print ("STAGE: " .. task.stage)
+        -- print ("STAGE: " .. task.stage)
         
         if task.stage < 9 then
             zombie:setBumpType("FishingSpearIdle")

@@ -16,7 +16,7 @@ function InitBanditModData(isNewGame)
     
     if not globalData.Scenes then globalData.Scenes = {} end
     if not globalData.Bandits then globalData.Bandits = {} end
-    if not globalData.Guardposts then globalData.Guardposts = {} end
+    if not globalData.Posts then globalData.Posts = {} end
     if not globalData.Kills then globalData.Kills = {} end
     if not globalData.VisitedBuildings then globalData.VisitedBuildings = {} end
     BanditGlobalData = globalData

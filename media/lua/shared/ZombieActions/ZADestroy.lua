@@ -7,6 +7,7 @@ ZombieActions.Destroy.onStart = function(zombie, task)
 end
 
 ZombieActions.Destroy.onWorking = function(zombie, task)
+    zombie:faceLocationF(task.x, task.y)
     if not zombie:getVariableString("BumpAnimFinished") then
         return false
     else

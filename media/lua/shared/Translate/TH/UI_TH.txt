@@ -1,4 +1,4 @@
 UI_TH = {
     UI_optionscreen_binding_Bandits = "Bandits",
-    UI_optionscreen_binding_GUARDPOSTS = "Manage Guardposts",
+    UI_optionscreen_binding_POSTS = "Manage Guardposts",
 }

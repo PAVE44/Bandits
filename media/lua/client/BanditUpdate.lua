@@ -468,6 +468,7 @@ function BanditUpdate.Collisions(bandit)
                             end
                             break
                         end
+
                         local highFence = properties:Val("FenceTypeHigh")
                         if highFence then
 
@@ -496,9 +497,10 @@ function BanditUpdate.Collisions(bandit)
                         end
                     end
 
-                    if instanceof(object, "IsoWindow") and (not safehouse or Bandit.IsHostile(bandit)) then
+                    if instanceof(object, "IsoWindow") then
                         if bandit:isFacingObject(object, 0.5) then
 
+                            --[[
                             local fx = object:getSquare():getX()
                             local fy = object:getSquare():getY()
                             if object:getSprite():getProperties():Is(IsoFlagType.WindowN) then
@@ -506,29 +508,26 @@ function BanditUpdate.Collisions(bandit)
                             end
                             if object:getSprite():getProperties():Is(IsoFlagType.doorW) then
                                 fx = fx - 0.5
-                            end
+                            end]]
 
                             if object:isBarricaded() then
                                 if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
 
-                                    local task = {action="Equip", itemPrimary="Base.Crowbar"}
-                                    table.insert(tasks, task)
+                                    local task1 = {action="Equip", itemPrimary="Base.Crowbar"}
+                                    table.insert(tasks, task1)
 
-                                    task = {action="FaceLocation", x=fx, y=fy, z=object:getSquare():getZ(), time=30}
-                                    table.insert(tasks, task)
-
-                                    task = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task)
+                                    local task2 = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                    table.insert(tasks, task2)
                                 end
 
-                            elseif not object:IsOpen() and not object:isSmashed() and Bandit.IsHostile(bandit) and SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
-                                    task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task)
-
                             elseif not object:IsOpen() and not object:isSmashed() then
-                                    task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task)
-
+                                if SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
+                                    local task1 = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                    table.insert(tasks, task1)
+                                else
+                                    local task2 = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                    table.insert(tasks, task2)
+                                end
 
                             elseif object:canClimbThrough(bandit) then
                                 local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
@@ -552,6 +551,7 @@ function BanditUpdate.Collisions(bandit)
                     if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
                         if bandit:isFacingObject(object, 0.5) then
 
+                            --[[
                             local fx = object:getSquare():getX()
                             local fy = object:getSquare():getY()
                             if object:getSprite():getProperties():Is(IsoFlagType.doorN) then
@@ -560,29 +560,23 @@ function BanditUpdate.Collisions(bandit)
                             if object:getSprite():getProperties():Is(IsoFlagType.doorW) then
                                 fx = fx - 0.5
                             end
+                            ]]
 
-                            if object:isBarricaded() and (not safehouse or Bandit.IsHostile(bandit)) then
+                            if object:isBarricaded() then
                                 if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
-                                    Bandit.ClearTasks(bandit)
 
-                                    local task = {action="Equip", itemPrimary="Base.Crowbar"}
-                                    table.insert(tasks, task)
+                                    local task1 = {action="Equip", itemPrimary="Base.Crowbar"}
+                                    table.insert(tasks, task1)
 
-                                    task = {action="FaceLocation", x=fx, y=fy, z=object:getSquare():getZ(), time=30}
-                                    table.insert(tasks, task)
-
-                                    task = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task)
+                                    local task2 = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                    table.insert(tasks, task2)
                                 end
 
-                            elseif object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior) and (not safehouse or Bandit.IsHostile(bandit)) then
+                            elseif object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior) then
                                 if SandboxVars.Bandits.General_DestroyDoor and Bandit.Can(bandit, "breakDoor") then
                                     Bandit.ClearTasks(bandit)
 
                                     local task = {action="Equip", itemPrimary=weapons.melee}
-                                    table.insert(tasks, task)
-
-                                    task = {action="FaceLocation", x=fx, y=fy, z=object:getSquare():getZ(), time=30}
                                     table.insert(tasks, task)
 
                                     task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), sound=object:getThumpSound(), time=80}
@@ -959,12 +953,12 @@ function BanditUpdate.SocialDistance(bandit)
                 local asn = bandit:getActionStateName()
                 local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
                 
-                if bandit:getZ() == player:getZ() and dist < 4 and not veh and asn ~= "onground" then
+                if bandit:getZ() == player:getZ() and dist < 3 and not veh and asn ~= "onground" then
 
                     local closestZombie = BanditUtils.GetClosestZombieLocation(player)
                     local closestBandit = BanditUtils.GetClosestZombieLocation(player)
             
-                    if closestZombie.dist > 3 and closestBandit.dist > 3 then
+                    if closestZombie.dist > 10 and closestBandit.dist > 10 then
                         if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
                             Bandit.SetProgram(bandit, "CompanionGuard", {})
                         end
@@ -1213,7 +1207,8 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if bandit:isCrawling() then
         Bandit.Say(bandit, "DEAD")
     end
-     ------------------------------------------------------------------------------------------------------------------------------------
+
+    ------------------------------------------------------------------------------------------------------------------------------------
     -- TASKBUILDER
     ------------------------------------------------------------------------------------------------------------------------------------
 

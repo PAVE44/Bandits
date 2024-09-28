@@ -209,8 +209,9 @@ end
 function Bandit.Can(zombie, capability)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        if brain.capabilities then
-            if brain.capabilities[capability] then return true end
+        local capabilities = ZombiePrograms[brain.program.name].GetCapabilities()
+        if capabilities then
+            if capabilities[capability] then return true end
         end
     end
     return false

@@ -9,17 +9,25 @@ BanditServer.Players.PlayerUpdate = function(player, args)
 end
 
 
-BanditServer.Commands.GuardpostToggle = function(player, args)
+BanditServer.Commands.PostToggle = function(player, args)
     local gmd = GetBanditModData()
     if not (args.x and args.y and args.z) then return end
 
     local id = args.x .. "-" .. args.y .. "-" .. args.z
     
-    if gmd.Guardposts[id] then
-        gmd.Guardposts[id] = nil
+    if gmd.Posts[id] then
+        gmd.Posts[id] = nil
     else
-        gmd.Guardposts[id] = args
+        gmd.Posts[id] = args
     end
+end
+
+BanditServer.Commands.PostUpdate = function(player, args)
+    local gmd = GetBanditModData()
+    if not (args.x and args.y and args.z) then return end
+
+    local id = args.x .. "-" .. args.y .. "-" .. args.z
+    gmd.Posts[id] = args
 end
 
 BanditServer.Commands.BanditRemove  = function(player, args)
@@ -115,7 +123,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.dna = dna
 
             -- program specific capabilities independent from clan
-            brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
+            -- brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
 
             -- action and state flags
             brain.stationary = false

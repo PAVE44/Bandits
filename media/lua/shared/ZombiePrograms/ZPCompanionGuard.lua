@@ -50,9 +50,13 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
 
     -- GUARD POST MUST BE PRESENT OTHERWISE SWITH PROGRAM
     -- at guardpost, switch program
-    local atGuardpost = BanditGuardpost.At(bandit)
+    local atGuardpost = BanditPost.At(bandit, "guard")
     if not atGuardpost then
 
+        Bandit.SetProgram(bandit, "Companion", {})
+        return {status=true, next="Prepare", tasks=tasks}
+
+        --[[
         -- we abandon the temporary guardpost only if the player is endangered
         local temporaryGuardpost = false
         if not Bandit.IsHostile(bandit) then
@@ -63,12 +67,12 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
                 local player = playerList:get(i)
                 if player then
                     local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
-                    if bandit:getZ() == player:getZ() and dist < 5 and not player:getVehicle() then
+                    if bandit:getZ() == player:getZ() and dist < 3 and not player:getVehicle() then
 
                         -- determine if safe
                         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
                         local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-                        if closestZombie.dist > 3 and closestBandit.dist > 3 then 
+                        if closestZombie.dist > 10 and closestBandit.dist > 10 then 
                             temporaryGuardpost = true
                         end
                     end
@@ -80,6 +84,8 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
             Bandit.SetProgram(bandit, "Companion", {})
             return {status=true, next="Prepare", tasks=tasks}
         end
+        ]]
+
     end
     
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)

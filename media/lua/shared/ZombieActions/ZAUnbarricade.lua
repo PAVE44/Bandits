@@ -7,6 +7,7 @@ ZombieActions.Unbarricade.onStart = function(zombie, task)
 end
 
 ZombieActions.Unbarricade.onWorking = function(zombie, task)
+    zombie:faceLocationF(task.x, task.y)
     if not zombie:getVariableString("BumpAnimFinished") then
         return false
     else

@@ -39,12 +39,12 @@ local function lootContainer(zombie, container, task)
     return success
 end
 
-ZombieActions.LootBody = {}
-ZombieActions.LootBody.onStart = function(zombie, task)
+ZombieActions.LootWeapons = {}
+ZombieActions.LootWeapons.onStart = function(zombie, task)
     return true
 end
 
-ZombieActions.LootBody.onWorking = function(zombie, task)
+ZombieActions.LootWeapons.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
     if task.time <= 0 then
         return true
@@ -58,7 +58,7 @@ ZombieActions.LootBody.onWorking = function(zombie, task)
     return false
 end
 
-ZombieActions.LootBody.onComplete = function(zombie, task)
+ZombieActions.LootWeapons.onComplete = function(zombie, task)
     local cell = getCell()
     local square = cell:getGridSquare(task.x, task.y, task.z)
     if square then
