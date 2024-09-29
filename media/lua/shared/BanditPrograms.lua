@@ -248,7 +248,7 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
                                         bx = object:getX()
                                         by = object:getY()
                                         bz = object:getZ()
-                                        lootDist = 1.1
+                                        lootDist = 1.3
                                         lootAnim = "LootLow"
                                     else
                                         local asquare = AdjacentFreeTileFinder.Find(square, bandit)

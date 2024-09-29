@@ -171,7 +171,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                                     local body = object
                                     container = body:getContainer()
                                     if container and not container:isEmpty() then
-                                        local subTasks = BanditPrograms.Container.Loot(bandit, body, container)
+                                        local subTasks = BanditPrograms.Container.WeaponLoot(bandit, body, container)
                                         if #subTasks > 0 then
                                             for _, subTask in pairs(subTasks) do
                                                 table.insert(tasks, subTask)
