@@ -154,8 +154,8 @@ table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol2", 
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol3", "Base.44Clip", 8, "DesertEagleShoot", 45))
 
 if getActivatedMods():contains("Brita") then
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK103", "Base.AKClip", 30, "[1]Shot_762x39", 4))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK12", "Base.545StdClip", 30, "[1]Shot_545", 3))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK103", "Base.AKClip", 30, "[1]Shot_762x39", 5))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK12", "Base.545StdClip", 30, "[1]Shot_545", 4))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK308", "Base.308ExtClip", 20, "[1]Shot_308", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK47", "Base.AKClip", 30, "[1]Shot_762x39", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK74", "Base.545StdClip", 30, "[1]Shot_545", 10))
@@ -165,7 +165,7 @@ if getActivatedMods():contains("Brita") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M723", "Base.556Clip", 30, "[1]Shot_556", 6))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M4A1", "Base.556Clip", 30, "[1]Shot_556", 7))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.FAMAS", "Base.556Clip", 30, "[1]Shot_556", 7))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.G21LMG", "Base.308Belt", 30, "[1]Shot_308", 2))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.G21LMG", "Base.308Belt", 30, "[1]Shot_308", 3))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.G28", "Base.308ExtClip", 20, "[1]Shot_308", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.UZI_Micro", "Base.9mmExtClip", 20, "[1]Shot_9", 10))
 end
@@ -175,10 +175,10 @@ if getActivatedMods():contains("firearmmod") or getActivatedMods():contains("fir
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AR15", "Base.556Clip", 30, "M14Shoot", 30))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M733", "Base.556Clip", 30, "M14Shoot", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.FN_FAL", "Base.FN_FAL_Mag", 20, "M14Shoot", 30))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mac10", "Base.Mac10Mag", 30, "M9Shoot", 2))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5", "Base.MP5Mag", 30, "M9Shoot", 4))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.UZI", "Base.UZIMag", 20, "M9Shoot", 3))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M60", "Base.M60Mag", 100, "FirearmM60Fire", 3))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mac10", "Base.Mac10Mag", 30, "M9Shoot", 8))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5", "Base.MP5Mag", 30, "M9Shoot", 12))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.UZI", "Base.UZIMag", 20, "M9Shoot", 11))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M60", "Base.M60Mag", 100, "FirearmM60Fire", 13))
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.ColtAce", "Base.22Clip", 15, "M9Shoot", 35))
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Glock17", "Base.Glock17Mag", 17, "M9Shoot", 35))
 end
@@ -190,7 +190,7 @@ if getActivatedMods():contains("VFExpansion1") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MAC10Unfolded", "Base.45Clip32", 32, "M1911Shoot", 10))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.M60MMG", "Base.M60Belt", 100, "M1911Shoot", 13))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.CampCarbine", "Base.45Clip", 7, "M1911Shoot", 22))
-    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5Unfolded", "Base.9mmClip30", 7, "M9Shoot", 7))
+    table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.MP5Unfolded", "Base.9mmClip30", 7, "M9Shoot", 12))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.Mini14", "Base.223Clip20", 20, "AK47shoot", 17))
     
     table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.CZ75", "Base.9mmClip16", 16, "M9Shoot", 35))
