@@ -35,9 +35,13 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
 
     local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
     local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-    local aimTimeSurp = math.floor(dist ^ 1.2)
+    local aimTimeSurp = math.floor(dist ^ 1.1)
+
+    if instanceof(enemyCharacter, "IsoZombie") then
+        aimTimeSurp = math.floor(aimTimeSurp / 2)
+    end
     if Bandit.IsDNA(bandit, "slow") then
-        aimTimeSurp = aimTimeSurp + 15
+        aimTimeSurp = aimTimeSurp + 11
     end
 
     if aimTimeMin + aimTimeSurp > 0 then
@@ -72,9 +76,9 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local weapon = brain.weapons[slot]
 
     local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
-    local firingtime = weapon.shotDelay + math.floor(dist ^ 1.2)
+    local firingtime = weapon.shotDelay + math.floor(dist ^ 1.1)
     if Bandit.IsDNA(bandit, "slow") then
-        firingtime = firingtime + 5
+        firingtime = firingtime + 3
     end
 
     local anim
