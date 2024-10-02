@@ -252,7 +252,7 @@ function BanditUpdate.Speech(bandit)
     if brain.speech and brain.speech > 0 then
         brain.speech = brain.speech - 0.01
         if brain.speech < 0 then brain.speech = 0 end
-        BanditBrain.Update(bandit, brain)
+        -- BanditBrain.Update(bandit, brain)
     end
 end
 
@@ -261,7 +261,7 @@ function BanditUpdate.Sound(bandit)
     if brain.sound and brain.sound > 0 then
         brain.sound = brain.sound - 0.001
         if brain.sound < 0 then brain.sound = 0 end
-        BanditBrain.Update(bandit, brain)
+        -- BanditBrain.Update(bandit, brain)
     end
 end
 
@@ -972,7 +972,7 @@ end
 function BanditUpdate.Zombie(zombie)
     
     zombie:setVariable("NoLungeAttack", true)
- 
+
     local asn = zombie:getActionStateName()
     if not zombie:getVariableBoolean("Bandit") and not zombie:isProne() and asn ~= "bumped" and asn ~= "onground" and asn ~= "climbfence" and asn ~= "getup" then
 
@@ -1005,92 +1005,121 @@ function BanditUpdate.Zombie(zombie)
         local enemy = BanditUtils.GetClosestBanditLocation(zombie)
 
         -- deal with the found if it is in range
-        if enemy.dist < 20 then
+        if enemy.dist < 30 then
 
             -- fetch visible players
             -- if player is closer than the bandit, dont do anything, game engine will manage attack on player by itself
             local player = BanditUtils.GetClosestPlayerLocation(zombie, true)
             if player.dist < enemy.dist then return end
 
-            local bandit = BanditZombie.GetInstanceById(enemy.id)
-            local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
+            -- local asn = zombie:getActionStateName()
 
-            -- the enemy is far, proceed with movement
-            if enemy.dist > 1 then
-                local asn = zombie:getActionStateName()
-                if zombie:CanSee(bandit) and asn ~= "lunge" then
-                    zombie:setTarget(bandit)
+            local bandit = BanditZombie.GetInstanceById(enemy.id)
+
+            -- the enemy is far, proceed with standard movement
+            if enemy.dist > 6 then 
+                if zombie:CanSee(bandit) then
                     zombie:pathToCharacter(bandit)
-                    zombie:spotted(bandit, true)
                 end
 
             elseif enemy.dist > 0.49 and enemy.dist < 0.7 then
                 zombie:setTarget(nil)
                 zombie:setPath2(nil)
+
+            elseif enemy.dist > 0.49  then
+                
+                if zombie:CanSee(bandit)  then
+                    -- zombie:Hit(teeth, bandit, 0, false, 0, false)
+                    -- zombie:addAggro(bandit, 0.1)
+                    
+                    -- zombie.TimeSinceSeenFlesh = 0
+                    -- zombie:changeState(LungeState.instance())
+                    -- zombie:setTarget(bandit)
+                    
+                    -- zombie:setLastHeardSound(bandit:getX(), bandit:getY(), bandit:getZ());
+                    -- zombie:pathToSound(bandit:getX(), bandit:getY(), bandit:getZ())
+                    -- zombie:pathToCharacter(bandit)
+                    
+                    -- this resets the TimeSinceLastTimeSeenFlesh necessary for zombie enter lunge state
+                    -- without it setTarget will not work
+                    zombie:spotted(getPlayer(), true)
+                    zombie:setTarget(bandit)
+                    
+                    -- probably not needed
+                    zombie:setAttackedBy(bandit)
+                end
+
+            --[[elseif enemy.dist > 0.51 and enemy.dist < 0.7 then
+                zombie:setTarget(nil)
+                zombie:setPath2(nil)]]
             
-            -- the enemy is close, proceed with the attack
-            elseif enemy.dist < 0.49 and enemy.z == zz and not isWallTo then
+            -- the enemy is in bite range, proceed with the attack
+            elseif enemy.dist < 0.49 and enemy.z == zz then
 
-                -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
-                if zombie:isFacingObject(bandit, 0.5) then
+                local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
+                if not isWallTo then
 
-                    -- detect number of zombies attacking the bandit at the same time
-                    local attackingZombiesNumber = 0
-                    local attackingZombieList = BanditZombie.GetAllZ()
-                    for id, attackingZombie in pairs(attackingZombieList) do
-                        local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
-                        if dist < 0.6 then
-                            attackingZombiesNumber = attackingZombiesNumber + 1
-                            
-                            -- if we know there is at least 3, then it's good enough and we can break for the sake of performance
-                            if attackingZombiesNumber > 2 then break end
+                    -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
+                    if zombie:isFacingObject(bandit, 0.5) then
+
+                        -- detect number of zombies attacking the bandit at the same time
+                        local attackingZombiesNumber = 0
+                        local attackingZombieList = BanditZombie.GetAllZ()
+                        for id, attackingZombie in pairs(attackingZombieList) do
+                            local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
+                            if dist < 0.6 then
+                                attackingZombiesNumber = attackingZombiesNumber + 1
+                                
+                                -- if we know there is at least 3, then it's good enough and we can break for the sake of performance
+                                if attackingZombiesNumber > 2 then break end
+                            end
                         end
-                    end
 
-                    -- depending on the number of attacking zombies, initiate a dragown or just a bite 
-                    if attackingZombiesNumber > 2 then
-                        local sound
-                        if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
-                        if not Bandit.HasTaskType(bandit, "Die") then
-                            Bandit.ClearTasks(bandit)
-                            local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
-                            Bandit.AddTask(bandit, task)
+                        -- depending on the number of attacking zombies, initiate a dragown or just a bite 
+                        if attackingZombiesNumber > 2 then
+                            local sound
+                            if bandit:isFemale() then sound = "FemaleBeingEatenDeath" end
+                            if not Bandit.HasTaskType(bandit, "Die") then
+                                Bandit.ClearTasks(bandit)
+                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
+                                Bandit.AddTask(bandit, task)
+                            end
+                        else
+                            zombie:setTarget(nil)
+                            zombie:setPath2(nil)
+                            zombie:setBumpType("Bite")
+
+                            if ZombRand(4) == 1 then
+                                bandit:playSound("ZombieScratch")
+                            else
+                                bandit:playSound("ZombieBite")
+                            end
+
+                            -- this item determines the strenght of the zombie attack on bandit
+                            local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
+
+                            SwipeStatePlayer.splash(bandit, teeth, zombie)
+
+                            bandit:setHitFromBehind(zombie:isBehind(bandit))
+
+                            if instanceof(bandit, "IsoZombie") then
+                                bandit:setHitAngle(zombie:getForwardDirection())
+                                bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
+                            end
+
+                            bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                            Bandit.UpdateInfection(bandit, 0.001)
+                            if bandit:getHealth() <= 0 then
+                                bandit:setHealth(0)
+                                bandit:clearAttachedItems()
+                                -- bandit:changeState(ZombieOnGroundState.instance())
+                                bandit:setAttackedBy(getCell():getFakeZombieForHit())
+                                -- bandit:becomeCorpse()
+                            end
                         end
                     else
-                        zombie:setTarget(nil)
-                        zombie:setPath2(nil)
-                        zombie:setBumpType("Bite")
-
-                        if ZombRand(4) == 1 then
-                            bandit:playSound("ZombieScratch")
-                        else
-                            bandit:playSound("ZombieBite")
-                        end
-
-                        -- this item determines the strenght of the zombie attack on bandit
-                        local teeth = InventoryItemFactory.CreateItem("Base.RollingPin")
-
-                        SwipeStatePlayer.splash(bandit, teeth, zombie)
-
-                        bandit:setHitFromBehind(zombie:isBehind(bandit))
-
-                        if instanceof(bandit, "IsoZombie") then
-                            bandit:setHitAngle(zombie:getForwardDirection())
-                            bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
-                        end
-
-                        bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                        Bandit.UpdateInfection(bandit, 0.001)
-                        if bandit:getHealth() <= 0 then
-                            bandit:setHealth(0)
-                            bandit:clearAttachedItems()
-                            -- bandit:changeState(ZombieOnGroundState.instance())
-                            bandit:setAttackedBy(getCell():getFakeZombieForHit())
-                            -- bandit:becomeCorpse()
-                        end
+                        zombie:faceThisObject(bandit)
                     end
-                else
-                    zombie:faceThisObject(bandit)
                 end
             end
         end
@@ -1273,7 +1302,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         for _, task in pairs(tasks) do
             table.insert(brain.tasks, task)
         end
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
     
     ------------------------------------------------------------------------------------------------------------------------------------

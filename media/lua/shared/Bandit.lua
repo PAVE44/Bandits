@@ -1,5 +1,23 @@
 Bandit = Bandit or {}
 
+Bandit.SoundTab = {
+    SPOTTED = {prefix = "ZSSpotted_", randMax = 6, length = 2},
+    HIT = {prefix = "ZSHit_", randMax = 14, length = 0.5},
+    BREACH = {prefix = "ZSBreach_", randMax = 6, length = 10},
+    RELOADING = {prefix = "ZSReloading_", randMax = 6, length = 4},
+    CAR = {prefix = "ZSCar_", randMax = 6, length = 4},
+    DEATH = {prefix = "ZSDeath_", randMax = 8, length = 6},
+    DEAD = {prefix = "ZSDead_", randMax = 6, length = 3},
+    BURN = {prefix = "ZSBurn_", randMax = 3, length = 8},
+    DRAGDOWN = {prefix = "ZSDragdown_", randMax = 3, length = 8},
+    INSIDE = {prefix = "ZSInside_", randMax = 3, length = 25},
+    OUTSIDE = {prefix = "ZSOutside_", randMax = 3, length = 25},
+    UPSTAIRS = {prefix = "ZSUpstairs_", randMax = 1, length = 25},
+    ROOM_KITCHEN = {prefix = "ZSRoom_Kitchen_", randMax = 1, length = 25},
+    ROOM_BATHROOM = {prefix = "ZSRoom_Bathroom_", randMax = 1, length = 25},
+    DEFENDER_SPOTTED = {prefix = "ZSDefender_Spot_", randMax = 4, length = 8}
+}
+
 function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getPlayer(), 'Commands', 'BanditUpdatePart', syncData)
 end
@@ -14,7 +32,7 @@ function Bandit.AddTask(zombie, task)
         end
     
         table.insert(brain.tasks, task)
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -28,7 +46,7 @@ function Bandit.AddTaskFirst(zombie, task)
         end
 
         table.insert(brain.tasks, 1, task)
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -91,7 +109,7 @@ function Bandit.UpdateTask(zombie, task)
     if brain then
         table.remove(brain.tasks, 1)
         table.insert(brain.tasks, 1, task)
-        BanditBrain.Update(zombie, brain)
+        --BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -99,7 +117,7 @@ function Bandit.RemoveTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         table.remove(brain.tasks, 1)
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -114,7 +132,7 @@ function Bandit.ClearTasks(zombie)
         end
 
         brain.tasks = newtasks
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -129,7 +147,7 @@ function Bandit.ClearOtherTasks(zombie, exception)
         end
 
         brain.tasks = newtasks
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -140,7 +158,7 @@ function Bandit.UpdateEndurance(zombie, delta)
         brain.endurance = brain.endurance + delta
         if brain.endurance < 0 then brain.endurance = 0 end
         if brain.endurance > 1 then brain.endurance = 1 end
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -149,7 +167,7 @@ function Bandit.UpdateInfection(zombie, delta)
     if brain then
         if not brain.infection then brain.infection = 0 end
         brain.infection = brain.infection + delta
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -157,7 +175,7 @@ function Bandit.ForceStationary(zombie, stationary)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.stationary = stationary
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -172,7 +190,7 @@ function Bandit.SetSleeping(zombie, sleeping)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.sleeping = sleeping
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -187,7 +205,7 @@ function Bandit.SetAim(zombie, aim)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.aim = aim
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -202,7 +220,7 @@ function Bandit.SetCapabilities(zombie, capabilities)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.capabilities = capabilities
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -241,7 +259,7 @@ function Bandit.SetMaster(zombie, master)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.master = master
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
         -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
     end
 end
@@ -261,7 +279,7 @@ function Bandit.SetProgram(zombie, program, programParams)
         brain.program.name = program
         brain.program.stage = "Prepare"
 
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
@@ -270,7 +288,7 @@ function Bandit.SetProgramStage(zombie, stage)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.program.stage = stage
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
@@ -280,7 +298,7 @@ function Bandit.SetHostile(zombie, hostile)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.hostile = hostile
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
     end
 end
 
@@ -328,7 +346,7 @@ function Bandit.SetWeapons(zombie, weapons)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.weapons = weapons
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
         Bandit.UpdateItemsToSpawnAtDeath(zombie)
         -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
     end
@@ -339,7 +357,7 @@ function Bandit.SetInventory(zombie, inventory)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.inventory = inventory
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
         Bandit.UpdateItemsToSpawnAtDeath(zombie)
         -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
     end
@@ -360,7 +378,7 @@ function Bandit.SetLoot(zombie, loot)
     local brain = BanditBrain.Get(zombie)
     if brain then
         brain.loot = loot
-        BanditBrain.Update(zombie, brain)
+        -- BanditBrain.Update(zombie, brain)
         Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
@@ -461,7 +479,7 @@ function Bandit.Say(zombie, phrase, force)
     if dist <= 14 then
         local id = BanditUtils.GetCharacterID(zombie)
         local voice = 1 + math.abs(id) % 5
-        if voice > 2 then voice = 1 end
+        if voice > 3 then voice = 1 end
 
         local sex = "Male"
         if zombie:isFemale() then 
@@ -469,55 +487,11 @@ function Bandit.Say(zombie, phrase, force)
             voice = 3
         end
 
-        local sound
-        local length = 2
-        if phrase == "SPOTTED" then
-            sound = "ZSSpotted_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-        elseif phrase == "HIT" then
-            sound = "ZSHit_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(14))
-            length = 0.5
-        elseif phrase == "BREACH" then
-            sound = "ZSBreach_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 10
-        elseif phrase == "RELOADING" then
-            sound = "ZSReloading_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 4
-        elseif phrase == "CAR" then
-            sound = "ZSCar_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 4
-        elseif phrase == "DEATH" then
-            sound = "ZSDeath_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(8))
-            length = 6
-        elseif phrase == "DEAD" then
-            sound = "ZSDead_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(6))
-            length = 3
-        elseif phrase == "BURN" then
-            sound = "ZSBurn_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 8
-        elseif phrase == "DRAGDOWN" then
-            sound = "ZSDragdown_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 8
-        elseif phrase == "INSIDE" then
-            sound = "ZSInside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 25
-        elseif phrase == "OUTSIDE" then
-            sound = "ZSOutside_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(3))
-            length = 25
-        elseif phrase == "UPSTAIRS" then
-            sound = "ZSUpstairs_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 25
-        elseif phrase == "ROOM_KITCHEN" then
-            sound = "ZSRoom_Kitchen_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 25
-        elseif phrase == "ROOM_BATHROOM" then
-            sound = "ZSRoom_Bathroom_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(1))
-            length = 25
-        elseif phrase == "DEFENDER_SPOTTED" then
-            sound = "ZSDefender_Spot_" .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(4))
-            length = 8
-        end
+        local config = Bandit.SoundTab[phrase]
+        if config then
+            local sound = config.prefix .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(config.randMax))
+            local length = config.length or 2
 
-        if sound then
             -- text captions
             if SandboxVars.Bandits.General_Captions then
                 local text = "IGUI_Bandits_Speech_" .. sound
@@ -530,17 +504,11 @@ function Bandit.Say(zombie, phrase, force)
 
             -- audiable speech
             if SandboxVars.Bandits.General_Speak then
-                if localSound then
-                    local emitter = getWorld():getFreeEmitter(zombie:getX(), zombie:getY(), zombie:getZ())
-                    -- emitter:setVolumeAll(0.2)
-                    emitter:playSoundLocal(sound)
-                else
-                    zombie:getEmitter():playVocals(sound)
-                end
+                zombie:getEmitter():playVocals(sound)
             end
 
             brain.speech = length
-            BanditBrain.Update(zombie, brain)
+
             addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
         end
     end

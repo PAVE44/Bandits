@@ -653,7 +653,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     if not brainShooter.sound or brainShooter.sound == 0 then
         addSound(getPlayer(), shooter:getX(), shooter:getY(), shooter:getZ(), 40, 100)
         brainShooter.sound = 1
-        BanditBrain.Update(shooter, brainShooter)
+        -- BanditBrain.Update(shooter, brainShooter)
     end
 
     for dx=-2, 2 do
