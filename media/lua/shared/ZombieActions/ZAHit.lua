@@ -53,7 +53,7 @@ local function Hit(attacker, item, victim)
             end
         end
         victim:playSound(hitSound)
-        addSound(getPlayer(), victim:getX(), victim:getY(), victim:getZ(), 4, 50)
+        -- addSound(getPlayer(), victim:getX(), victim:getY(), victim:getZ(), 4, 50)
     end
 
     -- Clean up the temporary player after use
