@@ -40,6 +40,20 @@ ZombiePrograms.Defend.Wait = function(bandit)
 
     local tasks = {}
 
+    -- if outside building change program
+    if bandit:isOutside() then
+        Bandit.SetSleeping(bandit, false)
+        Bandit.ClearTasks(bandit)
+        Bandit.SetProgram(bandit, "Looter", {})
+
+        local brain = BanditBrain.Get(bandit)
+        local syncData = {}
+        syncData.id = brain.id
+        syncData.sleeping = brain.sleeping
+        syncData.program = brain.program
+        Bandit.ForceSyncPart(friendly, syncData)
+    end
+
     -- manage sleep
     local gameTime = getGameTime()
     local hour = gameTime:getHour()
