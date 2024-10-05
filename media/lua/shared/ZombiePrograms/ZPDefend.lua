@@ -49,7 +49,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
         local brain = BanditBrain.Get(bandit)
         local syncData = {}
         syncData.id = brain.id
-        syncData.sleeping = brain.sleeping
+        syncData.sleeping = false
         syncData.program = brain.program
         Bandit.ForceSyncPart(friendly, syncData)
     end

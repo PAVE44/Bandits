@@ -511,66 +511,67 @@ function BanditUpdate.Collisions(bandit)
                             break
 
                         end
-                    end
+                    
 
-                    if instanceof(object, "IsoWindow") then
-                        if bandit:isFacingObject(object, 0.5) then
+                        if instanceof(object, "IsoWindow") then
+                            if bandit:isFacingObject(object, 0.5) then
 
-                            --[[
-                            local fx = object:getSquare():getX()
-                            local fy = object:getSquare():getY()
-                            if object:getSprite():getProperties():Is(IsoFlagType.WindowN) then
-                                fy = fy - 0.5
-                            end
-                            if object:getSprite():getProperties():Is(IsoFlagType.doorW) then
-                                fx = fx - 0.5
-                            end]]
-
-                            if object:isBarricaded() then
-                                if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
-
-                                    local task1 = {action="Equip", itemPrimary="Base.Crowbar"}
-                                    table.insert(tasks, task1)
-
-                                    local task2 = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task2)
+                                --[[
+                                local fx = object:getSquare():getX()
+                                local fy = object:getSquare():getY()
+                                if object:getSprite():getProperties():Is(IsoFlagType.WindowN) then
+                                    fy = fy - 0.5
                                 end
+                                if object:getSprite():getProperties():Is(IsoFlagType.doorW) then
+                                    fx = fx - 0.5
+                                end]]
 
-                            elseif not object:IsOpen() and not object:isSmashed() then
-                                if SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
-                                    local task1 = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task1)
-                                else
-                                    local task2 = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task2)
+                                if object:isBarricaded() then
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
+
+                                        local task1 = {action="Equip", itemPrimary="Base.Crowbar"}
+                                        table.insert(tasks, task1)
+
+                                        local task2 = {action="Unbarricade", anim="RemoveBarricadeCrowbarHigh", time=230, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                        table.insert(tasks, task2)
+                                    end
+
+                                elseif not object:IsOpen() and not object:isSmashed() then
+                                    if SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
+                                        local task1 = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        table.insert(tasks, task1)
+                                    else
+                                        local task2 = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        table.insert(tasks, task2)
+                                    end
+
+                                elseif object:canClimbThrough(bandit) then
+                                    --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
+                                    local raw = KahluaUtil.rawTostring2(params)
+                                    local startx = string.match(raw, "0=(%d+)")
+                                    local starty = string.match(raw, "1=(%d+)")
+                                    local endx = string.match(raw, "3=(%d+)")
+                                    local endy = string.match(raw, "4=(%d+)")]]
+
+                                    ClimbThroughWindowState.instance():setParams(bandit, object)
+                                    bandit:changeState(ClimbThroughWindowState.instance())
+                                    bandit:setBumpType("ClimbWindow")
                                 end
-
-                            elseif object:canClimbThrough(bandit) then
-                                --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
-                                local raw = KahluaUtil.rawTostring2(params)
-                                local startx = string.match(raw, "0=(%d+)")
-                                local starty = string.match(raw, "1=(%d+)")
-                                local endx = string.match(raw, "3=(%d+)")
-                                local endy = string.match(raw, "4=(%d+)")]]
-
-                                ClimbThroughWindowState.instance():setParams(bandit, object)
-                                bandit:changeState(ClimbThroughWindowState.instance())
-                                bandit:setBumpType("ClimbWindow")
                             end
+
+                            break
+                        elseif properties:Is(IsoFlagType.WindowW) or properties:Is(IsoFlagType.WindowN) then
+                            --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
+                            local raw = KahluaUtil.rawTostring2(params)
+                            local startx = string.match(raw, "0=(%d+)")
+                            local starty = string.match(raw, "1=(%d+)")
+                            local endx = string.match(raw, "3=(%d+)")
+                            local endy = string.match(raw, "4=(%d+)")]]
+
+                            ClimbThroughWindowState.instance():setParams(bandit, object)
+                            bandit:changeState(ClimbThroughWindowState.instance())
+                            bandit:setBumpType("ClimbWindow")
                         end
-
-                        break
-                    elseif properties and properties:Is(IsoFlagType.WindowW) or properties:Is(IsoFlagType.WindowN) then
-                        --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
-                        local raw = KahluaUtil.rawTostring2(params)
-                        local startx = string.match(raw, "0=(%d+)")
-                        local starty = string.match(raw, "1=(%d+)")
-                        local endx = string.match(raw, "3=(%d+)")
-                        local endy = string.match(raw, "4=(%d+)")]]
-
-                        ClimbThroughWindowState.instance():setParams(bandit, object)
-                        bandit:changeState(ClimbThroughWindowState.instance())
-                        bandit:setBumpType("ClimbWindow")
                     end
 
 

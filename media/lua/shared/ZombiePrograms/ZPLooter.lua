@@ -162,5 +162,7 @@ ZombiePrograms.Looter.Operate = function(bandit)
     return {status=true, next="Operate", tasks=tasks}
 end
 
-
+ZombiePrograms.Looter.Wait = function(bandit)
+    return {status=true, next="Operate", tasks={}}
+end
 
