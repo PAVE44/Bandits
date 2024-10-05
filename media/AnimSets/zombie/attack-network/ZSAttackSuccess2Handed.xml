@@ -18,11 +18,6 @@
 		<m_StringValue>success</m_StringValue>
 	</m_Conditions>
 	<m_Events>
-		<m_EventName>AttackCollisionCheck</m_EventName>
-		<m_TimePc>0.2</m_TimePc>
-		<m_ParameterValue></m_ParameterValue>
-	</m_Events>
-	<m_Events>
 		<m_EventName>SetVariable</m_EventName>
 		<m_Time>Start</m_Time>
 		<m_ParameterValue>PlayerHitReaction=Bite</m_ParameterValue>

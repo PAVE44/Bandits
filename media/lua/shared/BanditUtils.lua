@@ -250,6 +250,10 @@ function BanditUtils.GetNumNearbyBuildings()
     return buildingCount
 end
 
+function BanditUtils.GetBuildingID(buildingDef)
+    return buildingDef:getX() .. "-" .. buildingDef:getY() .. "-" .. buildingDef:getX2() .. "-" .. buildingDef:getY2()
+end
+
 --[[
 local x1 = player:getX()
 local y1 = player:getY()

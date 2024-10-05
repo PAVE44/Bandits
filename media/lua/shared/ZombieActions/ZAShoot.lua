@@ -644,6 +644,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local brainShooter = BanditBrain.Get(shooter)
     local weapon = brainShooter.weapons[task.slot]
     weapon.bulletsLeft = weapon.bulletsLeft - 1
+    Bandit.UpdateItemsToSpawnAtDeath(shooter)
     
     shooter:startMuzzleFlash()
     shooter:playSound(weapon.shotSound)

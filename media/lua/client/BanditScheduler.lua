@@ -520,7 +520,7 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
         end
         
         -- avoid recently visited buildings
-        local bid = building:getID()
+        local bid = BanditUtils.GetBuildingID(buildingDef)
         local gmd = GetBanditModData()
         if gmd.VisitedBuildings and gmd.VisitedBuildings[bid] then
             local now = getGameTime():getWorldAgeHours() --  8

@@ -20,6 +20,7 @@ ZombieActions.Reload.onComplete = function(zombie, task)
 
     weapon.bulletsLeft = weapon.magSize
     weapon.magCount = weapon.magCount - 1
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     return true
 end

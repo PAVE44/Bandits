@@ -131,7 +131,8 @@ BanditPlayer.UpdateVisitedBuildings = function()
     local player = getPlayer()
     local building = player:getBuilding()
     if building then
-        local bid = building:getID()
+        local buildingDef = building:getDef()
+        local bid = BanditUtils.GetBuildingID(buildingDef)
         local wah = getGameTime():getWorldAgeHours()
         local args = {bid=bid, wah=wah}
         sendClientCommand(player, 'Commands', 'UpdateVisitedBuilding', args)

@@ -470,7 +470,7 @@ function BanditUpdate.Collisions(bandit)
                         end
 
                         local highFence = properties:Val("FenceTypeHigh")
-                        if highFence then
+                        if highFence and hoppable then
 
                             if bandit:getVariableBoolean("bPathfind") or not bandit:getVariableBoolean("bMoving") then
                                 bandit:setVariable("bPathfind", false)
@@ -985,12 +985,25 @@ function BanditUpdate.Zombie(zombie)
         end
 
         local phi = zombie:getPrimaryHandItem()
-        local shi = zombie:getSecondaryHandItem()
         if phi then
             zombie:setPrimaryHandItem(nil)
         end
+
+        local shi = zombie:getSecondaryHandItem()
         if shi then
             zombie:setSecondaryHandItem(nil)
+        end
+
+        local target = zombie:getTarget()
+        if target and instanceof(target, "IsoZombie") then
+            -- shutting down zombie attack on bandit because it will crash the game
+            -- zombie:setVariable("BanditTarget", true)
+            zombie:setVariable("ZombieBiteDone", true)
+            zombie:setNoTeeth(true)
+            
+        else
+            -- zombie:setVariable("BanditTarget", false)
+            zombie:setNoTeeth(false)
         end
 
         local emitter = zombie:getEmitter()
@@ -1022,26 +1035,9 @@ function BanditUpdate.Zombie(zombie)
                     zombie:pathToCharacter(bandit)
                 end
 
-            elseif enemy.dist > 0.49 and enemy.dist < 0.7 then
-                zombie:setTarget(nil)
-                zombie:setPath2(nil)
-
-            elseif enemy.dist > 0.49  then
+            elseif enemy.dist >= 0.49  then
                 
                 if zombie:CanSee(bandit)  then
-                    -- zombie:Hit(teeth, bandit, 0, false, 0, false)
-                    -- zombie:addAggro(bandit, 0.1)
-                    
-                    -- zombie.TimeSinceSeenFlesh = 0
-                    -- zombie:changeState(LungeState.instance())
-                    -- zombie:setTarget(bandit)
-                    
-                    -- zombie:setLastHeardSound(bandit:getX(), bandit:getY(), bandit:getZ());
-                    -- zombie:pathToSound(bandit:getX(), bandit:getY(), bandit:getZ())
-                    -- zombie:pathToCharacter(bandit)
-                    
-                    -- this resets the TimeSinceLastTimeSeenFlesh necessary for zombie enter lunge state
-                    -- without it setTarget will not work
                     zombie:spotted(getPlayer(), true)
                     zombie:setTarget(bandit)
                     
@@ -1049,10 +1045,6 @@ function BanditUpdate.Zombie(zombie)
                     zombie:setAttackedBy(bandit)
                 end
 
-            --[[elseif enemy.dist > 0.51 and enemy.dist < 0.7 then
-                zombie:setTarget(nil)
-                zombie:setPath2(nil)]]
-            
             -- the enemy is in bite range, proceed with the attack
             elseif enemy.dist < 0.49 and enemy.z == zz then
 
@@ -1060,7 +1052,7 @@ function BanditUpdate.Zombie(zombie)
                 if not isWallTo then
 
                     -- if the zombie is facing the bandit attack may proceed, otherwise turn zombie towards the target
-                    if zombie:isFacingObject(bandit, 0.5) then
+                    if zombie:isFacingObject(bandit, 0.3) then
 
                         -- detect number of zombies attacking the bandit at the same time
                         local attackingZombiesNumber = 0
@@ -1085,8 +1077,6 @@ function BanditUpdate.Zombie(zombie)
                                 Bandit.AddTask(bandit, task)
                             end
                         else
-                            zombie:setTarget(nil)
-                            zombie:setPath2(nil)
                             zombie:setBumpType("Bite")
 
                             if ZombRand(4) == 1 then
