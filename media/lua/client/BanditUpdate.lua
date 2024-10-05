@@ -245,6 +245,22 @@ function BanditUpdate.Fire(bandit)
             Bandit.AddTask(bandit, task)
         end
     end
+
+    local cell = bandit:getCell()
+    -- local brain = BanditBrain.Get(bandit)
+    local nearFire = false
+    for x=-2, 2 do
+        for y=-2, 2 do
+            local testSquare = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, bandit:getZ())
+            if testSquare and testSquare:haveFire() then
+                if not Bandit.HasActionTask(bandit) then
+                    Bandit.ClearTasks(bandit)
+                    local task = {action="Time", anim="Cough", time=200}
+                    Bandit.AddTask(bandit, task)
+                end
+            end
+        end
+    end
 end
 
 function BanditUpdate.Speech(bandit)
@@ -530,23 +546,33 @@ function BanditUpdate.Collisions(bandit)
                                 end
 
                             elseif object:canClimbThrough(bandit) then
-                                local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
+                                --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
                                 local raw = KahluaUtil.rawTostring2(params)
                                 local startx = string.match(raw, "0=(%d+)")
                                 local starty = string.match(raw, "1=(%d+)")
                                 local endx = string.match(raw, "3=(%d+)")
-                                local endy = string.match(raw, "4=(%d+)")
+                                local endy = string.match(raw, "4=(%d+)")]]
 
-                                if true or (startx and starty and endx and endy) then
-                                    ClimbThroughWindowState.instance():setParams(bandit, object)
-                                    bandit:changeState(ClimbThroughWindowState.instance())
-                                    bandit:setBumpType("ClimbWindow")
-                                end
+                                ClimbThroughWindowState.instance():setParams(bandit, object)
+                                bandit:changeState(ClimbThroughWindowState.instance())
+                                bandit:setBumpType("ClimbWindow")
                             end
                         end
 
                         break
+                    elseif properties and properties:Is(IsoFlagType.WindowW) or properties:Is(IsoFlagType.WindowN) then
+                        --[[local params = bandit:getStateMachineParams(ClimbThroughWindowState.instance())
+                        local raw = KahluaUtil.rawTostring2(params)
+                        local startx = string.match(raw, "0=(%d+)")
+                        local starty = string.match(raw, "1=(%d+)")
+                        local endx = string.match(raw, "3=(%d+)")
+                        local endy = string.match(raw, "4=(%d+)")]]
+
+                        ClimbThroughWindowState.instance():setParams(bandit, object)
+                        bandit:changeState(ClimbThroughWindowState.instance())
+                        bandit:setBumpType("ClimbWindow")
                     end
+
 
                     if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
                         if bandit:isFacingObject(object, 0.5) then
@@ -637,20 +663,22 @@ function BanditUpdate.Collisions(bandit)
 
                     if instanceof(object, "IsoThumpable") and not properties:Val("FenceTypeLow") then
                         if SandboxVars.Bandits.General_DestroyThumpable and Bandit.Can(bandit, "breakObjects") then
-                            Bandit.ClearTasks(bandit)
+                            local isWallTo = bandit:getSquare():isSomethingTo(object:getSquare())
+                            if not isWallTo then
+                                Bandit.ClearTasks(bandit)
 
-                            local task = {action="Equip", itemPrimary=weapons.melee}
-                            table.insert(tasks, task)
+                                local task = {action="Equip", itemPrimary=weapons.melee}
+                                table.insert(tasks, task)
 
-                            local task = {action="FaceLocation", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), time=30}
-                            table.insert(tasks, task)
+                                local task = {action="FaceLocation", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), time=30}
+                                table.insert(tasks, task)
 
-                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), sound=object:getThumpSound(), time=80}
-                            table.insert(tasks, task)
+                                local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), sound=object:getThumpSound(), time=80}
+                                table.insert(tasks, task)
+                            end
+                            break
                         end
-                        break
                     end
-
                 end
             end
         end
@@ -837,8 +865,6 @@ function BanditUpdate.Combat(bandit)
             end
         end
     end
-
-    -- print ("ENEMIES: " .. enemies .. " FRIENDLIES: " .. friendlies)
 
     if shove then
         if not Bandit.HasTaskType(bandit, "Shove") then
@@ -1207,7 +1233,9 @@ function BanditUpdate.OnBanditUpdate(zombie)
     BanditUpdate.Chainsaw(bandit)
 
     -- MANAGE BANDIT BEING ON FIRE
-    BanditUpdate.Fire(bandit)
+    if uTick == 2 then
+        BanditUpdate.Fire(bandit)
+    end
 
     -- MANAGE BANDIT SPEECH COOLDOWN
     BanditUpdate.Speech(bandit)

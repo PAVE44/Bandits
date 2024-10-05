@@ -54,7 +54,7 @@ function BanditMenu.TestAction (player, square, zombie)
     -- zombie:setBumpType("trippingFromSprint")
     -- zombie:setBumpType("trippingFromSprint")
 
-    local task = {action="Sleep", anim="Sleep", time=400}
+    local task = {action="FaceLocation", anim="AimPistol", x=player:getX(), y=player:getY(), time=400}
     Bandit.AddTask(zombie, task)
 end
 

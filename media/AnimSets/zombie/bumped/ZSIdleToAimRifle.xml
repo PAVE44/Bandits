@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
-	<m_Name>ZSAimRifleLow</m_Name>
-	<m_AnimName>Bob_IdleAimRifle_Down</m_AnimName>
+	<m_Name>ZSIdleToAimRifle</m_Name>
+	<m_AnimName>Bob_IdleToAim_Rifle</m_AnimName>
 	<m_SpeedScale>0.80</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
@@ -9,7 +9,7 @@
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>AimRifleLow</m_StringValue>
+		<m_StringValue>IdleToAimRifle</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>

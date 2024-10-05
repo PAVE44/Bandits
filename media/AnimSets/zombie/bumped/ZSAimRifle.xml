@@ -2,12 +2,10 @@
 <animNode>
 	<m_Name>ZSAimRifle</m_Name>
 	<m_AnimName>Bob_IdleAimRifle</m_AnimName>
-	<m_Priority>4</m_Priority>
+	<m_SpeedScale>0.80</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-	<m_SpeedScale>0.20</m_SpeedScale>
-	<m_BlendTime>0.30</m_BlendTime>
-	<m_maxTorsoTwist>70.0</m_maxTorsoTwist>
+	<m_BlendTime>0.35</m_BlendTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
@@ -18,36 +16,4 @@
 		<m_Time>End</m_Time>
 		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
 	</m_Events>
-	<m_Transitions>
-		<m_Target>IdleRifle</m_Target>
-		<m_AnimName>Bob_AimToIdle_Rifle</m_AnimName>
-	</m_Transitions>
-	<m_Transitions>
-		<m_Target>sneakIdleRifle</m_Target>
-		<m_AnimName>Bob_AimToIdle_Rifle</m_AnimName>
-	</m_Transitions>
-	<m_Transitions>
-		<m_Target>sneakIdleLowRifle</m_Target>
-		<m_AnimName>Bob_AimToIdle_Rifle</m_AnimName>
-	</m_Transitions>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_Spine1</boneName>
-	</m_SubStateBoneWeights>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_Neck</boneName>
-	</m_SubStateBoneWeights>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_BackPack</boneName>
-	</m_SubStateBoneWeights>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_Prop1</boneName>
-	</m_SubStateBoneWeights>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_Prop2</boneName>
-	</m_SubStateBoneWeights>
-	<m_SubStateBoneWeights>
-		<boneName>Bip01_Spine</boneName>
-		<includeDescendants>false</includeDescendants>
-	</m_SubStateBoneWeights>
-
 </animNode>

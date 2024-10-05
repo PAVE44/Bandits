@@ -40,7 +40,7 @@ local function Hit(attacker, item, victim)
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then
                     local health = bodyDamage:getOverallBodyHealth()
-                    health = health + 8
+                    health = health + 12
                     if health > 100 then health = 100 end
                     bodyDamage:setOverallBodyHealth(health)
                 end

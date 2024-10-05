@@ -6,7 +6,7 @@ ZombiePrograms.CompanionGuard.Stages = {}
 ZombiePrograms.CompanionGuard.Init = function(bandit)
 end
 
-ZombiePrograms.Companion.GetCapabilities = function()
+ZombiePrograms.CompanionGuard.GetCapabilities = function()
     -- capabilities are program decided
     local capabilities = {}
     capabilities.melee = true
@@ -47,6 +47,7 @@ end
 
 ZombiePrograms.CompanionGuard.Guard = function(bandit)
     local tasks = {}
+    local master = BanditPlayer.GetMasterPlayer(bandit)
 
     -- GUARD POST MUST BE PRESENT OTHERWISE SWITH PROGRAM
     -- at guardpost, switch program
@@ -88,64 +89,28 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
 
     end
     
+    local idle = true
+    local x1, y1
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
 
-    local action = ZombRand(50)
+    local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+    local closestEnemy = closestZombie
 
-    local gameTime = getGameTime()
-    local alfa = gameTime:getMinutes() * 4
-    local theta = alfa * math.pi / 180
-    local x1 = bandit:getX() + 3 * math.cos(theta)
-    local y1 = bandit:getY() + 3 * math.sin(theta)
-
-    local master = BanditPlayer.GetMasterPlayer(bandit)
-    if master then
-        -- be polite, if master is close, face him, otherwise look somewhere else
-        local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
-        if dist < 3 then
-            x1, y1 = master:getX(), master:getY()
-        end
+    if closestBandit.dist < closestZombie.dist then 
+        closestEnemy = closestBandit 
     end
 
-    if action == 0 then
-        local task = {action="Time", anim="ShiftWeight", time=200}
-        table.insert(tasks, task)
-    elseif action == 1 then
-        local task = {action="Time", anim="Cough", time=200}
-        table.insert(tasks, task)
-    elseif action == 2 then
-        local task = {action="Time", anim="ChewNails", time=200}
-        table.insert(tasks, task)
-    elseif action == 3 then
-        local task = {action="Time", anim="Smoke", time=200}
-        table.insert(tasks, task)
-        table.insert(tasks, task)
-        table.insert(tasks, task)
-    elseif action == 4 then
-        local task = {action="Time", anim="PullAtCollar", time=200}
-        table.insert(tasks, task)
-    elseif action == 5 then
-        local task = {action="Time", anim="Sneeze", time=200}
-        table.insert(tasks, task)
-        addSound(getPlayer(), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
-    elseif action == 6 then
-        local task = {action="Time", anim="WipeBrow", time=200}
-        table.insert(tasks, task)
-    elseif action == 7 then
-        local task = {action="Time", anim="WipeHead", time=200}
-        table.insert(tasks, task)
-
-    elseif not outOfAmmo then
-        local anim
-        local weaponType = bandit:getVariableString("BanditPrimaryType")
-        if weaponType == "rifle" then anim = "AimRifle" end
-        if weaponType == "handgun" then anim = "AimPistol" end
-
-        local task = {action="FaceLocation", anim=anim, x=x1, y=y1, time=100}
+    if closestEnemy.dist < 12 then
+        local task = {action="FaceLocation", anim=anim, x=closestEnemy.x, y=closestEnemy.y, time=100}
         table.insert(tasks, task)
     else
-        local task = {action="Time", anim="ShiftWeight", time=200}
-        table.insert(tasks, task)
+        local subTasks = BanditPrograms.Idle(bandit)
+        if #subTasks > 0 then
+            for _, subTask in pairs(subTasks) do
+                table.insert(tasks, subTask)
+            end
+        end
     end
 
     return {status=true, next="Guard", tasks=tasks}

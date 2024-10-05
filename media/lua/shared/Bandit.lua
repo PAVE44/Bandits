@@ -1,21 +1,21 @@
 Bandit = Bandit or {}
 
 Bandit.SoundTab = {
-    SPOTTED = {prefix = "ZSSpotted_", randMax = 6, length = 2},
-    HIT = {prefix = "ZSHit_", randMax = 14, length = 0.5},
-    BREACH = {prefix = "ZSBreach_", randMax = 6, length = 10},
-    RELOADING = {prefix = "ZSReloading_", randMax = 6, length = 4},
-    CAR = {prefix = "ZSCar_", randMax = 6, length = 4},
-    DEATH = {prefix = "ZSDeath_", randMax = 8, length = 6},
-    DEAD = {prefix = "ZSDead_", randMax = 6, length = 3},
-    BURN = {prefix = "ZSBurn_", randMax = 3, length = 8},
-    DRAGDOWN = {prefix = "ZSDragdown_", randMax = 3, length = 8},
-    INSIDE = {prefix = "ZSInside_", randMax = 3, length = 25},
-    OUTSIDE = {prefix = "ZSOutside_", randMax = 3, length = 25},
-    UPSTAIRS = {prefix = "ZSUpstairs_", randMax = 1, length = 25},
-    ROOM_KITCHEN = {prefix = "ZSRoom_Kitchen_", randMax = 1, length = 25},
-    ROOM_BATHROOM = {prefix = "ZSRoom_Bathroom_", randMax = 1, length = 25},
-    DEFENDER_SPOTTED = {prefix = "ZSDefender_Spot_", randMax = 4, length = 8}
+    SPOTTED =           {prefix = "ZSSpotted_", chance = 90, randMax = 6, length = 2},
+    HIT =               {prefix = "ZSHit_", chance = 100, randMax = 14, length = 0.5},
+    BREACH =            {prefix = "ZSBreach_", chance = 80, randMax = 6, length = 10},
+    RELOADING =         {prefix = "ZSReloading_", chance = 80, randMax = 6, length = 4},
+    CAR =               {prefix = "ZSCar_", chance = 90, randMax = 6, length = 4},
+    DEATH =             {prefix = "ZSDeath_", chance = 70, randMax = 8, length = 6},
+    DEAD =              {prefix = "ZSDead_", chance = 100, randMax = 6, length = 3},
+    BURN =              {prefix = "ZSBurn_", chance = 100, randMax = 3, length = 8},
+    DRAGDOWN =          {prefix = "ZSDragdown_", chance = 100, randMax = 3, length = 8},
+    INSIDE =            {prefix = "ZSInside_", chance = 40, randMax = 3, length = 25},
+    OUTSIDE =           {prefix = "ZSOutside_", chance = 40, randMax = 3, length = 25},
+    UPSTAIRS =          {prefix = "ZSUpstairs_", chance = 40, randMax = 1, length = 25},
+    ROOM_KITCHEN =      {prefix = "ZSRoom_Kitchen_", chance = 40, randMax = 1, length = 25},
+    ROOM_BATHROOM =     {prefix = "ZSRoom_Bathroom_", chance = 40, randMax = 1, length = 25},
+    DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
 }
 
 function Bandit.ForceSyncPart(zombie, syncData)
@@ -136,6 +136,21 @@ function Bandit.ClearTasks(zombie)
     end
 end
 
+function Bandit.ClearMoveTasks(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        local newtasks = {}
+        for _, task in pairs(brain.tasks) do
+            if task.action ~= "Move" and task.action ~= "GoTo" then
+                table.insert(newtasks, task)
+            end
+        end
+
+        brain.tasks = newtasks
+        -- BanditBrain.Update(zombie, brain)
+    end
+end
+
 function Bandit.ClearOtherTasks(zombie, exception)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -183,6 +198,21 @@ function Bandit.IsForceStationary(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         return brain.stationary
+    end
+end
+
+function Bandit.SetNearFire(zombie, nearFire)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        brain.nearFire = nearFire
+        -- BanditBrain.Update(zombie, brain)
+    end
+end
+
+function Bandit.IsNearFire(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        return brain.nearFire
     end
 end
 
@@ -489,27 +519,30 @@ function Bandit.Say(zombie, phrase, force)
 
         local config = Bandit.SoundTab[phrase]
         if config then
-            local sound = config.prefix .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(config.randMax))
-            local length = config.length or 2
+            local r = ZombRand(100)
+            if r < config.chance then
+                local sound = config.prefix .. sex .. "_" .. voice .. "_" .. tostring(1 + ZombRand(config.randMax))
+                local length = config.length or 2
 
-            -- text captions
-            if SandboxVars.Bandits.General_Captions then
-                local text = "IGUI_Bandits_Speech_" .. sound
-                if brain.hostile then
-                    zombie:addLineChatElement(getText(text), 0.8, 0.1, 0.1)
-                else
-                    zombie:addLineChatElement(getText(text), 0.1, 0.8, 0.1)
+                -- text captions
+                if SandboxVars.Bandits.General_Captions then
+                    local text = "IGUI_Bandits_Speech_" .. sound
+                    if brain.hostile then
+                        zombie:addLineChatElement(getText(text), 0.8, 0.1, 0.1)
+                    else
+                        zombie:addLineChatElement(getText(text), 0.1, 0.8, 0.1)
+                    end
                 end
+
+                -- audiable speech
+                if SandboxVars.Bandits.General_Speak then
+                    zombie:getEmitter():playVocals(sound)
+                end
+
+                brain.speech = length
+
+                addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
             end
-
-            -- audiable speech
-            if SandboxVars.Bandits.General_Speak then
-                zombie:getEmitter():playVocals(sound)
-            end
-
-            brain.speech = length
-
-            addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
         end
     end
 

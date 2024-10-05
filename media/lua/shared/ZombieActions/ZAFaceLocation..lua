@@ -7,6 +7,7 @@ ZombieActions.FaceLocation.onStart = function(zombie, task)
 end
 
 ZombieActions.FaceLocation.onWorking = function(zombie, task)
+    zombie:faceLocation(task.x, task.y)
     if task.time == 0 then
         return true
     end
