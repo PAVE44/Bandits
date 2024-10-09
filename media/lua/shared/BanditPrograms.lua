@@ -301,7 +301,7 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
                                         table.insert(tasks, task)
                                     -- go to location
                                     else
-                                        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist))
+                                        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist, false))
                                     end
                                 end
                             end
@@ -355,7 +355,7 @@ BanditPrograms.Container.Loot = function(bandit, object, container)
         table.insert(tasks, task)
     -- go to location
     else
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist, false))
     end
                  
     return tasks

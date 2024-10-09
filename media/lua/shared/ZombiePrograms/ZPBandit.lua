@@ -106,7 +106,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                         if SandboxVars.Bandits.General_GeneratorCutoff and bandit:isOutside() then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, bandit:getX()+x, bandit:getY()+y, z, walkType, 12))
+                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, bandit:getX()+x, bandit:getY()+y, z, walkType, 12, false))
                                 return {status=true, next="TurnOffGenerator", tasks=tasks}
                             end
                         end
@@ -125,7 +125,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                                 local vpy = vehiclePartSquare:getY()
                                 local vpz = vehiclePartSquare:getZ()
 
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, vx, vy, vz, walkType, 12))
+                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, vx, vy, vz, walkType, 12, false))
                                 return {status=true, next="SabotageVehicle", tasks=tasks}
                             end
                         end
@@ -144,10 +144,23 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     target = closestZombie
     if closestBandit.dist < closestZombie.dist then
         target = closestBandit
+        enemy = BanditZombie.GetInstanceById(target.id)
     end
 
     if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist then
         target = closestPlayer
+        enemy = BanditPlayer.getPlayerById(target.id)
+    end
+
+    local closeSlow = true
+    if enemy then
+        local weapon = enemy:getPrimaryHandItem()
+        if weapon then
+            local weaponType = WeaponType.getWeaponType(weapon)
+            if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                closeSlow = false
+            end
+        end
     end
 
     if target.x and target.y and target.z then
@@ -202,7 +215,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                             -- local as = AdjacentFreeTileFinder.Find(square, bandit)
                             if last.x and last.y then
                                 -- print ("go build bridge from x: " .. last.x .. " y: " .. last.y .. " to x:" .. coords.x .. " y:" .. coords.y)
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, last.x, last.y, 0, walkType, target.dist))
+                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, last.x, last.y, 0, walkType, target.dist, false))
 
                                 if math.floor(bandit:getX()) == last.x and math.floor(bandit:getY()) == last.y then
                                     -- in position
@@ -229,7 +242,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
             local dyf = ((id % 11) - 5) / 10
 
 
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist))
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist, closeSlow))
         end
     else
         local task = {action="Time", anim="Shrug", time=200}
@@ -294,7 +307,7 @@ ZombiePrograms.Bandit.Escape = function(bandit)
         if rx == 1 then deltaX = -deltaX end
         if ry == 1 then deltaY = -deltaY end
 
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestPlayer.x+deltaX, closestPlayer.y+deltaY, 0, walkType, 12))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestPlayer.x+deltaX, closestPlayer.y+deltaY, 0, walkType, 12, false))
     end
     return {status=true, next="Escape", tasks=tasks}
 end

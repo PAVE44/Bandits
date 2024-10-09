@@ -129,6 +129,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.stationary = false
             brain.sleeping = false
             brain.aiming = false
+            brain.moving = false
             brain.endurance = 1.00
             brain.speech = 0.00
             brain.sound = 0.00

@@ -54,7 +54,7 @@ function BanditMenu.TestAction (player, square, zombie)
     -- zombie:setBumpType("trippingFromSprint")
     -- zombie:setBumpType("trippingFromSprint")
 
-    local task = {action="FaceLocation", anim="AimPistol", x=player:getX(), y=player:getY(), time=400}
+    local task = {action="FaceLocation", anim="RunToIdle", x=player:getX(), y=player:getY(), time=400}
     Bandit.AddTask(zombie, task)
 end
 
@@ -267,7 +267,10 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
             context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
+           
         end
+
+        -- context:addOption("[DGB] Bandit UI", player, ShowCustomizationUI)
 
         context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
         context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)

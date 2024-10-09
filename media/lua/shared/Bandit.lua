@@ -18,6 +18,29 @@ Bandit.SoundTab = {
     DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
 }
 
+Bandit.VisualDamage = {}
+
+Bandit.VisualDamage.Melee = {"ZedDmg_BACK_Slash", "ZedDmg_BellySlashLeft", "ZedDmg_BellySlashRightv", "ZedDmg_BELLY_Slash", 
+                             "ZedDmg_ChestSlashLeft", "ZedDmg_CHEST_Slash", "ZedDmg_FaceSkullLeft", "ZedDmg_FaceSkullRight", 
+                             "ZedDmg_HeadSlashCentre01", "ZedDmg_HeadSlashCentre02", "ZedDmg_HeadSlashCentre03", "ZedDmg_HeadSlashLeft01", 
+                             "ZedDmg_HeadSlashLeft02", "ZedDmg_HeadSlashLeft03", "ZedDmg_HeadSlashLeftBack01", "ZedDmg_HeadSlashLeftBack02", 
+                             "ZedDmg_HeadSlashRight01", "ZedDmg_HeadSlashRight02", "ZedDmg_HeadSlashRight03", "ZedDmg_HeadSlashRightBack01", 
+                             "ZedDmg_HeadSlashRightBack02", "ZedDmg_HEAD_Skin", "ZedDmg_HEAD_Slash", "ZedDmg_Mouth01", 
+                             "ZedDmg_Mouth02", "ZedDmg_MouthLeft", "ZedDmg_MouthRight", "ZedDmg_NoChin", 
+                             "ZedDmg_NoEarLeft", "ZedDmg_NoEarRight", "ZedDmg_NoNose", "ZedDmg_ShoulderSlashLeft", 
+                             "ZedDmg_ShoulderSlashRight", "ZedDmg_SkullCap", "ZedDmg_SkullUpLeft", "ZedDmg_SkullUpRight"}
+
+Bandit.VisualDamage.Gun = {"ZedDmg_BulletBelly01", "ZedDmg_BulletBelly02", "ZedDmg_BulletBelly03", "ZedDmg_BulletChest01", 
+                           "ZedDmg_BulletChest02", "ZedDmg_BulletChest03", "ZedDmg_BulletChest04", "ZedDmg_BulletFace01",
+                           "ZedDmg_BulletFace02", "ZedDmg_BulletForehead01", "ZedDmg_BulletForehead02", "ZedDmg_BulletForehead03",
+                           "ZedDmg_BulletLeftTemple", "ZedDmg_BulletRightTemple", "ZedDmg_BELLY_Bullet", "ZedDmg_BELLY_Shotgun",
+                           "ZedDmg_CHEST_Bullet", "ZedDmg_CHEST_Shotgun", "ZedDmg_HEAD_Bullet", "ZedDmg_HEAD_Shotgun",
+                           "ZedDmg_ShotgunBelly", "ZedDmg_ShotgunChestCentre", "ZedDmg_ShotgunChestLeft", "ZedDmg_ShotgunChestRight",
+                           "ZedDmg_ShotgunFaceFull", "ZedDmg_ShotgunFaceLeft", "ZedDmg_ShotgunFaceRight", "ZedDmg_ShotgunLeft",
+                           "ZedDmg_ShotgunRight"}
+
+
+
 function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getPlayer(), 'Commands', 'BanditUpdatePart', syncData)
 end
@@ -243,6 +266,21 @@ function Bandit.IsAim(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         return brain.aim
+    end
+end
+
+function Bandit.SetMoving(zombie, moving)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        brain.moving = moving
+        -- BanditBrain.Update(zombie, brain)
+    end
+end
+
+function Bandit.IsMoving(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        return brain.moving
     end
 end
 
@@ -548,3 +586,15 @@ function Bandit.Say(zombie, phrase, force)
 
 end
 
+function Bandit.AddVisualDamage(bandit, handWeapon)
+    
+    local itemVisual
+    local weaponType = WeaponType.getWeaponType(handWeapon)
+    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+        itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Gun)
+    else
+        itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Melee)
+    end
+
+    bandit:addVisualDamage(itemVisual)
+end

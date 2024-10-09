@@ -133,20 +133,34 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- however, if the enemy is close, the companion should engage
     -- but only if player is not too far, kind of a proactive defense.
     if dist < 20 then
+        local enemy
         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
         local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
         local closestEnemy = closestZombie
 
         if closestBandit.dist < closestZombie.dist then 
-            closestEnemy = closestBandit 
+            closestEnemy = closestBandit
+            enemy = BanditZombie.GetInstanceById(closestEnemy.id)
         end
 
         if closestEnemy.dist < 8 then
             -- We are trying to save the player, so the friendly should act with high motivation
             -- that translates to running pace (even despite limping) and minimal endurance loss.
+
+            local closeSlow = true
+            if enemy then
+                local weapon = enemy:getPrimaryHandItem()
+                if weapon then
+                    local weaponType = WeaponType.getWeaponType(weapon)
+                    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                        closeSlow = false
+                    end
+                end
+            end
+
             walkType = "Run"
             endurance = -0.01
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist))
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist, closeSlow))
             return {status=true, next="Follow", tasks=tasks}
         end
     end
@@ -226,7 +240,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- If there is a guardpost in the vicinity, take it.
     local guardpost = BanditPost.GetClosestFree(bandit, "guard", 40)
     if guardpost then
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist, false))
         return {status=true, next="Follow", tasks=tasks}
     end
 
@@ -278,7 +292,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                     table.insert(tasks, task)
                     return {status=true, next="Follow", tasks=tasks}
                 else
-                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, 0, "Run", dist))
+                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, 0, "Run", dist, false))
                     return {status=true, next="Follow", tasks=tasks}
                 end
             end
@@ -342,7 +356,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         local dz = master:getZ()
         local dxf = ((id % 10) - 5) / 10
         local dyf = ((id % 11) - 5) / 10
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist, false))
         return {status=true, next="Follow", tasks=tasks}
     end
 

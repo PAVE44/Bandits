@@ -5,7 +5,12 @@ local function ShovePlayer (attacker, player)
 
     player:clearVariable("BumpFallType")
     player:setBumpType("stagger")
-    player:setBumpFall(true)
+
+    if BanditUtils.BanditRand(3) == 1 then
+        player:setBumpFall(true)
+    else
+        player:setBumpFall(false)
+    end
 
     if facing then
         player:setBumpFallType("pushedFront")

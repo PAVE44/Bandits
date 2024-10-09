@@ -88,7 +88,7 @@ ZombiePrograms.Looter.Operate = function(bandit)
     local handweapon = bandit:getVariableString("BanditWeapon") 
     
     local target = {}
-
+    local enemy
     local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
     local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
     local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit, true)
@@ -96,10 +96,23 @@ ZombiePrograms.Looter.Operate = function(bandit)
     target = closestZombie
     if closestBandit.dist < closestZombie.dist then
         target = closestBandit
+        enemy = BanditZombie.GetInstanceById(target.id)
     end
 
     if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist then
         target = closestPlayer
+        enemy = BanditPlayer.getPlayerById(target.id)
+    end
+
+    local closeSlow = true
+    if enemy then
+        local weapon = enemy:getPrimaryHandItem()
+        if weapon then
+            local weaponType = WeaponType.getWeaponType(weapon)
+            if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                closeSlow = false
+            end
+        end
     end
 
     if target.x and target.y and target.z then
@@ -152,7 +165,7 @@ ZombiePrograms.Looter.Operate = function(bandit)
             local dyf = ((id % 11) - 5) / 10
 
 
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist))
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist, closeSlow))
         end
     else
         local task = {action="Time", anim="Shrug", time=200}

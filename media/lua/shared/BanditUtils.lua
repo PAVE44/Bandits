@@ -1,5 +1,82 @@
 BanditUtils = BanditUtils or {}
 
+BanditUtils.ItemVisuals = {
+    ["Base.ZedDmg_BACK_Slash"] = true,
+    ["Base.ZedDmg_BACK_Spine"] = true,
+    ["Base.ZedDmg_BellySlashLeft"] = true,
+    ["Base.ZedDmg_BellySlashRight"] = true,
+    ["Base.ZedDmg_BELLY_Bullet"] = true,
+    ["Base.ZedDmg_BELLY_Shotgun"] = true,
+    ["Base.ZedDmg_BELLY_Skin"] = true,
+    ["Base.ZedDmg_BELLY_Slash"] = true,
+    ["Base.ZedDmg_BulletBelly01"] = true,
+    ["Base.ZedDmg_BulletBelly02"] = true,
+    ["Base.ZedDmg_BulletBelly03"] = true,
+    ["Base.ZedDmg_BulletChest01"] = true,
+    ["Base.ZedDmg_BulletChest02"] = true,
+    ["Base.ZedDmg_BulletChest03"] = true,
+    ["Base.ZedDmg_BulletChest04"] = true,
+    ["Base.ZedDmg_BulletFace01"] = true,
+    ["Base.ZedDmg_BulletFace02"] = true,
+    ["Base.ZedDmg_BulletForehead01"] = true,
+    ["Base.ZedDmg_BulletForehead02"] = true,
+    ["Base.ZedDmg_BulletForehead03"] = true,
+    ["Base.ZedDmg_BulletLeftTemple"] = true,
+    ["Base.ZedDmg_BulletRightTemple"] = true,
+    ["Base.ZedDmg_ChestSlashLeft"] = true,
+    ["Base.ZedDmg_CHEST_Bullet"] = true,
+    ["Base.ZedDmg_CHEST_Shotgun"] = true,
+    ["Base.ZedDmg_CHEST_Slash"] = true,
+    ["Base.ZedDmg_FaceSkullLeft"] = true,
+    ["Base.ZedDmg_FaceSkullRight"] = true,
+    ["Base.ZedDmg_HeadSlashCentre01"] = true,
+    ["Base.ZedDmg_HeadSlashCentre02"] = true,
+    ["Base.ZedDmg_HeadSlashCentre03"] = true,
+    ["Base.ZedDmg_HeadSlashLeft01"] = true,
+    ["Base.ZedDmg_HeadSlashLeft02"] = true,
+    ["Base.ZedDmg_HeadSlashLeft03"] = true,
+    ["Base.ZedDmg_HeadSlashLeftBack01"] = true,
+    ["Base.ZedDmg_HeadSlashLeftBack02"] = true,
+    ["Base.ZedDmg_HeadSlashRight01"] = true,
+    ["Base.ZedDmg_HeadSlashRight02"] = true,
+    ["Base.ZedDmg_HeadSlashRight03"] = true,
+    ["Base.ZedDmg_HeadSlashRightBack01"] = true,
+    ["Base.ZedDmg_HeadSlashRightBack02"] = true,
+    ["Base.ZedDmg_HEAD_Bullet"] = true,
+    ["Base.ZedDmg_HEAD_Shotgun"] = true,
+    ["Base.ZedDmg_HEAD_Skin"] = true,
+    ["Base.ZedDmg_HEAD_Slash"] = true,
+    ["Base.ZedDmg_Mouth01"] = true,
+    ["Base.ZedDmg_Mouth02"] = true,
+    ["Base.ZedDmg_MouthLeft"] = true,
+    ["Base.ZedDmg_MouthRight"] = true,
+    ["Base.ZedDmg_NeckBiteBackLeft"] = true,
+    ["Base.ZedDmg_NeckBiteBackRight"] = true,
+    ["Base.ZedDmg_NeckBiteFrontLeft"] = true,
+    ["Base.ZedDmg_NeckBiteFrontRight"] = true,
+    ["Base.ZedDmg_NECK_Bite"] = true,
+    ["Base.ZedDmg_NoChin"] = true,
+    ["Base.ZedDmg_NoEarLeft"] = true,
+    ["Base.ZedDmg_NoEarRight"] = true,
+    ["Base.ZedDmg_NoNose"] = true,
+    ["Base.ZedDmg_RibsLeft"] = true,
+    ["Base.ZedDmg_RibsRight"] = true,
+    ["Base.ZedDmg_ShotgunBelly"] = true,
+    ["Base.ZedDmg_ShotgunChestCentre"] = true,
+    ["Base.ZedDmg_ShotgunChestLeft"] = true,
+    ["Base.ZedDmg_ShotgunChestRight"] = true,
+    ["Base.ZedDmg_ShotgunFaceFull"] = true,
+    ["Base.ZedDmg_ShotgunFaceLeft"] = true,
+    ["Base.ZedDmg_ShotgunFaceRight"] = true,
+    ["Base.ZedDmg_ShotgunLeft"] = true,
+    ["Base.ZedDmg_ShotgunRight"] = true,
+    ["Base.ZedDmg_ShoulderSlashLeft"] = true,
+    ["Base.ZedDmg_ShoulderSlashRight"] = true,
+    ["Base.ZedDmg_SkullCap"] = true,
+    ["Base.ZedDmg_SkullUpLeft"] = true,
+    ["Base.ZedDmg_SkullUpRight"] = true,
+}
+
 function BanditUtils.GetCharacterID (character)
 
     local function toBits(num)
@@ -82,6 +159,23 @@ function BanditUtils.IsInAngle(observer, targetX, targetY)
         return false
     end
 end
+
+function BanditUtils.CalcAngle (x1, y1, x2, y2)
+
+    -- Calculate the difference in coordinates
+    local dx = x2 - x1
+    local dy = y2 - y1
+
+    -- Use atan2 to get the angle in radians
+    local angleRadians = math.atan2(dy, dx)
+
+    -- Convert radians to degrees
+    local angleDegrees = math.deg(angleRadians)
+
+    -- Ensure the angle is within the range -180 to 180
+    return angleDegrees
+end
+
 
 function BanditUtils.GetClosestPlayerLocation(character, mustSee)
     local result = {}
@@ -205,7 +299,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     return result
 end
 
-function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist)
+function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     -- Move and GoTo generally do the same thing with a different method
     -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
     -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
@@ -214,12 +308,12 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist)
     local task
     if gamemode == "Multiplayer" then
         if dist > 30 then
-            task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+            task = {action="Move", time=35, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
         else
-            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
         end
     else
-        task = {action="Move", time=25, endurance=endurance, x=x, y=y, z=z, walkType=walkType}
+        task = {action="Move", time=35, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
     end
     return task
 end
@@ -347,4 +441,19 @@ function BanditUtils.CoinFlip()
     else 
         return false 
     end
+end
+
+-- deterministic rand for all clients
+function BanditUtils.BanditRand(n)
+    local a = 1664525
+    local c = 1013904223
+    local m = 2^32
+
+    -- this is probably not perfect but
+    -- the seed should be same for all clients most of the time
+    local gameTime = getGameTime()
+    local seed = gameTime:getMinutesStamp()
+
+    seed = (a * seed + c) % m
+    return seed % (n + 1)
 end

@@ -189,6 +189,17 @@ function BanditUpdate.Visuals(bandit)
                 end
                 banditVisuals:randomDirt()
                 banditVisuals:removeBlood()
+                local itemVisuals = banditVisuals:getBodyVisuals()
+                for i=0, itemVisuals:size()-1 do
+                    local item = itemVisuals:get(i)
+                    if item then
+                        local itemType = item:getItemType()
+                        if BanditUtils.ItemVisuals[itemType] then
+                            banditVisuals:removeBodyVisualFromItemType(itemType)
+                        end
+                    end
+                end
+                
                 bandit:resetModel()
                 bandit:setVariable("BanditSkin", true)
             end
@@ -715,7 +726,7 @@ function BanditUpdate.Avoidance(bandit)
     if enemies > friendlies + 3 and not Bandit.HasMoveTask(bandit) then
         local tx, ty, tz = GetEscapePoint(bandit, 10)
         -- bandit:addLineChatElement("evade to")
-        local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 30)
+        local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 30, false)
         task.panic = true
         task.lock = true
         table.insert(tasks, task)
@@ -1063,9 +1074,11 @@ function BanditUpdate.Zombie(zombie)
                 end
 
             elseif enemy.dist >= 0.49  then
-                
-                if zombie:CanSee(bandit)  then
-                    zombie:spotted(getPlayer(), true)
+                local player = getPlayer()
+                if zombie:CanSee(bandit) and zombie:CanSee(player) then
+                    
+                    -- this function only works for players, but the zombie gets properly activated anyway so that setTarget works
+                    zombie:spotted(player, true)
                     zombie:setTarget(bandit)
                     
                     -- probably not needed
@@ -1335,9 +1348,28 @@ function BanditUpdate.OnBanditUpdate(zombie)
 
     if task.state == "NEW" then
 
-        -- Update aim loss if necessary
         if task.action ~= "Shoot" and task.action ~= "Aim" then
             Bandit.SetAim(bandit, false)
+        end
+
+        if task.action ~= "Move" and task.action ~= "GoTo" then
+            if Bandit.IsMoving(zombie) then
+                Bandit.SetMoving(zombie, false)
+            
+                --[[local anim
+                local walkType = zombie:getVariableString("BanditWalkType")
+                if walkType == "Run" then
+                    anim = "RunToIdle"
+                elseif walkType == "Walk" then
+                    anim = "WalkToIdle"
+                end
+
+                if anim then
+                    local task = {action="Single", lock=true, anim=anim, time=100}
+                    Bandit.AddTaskFirst(zombie, task)
+                    return
+                end]]
+            end
         end
 
         if task.sound then
@@ -1391,6 +1423,8 @@ end
 function BanditUpdate.OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     if zombie:getVariableBoolean("Bandit") then
         local bandit = zombie
+
+        Bandit.AddVisualDamage(bandit, handWeapon)
         Bandit.ClearTasks(bandit)
         Bandit.Say(bandit, "HIT")
         if Bandit.IsSleeping(bandit) then
