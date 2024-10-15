@@ -17,7 +17,7 @@ BanditPrograms.Weapon.Switch = function(bandit, itemName)
     -- check what is equippped that needs to be deattached
     local old = bandit:getPrimaryHandItem()
     if old then
-        local task = {action="Unequip", time=200, itemPrimary=old:getFullType()}
+        local task = {action="Unequip", time=100, itemPrimary=old:getFullType()}
         table.insert(tasks, task)
     end
 
@@ -35,7 +35,7 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
 
     local dist = math.sqrt(math.pow(bandit:getX() - enemyCharacter:getX(), 2) + math.pow(bandit:getY() - enemyCharacter:getY(), 2))
     local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
-    local aimTimeSurp = math.floor(dist ^ 1.1)
+    local aimTimeSurp = math.floor(dist * 5)
 
     if instanceof(enemyCharacter, "IsoZombie") then
         aimTimeSurp = math.floor(aimTimeSurp / 2)

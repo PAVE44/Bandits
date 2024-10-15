@@ -4,7 +4,6 @@ ZombieActions.Fishing = {}
 ZombieActions.Fishing.onStart = function(zombie, task)
     local primaryItem = InventoryItemFactory.CreateItem("Base.WoodenLance")
     zombie:setPrimaryHandItem(primaryItem)
-    zombie:setVariable("BanditHasPrimary", true)
     zombie:setVariable("BanditPrimary", task.itemPrimary)
     zombie:setVariable("BanditPrimaryType", "spear")
     return true

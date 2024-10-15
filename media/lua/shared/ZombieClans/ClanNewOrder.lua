@@ -35,7 +35,7 @@ if getActivatedMods():contains("KATTAJ1_Military") then
     table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Vanguard")
 else
     table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
-    table.insert(BanditClan.NewOrder.Outfits, "Ghillie")
+    -- table.insert(BanditClan.NewOrder.Outfits, "Ghillie")
 end
 
 -- available melee weapons

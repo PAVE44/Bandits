@@ -623,7 +623,7 @@ end
 
 ZombieActions.Shoot.onWorking = function(zombie, task)
     zombie:faceLocationF(task.x, task.y)
-
+    -- print ("SHOOT: " .. task.time)
     -- local bumpType = zombie:getBumpType()
     -- if bumpType ~= task.anim then return false end
     zombie:setBumpType(task.anim)

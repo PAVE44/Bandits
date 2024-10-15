@@ -6,6 +6,7 @@ ZombieActions.Aim.onStart = function(zombie, task)
 end
 
 ZombieActions.Aim.onWorking = function(zombie, task)
+    -- print ("AIM: " .. task.time)
     zombie:faceLocationF(task.x, task.y)
     if not zombie:getVariableString("BumpAnimFinished") then
         return false

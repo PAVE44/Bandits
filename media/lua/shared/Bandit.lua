@@ -157,6 +157,13 @@ function Bandit.ClearTasks(zombie)
         brain.tasks = newtasks
         -- BanditBrain.Update(zombie, brain)
     end
+
+    local emitter = zombie:getEmitter()
+    if emitter:isPlaying("BeginRemoveBarricadePlank") then
+        emitter:stopSoundByName("BeginRemoveBarricadePlank")
+    elseif emitter:isPlaying("BlowTorch") then
+        emitter:stopSoundByName("BlowTorch")
+    end
 end
 
 function Bandit.ClearMoveTasks(zombie)

@@ -127,11 +127,13 @@ end
 
 ZombieActions.Hit.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
-    
     local bumpType = bandit:getBumpType()
     if bumpType ~= task.anim then return false end
 
-    if task.time == 50 then
+    if not task.hit and task.time <= 50 then
+        task.hit = true
+        Bandit.UpdateTask(bandit, task)
+
         local item = InventoryItemFactory.CreateItem(task.weapon)
         local enemy = BanditZombie.GetInstanceById(task.eid)
         if enemy then 
@@ -153,6 +155,9 @@ ZombieActions.Hit.onWorking = function(bandit, task)
                 end
             end
         end
+
+
+
         return false
 
     end

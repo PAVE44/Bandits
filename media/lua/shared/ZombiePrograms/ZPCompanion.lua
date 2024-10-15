@@ -150,7 +150,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
             local closeSlow = true
             if enemy then
                 local weapon = enemy:getPrimaryHandItem()
-                if weapon then
+                if weapon and weapon:IsWeapon() then
                     local weaponType = WeaponType.getWeaponType(weapon)
                     if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
                         closeSlow = false
