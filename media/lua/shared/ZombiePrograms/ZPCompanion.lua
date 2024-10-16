@@ -342,6 +342,41 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
+    -- ideas: read book, 
+    --[[
+    ram database
+        - fridge locations
+        - contents of all containers in the base
+            - updated on each container item add/remove
+            - container existance verified periodically
+        - base coordinates
+            -- updated once on base creation - when items put to fridge
+        - lua objects [farms, barrels]
+            -- updated periodically in certain range from base
+        - generator locations
+            -- updated on player start / stop / connect / disconnect
+        - world items
+            -- updated when walking on square
+
+    water crops
+    0. prequisites
+        - must know farm locations
+            - farm must be dry
+        - must know where tools are
+            - must be in base
+        - must know water sources
+        - must not rain
+    
+    1. get tools
+    2. go to water source (barrel, faucet)
+    3. water
+    4. return tools
+
+    , heal crops, fix car, refuel genny, fix genny, chop tree, saw logs, 
+    
+    itemless:
+    sleep, use toilet, eat something, drink something]]
+
     -- follow the player.
     local minDist = 2
     if dist > minDist then

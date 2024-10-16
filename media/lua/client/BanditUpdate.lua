@@ -1074,7 +1074,7 @@ function BanditUpdate.Zombie(zombie)
             zombie:setNoTeeth(false)
         end
 
-        if target and not target:isAlive() then
+        if target and (not target:isAlive() or not zombie:CanSee(target)) then
             zombie:setTarget(nil)
         end
 
