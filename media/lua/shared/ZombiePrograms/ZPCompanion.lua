@@ -342,6 +342,14 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
+    -- companion base tasks
+
+    -- companion generator maintenance
+    local generator = BanditPlayerBase.GetGenerator(bandit)
+    if generator then
+        print ("test")
+    end
+
     -- ideas: read book, 
     --[[
     ram database

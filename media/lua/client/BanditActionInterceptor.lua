@@ -41,76 +41,60 @@ end
 BanditActionInterceptor.Main = function(data)
     local character = data.character
     local jobType = data.jobType
+    local action = data.action:getMetaType()
 
-    -- not implemented yet
-    if false and jobType then
+    if not action then return end
+
+    if action == "ISInventoryTransferAction" then
         if jobType:startsWith(getText("IGUI_PuttingInContainer")) then
             print ("load container")
-            local destContainer = data.destContainer
-            local object = destContainer:getParent()
-
-            if object then
-                local item = data.item
-
-                local post = {}
-                post.x = object:getX()
-                post.y = object:getY()
-                post.z = object:getZ()
-                post.type = "container-to"
-                post.data = {}
-                post.data.categories = BanditActionInterceptor.GetContainerCategories(destContainer, item)
-
-                BanditPost.Update(character, post)
+            local container = data.destContainer
+            local containerType = container:getType()
+            if containerType == "fridge" or containerType == "freezer" then
+                local object = container:getParent()
+                local square = object:getSquare()
+                local building = square:getBuilding()
+                local buildingDef = building:getDef()
+                BanditPlayerBase.RegisterBase(buildingDef)
             end
+            BanditPlayerBase.UpdateContainer(container)
+
         elseif jobType:startsWith(getText("IGUI_TakingFromContainer")) then
-            print ("take container")
-            local srcContainer = data.srcContainer
-            local object = srcContainer:getParent()
+            local container = data.srcContainer
+            BanditPlayerBase.UpdateContainer(container)
+        end
 
-            if object then
-                local item = data.item
-                local category = BanditActionInterceptor.getItemCategory(item)
-
-                local cell = character:getCell()
-                local building = character:getBuilding()
-                local def = building:getDef()
-                local roomDefs = def:getRooms()
-                for i=0, roomDefs:size() - 1 do
-                    local roomDef = roomDefs:get(i)
-                    for x=roomDef:getX(), roomDef:getX2() do
-                        for y=roomDef:getY(), roomDef:getY2() do
-                            local square = cell:getGridSquare(x, y, roomDef:getZ())
-                            if square then
-                                local objects = square:getObjects()
-                                for i=0, objects:size() - 1 do
-                                    local object = objects:get(i)
-                                    local container = object:getContainer()
-                                    if container and not container:isEmpty() then
-
-                                        local x = object:getX()
-                                        local y = object:getY()
-                                        local z = object:getZ()
-
-                                        local post = BanditPost.Get(x, y, z, "container-from")
-                                        if not post then
-                                            post = {}
-                                            post.x = x
-                                            post.y = y
-                                            post.z = z
-                                            post.type = "container-from"
-                                            post.data = {}
-                                            post.data.categories = {}
-                                        end
-                                        post.data.categories[category] = true
-
-                                        BanditPost.Update(character, post)
-                                    end
-                                end
-                            end
-                        end
-                    end
+    elseif action == "ISSeedAction" then
+        if data.plant then
+            if data.plant.globalObject then
+                local farm = data.plant.globalObject
+                BanditPlayerBase.UpdateFarm(farm)
+            end
+        end
+    elseif action == "ISShovelAction" or action == "ISHarvestPlantAction" then
+        if data.plant then
+            if data.plant.globalObject then
+                local farm = data.plant.globalObject
+                BanditPlayerBase.RemoveFarm(farm)
+            end
+        end
+    elseif action == "ISBuildAction" then
+        if data.spriteName then
+            if data.spriteName == "carpentry_02_52" or data.spriteName == "carpentry_02_54" then
+                local square = getCell():getGridSquare(data.x, data.y, data.z)
+                if square then 
+                    local obj = IsoObject.new(square, data.spriteName, "")
+                    BanditPlayerBase.UpdateWaterSource(obj)
                 end
             end
+        end
+    elseif action == "ISPlugGenerator" or action == "ISActivateGenerator" then
+        if data.generator then
+            BanditPlayerBase.UpdateGenerator(data.generator)
+        end
+    elseif action == "ISTakeGenerator" then
+        if data.generator then
+            BanditPlayerBase.RemoveGenerator(data.generator)
         end
     end
 end
