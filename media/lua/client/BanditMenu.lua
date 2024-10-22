@@ -159,6 +159,10 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local walktype = zombie:getVariableString("zombieWalkType")
     local walktype2 = zombie:getVariableString("BanditWalkType")
     local isBanditTarget = zombie:getVariableString("BanditTarget")
+    local walktype2 = zombie:getVariableString("BanditWalkType")
+    local primary = zombie:getVariableString("BanditPrimary")
+    local primaryType = zombie:getVariableString("BanditPrimaryType")
+    local secondary = zombie:getVariableString("BanditSecondary")
     local ans = zombie:getActionStateName()
     local under = zombie:isUnderVehicle()
     local veh = zombie:getVehicle()
@@ -168,6 +172,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local animator = zombie:getAdvancedAnimator()
     -- local astate = zombie:getAnimationDebug()
     local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
+    local baseData = BanditPlayerBase.data
     
 end
 
@@ -186,6 +191,15 @@ function BanditMenu.RemoveAllBandits(player)
             print (q.id .. ": " .. #q.tasks)
         end
     end
+end
+
+function BanditMenu.ResetGenerator (player, generator)
+    generator:setFuel(50)
+    generator:setCondition(50)
+end
+
+function BanditMenu.RegenerateBase (player)
+    BanditPlayerBase.Regenerate(player)
 end
 
 function BanditMenu.SwitchProgram(player, bandit, program)
@@ -213,6 +227,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local square = clickedSquare
     local player = getSpecificPlayer(playerID)
     local zombie = square:getZombie()
+    local generator = square:getGenerator()
     
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
@@ -273,10 +288,15 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         -- context:addOption("[DGB] Bandit UI", player, ShowCustomizationUI)
 
         context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
-        context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
+        -- context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
+        context:addOption("[DGB] Regenerate base", player, BanditMenu.RegenerateBase)
         -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
+        if generator then
+            context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
+        end
+
     end
 end
 

@@ -86,6 +86,7 @@ table.insert(BanditClan.DesperateCitizen.Melee, "Base.Wrench")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Plank")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.LeadPipe")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.WoodenMallet")
+table.insert(BanditClan.DesperateCitizen.Melee, "Base.Broom")
 
 -- available primary weapons
 BanditClan.DesperateCitizen.Primary = BanditClan.DesperateCitizen.Primary or BanditWeapons.Primary

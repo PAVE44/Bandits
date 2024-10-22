@@ -9,9 +9,10 @@ ZombieActions.Equip.onStart = function(zombie, task)
         zombie:setPrimaryHandItem(primaryItem)
         zombie:setVariable("BanditPrimary", task.itemPrimary)
 
+        local hands
         if primaryItem:IsWeapon() then
             local primaryItemType = WeaponType.getWeaponType(primaryItem)
-            local hands
+            
             if primaryItemType == WeaponType.barehand then
                 hands = "barehand"
             elseif primaryItemType == WeaponType.firearm then
@@ -45,7 +46,6 @@ ZombieActions.Equip.onStart = function(zombie, task)
                 if oldSecondaryPrimary ~= task.itemSecondary then
                     local secondaryItem = InventoryItemFactory.CreateItem(task.itemSecondary)
                     zombie:setSecondaryHandItem(secondaryItem)
-                    zombie:setVariable("BanditHasSecondary", true)
                     zombie:setVariable("BanditSecondary", task.itemSecondary)
 
                     local ls = secondaryItem:getLightStrength()

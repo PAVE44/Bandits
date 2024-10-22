@@ -163,6 +163,10 @@ function Bandit.ClearTasks(zombie)
         emitter:stopSoundByName("BeginRemoveBarricadePlank")
     elseif emitter:isPlaying("BlowTorch") then
         emitter:stopSoundByName("BlowTorch")
+    elseif emitter:isPlaying("GeneratorAddFuel") then
+        emitter:stopSoundByName("GeneratorAddFuel")
+    elseif emitter:isPlaying("GeneratorRepair") then
+        emitter:stopSoundByName("GeneratorRepair")
     end
 end
 

@@ -342,12 +342,85 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
-    -- companion base tasks
+    -- companion homebase tasks
 
     -- companion generator maintenance
-    local generator = BanditPlayerBase.GetGenerator(bandit)
-    if generator then
-        print ("test")
+    -- FIXME: change to NOT
+    if not getWorld():isHydroPowerOn() then 
+        local generator = BanditPlayerBase.GetGenerator(bandit)
+        if generator then
+            local condition = generator:getCondition()
+            if condition < 60 or (condition <=95 and not generator:isActivated()) then
+                local subTasks = BanditPrograms.Generator.Repair(bandit, generator)
+                if #subTasks > 0 then
+                    for _, subTask in pairs(subTasks) do
+                        table.insert(tasks, subTask)
+                    end
+                    return {status=true, next="Follow", tasks=tasks}
+                end
+            end
+
+            local fuel = generator:getFuel()
+            if fuel < 40 then
+                local subTasks = BanditPrograms.Generator.Refuel(bandit, generator)
+                if #subTasks > 0 then
+                    for _, subTask in pairs(subTasks) do
+                        table.insert(tasks, subTask)
+                    end
+                    return {status=true, next="Follow", tasks=tasks}
+                end
+            end
+        end
+    end
+
+    -- gardening
+    -- TODO: remove weed
+
+    -- farming
+    if not cm:isRaining() then
+        local plant = BanditPlayerBase.GetFarm(bandit)
+        if plant and plant.waterNeeded > 0 and plant.waterLvl < 100 then
+            local subTasks = BanditPrograms.Farm.Water(bandit, plant)
+            if #subTasks > 0 then
+                for _, subTask in pairs(subTasks) do
+                    table.insert(tasks, subTask)
+                end
+                return {status=true, next="Follow", tasks=tasks}
+            end
+        end
+    end
+
+    -- housekeeping
+    local subTasks = BanditPrograms.Housekeeping.FillGraves(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
+    local subTasks = BanditPrograms.Housekeeping.RemoveCorpses(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
+    local subTasks = BanditPrograms.Housekeeping.RemoveTrash(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
+    local subTasks = BanditPrograms.Housekeeping.CleanBlood(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
     end
 
     -- ideas: read book, 
@@ -366,24 +439,11 @@ ZombiePrograms.Companion.Follow = function(bandit)
         - world items
             -- updated when walking on square
 
-    water crops
-    0. prequisites
-        - must know farm locations
-            - farm must be dry
-        - must know where tools are
-            - must be in base
-        - must know water sources
-        - must not rain
-    
-    1. get tools
-    2. go to water source (barrel, faucet)
-    3. water
-    4. return tools
 
-    , heal crops, fix car, refuel genny, fix genny, chop tree, saw logs, 
+    , heal crops, fix car, chop tree, saw logs, 
     
     itemless:
-    sleep, use toilet, eat something, drink something]]
+    move rotten to composter, sleep, use toilet, eat something, drink something]]
 
     -- follow the player.
     local minDist = 2

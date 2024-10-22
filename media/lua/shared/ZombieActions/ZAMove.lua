@@ -59,7 +59,7 @@ ZombieActions.Move.onStart = function(zombie, task)
                 zombie:getPathFindBehavior2():pathToVehicleArea(vehicle, task.vehiclePartArea)
             end
         else
-            zombie:getPathFindBehavior2():pathToLocation(task.x + 0.5, task.y + 0.5, task.z)
+            zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
         end
         
         zombie:getPathFindBehavior2():cancel()

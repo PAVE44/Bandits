@@ -50,6 +50,7 @@ BanditActionInterceptor.Main = function(data)
             print ("load container")
             local container = data.destContainer
             local containerType = container:getType()
+            
             if containerType == "fridge" or containerType == "freezer" then
                 local object = container:getParent()
                 local square = object:getSquare()
@@ -57,6 +58,16 @@ BanditActionInterceptor.Main = function(data)
                 local buildingDef = building:getDef()
                 BanditPlayerBase.RegisterBase(buildingDef)
             end
+
+            local object = container:getParent()
+            if object then
+                local sprite = object:getSprite()
+                local props = sprite:getProperties()
+                if sprite:getProperties():Is("IsTrashCan") then
+                    BanditPlayerBase.UpdateTrashcan(object)
+                end
+            end
+
             BanditPlayerBase.UpdateContainer(container)
 
         elseif jobType:startsWith(getText("IGUI_TakingFromContainer")) then
@@ -86,8 +97,23 @@ BanditActionInterceptor.Main = function(data)
                     local obj = IsoObject.new(square, data.spriteName, "")
                     BanditPlayerBase.UpdateWaterSource(obj)
                 end
+            elseif data.spriteName == "location_community_cemetary_01_33" or data.spriteName == "location_community_cemetary_01_34" then
+                local square = getCell():getGridSquare(data.x, data.y, data.z)
+                if square then 
+                    local obj = IsoObject.new(square, data.spriteName, "")
+                    BanditPlayerBase.UpdateGrave(obj)
+                end
             end
         end
+    elseif action == "ISTakeWaterAction" then
+        if data.waterObject then
+            BanditPlayerBase.UpdateWaterSource(data.waterObject)
+        end
+    elseif action == "ISWashClothing" or action == "ISWashYourself" then
+        if data.sink then
+            BanditPlayerBase.UpdateWaterSource(data.sink)
+        end
+
     elseif action == "ISPlugGenerator" or action == "ISActivateGenerator" then
         if data.generator then
             BanditPlayerBase.UpdateGenerator(data.generator)
@@ -96,6 +122,7 @@ BanditActionInterceptor.Main = function(data)
         if data.generator then
             BanditPlayerBase.RemoveGenerator(data.generator)
         end
+    
     end
 end
 

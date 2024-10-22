@@ -430,6 +430,25 @@ function BanditUtils.IsWater(square)
     return false
 end
 
+function BanditUtils.ReplaceDrainable(item)
+    local itemType = item:getFullType()
+    local newItemType
+    if itemType == "farming.WateredCan" then
+        newItemType = "farming.WateredCanFull"
+    elseif itemType == "Base.BucketEmpty" then
+        newItemType = "Base.BucketWaterFull"
+    end
+
+    local newItem
+    if newItemType then
+        newItem = InventoryItemFactory.CreateItem(newItemType)
+        newItem:setUsedDelta(0)
+    else
+        newItem = item
+    end
+    return newItem
+end
+
 function BanditUtils.Choice(arr)
     local r = 1 + ZombRand(#arr)
     return arr[r]
