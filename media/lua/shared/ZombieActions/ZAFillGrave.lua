@@ -1,19 +1,18 @@
 ZombieActions = ZombieActions or {}
 
 local function changeSprite(square)
-	for i=0,square:getSpecialObjects():size()-1 do
-		local grave = square:getSpecialObjects():get(i)
-		if grave:getName() == "EmptyGraves" then
-			grave:getModData()["filled"] = true
-			grave:transmitModData()
-			local split = luautils.split(grave:getSprite():getName(), "_")
-			local spriteName = "location_community_cemetary_01_" .. (split[5] + 8)
-			grave:setSpriteFromName(spriteName)
-			grave:transmitUpdatedSpriteToServer()
-            BanditPlayerBase.RemoveGrave(grave)
+    for i=0,square:getSpecialObjects():size()-1 do
+        local grave = square:getSpecialObjects():get(i)
+        if grave:getName() == "EmptyGraves" then
+            grave:getModData()["filled"] = true
+            grave:transmitModData()
+            local split = luautils.split(grave:getSprite():getName(), "_")
+            local spriteName = "location_community_cemetary_01_" .. (split[5] + 8)
+            grave:setSpriteFromName(spriteName)
+            grave:transmitUpdatedSpriteToServer()
             break
-		end
-	end
+        end
+    end
 end
 
 ZombieActions.FillGrave = {}

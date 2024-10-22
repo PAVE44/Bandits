@@ -50,7 +50,7 @@ ZombieActions.GeneratorRefill.onComplete = function(zombie, task)
         generator:setFuel(newFuel)
         square:AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
     end
-    BanditPlayerBase.UpdateContainer(square)
+
     return true
 end
 

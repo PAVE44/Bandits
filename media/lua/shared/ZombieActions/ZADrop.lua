@@ -20,7 +20,6 @@ ZombieActions.Drop.onComplete = function(zombie, task)
             zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
         end
     end
-    BanditPlayerBase.UpdateContainer(zombie:getSquare())
     
     return true
 end

@@ -35,7 +35,6 @@ ZombieActions.PutInContainer.onComplete = function(zombie, task)
                 container:addItemOnServer(item)
             end
             inventory:Remove(item)
-            BanditPlayerBase.UpdateContainer(container)
             break
         end
     end

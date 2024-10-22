@@ -40,7 +40,6 @@ ZombieActions.CleanBlood.onComplete = function(zombie, task)
     end
 
     square:removeBlood(false, false)
-    BanditPlayerBase.UpdateBlood(square)
 
     local item = zombie:getPrimaryHandItem()
     local inventory = zombie:getInventory()

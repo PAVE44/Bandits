@@ -29,7 +29,6 @@ ZombieActions.PickUpBody.onComplete = function(zombie, task)
             square:removeCorpse(body, false)
         end
 
-        BanditPlayerBase.RemoveDeadbody(body)
     end
 
     return true

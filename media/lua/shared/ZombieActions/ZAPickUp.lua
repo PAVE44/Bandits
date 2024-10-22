@@ -44,7 +44,6 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
             end
         end
 
-        BanditPlayerBase.UpdateContainer(square)
     end
 
     return true

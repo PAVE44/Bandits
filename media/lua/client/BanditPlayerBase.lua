@@ -27,7 +27,7 @@ BanditPlayerBase.Debug = function(buildingDef)
     local debug = BanditPlayerBase.data
 end
 
--- gradual update
+-- function that governs player bases regeneration
 BanditPlayerBase.Update = function(numberTicks)
     if numberTicks % 4 == 0 then 
         for baseId, _ in pairs(BanditPlayerBase.data) do
@@ -37,6 +37,7 @@ BanditPlayerBase.Update = function(numberTicks)
     end
 end
 
+-- this updates player bases gradually to preserve performance
 BanditPlayerBase.Regenerate = function(baseId)
 
     -- registers virtual object at the given location of a given type
@@ -147,6 +148,7 @@ BanditPlayerBase.Regenerate = function(baseId)
             local object = objects:get(i)
             local container = object:getContainer()
             local sprite = object:getSprite()
+            local md = object:getModData()
             local props
             if sprite then props = sprite:getProperties() end
 
@@ -154,7 +156,7 @@ BanditPlayerBase.Regenerate = function(baseId)
                 addObject(baseId, x, y, z, "generators")
             elseif instanceof(object, "IsoDeadBody") then
                 addObject(baseId, x, y, z, "deadbodies")
-            elseif object:getName() == "EmptyGraves" then
+            elseif object:getName() == "EmptyGraves" and md.filled == false then
                 addObject(baseId, x, y, z, "graves")
             elseif object:getWaterAmount() > 0 then
                 addObject(baseId, x, y, z, "waterSources")
@@ -184,6 +186,8 @@ BanditPlayerBase.Regenerate = function(baseId)
 
     local cell = getCell()
 
+    -- player base is updated gradualy by fragments 
+    -- size determines a size of a fragment square
     local size = 10
 
     local xmin = base.x + base.pointer.x
@@ -294,73 +298,6 @@ BanditPlayerBase.ReindexItems = function(baseId)
     BanditPlayerBase.data[baseId].items = items
 end
 
-
-
-
-
--- registers container and its items
-BanditPlayerBase.UpdateContainer = function(container)
-
-    if not container then return end
-
-    local x, y, z
-
-    if instanceof(container, "IsoGridSquare") then
-        -- convert world items on the floor to a temporary container
-        local square = container
-        container = ItemContainer.new("floor", nil, nil, 10, 10)
-        local wobs = square:getWorldObjects()
-        for i = 0, wobs:size()-1 do
-            local o = wobs:get(i)
-            container:AddItem(o:getItem())
-        end
-        x = square:getX()
-        y = square:getY()
-        z = square:getZ()
-    elseif container:getType() == "floor" then
-        local player = getPlayer()
-        x = math.floor(player:getX())
-        y = math.floor(player:getY())
-        z = player:getZ()
-    else
-        local object = container:getParent()
-        x = object:getX()
-        y = object:getY()
-        z = object:getZ()
-    end
-    local contId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local cont = {}
-    cont.id = contId
-    cont.x = x
-    cont.y = y
-    cont.z = z
-    cont.type = container:getType()
-    cont.items = {}
-
-    local items = ArrayList.new()
-    container:getAllEvalRecurse(predicateAll, items)
-    if items:size() > 0 then
-        for i=0, items:size()-1 do
-            local item = items:get(i)
-            local itemType = item:getFullType()
-            if not cont.items[itemType] then
-                cont.items[itemType] = 1
-            else
-                cont.items[itemType] = cont.items[itemType] + 1
-            end
-        end
-
-        BanditPlayerBase.data[baseId].containers[contId] = cont
-    else
-        BanditPlayerBase.data[baseId].containers[contId] = nil
-    end
-    BanditPlayerBase.ReindexItems(baseId)
-end
-
 -- returns closest container containing required number of items
 BanditPlayerBase.GetContainer = function(character, item, cnt)
     local x = character:getX()
@@ -404,52 +341,6 @@ BanditPlayerBase.GetContainer = function(character, item, cnt)
 
 end
 
--- registers farm
-BanditPlayerBase.UpdateFarm = function(farm)
-    if not farm then return end
-
-    local x = farm:getX()
-    local y = farm:getY()
-    local z = farm:getZ()
-    local farmId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local farm = {}
-    farm.id = farmId
-    farm.x = x
-    farm.y = y
-    farm.z = z
-
-    if not BanditPlayerBase.data[baseId].farms then
-        BanditPlayerBase.data[baseId].farms = {}
-    end
-
-    BanditPlayerBase.data[baseId].farms[farmId] = farm
-    local debug = BanditPlayerBase.data
-end
-
--- unregisters farm
-BanditPlayerBase.RemoveFarm = function(farm)
-    local x = farm:getX()
-    local y = farm:getY()
-    local z = farm:getZ()
-    local farmId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    if not BanditPlayerBase.data[baseId].farms then
-        BanditPlayerBase.data[baseId].farms = {}
-    end
-
-    if BanditPlayerBase.data[baseId].farms[farmId] then
-        BanditPlayerBase.data[baseId].farms[farmId] = nil
-    end
-    local debug = BanditPlayerBase.data
-end
-
 -- returns farm requiring action closest to the character 
 BanditPlayerBase.GetFarm = function(character)
     local x = character:getX()
@@ -477,32 +368,6 @@ BanditPlayerBase.GetFarm = function(character)
     end
 
     return bestPlant
-end
-
--- registers water source
-BanditPlayerBase.UpdateWaterSource = function(waterSource)
-    if not waterSource then return end
-
-    local x = waterSource:getX()
-    local y = waterSource:getY()
-    local z = waterSource:getZ()
-    local waterSourceId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local waterSource = {}
-    waterSource.id = waterSourceId
-    waterSource.x = x
-    waterSource.y = y
-    waterSource.z = z
-
-    if not BanditPlayerBase.data[baseId].waterSources then
-        BanditPlayerBase.data[baseId].waterSources = {}
-    end
-
-    BanditPlayerBase.data[baseId].waterSources[waterSourceId] = waterSource
-    local debug = BanditPlayerBase.data
 end
 
 -- returns non-empty water source closest to the character 
@@ -553,53 +418,6 @@ BanditPlayerBase.GetWaterSource = function(character)
     return bestSource
 end
 
--- registers generator
-BanditPlayerBase.UpdateGenerator = function(generator)
-    if not generator then return end
-
-    local x = generator:getX()
-    local y = generator:getY()
-    local z = generator:getZ()
-    local generatorId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local generator = {}
-    generator.id = generatorId
-    generator.x = x
-    generator.y = y
-    generator.z = z
-
-    if not BanditPlayerBase.data[baseId].generators then
-        BanditPlayerBase.data[baseId].generators = {}
-    end
-
-    BanditPlayerBase.data[baseId].generators[generatorId] = generator
-    local debug = BanditPlayerBase.data
-end
-
--- unregisters generator
-BanditPlayerBase.RemoveGenerator = function(generator)
-    local x = generator:getX()
-    local y = generator:getY()
-    local z = generator:getZ()
-    local generatorId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    if not BanditPlayerBase.data[baseId].generators then
-        BanditPlayerBase.data[baseId].generators = {}
-    end
-
-    if BanditPlayerBase.data[baseId].generators[generatorId] then
-        BanditPlayerBase.data[baseId].generators[generatorId] = nil
-    end
-
-    local debug = BanditPlayerBase.data
-end
-
 -- returns generator requiring action closest to the character 
 BanditPlayerBase.GetGenerator = function(character)
     local x = character:getX()
@@ -631,29 +449,6 @@ BanditPlayerBase.GetGenerator = function(character)
     return bestGenerator
 end
 
--- registers blood
-BanditPlayerBase.UpdateBlood = function(square)
-    local x = square:getX()
-    local y = square:getY()
-    local z = square:getZ()
-    local bloodId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local blood = {}
-    blood.id = bloodId
-    blood.x = x
-    blood.y = y
-    blood.z = z
-
-    if not BanditPlayerBase.data[baseId].blood then
-        BanditPlayerBase.data[baseId].blood = {}
-    end
-
-    BanditPlayerBase.data[baseId].blood[bloodId] = blood
-end
-
 -- get square that has blood to clean
 BanditPlayerBase.GetBlood = function(character)
     local x = character:getX()
@@ -678,31 +473,6 @@ BanditPlayerBase.GetBlood = function(character)
     end
 
     return bestBlood
-end
-
--- registers trashcan
-BanditPlayerBase.UpdateTrashcan = function(trashcan)
-    if not trashcan then return end
-
-    local x = trashcan:getX()
-    local y = trashcan:getY()
-    local z = trashcan:getZ()
-    local trashcanId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local trashcan = {}
-    trashcan.id = trashcanId
-    trashcan.x = x
-    trashcan.y = y
-    trashcan.z = z
-
-    if not BanditPlayerBase.data[baseId].trashcans then
-        BanditPlayerBase.data[baseId].trashcans = {}
-    end
-
-    BanditPlayerBase.data[baseId].trashcans[trashcanId] = trashcan
 end
 
 -- get square that has a trashcan
@@ -742,31 +512,6 @@ BanditPlayerBase.GetTrashcan = function(character)
     return bestTrashcan
 end
 
--- registers grave
-BanditPlayerBase.UpdateGrave = function(grave)
-    if not grave then return end
-
-    local x = grave:getX()
-    local y = grave:getY()
-    local z = grave:getZ()
-    local graveId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local grave = {}
-    grave.id = graveId
-    grave.x = x
-    grave.y = y
-    grave.z = z
-
-    if not BanditPlayerBase.data[baseId].graves then
-        BanditPlayerBase.data[baseId].graves = {}
-    end
-
-    BanditPlayerBase.data[baseId].graves[graveId] = grave
-end
-
 -- get square that has a grave
 BanditPlayerBase.GetGrave = function(character, isFull)
     local x = character:getX()
@@ -803,51 +548,6 @@ BanditPlayerBase.GetGrave = function(character, isFull)
     return bestGrave
 end
 
--- unregisters grave
-BanditPlayerBase.RemoveGrave = function(grave)
-    if not grave then return end
-    local x = grave:getX()
-    local y = grave:getY()
-    local z = grave:getZ()
-    local graveId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    if not BanditPlayerBase.data[baseId].graves then
-        BanditPlayerBase.data[baseId].graves = {}
-    end
-
-    if BanditPlayerBase.data[baseId].graves[graveId] then
-        BanditPlayerBase.data[baseId].graves[graveId] = nil
-    end
-end
-
--- registers deadbody
-BanditPlayerBase.UpdateDeadbody = function(deadbody)
-    if not deadbody then return end
-
-    local x = deadbody:getX()
-    local y = deadbody:getY()
-    local z = deadbody:getZ()
-    local deadbodyId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    local deadbody = {}
-    deadbody.id = deadbodyId
-    deadbody.x = x
-    deadbody.y = y
-    deadbody.z = z
-
-    if not BanditPlayerBase.data[baseId].deadbodies then
-        BanditPlayerBase.data[baseId].deadbodies = {}
-    end
-
-    BanditPlayerBase.data[baseId].deadbodies[deadbodyId] = deadbody
-end
-
 -- get square that has a deadbody
 BanditPlayerBase.GetDeadbody = function(character)
     local x = character:getX()
@@ -873,27 +573,6 @@ BanditPlayerBase.GetDeadbody = function(character)
     end
 
     return bestDeadbody
-end
-
--- unregisters deadbody
-BanditPlayerBase.RemoveDeadbody = function(deadbody)
-    if not deadbody then return end
-
-    local x = deadbody:getX()
-    local y = deadbody:getY()
-    local z = deadbody:getZ()
-    local deadbodyId = x .. "-" .. y .. "-" .. z
-
-    local baseId = getBase(x, y)
-    if not baseId then return end
-
-    if not BanditPlayerBase.data[baseId].deadbodies then
-        BanditPlayerBase.data[baseId].deadbodies = {}
-    end
-
-    if BanditPlayerBase.data[baseId].deadbodies[deadbodyId] then
-        BanditPlayerBase.data[baseId].deadbodies[deadbodyId] = nil
-    end
 end
 
 Events.OnTick.Add(BanditPlayerBase.Update)
