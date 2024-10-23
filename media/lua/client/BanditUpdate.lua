@@ -1499,6 +1499,7 @@ function BanditUpdate.OnZombieDead(zombie)
         bandit:setPrimaryHandItem(nil)
         bandit:clearAttachedItems()
         bandit:resetEquippedHandsModels()
+        bandit:getInventory():clear()
 
         local veh = bandit:getVehicle()
         if veh then

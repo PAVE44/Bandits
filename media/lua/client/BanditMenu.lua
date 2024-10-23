@@ -194,7 +194,7 @@ function BanditMenu.RemoveAllBandits(player)
 end
 
 function BanditMenu.ResetGenerator (player, generator)
-    generator:setFuel(50)
+    generator:setFuel(20)
     generator:setCondition(50)
 end
 

@@ -372,7 +372,7 @@ BanditPrograms.Generator.Refuel = function(bandit, generator)
     local inventory = bandit:getInventory()
     if inventory:getItemCountFromTypeRecurse(itemType) > 0 then
         local dist = math.sqrt(math.pow(bandit:getX() - generator:getX(), 2) + math.pow(bandit:getY() - generator:getY(), 2))
-        if dist > 0.75 then
+        if dist > 0.90 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, generator:getX(), generator:getY(), generator:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -408,8 +408,8 @@ BanditPrograms.Generator.Refuel = function(bandit, generator)
 
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -421,8 +421,8 @@ BanditPrograms.Generator.Refuel = function(bandit, generator)
         local square = obj:getParent():getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getX() + 0.5), 2))
+            if dist > 0.90 then
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
@@ -449,7 +449,7 @@ BanditPrograms.Generator.Repair = function(bandit, generator)
     local has = inventory:getItemCountFromTypeRecurse(itemType)
     if inventory:getItemCountFromTypeRecurse(itemType) >= cnt then
         local dist = math.sqrt(math.pow(bandit:getX() - generator:getX(), 2) + math.pow(bandit:getY() - generator:getY(), 2))
-        if dist > 0.75 then
+        if dist > 0.90 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, generator:getX(), generator:getY(), generator:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -485,8 +485,8 @@ BanditPrograms.Generator.Repair = function(bandit, generator)
 
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -498,8 +498,8 @@ BanditPrograms.Generator.Repair = function(bandit, generator)
         local square = obj:getParent():getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
@@ -546,8 +546,8 @@ BanditPrograms.Farm.Water = function(bandit, plant)
         if water > 0 then
             local farm = BanditPlayerBase.GetFarm(bandit)
             if farm then
-                local dist = math.sqrt(math.pow(bandit:getX() - farm.x, 2) + math.pow(bandit:getY() - farm.y, 2))
-                if dist > 0.75 then
+                local dist = math.sqrt(math.pow(bandit:getX() - (farm.x + 0.5), 2) + math.pow(bandit:getY() - (farm.y + 0.5), 2))
+                if dist > 0.80 then
                     table.insert(tasks, BanditUtils.GetMoveTask(0, farm.x, farm.y, farm.z, "Walk", dist, false))
                     return tasks
                 else
@@ -569,8 +569,8 @@ BanditPrograms.Farm.Water = function(bandit, plant)
                 local square = source:getSquare()
                 local asquare = AdjacentFreeTileFinder.Find(square, bandit)
                 if asquare then
-                    local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-                    if dist > 0.75 then
+                    local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+                    if dist > 0.90 then
                         table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                         return tasks
                     else
@@ -605,8 +605,8 @@ BanditPrograms.Farm.Water = function(bandit, plant)
 
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -618,8 +618,8 @@ BanditPrograms.Farm.Water = function(bandit, plant)
         local square = obj:getParent():getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
@@ -677,16 +677,21 @@ BanditPrograms.Housekeeping.CleanBlood = function(bandit)
     if itemMop and itemBleach then
         local square = BanditPlayerBase.GetBlood(bandit)
         if square then
-            local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+            if dist > 0.80 then
+                bandit:addLineChatElement(("go clean blood"), 0.1, 0.1, 0.9)
                 table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
                 return tasks
             else
+                bandit:addLineChatElement(("clean blood"), 0.1, 0.1, 0.9)
                 local task1 = {action="Equip", itemPrimary=itemMopType}
                 table.insert(tasks, task1)
 
                 local task2 = {action="CleanBlood", anim="Rake", itemType=itemMopType, x=square:getX(), y=square:getY(), z=square:getZ(), time=300}
                 table.insert(tasks, task2)
+
+                local task3 = {action="Equip", itemPrimary=Bandit.GetBestWeapon(bandit)}
+                table.insert(tasks, task3)
 
                 return tasks
             end
@@ -703,11 +708,13 @@ BanditPrograms.Housekeeping.CleanBlood = function(bandit)
 
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
+            bandit:addLineChatElement(("go get tools to clean blood"), 0.1, 0.1, 0.9)
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
+            bandit:addLineChatElement(("pickup tools to clean blood"), 0.1, 0.1, 0.9)
             local task = {action="PickUp", anim="LootLow", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ()}
             table.insert(tasks, task)
             return tasks
@@ -716,11 +723,13 @@ BanditPrograms.Housekeeping.CleanBlood = function(bandit)
         local square = obj:getParent():getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
+                bandit:addLineChatElement(("go to container to get tools to clean blood"), 0.1, 0.1, 0.9)
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
+                bandit:addLineChatElement(("get tools from container to clean blood"), 0.1, 0.1, 0.9)
                 local task = {action="TakeFromContainer", anim="Loot", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ()}
                 table.insert(tasks, task)
                 return tasks
@@ -748,12 +757,14 @@ BanditPrograms.Housekeeping.RemoveTrash = function(bandit)
         local square = trashcan:getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
+                bandit:addLineChatElement(("go to throw away trash"), 0.1, 0.1, 0.9)
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
                 for i=0, items:size()-1 do
+                    bandit:addLineChatElement(("throw away trash"), 0.1, 0.1, 0.9)
                     local item = items:get(i)
                     local itemType = item:getFullType()
                     local task = {action="PutInContainer", anim="Loot", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ()}
@@ -779,11 +790,17 @@ BanditPrograms.Housekeeping.RemoveTrash = function(bandit)
     
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local bx = bandit:getX()
+        local by = bandit:getY()
+        local sx = square:getX()
+        local sy = square:getY()
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
+            bandit:addLineChatElement(("go collect trash"), 0.1, 0.1, 0.9)
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
+            bandit:addLineChatElement(("pickup trash"), 0.1, 0.1, 0.9)
             local task = {action="PickUp", anim="LootLow", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ()}
             table.insert(tasks, task)
             return tasks
@@ -795,8 +812,8 @@ BanditPrograms.Housekeeping.RemoveTrash = function(bandit)
         local square = object:getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
@@ -822,8 +839,8 @@ BanditPrograms.Housekeeping.FillGraves = function(bandit)
     local inventory = bandit:getInventory()
     if inventory:getItemCountFromTypeRecurse(itemType) > 0 then
 
-        local dist = math.sqrt(math.pow(bandit:getX() - grave:getX(), 2) + math.pow(bandit:getY() - grave:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (grave:getX() + 0.5), 2) + math.pow(bandit:getY() - (grave:getY() + 0.5), 2))
+        if dist > 0.90 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, grave:getX(), grave:getY(), grave:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -847,8 +864,8 @@ BanditPrograms.Housekeeping.FillGraves = function(bandit)
 
     if instanceof(obj, "IsoGridSquare") then
         local square = obj
-        local dist = math.sqrt(math.pow(bandit:getX() - square:getX(), 2) + math.pow(bandit:getY() - square:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.90 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -860,8 +877,8 @@ BanditPrograms.Housekeeping.FillGraves = function(bandit)
         local square = obj:getParent():getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - asquare:getX(), 2) + math.pow(bandit:getY() - asquare:getY(), 2))
-            if dist > 0.75 then
+            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            if dist > 0.90 then
                 table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
                 return tasks
             else
@@ -886,8 +903,8 @@ BanditPrograms.Housekeeping.RemoveCorpses = function(bandit)
     local inventory = bandit:getInventory()
     if inventory:getItemCountFromTypeRecurse(itemType) > 0 then
 
-        local dist = math.sqrt(math.pow(bandit:getX() - grave:getX(), 2) + math.pow(bandit:getY() - grave:getY(), 2))
-        if dist > 0.75 then
+        local dist = math.sqrt(math.pow(bandit:getX() - (grave:getX() + 0.5), 2) + math.pow(bandit:getY() - (grave:getY() + 0.5), 2))
+        if dist > 0.90 then
             table.insert(tasks, BanditUtils.GetMoveTask(0, grave:getX(), grave:getY(), grave:getZ(), "Walk", dist, false))
             return tasks
         else
@@ -902,8 +919,8 @@ BanditPrograms.Housekeeping.RemoveCorpses = function(bandit)
     if not deadbody then return tasks end
 
     local square = obj
-    local dist = math.sqrt(math.pow(bandit:getX() - deadbody:getX(), 2) + math.pow(bandit:getY() - deadbody:getY(), 2))
-    if dist > 0.75 then
+    local dist = math.sqrt(math.pow(bandit:getX() - (deadbody:getX() + 0.5), 2) + math.pow(bandit:getY() - (deadbody:getY() + 0.5), 2))
+    if dist > 0.90 then
         table.insert(tasks, BanditUtils.GetMoveTask(0, deadbody:getX(), deadbody:getY(), deadbody:getZ(), "Walk", dist, false))
         return tasks
     else

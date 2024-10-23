@@ -37,11 +37,12 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
                 if cnt >= task.cnt then break end
             end
         end
-
-        if BanditUtils.IsController(zombie) then
-            for k, object in pairs(toRemove) do
-                square:removeWorldObject(object)
-            end
+        
+        for k, object in pairs(toRemove) do
+            square:removeWorldObject(object)
+            square:transmitRemoveItemFromSquare(object)
+            local item = object:getItem()
+            item:setWorldItem(nil)
         end
 
     end

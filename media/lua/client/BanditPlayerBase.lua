@@ -29,7 +29,7 @@ end
 
 -- function that governs player bases regeneration
 BanditPlayerBase.Update = function(numberTicks)
-    if numberTicks % 4 == 0 then 
+    if numberTicks % 2 == 0 then 
         for baseId, _ in pairs(BanditPlayerBase.data) do
             BanditPlayerBase.Regenerate(baseId)
             BanditPlayerBase.ReindexItems(baseId)
@@ -143,6 +143,14 @@ BanditPlayerBase.Regenerate = function(baseId)
         removeObject(baseId, x, y, z, "waterSources")
         removeObject(baseId, x, y, z, "trashcans")
 
+        local sobjects = square:getStaticMovingObjects()
+        for i=0, sobjects:size()-1 do
+            local object = sobjects:get(i)
+            if instanceof(object, "IsoDeadBody") then
+                addObject(baseId, x, y, z, "deadbodies")
+            end
+        end
+
         local objects = square:getObjects()
         for i=0, objects:size()-1 do
             local object = objects:get(i)
@@ -154,8 +162,6 @@ BanditPlayerBase.Regenerate = function(baseId)
 
             if instanceof(object, "IsoGenerator") then
                 addObject(baseId, x, y, z, "generators")
-            elseif instanceof(object, "IsoDeadBody") then
-                addObject(baseId, x, y, z, "deadbodies")
             elseif object:getName() == "EmptyGraves" and md.filled == false then
                 addObject(baseId, x, y, z, "graves")
             elseif object:getWaterAmount() > 0 then

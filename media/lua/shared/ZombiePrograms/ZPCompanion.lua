@@ -346,7 +346,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
 
     -- companion generator maintenance
     -- FIXME: change to NOT
-    if not getWorld():isHydroPowerOn() then 
+    if getWorld():isHydroPowerOn() then 
         local generator = BanditPlayerBase.GetGenerator(bandit)
         if generator then
             local condition = generator:getCondition()
