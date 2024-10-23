@@ -390,6 +390,15 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
     end
 
+    -- unload collected food to fridge
+    local subTasks = BanditPrograms.Misc.ReturnFood(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
+    end
+
     -- housekeeping
     local subTasks = BanditPrograms.Housekeeping.FillGraves(bandit)
     if #subTasks > 0 then

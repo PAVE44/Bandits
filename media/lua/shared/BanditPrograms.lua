@@ -5,6 +5,17 @@ local function predicateAll(item)
 	return true
 end
 
+local function predicateFreshFood(item)
+    local category = item:getDisplayCategory()
+    if category == "Food" then
+        local canSpoil = item:getOffAgeMax() < 1000
+        if canSpoil then
+            return true
+        end
+    end
+    return false
+end
+
 BanditPrograms = BanditPrograms or {}
 
 BanditPrograms.Weapon = BanditPrograms.Weapon or {}
@@ -403,7 +414,7 @@ BanditPrograms.Generator.Refuel = function(bandit, generator)
     end
     
     -- go get carnister
-    local obj = BanditPlayerBase.GetContainer(bandit, itemType, 1)
+    local obj = BanditPlayerBase.GetContainerWithItem(bandit, itemType, 1)
     if not obj then return tasks end
 
     if instanceof(obj, "IsoGridSquare") then
@@ -480,7 +491,7 @@ BanditPrograms.Generator.Repair = function(bandit, generator)
     end
     
     -- go get electronics
-    local obj = BanditPlayerBase.GetContainer(bandit, itemType, cnt)
+    local obj = BanditPlayerBase.GetContainerWithItem(bandit, itemType, cnt)
     if not obj then return tasks end
 
     if instanceof(obj, "IsoGridSquare") then
@@ -534,7 +545,10 @@ end
 BanditPrograms.Farm.Water = function(bandit, plant)
     local tasks = {}
 
-    -- return with watering can
+    local farm = BanditPlayerBase.GetFarm(bandit)
+    if not farm then return true end
+
+    -- water plants
     local inventory = bandit:getInventory()
     local items = ArrayList.new()
     inventory:getAllEvalRecurse(BanditPrograms.Farm.PredicateFillable, items)
@@ -544,24 +558,21 @@ BanditPrograms.Farm.Water = function(bandit, plant)
         local itemType = item:getFullType()
         local water = item:getUsedDelta()
         if water > 0 then
-            local farm = BanditPlayerBase.GetFarm(bandit)
-            if farm then
-                local dist = math.sqrt(math.pow(bandit:getX() - (farm.x + 0.5), 2) + math.pow(bandit:getY() - (farm.y + 0.5), 2))
-                if dist > 0.80 then
-                    table.insert(tasks, BanditUtils.GetMoveTask(0, farm.x, farm.y, farm.z, "Walk", dist, false))
-                    return tasks
-                else
-                    local task1 = {action="Equip", itemPrimary=itemType}
-                    table.insert(tasks, task1)
+            local dist = math.sqrt(math.pow(bandit:getX() - (farm.x + 0.5), 2) + math.pow(bandit:getY() - (farm.y + 0.5), 2))
+            if dist > 0.80 then
+                table.insert(tasks, BanditUtils.GetMoveTask(0, farm.x, farm.y, farm.z, "Walk", dist, false))
+                return tasks
+            else
+                local task1 = {action="Equip", itemPrimary=itemType}
+                table.insert(tasks, task1)
 
-                    local task2 = {action="WaterFarm", anim="PourWateringCan", itemType=itemType, x=farm.x, y=farm.y, z=farm.z}
-                    table.insert(tasks, task2)
-    
-                    local task3 = {action="Equip", itemPrimary=Bandit.GetBestWeapon(bandit)}
-                    table.insert(tasks, task3)
+                local task2 = {action="WaterFarm", anim="PourWateringCan", itemType=itemType, x=farm.x, y=farm.y, z=farm.z}
+                table.insert(tasks, task2)
 
-                    return tasks
-                end
+                local task3 = {action="Equip", itemPrimary=Bandit.GetBestWeapon(bandit)}
+                table.insert(tasks, task3)
+
+                return tasks
             end
         else
             local source = BanditPlayerBase.GetWaterSource(bandit)
@@ -594,7 +605,7 @@ BanditPrograms.Farm.Water = function(bandit, plant)
     local obj
     local itemType
     for _, it in pairs(BanditPrograms.Farm.fillables) do
-        local o = BanditPlayerBase.GetContainer(bandit, it, 1)
+        local o = BanditPlayerBase.GetContainerWithItem(bandit, it, 1)
         if o then 
             obj = o
             itemType = it
@@ -666,6 +677,10 @@ end
 
 BanditPrograms.Housekeeping.CleanBlood = function(bandit)
     local tasks = {}
+
+    local square = BanditPlayerBase.GetBlood(bandit)
+    if not square then return true end
+
     local inventory = bandit:getInventory()
 
     itemMopType = "Base.Broom"
@@ -675,26 +690,23 @@ BanditPrograms.Housekeeping.CleanBlood = function(bandit)
     local itemBleach = inventory:getItemFromType(itemBleachType)
 
     if itemMop and itemBleach then
-        local square = BanditPlayerBase.GetBlood(bandit)
-        if square then
-            local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
-            if dist > 0.80 then
-                bandit:addLineChatElement(("go clean blood"), 0.1, 0.1, 0.9)
-                table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
-                return tasks
-            else
-                bandit:addLineChatElement(("clean blood"), 0.1, 0.1, 0.9)
-                local task1 = {action="Equip", itemPrimary=itemMopType}
-                table.insert(tasks, task1)
+        local dist = math.sqrt(math.pow(bandit:getX() - (square:getX() + 0.5), 2) + math.pow(bandit:getY() - (square:getY() + 0.5), 2))
+        if dist > 0.80 then
+            bandit:addLineChatElement(("go clean blood"), 0.1, 0.1, 0.9)
+            table.insert(tasks, BanditUtils.GetMoveTask(0, square:getX(), square:getY(), square:getZ(), "Walk", dist, false))
+            return tasks
+        else
+            bandit:addLineChatElement(("clean blood"), 0.1, 0.1, 0.9)
+            local task1 = {action="Equip", itemPrimary=itemMopType}
+            table.insert(tasks, task1)
 
-                local task2 = {action="CleanBlood", anim="Rake", itemType=itemMopType, x=square:getX(), y=square:getY(), z=square:getZ(), time=300}
-                table.insert(tasks, task2)
+            local task2 = {action="CleanBlood", anim="Rake", itemType=itemMopType, x=square:getX(), y=square:getY(), z=square:getZ(), time=300}
+            table.insert(tasks, task2)
 
-                local task3 = {action="Equip", itemPrimary=Bandit.GetBestWeapon(bandit)}
-                table.insert(tasks, task3)
+            local task3 = {action="Equip", itemPrimary=Bandit.GetBestWeapon(bandit)}
+            table.insert(tasks, task3)
 
-                return tasks
-            end
+            return tasks
         end
     end
 
@@ -703,7 +715,7 @@ BanditPrograms.Housekeeping.CleanBlood = function(bandit)
     if not itemBleach then itemType = itemBleachType end
     if not itemMop then itemType = itemMopType end
 
-    local obj = BanditPlayerBase.GetContainer(bandit, itemType, 1)
+    local obj = BanditPlayerBase.GetContainerWithItem(bandit, itemType, 1)
     if not obj then return tasks end
 
     if instanceof(obj, "IsoGridSquare") then
@@ -742,18 +754,17 @@ end
 
 BanditPrograms.Housekeeping.RemoveTrash = function(bandit)
     local tasks = {}
-    local inventory = bandit:getInventory()
+
+    local trashcan = BanditPlayerBase.GetTrashcan(bandit)
+    if not trashcan then return tasks end
 
     -- put trash in the trashcan
+    local inventory = bandit:getInventory()
     local items = ArrayList.new()
     inventory:getAllEvalRecurse(BanditPrograms.Housekeeping.PredicateTrash, items)
     if items:size() >= 7 then
         local item = items:get(0)
         local itemType = item:getFullType()
-
-        local trashcan = BanditPlayerBase.GetTrashcan(bandit)
-        if not trashcan then return tasks end
-
         local square = trashcan:getSquare()
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
         if asquare then
@@ -779,7 +790,7 @@ BanditPrograms.Housekeeping.RemoveTrash = function(bandit)
     local obj
     local itemType
     for _, it in pairs(BanditPrograms.Housekeeping.trash) do
-        local o = BanditPlayerBase.GetContainer(bandit, it, 1)
+        local o = BanditPlayerBase.GetContainerWithItem(bandit, it, 1)
         if o then 
             obj = o
             itemType = it
@@ -859,7 +870,7 @@ BanditPrograms.Housekeeping.FillGraves = function(bandit)
 
     -- go take shovel
     local itemType = "Base.Shovel"
-    local obj = BanditPlayerBase.GetContainer(bandit, itemType, 1)
+    local obj = BanditPlayerBase.GetContainerWithItem(bandit, itemType, 1)
     if not obj then return tasks end
 
     if instanceof(obj, "IsoGridSquare") then
@@ -930,4 +941,44 @@ BanditPrograms.Housekeeping.RemoveCorpses = function(bandit)
     end
 
     return tasks
+end
+
+BanditPrograms.Misc = BanditPrograms.Misc or {}
+
+BanditPrograms.Misc.ReturnFood = function(bandit)
+    local tasks = {}
+
+    local container = BanditPlayerBase.GetContainerOfType(bandit, "freezer")
+
+    if not container then
+        container = BanditPlayerBase.GetContainerOfType(bandit, "fridge")
+    end
+    if not container then return tasks end
+    local inventory = bandit:getInventory()
+
+    local itemType
+    local items = ArrayList.new()
+    inventory:getAllEvalRecurse(predicateFreshFood, items)
+    if items:size() == 0 then return true end
+
+    local square = container:getParent():getSquare()
+    local asquare = AdjacentFreeTileFinder.Find(square, bandit)
+    if asquare then
+        local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+        if dist > 0.90 then
+            bandit:addLineChatElement(("go put food to fridge"), 0.1, 0.1, 0.9)
+            table.insert(tasks, BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Walk", dist, false))
+            return tasks
+        else
+            for i=0, items:size()-1 do
+                bandit:addLineChatElement(("put food to fridge"), 0.1, 0.1, 0.9)
+                local item = items:get(i)
+                local itemType = item:getFullType()
+                local task = {action="PutInContainer", anim="Loot", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ()}
+                table.insert(tasks, task)
+            end
+            return tasks
+        end
+    end
+
 end

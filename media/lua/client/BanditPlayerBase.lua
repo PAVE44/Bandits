@@ -305,7 +305,7 @@ BanditPlayerBase.ReindexItems = function(baseId)
 end
 
 -- returns closest container containing required number of items
-BanditPlayerBase.GetContainer = function(character, item, cnt)
+BanditPlayerBase.GetContainerWithItem = function(character, item, cnt)
     local x = character:getX()
     local y = character:getY()
 
@@ -344,7 +344,46 @@ BanditPlayerBase.GetContainer = function(character, item, cnt)
             end
         end
     end
+end
 
+-- returns closest container of a specified type
+BanditPlayerBase.GetContainerOfType = function(character, ctype)
+    local x = character:getX()
+    local y = character:getY()
+
+    local baseId = getBase(x, y)
+    if not baseId then return end
+
+    local bestDist = math.huge
+    local bestCont
+    for contId, cont in pairs(BanditPlayerBase.data[baseId].containers) do
+        if cont.type == ctype then
+            local dist = math.sqrt(math.pow(cont.x - x, 2) + math.pow(cont.y - y, 2))
+            if dist < bestDist then
+                bestCont = cont
+                bestDist = dist
+            end
+        end
+    end
+
+    if bestCont then
+        local square = character:getCell():getGridSquare(bestCont.x, bestCont.y, bestCont.z)
+
+        if square then
+            if bestCont.type == "floor" then 
+                return square
+            else
+                local objects = square:getObjects()
+                for i=0, objects:size()-1 do
+                    local object = objects:get(i)
+                    local container = object:getContainerByType(bestCont.type)
+                    if container then
+                        return container
+                    end
+                end
+            end
+        end
+    end
 end
 
 -- returns farm requiring action closest to the character 
