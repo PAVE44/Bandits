@@ -230,7 +230,8 @@ function BanditScheduler.SpawnWave(player, wave)
     event.hostile = true
     if ZombRand(100) < wave.friendlyChance then
         event.hostile = false
-        event.program.name = "Companion"
+        -- event.program.name = "Companion"
+        event.program.name = "Thief"
     else
         if wave.enemyBehaviour == 1 then
             event.program.name = BanditUtils.Choice({"Bandit", "Looter"})

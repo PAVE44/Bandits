@@ -2,15 +2,27 @@ require "Farming/CFarmingSystem"
 
 ZombieActions = ZombieActions or {}
 
+local function getFakeItem(itemType)
+    local fakeItemType
+    if itemType == "farming.WateredCanFull" or itemType == "farming.WateredCan" then
+        fakeItemType = "Bandits.WateringCan"
+    elseif itemType == "Base.BucketWaterFull" or itemType == "Base.BucketEmpty" then
+        fakeItemType = "Bandits.Bucket"
+    end
+    local fakeItem = InventoryItemFactory.CreateItem(fakeItemType)
+    return fakeItem
+end
+
 ZombieActions.WaterFarm = {}
 ZombieActions.WaterFarm.onStart = function(zombie, task)
     local inventory = zombie:getInventory()
     local item = inventory:getItemFromType(task.itemType)
-    if item then
-        zombie:setPrimaryHandItem(item)
-        inventory:Remove(item)
-        zombie:playSound("WaterCrops")
-    end
+    if not instanceof(item, "DrainableComboItem") then return end
+
+    local fakeItem = getFakeItem(item:getFullType())
+    zombie:setPrimaryHandItem(fakeItem)
+    zombie:playSound("WaterCrops")
+
     return true
 end
 
@@ -25,7 +37,10 @@ end
 
 ZombieActions.WaterFarm.onComplete = function(zombie, task)
 
-    local item = zombie:getPrimaryHandItem()
+    zombie:setPrimaryHandItem(nil)
+
+    local inventory = zombie:getInventory()
+    local item = inventory:getItemFromType(task.itemType)
     if not instanceof(item, "DrainableComboItem") then return end
 
     local square = zombie:getCell():getGridSquare(task.x, task.y, task.z)
@@ -48,7 +63,7 @@ ZombieActions.WaterFarm.onComplete = function(zombie, task)
     if newWater > 1 then newWater = 1 end
     item:setUsedDelta(newWater)
 
-    local inventory = zombie:getInventory()
-    inventory:AddItem(item)
+    -- local inventory = zombie:getInventory()
+    -- inventory:AddItem(item)
     return true
 end

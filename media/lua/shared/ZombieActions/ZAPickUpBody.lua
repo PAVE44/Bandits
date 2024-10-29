@@ -23,6 +23,7 @@ ZombieActions.PickUpBody.onComplete = function(zombie, task)
         local body = square:getDeadBody()
         if body then
             inventory:AddItem(body:getItem())
+            Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if BanditUtils.IsController(zombie) then
                 square:removeCorpse(body, false)
             end

@@ -24,6 +24,7 @@ ZombieActions.FillGrave.onStart = function(zombie, task)
         zombie:setVariable("BanditPrimary", task.itemType)
         zombie:setVariable("BanditPrimaryType", "twohanded")
         inventory:Remove(item)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
         zombie:playSound("Shoveling")
     end
     return true
@@ -74,12 +75,18 @@ ZombieActions.FillGrave.onComplete = function(zombie, task)
         end
     end
 
-    changeSprite(sq1)
-    changeSprite(sq2)
+    if sq1 and sq2 then
+        changeSprite(sq1)
+        changeSprite(sq2)
+    end
 
     local item = zombie:getPrimaryHandItem()
+    
     local inventory = zombie:getInventory()
     inventory:AddItem(item)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+
+    -- zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
 
     return true
 end

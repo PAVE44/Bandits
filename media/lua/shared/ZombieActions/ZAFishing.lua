@@ -30,15 +30,18 @@ ZombieActions.Fishing.onWorking = function(zombie, task)
     end
 
     if task.stage == 10 then
-        if BanditUtils.IsController(zombie) then
-            if ZombRand(20) == 0 then
-                local fishTypes = {"Base.Bass", "Base.Crappie", "Base.Perch", "Base.Pike", "Base.Panfish", "Base.Trout"}
-                local fishType = fishTypes[1 + ZombRand(#fishTypes)]
-                local fishItem = InventoryItemFactory.CreateItem(fishType)
-                if item then
-                    zombie:getSquare():AddWorldInventoryItem(fishItem, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                end
-            end
+        local rng = BanditUtils.BanditRand(2)
+        if rng == 1 then
+            local fishTypes = {"Base.Bass", "Base.Crappie", "Base.Perch", "Base.Pike", "Base.Panfish", "Base.Trout"}
+            local fishType = fishTypes[1 + BanditUtils.BanditRand(#fishTypes)]
+            local fishItem = InventoryItemFactory.CreateItem(fishType)
+            local inventory = zombie:getInventory()
+            inventory:AddItem(fishItem)
+            Bandit.UpdateItemsToSpawnAtDeath(zombie)
+
+            --[[if item then
+                zombie:getSquare():AddWorldInventoryItem(fishItem, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+            end]]
         end
 
         return true

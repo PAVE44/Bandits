@@ -54,6 +54,12 @@ function BanditMenu.TestAction (player, square, zombie)
     -- zombie:setBumpType("trippingFromSprint")
     -- zombie:setBumpType("trippingFromSprint")
 
+    --
+    local item = InventoryItemFactory.CreateItem("Base.Hat_GasMask")
+    local x = item:getBodyLocation()
+    zombie:setWornItem(x, item)
+    -- zombie:dressInClothingItem()
+
     local task = {action="FaceLocation", anim="RunToIdle", x=player:getX(), y=player:getY(), time=400}
     Bandit.AddTask(zombie, task)
 end
@@ -229,6 +235,9 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local zombie = square:getZombie()
     local generator = square:getGenerator()
     
+    local chunkRegion = IsoRegions.getChunkRegion(square:getX(), square:getY(), square:getZ())
+    local enclosed = chunkRegion:getIsEnclosed()
+    
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
         local brain = BanditBrain.Get(zombie)
@@ -282,6 +291,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
             context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
+
            
         end
 

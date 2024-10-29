@@ -28,6 +28,7 @@ ZombieActions.GeneratorFix.onComplete = function(zombie, task)
     local item = inventory:getItemFromType("ElectronicsScrap")
     if item then
         inventory:Remove(item)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     if BanditUtils.IsController(zombie) then

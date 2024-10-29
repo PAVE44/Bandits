@@ -24,6 +24,9 @@ BanditClan.NewOrder.accuracyBoost = 1.4
 BanditClan.NewOrder.favoriteZones = {}
 BanditClan.NewOrder.avoidZones = {}
 
+-- hairstyles, nil for default
+BanditClan.NewOrder.hairStyles = {"Bald", "Fresh", "Demi", "FlatTop", "MohawkShort"}
+
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}
 if getActivatedMods():contains("KATTAJ1_Military") then
@@ -35,6 +38,7 @@ if getActivatedMods():contains("KATTAJ1_Military") then
     table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Vanguard")
 else
     table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
+    table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
     -- table.insert(BanditClan.NewOrder.Outfits, "Ghillie")
 end
 

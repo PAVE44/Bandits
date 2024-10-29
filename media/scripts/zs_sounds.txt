@@ -22,7 +22,7 @@ module Bandits{
         } 
     }
 
-    sound ZSHit1 {
+    sound ZSHit3 {
         category = Object, 
         loop = false
         is3D = true,

@@ -27,18 +27,24 @@ ZombiePrograms.Companion.Prepare = function(bandit)
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
 
-    Bandit.ForceStationary(bandit, false)
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
+    local weapons = Bandit.GetWeapons(bandit)
     local primary = Bandit.GetBestWeapon(bandit)
+
+    Bandit.ForceStationary(bandit, false)
+    Bandit.SetWeapons(bandit, weapons)
 
     local secondary
     if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
         secondary = "Base.HandTorch"
     end
 
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task)
+    if weapons.secondary.name then
+        local task1 = {action="Unequip", time=100, itemPrimary=weapons.secondary.name}
+        table.insert(tasks, task1)
+    end
+
+    local task2 = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
+    table.insert(tasks, task2)
 
     return {status=true, next="Follow", tasks=tasks}
 end
@@ -247,7 +253,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- companion fishing
     local gameTime = getGameTime()
     local hour = gameTime:getHour()
-    if (hour >= 4 and hour < 12) or (hour >= 18 and hour < 22) then
+    if (hour >= 4 and hour < 6) or (hour >= 18 and hour < 21) then
         local vectors = {}
         table.insert(vectors, {x=0, y=-1}) --12
         table.insert(vectors, {x=1, y=-1}) -- 1.30
@@ -391,16 +397,27 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end
 
     -- unload collected food to fridge
-    local subTasks = BanditPrograms.Misc.ReturnFood(bandit)
+    local subTasks
+    subTasks = BanditPrograms.Misc.ReturnFood(bandit)
     if #subTasks > 0 then
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
         return {status=true, next="Follow", tasks=tasks}
     end
+
+    -- self
+    subTasks = BanditPrograms.Self.Wash(bandit)
+    if #subTasks > 0 then
+        for _, subTask in pairs(subTasks) do
+            table.insert(tasks, subTask)
+        end
+        return {status=true, next="Follow", tasks=tasks}
+    end
+    
 
     -- housekeeping
-    local subTasks = BanditPrograms.Housekeeping.FillGraves(bandit)
+    subTasks = BanditPrograms.Housekeeping.FillGraves(bandit)
     if #subTasks > 0 then
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
@@ -408,7 +425,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         return {status=true, next="Follow", tasks=tasks}
     end
 
-    local subTasks = BanditPrograms.Housekeeping.RemoveCorpses(bandit)
+    subTasks = BanditPrograms.Housekeeping.RemoveCorpses(bandit)
     if #subTasks > 0 then
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
@@ -416,7 +433,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         return {status=true, next="Follow", tasks=tasks}
     end
 
-    local subTasks = BanditPrograms.Housekeeping.RemoveTrash(bandit)
+    subTasks = BanditPrograms.Housekeeping.RemoveTrash(bandit)
     if #subTasks > 0 then
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
@@ -424,7 +441,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         return {status=true, next="Follow", tasks=tasks}
     end
 
-    local subTasks = BanditPrograms.Housekeeping.CleanBlood(bandit)
+    subTasks = BanditPrograms.Housekeeping.CleanBlood(bandit)
     if #subTasks > 0 then
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)

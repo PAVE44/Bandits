@@ -180,7 +180,8 @@ function BanditUpdate.Visuals(bandit)
         local skin = banditVisuals:getSkinTexture()
         if skin then
             if string.sub(skin, 1, 10) ~= "FemaleBody" and string.sub(skin, 1, 8) ~= "MaleBody" then
-                local id = BanditUtils.GetCharacterID(bandit)
+                local brain = BanditBrain.Get(bandit)
+                local id = brain.id
                 
                 if bandit:isFemale() then
                     local r = 1 + math.abs(id) % 5 -- deterministc for all clients
@@ -193,6 +194,11 @@ function BanditUpdate.Visuals(bandit)
                         banditVisuals:setSkinTextureName("MaleBody0" .. tostring(r))
                     end
                 end
+
+                if brain.hairStyle then
+                    banditVisuals:setHairModel(brain.hairStyle)
+                end
+
                 banditVisuals:randomDirt()
                 banditVisuals:removeBlood()
 
@@ -327,8 +333,8 @@ function BanditUpdate.ActionState(bandit)
             end
         end
 
-    elseif asn == "turnalerted" then
-        bandit:changeState(ZombieIdleState.instance())
+    --elseif asn == "turnalerted" then
+    --    bandit:changeState(ZombieIdleState.instance())
 
     elseif asn == "getup" or asn =="staggerback" then
         Bandit.ClearTasks(bandit)
@@ -1194,6 +1200,8 @@ end
 local uTick = 0
 function BanditUpdate.OnBanditUpdate(zombie)
 
+    -- local ts = getTimestampMs()
+
     if isServer() then return end
 
     if uTick == 16 then uTick = 0 end
@@ -1370,7 +1378,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         end
         -- BanditBrain.Update(zombie, brain)
     end
-    
+
     ------------------------------------------------------------------------------------------------------------------------------------
     -- TASK PROCESSOR
     ------------------------------------------------------------------------------------------------------------------------------------
@@ -1442,8 +1450,9 @@ function BanditUpdate.OnBanditUpdate(zombie)
         if done then 
             Bandit.RemoveTask(bandit)
         end
-
     end
+
+    -- print ("BU.T:" .. (getTimestampMs() - ts))
 end
 
 function BanditUpdate.OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
@@ -1499,7 +1508,7 @@ function BanditUpdate.OnZombieDead(zombie)
         bandit:setPrimaryHandItem(nil)
         bandit:clearAttachedItems()
         bandit:resetEquippedHandsModels()
-        bandit:getInventory():clear()
+        -- bandit:getInventory():clear()
 
         local veh = bandit:getVehicle()
         if veh then

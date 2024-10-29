@@ -32,6 +32,8 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
                 item = BanditUtils.ReplaceDrainable(item)
                 local test1 = item:getFullType()
                 zinventory:AddItem(item)
+                zinventory:setDrawDirty(true)
+                Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 table.insert(toRemove, object)
                 cnt = cnt + 1
                 if cnt >= task.cnt then break end
@@ -41,6 +43,13 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
         for k, object in pairs(toRemove) do
             square:removeWorldObject(object)
             square:transmitRemoveItemFromSquare(object)
+            square:RecalcProperties()
+    		square:RecalcAllWithNeighbours(true)
+
+            object:removeFromWorld()
+            object:removeFromSquare()
+            object:setSquare(nil)
+
             local item = object:getItem()
             item:setWorldItem(nil)
         end

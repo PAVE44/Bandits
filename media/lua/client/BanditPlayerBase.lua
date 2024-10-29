@@ -27,12 +27,69 @@ BanditPlayerBase.Debug = function(buildingDef)
     local debug = BanditPlayerBase.data
 end
 
+-- function that returns the coordinates of the closest base to the character
+BanditPlayerBase.GetBaseClosest = function(character)
+    local cx = character:getX()
+    local cy = character:getY()
+
+    local bestDist = 100
+    local bestBase
+    local bestBaseId
+    for baseId, base in pairs(BanditPlayerBase.data) do
+        local dist = math.sqrt(math.pow(base.x - cx, 2) + math.pow(base.y - cy, 2))    
+        if dist < bestDist then
+            bestBase = base
+            bestBaseId = baseId
+            bestDist = dist
+        end
+    end
+    return bestBaseId, bestBase
+end
+
+-- function that returns the coordinates of the closest base to the character
+BanditPlayerBase.GetContainerClosest = function(character, baseId)
+    local d = BanditPlayerBase.data
+    local cx = character:getX()
+    local cy = character:getY()
+
+    local bestDist = 100
+    local bestCont
+    local bestContId
+    for contId, cont in pairs(BanditPlayerBase.data[baseId].containers) do
+        local empty = true
+        for _, _ in pairs(cont.items) do
+            empty = false
+            break
+        end
+
+        if not empty then
+            local dist = math.sqrt(math.pow(cont.x - cx, 2) + math.pow(cont.y - cy, 2))    
+            if dist < bestDist then
+                bestCont = cont
+                bestContId = contId
+                bestDist = dist
+            end
+        end
+    end
+    return bestContId, bestCont
+end
+
 -- function that governs player bases regeneration
 BanditPlayerBase.Update = function(numberTicks)
-    if numberTicks % 2 == 0 then 
+
+    if numberTicks % 10 == 0 then 
+        local gmd = GetBanditModData()
+        for baseId, baseData in pairs(gmd.Bases) do
+            if not BanditPlayerBase.data[baseId] then
+                BanditPlayerBase.RegisterBase(baseData.x, baseData.y, baseData.x2, baseData.y2)
+            end
+        end
+    end
+
+    if numberTicks % 10 == 0 then 
         for baseId, _ in pairs(BanditPlayerBase.data) do
             BanditPlayerBase.Regenerate(baseId)
-            BanditPlayerBase.ReindexItems(baseId)
+            -- BanditPlayerBase.ReindexItems(baseId)
         end
     end
 end
@@ -40,6 +97,7 @@ end
 -- this updates player bases gradually to preserve performance
 BanditPlayerBase.Regenerate = function(baseId)
 
+    -- local ts = getTimestampMs()
     -- registers virtual object at the given location of a given type
     local function addObject(baseId, x, y, z, objectType)
         local obj = {}
@@ -76,8 +134,25 @@ BanditPlayerBase.Regenerate = function(baseId)
         if not BanditPlayerBase.data[baseId].containers then
             BanditPlayerBase.data[baseId].containers = {}
         end
-    
         BanditPlayerBase.data[baseId].containers[id] = obj
+
+        for itemType, cnt in pairs(items) do 
+            tab = {}
+            tab.x = x
+            tab.y = y
+            tab.z = z
+            tab.type = contType
+            tab.cnt = cnt
+
+            if not items[itemType] then
+                items[itemType] = {}
+            end
+
+            if not BanditPlayerBase.data[baseId].items[itemType] then
+                BanditPlayerBase.data[baseId].items[itemType] = {}
+            end
+            BanditPlayerBase.data[baseId].items[itemType][id] = tab
+        end
     end
     
     -- unregisters all items located at the given location for a given base
@@ -113,7 +188,11 @@ BanditPlayerBase.Regenerate = function(baseId)
             end
         end
 
-        addItems(baseId, x, y, z, "floor", items)
+        if #items > 0 then
+            addItems(baseId, x, y, z, "floor", items)
+        else
+            removeItems(baseId, x, y, z)
+        end
     end
 
     -- scans square for lua objects to be registered as virtual objects
@@ -154,19 +233,21 @@ BanditPlayerBase.Regenerate = function(baseId)
         local objects = square:getObjects()
         for i=0, objects:size()-1 do
             local object = objects:get(i)
+            local props = object:getProperties()
             local container = object:getContainer()
             local sprite = object:getSprite()
             local md = object:getModData()
-            local props
-            if sprite then props = sprite:getProperties() end
+            local spriteProps
+            if sprite then spriteProps = sprite:getProperties() end
 
             if instanceof(object, "IsoGenerator") then
                 addObject(baseId, x, y, z, "generators")
             elseif object:getName() == "EmptyGraves" and md.filled == false then
                 addObject(baseId, x, y, z, "graves")
-            elseif object:getWaterAmount() > 0 then
+            elseif object:getWaterAmount() > 10 then -- or (props and props:Is("waterPiped"))
+                local xx = object:getWaterAmount()
                 addObject(baseId, x, y, z, "waterSources")
-            elseif props and props:Is("IsTrashCan") then
+            elseif spriteProps and spriteProps:Is("IsTrashCan") then
                 addObject(baseId, x, y, z, "trashcans")
             elseif container then
 
@@ -206,7 +287,7 @@ BanditPlayerBase.Regenerate = function(baseId)
 
     -- print ("scanning: x:" .. xmin .. "-" .. xmax .. " y:" .. ymin .. "-" .. ymax)
 
-    for z=0, 7 do
+    for z=0, 1 do
         for x=xmin, xmax do
             for y=ymin, ymax do
                 local square = cell:getGridSquare(x, y, z)
@@ -231,23 +312,18 @@ BanditPlayerBase.Regenerate = function(baseId)
         base.pointer.y = base.pointer.y + size
         if ymin > base.y2 - size then
             base.pointer.y = 0
-            print ("------ SCAN COMPLETE ------")
+            -- print ("------ SCAN COMPLETE " .. baseId .. " ------")
         end
     else
         base.pointer.x = base.pointer.x + size
     end
+
+    -- print ("REGENERATE:" .. (getTimestampMs() - ts))
 end
 
 -- registers a new base based on building definition
-BanditPlayerBase.RegisterBase = function(buildingDef)
-    local debug = BanditPlayerBase.data
-
-    local x = buildingDef:getX()
-    local y = buildingDef:getY()
-    local x2 = buildingDef:getX2()
-    local y2 = buildingDef:getY2()
-
-    -- this base already exists, do not overwrite it
+BanditPlayerBase.RegisterBase = function(x, y, x2, y2)
+    -- if this base already exists, do not overwrite it
     local baseId = x .. "-" .. y
     if getBase(x, y) then return end
 
@@ -255,6 +331,7 @@ BanditPlayerBase.RegisterBase = function(buildingDef)
     local padding = BanditPlayerBase.const.padding
     local base = {}
 
+    base.id = baseId
     base.pointer = {}
     base.pointer.x = 0
     base.pointer.y = 0
@@ -283,7 +360,7 @@ end
 -- iterates over all player base containers to create a map of items
 BanditPlayerBase.ReindexItems = function(baseId)
     local items = {}
-    local debug = BanditPlayerBase.data
+    local i = 0
     for contId, cont in pairs(BanditPlayerBase.data[baseId].containers) do
         for itemType, cnt in pairs(cont.items) do
             
@@ -298,7 +375,7 @@ BanditPlayerBase.ReindexItems = function(baseId)
             tab.cnt = cnt
 
             items[itemType][contId] = tab
-            
+            i = i + 1
         end
     end
     BanditPlayerBase.data[baseId].items = items
@@ -432,8 +509,7 @@ BanditPlayerBase.GetWaterSource = function(character)
             local source
             for i=0, objects:size()-1 do
                 local object = objects:get(i)
-                local md = object:getModData()
-                if md.waterAmount and md.waterAmount > 0 then
+                if object:getWaterAmount() > 10 then
                     source = object
                     break
                 end
@@ -446,17 +522,6 @@ BanditPlayerBase.GetWaterSource = function(character)
                     bestDist = dist
                 end
             end
-            --[[local barrel = CRainBarrelSystem.instance:getLuaObjectAt(ws.x, ws.y, ws.z)
-            if barrel then
-                if barrel.waterAmount > 10 then
-                    local dist = math.sqrt(math.pow(ws.x - x, 2) + math.pow(ws.y - y, 2))
-                    if dist < bestDist then
-                        bestBarrel = barrel
-                        bestDist = dist
-                    end
-                end
-            end]]
-
         end
     end
 

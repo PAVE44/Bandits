@@ -11,25 +11,32 @@ LuaEventManager.AddEvent("OnTimedActionPerform")
 
 BanditActionInterceptor.Main = function(data)
     local character = data.character
-    local jobType = data.jobType
-    local action = data.action:getMetaType()
+    if not character then return end
 
+    local action = data.action:getMetaType()
     if not action then return end
 
     -- action for registering player base
     if action == "ISInventoryTransferAction" then
-        if jobType:startsWith(getText("IGUI_PuttingInContainer")) then
-            print ("load container")
-            local container = data.destContainer
-            local containerType = container:getType()
-            
-            if containerType == "fridge" or containerType == "freezer" then
-                local object = container:getParent()
-                local square = object:getSquare()
-                local building = square:getBuilding()
-                local buildingDef = building:getDef()
-                BanditPlayerBase.RegisterBase(buildingDef)
-            end
+        local container = data.destContainer
+        if not container then return end
+
+        local containerType = container:getType()
+        
+        if containerType == "fridge" or containerType == "freezer" then
+            print ("base created")
+            local object = container:getParent()
+            local square = object:getSquare()
+            local building = square:getBuilding()
+            local buildingDef = building:getDef()
+            local x = buildingDef:getX()
+            local y = buildingDef:getY()
+            local x2 = buildingDef:getX2()
+            local y2 = buildingDef:getY2()
+
+            local args = {x=x, y=y, x2=x2, y2=y2}
+            sendClientCommand(character, 'Commands', 'BaseUpdate', args)
+            -- BanditPlayerBase.RegisterBase(buildingDef)
         end
     end
 end

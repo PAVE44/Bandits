@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<outfitManager>
+<m_MaleOutfits>
+        <m_Name>ZSArmySpecialOps</m_Name>
+        <m_Guid>d6c8c778-226f-4dc4-a37b-c77bde0675a8</m_Guid>
+        <m_Top>false</m_Top>
+        <m_Pants>false</m_Pants>
+        <m_AllowPantsHue>false</m_AllowPantsHue>
+        <m_AllowTopTint>false</m_AllowTopTint>
+        <m_AllowTShirtDecal>false</m_AllowTShirtDecal>
+        <m_items>
+            <itemGUID>9e094ca7-29b4-4c7d-ae70-597fa4c8a330</itemGUID> <!-- leather jacket -->
+        </m_items>
+        <m_items>
+            <itemGUID>1a437dbb-cee9-4013-8e8a-e158acf98b62</itemGUID> <!-- bulletproof vest -->
+        </m_items>
+        <m_items>
+            <itemGUID>92efbe27-baa3-4e7f-bc7c-cb4713d23c14</itemGUID> <!-- gas mask -->
+        </m_items>
+        <m_items>
+            <probability>0.8</probability>
+            <itemGUID>096acc98-7ac1-4867-82dd-af77afb6a87b</itemGUID> <!-- leather gloves -->
+        </m_items>
+        <m_items>
+            <itemGUID>cbe793fe-97d9-4585-88e0-bc18be39d714</itemGUID> <!-- shirt -->
+            <subItems>
+                <itemGUID>48efaf62-6a65-474a-8773-886e05ea7632</itemGUID> <!-- shirt -->
+            </subItems>
+            <subItems>
+                <itemGUID>0cc9f034-1d90-4f4c-9b17-e1dcf008b356</itemGUID> <!-- shirt -->
+            </subItems>
+        </m_items>
+        <m_items>
+            <itemGUID>ebea15c8-99b3-4e20-905b-d22cf82b8217</itemGUID> <!-- socks -->
+        </m_items>
+        <m_items>
+            <itemGUID>227cb2d5-05a5-44ed-872d-ac4ca16e80bc</itemGUID> <!-- army boots -->
+        </m_items>
+        <m_items>
+            <itemGUID>d325b65d-497d-4c77-8919-74a65172cb94</itemGUID> <!-- trousers camo green -->
+            <subItems>
+                <itemGUID>7f907c3c-9d6f-46c6-8e93-6f74526ef7cc</itemGUID> <!-- trousers leather black -->
+            </subItems>
+        </m_items>
+        <m_items>
+            <itemGUID>88321000-2b08-4537-9c51-4b5eca360c92</itemGUID> <!--dog tag -->
+        </m_items>
+        <m_items>
+            <probability>0.6</probability>
+            <itemGUID>15514b21-1567-4a0b-a171-9740ee9b7b3a</itemGUID> <!--bullets strap -->
+        </m_items>
+        <m_items>
+            <itemGUID>88f11c9e-e717-446c-82ec-f749320df25a</itemGUID> <!--holster -->
+        </m_items>
+        <m_items>
+            <probability>0.3</probability>
+            <itemGUID>5fc22466-2942-4ba1-8c33-2a8528b73021</itemGUID> <!--watches -->
+            <subItems>
+                <itemGUID>ce1a8520-7120-432e-8a3a-aa7b3094f0bb</itemGUID>
+            </subItems>
+            <subItems>
+                <itemGUID>c7cc655b-284a-4087-85a6-d7c116385fb0</itemGUID>
+            </subItems>
+            <subItems>
+                <itemGUID>0383956a-3fbd-4001-9749-69e2ba70b134</itemGUID>
+            </subItems>
+        </m_items>
+    </m_MaleOutfits>
+    <m_MaleOutfits>
+        <m_Name>ZSPoliceSpecialOps</m_Name>
+        <m_Guid>820c0f23-79b2-4191-99cc-2a831b871e55</m_Guid>
+        <m_Top>false</m_Top>
+        <m_Pants>false</m_Pants>
+        <m_AllowPantsHue>false</m_AllowPantsHue>
+        <m_AllowTopTint>false</m_AllowTopTint>
+        <m_AllowTShirtDecal>false</m_AllowTShirtDecal>
+        <m_items>
+            <itemGUID>dd34e357-8851-4fe6-9ee3-61d4ce953e66</itemGUID> <!-- urban camp shirt -->
+        </m_items>
+        <m_items>
+            <itemGUID>d234e3b1-4e68-41b9-a48c-5669a8a52629</itemGUID> <!-- bulletproof vest -->
+        </m_items>
+        <m_items>
+            <itemGUID>22c8fd40-4c25-4e82-9353-f70aa582611a</itemGUID> <!-- balaclava -->
+        </m_items>
+        <m_items>
+            <probability>0.8</probability>
+            <itemGUID>096acc98-7ac1-4867-82dd-af77afb6a87b</itemGUID> <!-- leather gloves -->
+        </m_items>
+        <m_items>
+            <itemGUID>3d13c81d-2dae-4f3f-9cb0-18146938c973</itemGUID> <!-- t-shirt police gray -->
+        </m_items>
+        <m_items>
+            <itemGUID>ebea15c8-99b3-4e20-905b-d22cf82b8217</itemGUID> <!-- socks -->
+        </m_items>
+        <m_items>
+            <itemGUID>227cb2d5-05a5-44ed-872d-ac4ca16e80bc</itemGUID> <!-- army boots -->
+        </m_items>
+        <m_items>
+            <itemGUID>2424958a-64aa-4494-aeba-ad05a08d5917</itemGUID> <!-- trousers camo urban -->
+        </m_items>
+        <m_items>
+            <probability>0.6</probability>
+            <itemGUID>15514b21-1567-4a0b-a171-9740ee9b7b3a</itemGUID> <!--bullets strap -->
+        </m_items>
+        <m_items>
+            <itemGUID>88f11c9e-e717-446c-82ec-f749320df25a</itemGUID> <!--holster -->
+        </m_items>
+        <m_items>
+            <probability>0.3</probability>
+            <itemGUID>5fc22466-2942-4ba1-8c33-2a8528b73021</itemGUID> <!--watches -->
+            <subItems>
+                <itemGUID>ce1a8520-7120-432e-8a3a-aa7b3094f0bb</itemGUID>
+            </subItems>
+            <subItems>
+                <itemGUID>c7cc655b-284a-4087-85a6-d7c116385fb0</itemGUID>
+            </subItems>
+            <subItems>
+                <itemGUID>0383956a-3fbd-4001-9749-69e2ba70b134</itemGUID>
+            </subItems>
+        </m_items>
+    </m_MaleOutfits>
+</outfitManager>

@@ -7,21 +7,26 @@ ZombieActions.FillWater.onStart = function(zombie, task)
     if item then
         zombie:setPrimaryHandItem(item)
         inventory:Remove(item)
-        zombie:playSound("GetWaterFromLake")
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
     return true
 end
 
 ZombieActions.FillWater.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
+    if task.time <= 0 then
         return true
+    else
+        local bumpType = zombie:getBumpType()
+        if bumpType ~= task.anim then 
+            zombie:playSound("GetWaterFromTapMetalBig") -- GetWaterFromLake
+            zombie:setBumpType(task.anim)
+        end
     end
 end
 
 ZombieActions.FillWater.onComplete = function(zombie, task)
+    zombie:getEmitter():stopAll()
 
     local item = zombie:getPrimaryHandItem()
     if not instanceof(item, "DrainableComboItem") then return end
@@ -34,10 +39,10 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
     local waterAvailable
     for i=0, objects:size()-1 do
         local object = objects:get(i)
-        local md = object:getModData()
-        if md.waterAmount and md.waterAmount > 0 then
+        local waterAmount = object:getWaterAmount()
+        if waterAmount > 0 then
             source = object
-            waterAvailable = md.waterAmount
+            waterAvailable = waterAmount
             break
         end
     end
@@ -59,6 +64,7 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
     
     local inventory = zombie:getInventory()
     inventory:AddItem(item)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     return true
 end

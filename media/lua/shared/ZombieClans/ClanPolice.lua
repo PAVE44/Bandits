@@ -30,6 +30,7 @@ table.insert(BanditClan.Police.Outfits, "Police")
 table.insert(BanditClan.Police.Outfits, "PoliceState")
 table.insert(BanditClan.Police.Outfits, "PoliceRiot")
 table.insert(BanditClan.Police.Outfits, "PrisonGuard")
+table.insert(BanditClan.Police.Outfits, "ZSPoliceSpecialOps")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Police.Outfits, "AuthenticSurvivorPolice")

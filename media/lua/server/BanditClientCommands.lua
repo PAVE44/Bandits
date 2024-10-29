@@ -30,6 +30,14 @@ BanditServer.Commands.PostUpdate = function(player, args)
     gmd.Posts[id] = args
 end
 
+BanditServer.Commands.BaseUpdate = function(player, args)
+    local gmd = GetBanditModData()
+    if not (args.x and args.y) then return end
+
+    local id = args.x .. "-" .. args.y
+    gmd.Bases[id] = args
+end
+
 BanditServer.Commands.BanditRemove  = function(player, args)
     local gmd = GetBanditModData()
     local id = args.id
@@ -107,6 +115,11 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.clan = bandit.clan
             brain.eatBody = bandit.eatBody
             brain.accuracyBoost = bandit.accuracyBoost
+
+            -- hair style
+            if bandit.hairStyle then
+                brain.hairStyle = bandit.hairStyle
+            end
 
             -- the AI program to follow at start
             brain.program = {}

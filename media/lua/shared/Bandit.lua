@@ -40,6 +40,10 @@ Bandit.VisualDamage.Gun = {"ZedDmg_BulletBelly01", "ZedDmg_BulletBelly02", "ZedD
                            "ZedDmg_ShotgunRight"}
 
 
+local function predicateAll(item)
+    return true
+end
+                        
 
 function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getPlayer(), 'Commands', 'BanditUpdatePart', syncData)
@@ -167,6 +171,8 @@ function Bandit.ClearTasks(zombie)
         emitter:stopSoundByName("GeneratorAddFuel")
     elseif emitter:isPlaying("GeneratorRepair") then
         emitter:stopSoundByName("GeneratorRepair")
+    elseif emitter:isPlaying("GetWaterFromTapMetalBig") then
+        emitter:stopSoundByName("GetWaterFromTapMetalBig")
     end
 end
 
@@ -478,6 +484,15 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if brain.fullname then
         local item = InventoryItemFactory.CreateItem("Base.KeyRing")
         item:setName(brain.fullname .. " Key Ring")
+        zombie:addItemToSpawnAtDeath(item)
+    end
+
+    -- update inventory
+    local inventory = zombie:getInventory()
+    local items = ArrayList.new()
+    inventory:getAllEvalRecurse(predicateAll, items)
+    for i=0, items:size()-1 do
+        local item = items:get(i)
         zombie:addItemToSpawnAtDeath(item)
     end
 

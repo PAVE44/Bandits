@@ -7,6 +7,7 @@ ZombieActions.GeneratorRefill.onStart = function(zombie, task)
     if item then
         zombie:setPrimaryHandItem(item)
         inventory:Remove(item)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie)
         zombie:playSound("GeneratorAddFuel")
     end
     return true

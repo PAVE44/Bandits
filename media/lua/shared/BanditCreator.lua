@@ -117,6 +117,11 @@ function BanditCreator.MakeFromWave(wave)
     -- outfit choice comes from clan file
     bandit.outfit = BanditUtils.Choice(clan.Outfits)
 
+    -- hairstyle 
+    if clan.hairStyles then
+        bandit.hairStyle = BanditUtils.Choice(clan.hairStyles)
+    end
+    
     -- loot choice comes from clan file
     bandit.loot = BanditCreator.MakeLoot(clan.Loot)
 
@@ -183,6 +188,11 @@ function BanditCreator.MakeFromSpawnType(spawnData)
 
     -- outfit choice comes from clan file
     bandit.outfit = BanditUtils.Choice(clan.Outfits)
+
+    -- hairstyle 
+    if clan.hairStyles then
+        bandit.hairStyle = BanditUtils.Choice(clan.hairStyles)
+    end
 
     -- loot choice comes from clan file
     bandit.loot = BanditCreator.MakeLoot(clan.Loot)
