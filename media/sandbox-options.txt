@@ -171,7 +171,7 @@ option Bandits.Clan_1_FriendlyChance = {
 }
 
 option Bandits.Clan_1_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_1, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -238,7 +238,7 @@ option Bandits.Clan_2_FriendlyChance = {
 }
 
 option Bandits.Clan_2_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_2, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -305,7 +305,7 @@ option Bandits.Clan_3_FriendlyChance = {
 }
 
 option Bandits.Clan_3_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_3, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -372,7 +372,7 @@ option Bandits.Clan_4_FriendlyChance = {
 }
 
 option Bandits.Clan_4_EnemyBehaviour = {
-    type = enum, numValues=4, default = 3,
+    type = enum, numValues=5, default = 3,
     page = Bandits_Clan_4, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -439,7 +439,7 @@ option Bandits.Clan_5_FriendlyChance = {
 }
 
 option Bandits.Clan_5_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_5, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -506,7 +506,7 @@ option Bandits.Clan_6_FriendlyChance = {
 }
 
 option Bandits.Clan_6_EnemyBehaviour = {
-    type = enum, numValues=4, default = 3,
+    type = enum, numValues=5, default = 3,
     page = Bandits_Clan_6, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -573,7 +573,7 @@ option Bandits.Clan_7_FriendlyChance = {
 }
 
 option Bandits.Clan_7_EnemyBehaviour = {
-    type = enum, numValues=4, default = 3,
+    type = enum, numValues=5, default = 3,
     page = Bandits_Clan_7, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -640,7 +640,7 @@ option Bandits.Clan_8_FriendlyChance = {
 }
 
 option Bandits.Clan_8_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_8, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -707,7 +707,7 @@ option Bandits.Clan_9_FriendlyChance = {
 }
 
 option Bandits.Clan_9_EnemyBehaviour = {
-    type = enum, numValues=4, default = 2,
+    type = enum, numValues=5, default = 2,
     page = Bandits_Clan_9, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -774,7 +774,7 @@ option Bandits.Clan_10_FriendlyChance = {
 }
 
 option Bandits.Clan_10_EnemyBehaviour = {
-    type = enum, numValues=4, default = 3,
+    type = enum, numValues=5, default = 3,
     page = Bandits_Clan_10, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -841,7 +841,7 @@ option Bandits.Clan_11_FriendlyChance = {
 }
 
 option Bandits.Clan_11_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_11, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -908,7 +908,7 @@ option Bandits.Clan_12_FriendlyChance = {
 }
 
 option Bandits.Clan_12_EnemyBehaviour = {
-    type = enum, numValues=4, default = 2,
+    type = enum, numValues=5, default = 2,
     page = Bandits_Clan_12, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -975,7 +975,7 @@ option Bandits.Clan_13_FriendlyChance = {
 }
 
 option Bandits.Clan_13_EnemyBehaviour = {
-    type = enum, numValues=4, default = 3,
+    type = enum, numValues=5, default = 3,
     page = Bandits_Clan_13, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1042,7 +1042,7 @@ option Bandits.Clan_14_FriendlyChance = {
 }
 
 option Bandits.Clan_14_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_14, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1109,7 +1109,7 @@ option Bandits.Clan_15_FriendlyChance = {
 }
 
 option Bandits.Clan_15_EnemyBehaviour = {
-    type = enum, numValues=4, default = 2,
+    type = enum, numValues=5, default = 2,
     page = Bandits_Clan_15, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1176,7 +1176,7 @@ option Bandits.Clan_16_FriendlyChance = {
 }
 
 option Bandits.Clan_16_EnemyBehaviour = {
-    type = enum, numValues=4, default = 1,
+    type = enum, numValues=5, default = 1,
     page = Bandits_Clan_16, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 

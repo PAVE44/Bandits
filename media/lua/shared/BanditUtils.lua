@@ -232,6 +232,8 @@ end
 
 function BanditUtils.GetClosestBanditLocation(character)
     local result = {}
+    local cid = BanditUtils.GetCharacterID(character)
+
     result.dist = math.huge
     result.x = false
     result.y = false
@@ -243,7 +245,7 @@ function BanditUtils.GetClosestBanditLocation(character)
     local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
         local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
-        if dist < result.dist then
+        if dist < result.dist and cid ~= id then
             result.dist = dist
             result.x = zombie.x
             result.y = zombie.y
@@ -428,6 +430,28 @@ function BanditUtils.IsWater(square)
         end
     end
     return false
+end
+
+function BanditUtils.GetGroundType(square)
+    local groundType = "generic"
+    local objects = square:getObjects()
+    for i=0, objects:size()-1 do
+        local object = objects:get(i)
+        if object then
+            local sprite = object:getSprite()
+            if sprite then
+                local spriteName = sprite:getName()
+                if spriteName then
+                    if spriteName:embodies("street") then
+                        groundType = "street"
+                    elseif spriteName:embodies("blends_natural") then
+                        groundType = "grass"
+                    end
+                end
+            end
+        end
+    end
+    return groundType
 end
 
 function BanditUtils.ReplaceDrainable(item)

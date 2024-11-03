@@ -87,6 +87,7 @@ Sandbox_CN = {
 	Sandbox_Bandits.EnemyBehaviour_option2_tooltip = "非常危险，他们会在刷新时立即锁定你的位置并发起追杀"
     Sandbox_Bandits.EnemyBehaviour_option3 = "漫游搜集"
     Sandbox_Bandits.EnemyBehaviour_option4 = "占山为王"
+    Sandbox_Bandits.EnemyBehaviour_option5 = "贼"
  
     Sandbox_Bandits.FirstDay = "开始刷新期限"
     Sandbox_Bandits.FirstDay_tooltip = "在游戏时间内的多少天后能够被刷新出来"

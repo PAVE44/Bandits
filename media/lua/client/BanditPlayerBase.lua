@@ -36,7 +36,7 @@ BanditPlayerBase.GetBaseClosest = function(character)
     local bestBase
     local bestBaseId
     for baseId, base in pairs(BanditPlayerBase.data) do
-        local dist = math.sqrt(math.pow(base.x - cx, 2) + math.pow(base.y - cy, 2))    
+        local dist = math.sqrt(math.pow(base.x - cx, 2) + math.pow(base.y - cy, 2))
         if dist < bestDist then
             bestBase = base
             bestBaseId = baseId

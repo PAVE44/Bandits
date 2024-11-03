@@ -202,6 +202,14 @@ function BanditUpdate.Visuals(bandit)
                 banditVisuals:randomDirt()
                 banditVisuals:removeBlood()
 
+                for i=1,BloodBodyPartType.MAX:index() do
+                    local part = BloodBodyPartType.FromIndex(i-1)
+                    banditVisuals:setBlood(part, 0)
+                    banditVisuals:setDirt(part, 0)
+                end
+                bandit:resetModelNextFrame()
+
+
                 local toRemove = {}
                 local itemVisuals = banditVisuals:getBodyVisuals()
                 local s = itemVisuals:size()
@@ -345,7 +353,7 @@ function BanditUpdate.ActionState(bandit)
         bandit:changeState(ZombieIdleState.instance())
         bandit:clearAggroList()
         bandit:setTarget(nil)
-    elseif asn == "pathfind" then
+    -- elseif asn == "pathfind" then
 
     elseif asn == "thump" then
         -- bandit:changeState(ZombieIdleState.instance())
@@ -360,7 +368,7 @@ function BanditUpdate.ActionState(bandit)
         bandit:clearAggroList()
         bandit:setTarget(nil)
 
-    elseif asn == "walktoward-network" then
+    -- elseif asn == "walktoward-network" then
 
     else
         local world = getWorld()
@@ -1227,7 +1235,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     -- OR ZOMBIFY IF QUEUE HAS BEEN REMOVED
     local gmd = GetBanditModData()
     if gmd.Queue then
-        if gmd.Queue[id] and id ~= 0 then
+        if gmd.Queue[id] then -- and id ~= 0
             if not zombie:getVariableBoolean("Bandit") then
                 brain = gmd.Queue[id]
                 BanditUpdate.Banditize(zombie, brain)

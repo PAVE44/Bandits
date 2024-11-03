@@ -51,7 +51,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
         syncData.id = brain.id
         syncData.sleeping = false
         syncData.program = brain.program
-        Bandit.ForceSyncPart(friendly, syncData)
+        Bandit.ForceSyncPart(bandit, syncData)
     end
 
     -- manage sleep
@@ -124,7 +124,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
                         syncData.id = brain.id
                         syncData.sleeping = brain.sleeping
                         syncData.program = brain.program
-                        Bandit.ForceSyncPart(friendly, syncData)
+                        Bandit.ForceSyncPart(bandit, syncData)
 
                         return {status=true, next="Prepare", tasks=tasks}
                     end

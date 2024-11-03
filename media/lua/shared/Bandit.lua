@@ -217,11 +217,21 @@ function Bandit.UpdateEndurance(zombie, delta)
     end
 end
 
+function Bandit.GetInfection(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        if not brain.infection then brain.infection = 0 end
+        return brain.infection
+    end
+    return nil
+end
+
 function Bandit.UpdateInfection(zombie, delta)
     local brain = BanditBrain.Get(zombie)
     if brain then
         if not brain.infection then brain.infection = 0 end
         brain.infection = brain.infection + delta
+        -- if brain.infection > 90 then print (brain.infection) end
         -- BanditBrain.Update(zombie, brain)
     end
 end

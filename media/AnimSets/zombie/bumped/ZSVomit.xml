@@ -1,23 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
-	<m_Name>ZSWaveHi</m_Name>
-	<m_AnimName>Bob_EmoteWaveHi</m_AnimName>
+	<m_Name>ZSVomit</m_Name>
+	<m_AnimName>Bob_EmoteVomit</m_AnimName>
+	<m_SpeedScale>0.70</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
-	<m_Looped>true</m_Looped>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
-	<m_SpeedScale>0.80</m_SpeedScale>
-	<m_BlendTime>0.50</m_BlendTime>
+	<m_BlendTime>0.35</m_BlendTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>WaveHi</m_StringValue>
+		<m_StringValue>Vomit</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>
 		<m_Time>End</m_Time>
 		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
 	</m_Events>
-
-
 </animNode>

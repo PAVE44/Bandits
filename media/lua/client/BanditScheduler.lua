@@ -230,17 +230,25 @@ function BanditScheduler.SpawnWave(player, wave)
     event.hostile = true
     if ZombRand(100) < wave.friendlyChance then
         event.hostile = false
-        -- event.program.name = "Companion"
-        event.program.name = "Thief"
+        event.program.name = "Companion"
+        -- event.program.name = "Thief"
     else
         if wave.enemyBehaviour == 1 then
-            event.program.name = BanditUtils.Choice({"Bandit", "Looter"})
+            local base = BanditPlayerBase.GetBaseClosest(player)
+            if base then
+                event.program.name = BanditUtils.Choice({"Bandit", "Looter", "Thief"})
+            else
+                event.program.name = BanditUtils.Choice({"Bandit", "Looter"})
+            end
         elseif wave.enemyBehaviour == 2 then
             event.program.name = "Bandit"
         elseif wave.enemyBehaviour == 3 then
             event.program.name = "Looter"
         elseif wave.enemyBehaviour == 4 then
             event.program.name = "BaseGuard"
+        elseif wave.enemyBehaviour == 5 then
+            event.program.name = "Thief"
+            event.hostile = false
         else
             event.program.name = "Bandit"
         end
@@ -378,14 +386,17 @@ function BanditScheduler.SpawnWave(player, wave)
                 if event.hostile then
                     if event.program.name == "Bandit" then
                         icon = "media/ui/raid.png"
-                        color = {r=1, g=0.5, b=0.5}
-                    else
+                        color = {r=1, g=0.5, b=0.5} -- red
+                    elseif event.program.name == "Thief" then
+                        icon = "media/ui/thief.png"
+                        color = {r=1, g=1, b=0.5} -- yellow
+                    else 
                         icon = "media/ui/loot.png"
-                        color = {r=1, g=1, b=0.5}
+                        color = {r=1, g=0.5, b=0} -- orange
                     end
                 else
                     icon = "media/ui/friend.png"
-                    color = {r=0.5, g=1, b=0.5}
+                    color = {r=0.5, g=1, b=0.5} -- green
                 end
 
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
@@ -397,6 +408,8 @@ end
 function BanditScheduler.RaiseDefences(x, y)
     local cell = getCell()
     local square = cell:getGridSquare(x, y, 0)
+    if not square then return end
+
     local building = square:getBuilding()
     
     if building then

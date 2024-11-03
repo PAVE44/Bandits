@@ -159,6 +159,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
 
     -- add breakpoint below to see data
     local brain = BanditBrain.Get(zombie)
+    local id = BanditUtils.GetCharacterID(zombie)
     local daysPassed = BanditScheduler.DaysSinceApo()
     local isUseless = zombie:isUseless()
     local isBandit = zombie:getVariableBoolean("Bandit")
@@ -169,6 +170,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local primary = zombie:getVariableString("BanditPrimary")
     local primaryType = zombie:getVariableString("BanditPrimaryType")
     local secondary = zombie:getVariableString("BanditSecondary")
+    local outfit = zombie:getOutfitName()
     local ans = zombie:getActionStateName()
     local under = zombie:isUnderVehicle()
     local veh = zombie:getVehicle()
@@ -235,8 +237,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local zombie = square:getZombie()
     local generator = square:getGenerator()
     
-    local chunkRegion = IsoRegions.getChunkRegion(square:getX(), square:getY(), square:getZ())
-    local enclosed = chunkRegion:getIsEnclosed()
+    -- local chunkRegion = IsoRegions.getChunkRegion(square:getX(), square:getY(), square:getZ())
+    -- local enclosed = chunkRegion:getIsEnclosed()
     
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then

@@ -4,6 +4,14 @@ ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
     -- local oldWalkType = zombie:getVariableString("BanditWalkType")
+    if not zombie:getSquare():isFree(false) then
+        local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)
+        if asquare then
+            zombie:setX(asquare:getX() + 0.5)
+            zombie:setY(asquare:getY() + 0.5)
+        end
+    end
+        
 
     local dx = math.abs(zombie:getX() - task.x)
     local dy = math.abs(zombie:getY() - task.y)
@@ -74,6 +82,13 @@ end
 ZombieActions.Move.onWorking = function(zombie, task)
 
     zombie:setVariable("BanditWalkType", task.walkType)
+
+    --[[
+    if zombie:getSquare():isFree(false) then
+        zombie:setCollidable(true)
+    else
+        zombie:setCollidable(false)
+    end]]
 
     if BanditUtils.IsController(zombie) then
         local cell = getCell()

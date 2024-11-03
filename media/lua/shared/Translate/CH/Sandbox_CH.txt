@@ -79,6 +79,7 @@ Sandbox_CH = {
     Sandbox_Bandits.EnemyBehaviour_option2 = "Raider"
     Sandbox_Bandits.EnemyBehaviour_option3 = "Wanderer"
     Sandbox_Bandits.EnemyBehaviour_option4 = "Guard"
+    Sandbox_Bandits.EnemyBehaviour_option5 = "Thief"
 
     Sandbox_Bandits.FirstDay = "Day Start"
     Sandbox_Bandits.FirstDay_tooltip = "The number of days the player has survived after which the spawn starts"
