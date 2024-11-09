@@ -619,6 +619,8 @@ table.insert(BanditPrograms.Housekeeping.trash, "Base.WhiskeyEmpty")
 table.insert(BanditPrograms.Housekeeping.trash, "Base.PopBottleEmpty")
 table.insert(BanditPrograms.Housekeeping.trash, "Base.RippedSheetsDirty")
 table.insert(BanditPrograms.Housekeeping.trash, "Base.TinCanEmpty")
+table.insert(BanditPrograms.Housekeeping.trash, "Base.UnusableWood")
+table.insert(BanditPrograms.Housekeeping.trash, "Base.UnusableMetal")
 
 BanditPrograms.Housekeeping.PredicateTrash = function(item)
     for _, itemType in pairs(BanditPrograms.Housekeeping.trash) do

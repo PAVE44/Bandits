@@ -189,7 +189,7 @@ BanditPlayerBase.Regenerate = function(baseId)
             end
         end
 
-        if #items > 0 then
+        if wobs:size() > 0 then
             addItems(baseId, x, y, z, "floor", items)
         else
             removeItems(baseId, x, y, z)
