@@ -157,6 +157,11 @@ end
 function BanditMenu.ShowBrain (player, square, zombie)
     local gmd = GetBanditModData()
 
+    local bcnt = 0
+    for k, v in pairs(gmd.Queue) do
+        bcnt = bcnt + 1
+    end
+
     -- add breakpoint below to see data
     local brain = BanditBrain.Get(zombie)
     local id = BanditUtils.GetCharacterID(zombie)
@@ -184,21 +189,9 @@ function BanditMenu.ShowBrain (player, square, zombie)
     
 end
 
-function BanditMenu.RemoveAllBandits(player)
-    -- local args = {a=1}
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditClear', args)
-    local gmd = GetBanditModData()
-    local cnt = 0
-    for _, q in pairs(gmd.Queue) do
-        cnt = cnt + 1
-    end
-    print ("REGISTERED BANDITS: " .. cnt)
-
-    for _, q in pairs(gmd.Queue) do
-        if #q.tasks > 10 then
-            print (q.id .. ": " .. #q.tasks)
-        end
-    end
+function BanditMenu.BanditFlush(player)
+    local args = {a=1}
+    sendClientCommand(player, 'Commands', 'BanditFlush', args)
 end
 
 function BanditMenu.ResetGenerator (player, generator)
@@ -278,6 +271,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         for i=1, 2 do
             spawnBaseMenu:addOption("Base " .. tostring(i), player, BanditMenu.SpawnBase, square, i)
         end
+
+        context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
     end
     
     -- Debug options
@@ -290,24 +285,23 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
             print ("this zombie dir is: " .. zombie:getDirectionAngle())
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
-            context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
-            context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
+            -- context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
+            -- context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
-
-           
+          
         end
 
         -- context:addOption("[DGB] Bandit UI", player, ShowCustomizationUI)
 
-        context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
+        -- context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
         -- context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
-        context:addOption("[DGB] Regenerate base", player, BanditMenu.RegenerateBase)
+        -- context:addOption("[DGB] Regenerate base", player, BanditMenu.RegenerateBase)
         -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
-        if generator then
-            context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
-        end
+        -- if generator then
+        --    context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
+        -- end
 
     end
 end

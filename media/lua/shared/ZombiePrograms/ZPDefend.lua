@@ -110,7 +110,7 @@ ZombiePrograms.Defend.Wait = function(bandit)
                 local banditBuilding = banditSquare:getBuilding()
                 if playerBuilding and banditBuilding and playerBuilding:getID() == banditBuilding:getID()then
                     if player:isSneaking() then spotDist = spotDist - 3 end
-                    local dist = math.sqrt(math.pow(player:getX() - bandit:getX(), 2) + math.pow(player:getY() - bandit:getY(), 2))
+                    local dist = BanditUtils.DistTo(player:getX(), player:getY(), bandit:getX(), bandit:getY())
                     if dist <= spotDist then
                         if Bandit.IsHostile(bandit) then
                             Bandit.Say(bandit, "DEFENDER_SPOTTED")

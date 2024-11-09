@@ -79,7 +79,8 @@ BanditUtils.ItemVisuals = {
 
 function BanditUtils.GetCharacterID (character)
 
-    local function toBits(num)
+    -- the following has proven to be much less efficient
+     local function toBits(num)
         local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
         while #bits < 16 do bits[#bits+1] = "0" end
         return bits
@@ -94,9 +95,13 @@ function BanditUtils.GetCharacterID (character)
         local dec = character:getPersistentOutfitID()
 
         local bits = toBits(dec)
-        bits[16] = 0
-        local id = toDec(bits)
-        return id
+        local hat = bits[16]
+        if hat == 1 then
+            bits[16] = 0
+            return toDec(bits)
+        else
+            return dec
+        end
     end
     
     if instanceof(character, "IsoPlayer") then
@@ -134,7 +139,7 @@ function BanditUtils.IsController(zombie)
         local px = player:getX()
         local py = player:getY()
 
-        local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+        local dist = BanditUtils.DistTo(zx, zy, px, py)
         if dist < bestDist then
             bestDist = dist
             bestPlayerId = BanditUtils.GetCharacterID(player)
@@ -192,7 +197,7 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py = player:getX(), player:getY()
-            local dist = math.sqrt(math.pow(cx - px, 2) + math.pow(cy - py, 2))
+            local dist = BanditUtils.DistTo(cx, cy, px, py)
             if dist < result.dist and (not mustSee or (character:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
                 result.dist = dist
                 result.x = player:getX()
@@ -217,7 +222,7 @@ function BanditUtils.GetClosestZombieLocation(character)
 
     local zombieList = BanditZombie.GetAllZ()
     for id, zombie in pairs(zombieList) do
-        local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
+        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist then
             result.dist = dist
             result.x = zombie.x
@@ -244,13 +249,42 @@ function BanditUtils.GetClosestBanditLocation(character)
 
     local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
-        local dist = math.sqrt(math.pow(cx - zombie.x, 2) + math.pow(cy - zombie.y, 2))
+        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist and cid ~= id then
             result.dist = dist
             result.x = zombie.x
             result.y = zombie.y
             result.z = zombie.z
             result.id = zombie.id
+        end
+    end
+
+    return result
+end
+
+function BanditUtils.GetClosestBanditLocationFast(character)
+    local result = {}
+    local cid = BanditUtils.GetCharacterID(character)
+
+    result.dist = math.huge
+    result.x = false
+    result.y = false
+    result.z = false
+    result.id = false
+    
+    local cx, cy = character:getX(), character:getY()
+
+    local zombieList = BanditZombie.GetAllB()
+    for id, zombie in pairs(zombieList) do
+        if math.abs(zombie.x - cx) < 25 or math.abs(zombie.y - cy) < 30 then
+            local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+            if dist < result.dist and cid ~= id then
+                result.dist = dist
+                result.x = zombie.x
+                result.y = zombie.y
+                result.z = zombie.z
+                result.id = zombie.id
+            end
         end
     end
 
@@ -272,7 +306,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do
             if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
-                local dist = math.sqrt(math.pow(cx - otherBandit.x, 2) + math.pow(cy - otherBandit.y, 2))
+                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
                 if dist < result.dist then
                     result.dist = dist
                     result.x = otherBandit.x
@@ -287,7 +321,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     if instanceof(character, "IsoPlayer") then
         for id, otherBandit in pairs(banditList) do
             if otherBandit.brain.hostile then
-                local dist = math.sqrt(math.pow(cx - otherBandit.x, 2) + math.pow(cy - otherBandit.y, 2))
+                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
                 if dist < result.dist then
                     result.dist = dist
                     result.x = otherBandit.x
@@ -315,7 +349,7 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
             task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
         end
     else
-        task = {action="Move", time=35, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
+        task = {action="Move", time=70, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
     end
     return task
 end
@@ -471,6 +505,14 @@ function BanditUtils.ReplaceDrainable(item)
         newItem = item
     end
     return newItem
+end
+
+function BanditUtils.DistTo(x1, y1, x2, y2)
+    -- this is the fastest
+    return math.sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
+
+    -- return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+    -- return IsoUtils.DistanceTo(x1, y1, x2, y2)
 end
 
 function BanditUtils.Choice(arr)

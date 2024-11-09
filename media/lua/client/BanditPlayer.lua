@@ -6,19 +6,15 @@ BanditPlayer = BanditPlayer or {}
 --
 -- each client needs status of all players so that the bandits will not attack any of the ghosted players
 BanditPlayer.UpdatePlayersOnline = function ()
-    if not isServer() then
-        local player = getPlayer()
-        if player then
-            local playerData = {}
-            playerData.id = BanditUtils.GetCharacterID(player)
-            playerData.name = player:getDisplayName()
-            playerData.isGhost = player:isGhostMode()
-            sendClientCommand(player, 'Players', 'PlayerUpdate', playerData)
-        end
-        local gmd = GetBanditModDataPlayers()
-        for _, p in pairs(gmd.OnlinePlayers) do
-            -- print ("PLAYER:" .. p.name .. " (" .. p.id .. ") GHOST: " .. tostring(p.isGhost))
-        end
+    if isServer() then return end
+
+    local player = getPlayer()
+    if player then
+        local playerData = {}
+        playerData.id = BanditUtils.GetCharacterID(player)
+        playerData.name = player:getDisplayName()
+        playerData.isGhost = player:isGhostMode()
+        sendClientCommand(player, 'Players', 'PlayerUpdate', playerData)
     end
 end
 
@@ -85,20 +81,27 @@ local originalPanicIncreaseValue = nil
 
 -- Function to check nearby entities and set panic increase value
 BanditPlayer.PanicHandler = function(player)
-    local px, py = player:getX(), player:getY()
-    local panicRadius = player:getSeeNearbyCharacterDistance() + 2.0
-    
+    if isServer() then return end
+
     -- Step 1: Store the original PanicIncreaseValue if it's the first time modifying it
     local bodyDamage = player:getBodyDamage()
     if originalPanicIncreaseValue == nil then
         originalPanicIncreaseValue = bodyDamage:getPanicIncreaseValue()
     end
-    
+
+    if player:getStats():getPanic() < 3 then 
+        bodyDamage:setPanicIncreaseValue(originalPanicIncreaseValue)
+        return 
+    end
+
+    local px, py = player:getX(), player:getY()
+    local panicRadius = player:getSeeNearbyCharacterDistance() + 2.0
+
     -- Step 2: Proceed with checking all zombies within the panicRadius
     local onlyFriendlies = false  -- Default to false, assume hostiles are present
     local zombieList = BanditZombie.GetAll()
     for id, zombie in pairs(zombieList) do
-        local dist = math.sqrt(math.pow(zombie.x - px, 2) + math.pow(zombie.y - py, 2))
+        local dist = BanditUtils.DistTo(zombie.x, zombie.y, px, py)
         if dist <= panicRadius then
             if zombie.brain and not zombie.brain.hostile then
                 -- Found a friendly Bandit, mark as potentially only friendlies
@@ -122,12 +125,14 @@ BanditPlayer.PanicHandler = function(player)
 end
 
 BanditPlayer.ResetBanditKills = function(player)
+    if isServer() then return end
     local args = {}
     args.id = 0
 	sendClientCommand(player, 'Commands', 'ResetBanditKills', args)
 end
 
 BanditPlayer.UpdateVisitedBuildings = function()
+    if isServer() then return end
     local player = getPlayer()
     local building = player:getBuilding()
     if building then

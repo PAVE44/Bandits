@@ -27,7 +27,7 @@ ZombieActions.Move.onStart = function(zombie, task)
     zombie:setVariable("BanditWalkType", task.walkType)
 
     if not Bandit.IsMoving(zombie) then
-        dist = math.sqrt(math.pow(zombie:getX() - task.x, 2) + math.pow(zombie:getY() - task.y, 2))
+        local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), task.x, task.y)
         if dist > 2 then
             local bump
             if task.walkType == "Run" then
@@ -93,8 +93,6 @@ ZombieActions.Move.onWorking = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         local cell = getCell()
 
-        --local dist = math.sqrt(math.pow(zombie:getX() - task.x, 2) + math.pow(zombie:getY() - task.y, 2))
-        --print(dist)
         if ZombRand(1000) == 1 then
             zombie:getPathFindBehavior2():pathToLocation(task.x+1, task.y+1, task.z)
             zombie:getPathFindBehavior2():cancel()

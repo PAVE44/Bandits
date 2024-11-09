@@ -53,7 +53,7 @@ local function GetEscapePoint(bandit, radius)
     local potentialEnemyList = BanditZombie.GetAll()
     for id, potentialEnemy in pairs(potentialEnemyList) do
         -- Calculate distance between bandit and the enemy character
-        local distance = math.sqrt((potentialEnemy.x - bx) ^ 2 + (potentialEnemy.y - by) ^ 2)
+        local distance = BanditUtils.DistTo(potentialEnemy.x, potentialEnemy.y, bx, by)
         if distance <= radius and bz == potentialEnemy.z then
             -- Calculate angle of the point relative to the circle's center
             local angle = math.atan2(potentialEnemy.y - by, potentialEnemy.x - bx)
@@ -102,7 +102,7 @@ local function CheckFriendlyFire(bandit, attacker)
         local witnesses = BanditZombie.GetAllB()
         for id, witness in pairs(witnesses) do
             if not witness.brain.hostile then
-                local dist = math.sqrt(math.pow(attacker:getX() - witness.x, 2) + math.pow(attacker:getY() - witness.y, 2))
+                local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
                 if dist < 12 then
                     local friendly = BanditZombie.GetInstanceById(witness.id)
                     if friendly:CanSee(attacker) then
@@ -652,7 +652,7 @@ function BanditUpdate.Collisions(bandit)
                                         return tasks
                                     end
 
-                                elseif object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior) then
+                                elseif (object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior)) or object:getProperties():Is("forceLocked") then
                                     if SandboxVars.Bandits.General_DestroyDoor and Bandit.Can(bandit, "breakDoor") then
                                         -- Bandit.ClearTasks(bandit)
 
@@ -755,7 +755,7 @@ function BanditUpdate.Avoidance(bandit)
     local potentialEnemyList = BanditZombie.GetAll()
     for id, potentialEnemy in pairs(potentialEnemyList) do
         -- Calculate distance between bandit and the enemy character
-        local distance = math.sqrt((potentialEnemy.x - bx) ^ 2 + (potentialEnemy.y - by) ^ 2)
+        local distance = BanditUtils.DistTo(potentialEnemy.x, potentialEnemy.y, bx, by)
         if distance <= radius and bz == potentialEnemy.z then
             -- Calculate angle of the point relative to the circle's center
             
@@ -787,7 +787,6 @@ function BanditUpdate.Combat(bandit)
     if bandit:getActionStateName() == "bumped" then return {} end
 
     local tasks = {}
-    local cell = getCell()
     local zx = bandit:getX()
     local zy = bandit:getY()
     local zz = bandit:getZ()
@@ -811,7 +810,7 @@ function BanditUpdate.Combat(bandit)
                 local py = potentialEnemy:getY()
                 local pz = potentialEnemy:getZ()
 
-                local dist = math.sqrt(math.pow(zx - px, 2) + math.pow(zy - py, 2))
+                local dist = BanditUtils.DistTo(zx, zy, px, py)
                 if dist < bestDist and pz == zz then
 
                     local spottedScore = CalcSpottedScore(potentialEnemy, dist)
@@ -821,7 +820,7 @@ function BanditUpdate.Combat(bandit)
                         bestDist = dist
 
                         --determine if bandit will be in combat mode
-                        if Bandit.Can(bandit, "melee") and weapons.melee then
+                        if weapons.melee and Bandit.Can(bandit, "melee") then
                             local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
                             local minRange = itemMelee:getMaxRange()
                             local cryingPlayersHandicap = 0.2
@@ -862,62 +861,71 @@ function BanditUpdate.Combat(bandit)
     local potentialEnemyList = BanditZombie.GetAll()
     for id, potentialEnemy in pairs(potentialEnemyList) do
 
-        local dist = math.sqrt(math.pow(zx - potentialEnemy.x, 2) + math.pow(zy - potentialEnemy.y, 2))
-
-        -- hard cap for optimization
-        if dist < 25 then
-            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
-                if dist < 6 then enemies = enemies + 1 end
-                if dist < bestDist and potentialEnemy.z == zz  then
+        if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
         
-                    -- load real instance here
-                    local potentialEnemy = BanditZombie.GetInstanceById(id)
-                    if bandit:CanSee(potentialEnemy) then -- FIXME: add visibility cone
-                        local potentialEnemySquare = potentialEnemy:getSquare()
-                        if potentialEnemySquare then
-                            local lightLevel = potentialEnemySquare:getLightLevel(0)
-                            local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
-                            if not isWallTo and lightLevel > 0.31 then
-                                bestDist = dist
-                                
-                                --determine if bandit will be in combat mode
-                                if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
-                                    local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
+            -- quick manhattan check for performance boost
+            if math.abs(potentialEnemy.x - zx) < 25 or math.abs(potentialEnemy.y - zy) < 25 then
+            
+                -- load real instance here
+                local potentialEnemy = BanditZombie.GetInstanceById(id)
+                if bandit:CanSee(potentialEnemy) then -- FIXME: add visibility cone
+                    local potentialEnemySquare = potentialEnemy:getSquare()
+                    if potentialEnemySquare then
+                        local lightLevel = potentialEnemySquare:getLightLevel(0)
+                        local isWallTo = bandit:getSquare():isSomethingTo(potentialEnemySquare)
+                        if not isWallTo and lightLevel > 0.31 then
+
+                            local dist = BanditUtils.DistTo(zx, zy, potentialEnemy:getX(), potentialEnemy:getY())
+                            if dist < 25 then
+                            
+                                if dist < 6 then 
+                                    enemies = enemies + 1 
+                                end
+                                if dist < bestDist then
+
+                                    bestDist = dist
                                     
-                                    -- the bandit may need to swich to melee weapon so we need to switch earier
-                                    -- before target is in range
-                                    local minRange = itemMelee:getMaxRange()
-                                    if dist <= minRange then
-                                        enemyCharacter = potentialEnemy
-                                        local asn = enemyCharacter:getActionStateName()
-                                        if dist < 0.6 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" then
-                                            shove = true
-                                        else
-                                            combat = true
+                                    --determine if bandit will be in combat mode
+                                    if Bandit.Can(bandit, "melee") and weapons.melee and zz == potentialEnemy:getZ() then
+                                        local itemMelee = InventoryItemFactory.CreateItem(weapons.melee)
+                                        
+                                        -- the bandit may need to swich to melee weapon so we need to switch earier
+                                        -- before target is in range
+                                        local minRange = itemMelee:getMaxRange()
+                                        if dist <= minRange then
+                                            enemyCharacter = potentialEnemy
+                                            local asn = enemyCharacter:getActionStateName()
+                                            if dist < 0.6 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" then
+                                                shove = true
+                                            else
+                                                combat = true
+                                            end
                                         end
                                     end
-                                end
 
-                                --determine if bandit will be in shooting mode
-                                local pistolRange = SandboxVars.Bandits.General_PistolRange - 4
-                                local rifleRange = SandboxVars.Bandits.General_RifleRange - 6
-                                if Bandit.IsDNA(bandit, "blind") then
-                                    pistolRange = pistolRange - 4
-                                    rifleRange = rifleRange - 7
-                                end
-                                if Bandit.Can(bandit, "shoot") and weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < rifleRange then 
-                                    enemyCharacter = potentialEnemy
-                                    firing = true
-                                elseif Bandit.Can(bandit, "shoot") and weapons.secondary and  (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < pistolRange then
-                                    enemyCharacter = potentialEnemy
-                                    firing = true
+                                    --determine if bandit will be in shooting mode
+                                    local pistolRange = SandboxVars.Bandits.General_PistolRange - 4
+                                    local rifleRange = SandboxVars.Bandits.General_RifleRange - 6
+                                    if Bandit.IsDNA(bandit, "blind") then
+                                        pistolRange = pistolRange - 4
+                                        rifleRange = rifleRange - 7
+                                    end
+                                    if Bandit.Can(bandit, "shoot") and weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < rifleRange then 
+                                        enemyCharacter = potentialEnemy
+                                        firing = true
+                                    elseif Bandit.Can(bandit, "shoot") and weapons.secondary and  (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < pistolRange then
+                                        enemyCharacter = potentialEnemy
+                                        firing = true
+                                    end
                                 end
                             end
                         end
                     end
                 end
-            else
-                if dist < 6 then friendlies = friendlies + 1 end
+            end
+        else
+            if math.abs(potentialEnemy.x - zx) < 8 and math.abs(potentialEnemy.y - zy) < 8 then
+                friendlies = friendlies + 1
             end
         end
     end
@@ -1025,15 +1033,17 @@ function BanditUpdate.SocialDistance(bandit)
     -- so here we detect player proximity and we switch the program to CompaningGuard,
     -- which in practice forces the useless flag.
 
+    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
     local brain = BanditBrain.Get(bandit)
     if brain.program.name == "Companion" then
         local playerList = BanditPlayer.GetPlayers()
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
             if player then
+                local px, py, pz = player:getX(), player:getY(), player:getZ()
                 local veh = player:getVehicle()
                 local asn = bandit:getActionStateName()
-                local dist = math.sqrt(math.pow(bandit:getX() - player:getX(), 2) + math.pow(bandit:getY() - player:getY(), 2))
+                local dist = BanditUtils.DistTo(bx, by, px, py)
                 
                 if bandit:getZ() == player:getZ() and dist < 3 and not veh and asn ~= "onground" then
 
@@ -1101,7 +1111,7 @@ function BanditUpdate.Zombie(zombie)
         local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
         -- fetch the RAM-based lightweight zombie cache
-        local enemy = BanditUtils.GetClosestBanditLocation(zombie)
+        local enemy = BanditUtils.GetClosestBanditLocationFast(zombie)
 
         -- deal with the found if it is in range
         if enemy.dist < 30 then
@@ -1146,7 +1156,7 @@ function BanditUpdate.Zombie(zombie)
                         local attackingZombiesNumber = 0
                         local attackingZombieList = BanditZombie.GetAllZ()
                         for id, attackingZombie in pairs(attackingZombieList) do
-                            local dist = math.sqrt(math.pow(attackingZombie.x - enemy.x, 2) + math.pow(attackingZombie.y - enemy.y, 2))
+                            local dist = BanditUtils.DistTo(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
                             if dist < 0.6 then
                                 attackingZombiesNumber = attackingZombiesNumber + 1
                                 
@@ -1187,6 +1197,7 @@ function BanditUpdate.Zombie(zombie)
 
                             bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                             Bandit.UpdateInfection(bandit, 0.001)
+                            -- bandit:setReanimateTimer(0.1)
                             if bandit:getHealth() <= 0 then
                                 bandit:setHealth(0)
                                 bandit:clearAttachedItems()
@@ -1207,15 +1218,15 @@ end
 
 local uTick = 0
 function BanditUpdate.OnBanditUpdate(zombie)
-
-    -- local ts = getTimestampMs()
-
+    
+    local ts = getTimestampMs()
+    
     if isServer() then return end
 
     if uTick == 16 then uTick = 0 end
     uTick = uTick + 1
 
-    if not zombie:isAlive() then return end
+    -- if not zombie:isAlive() then return end
 
     ------------------------------------------------------------------------------------------------------------------------------------
     -- ZOMBIE UPDATE AFTER THIS LINE
@@ -1226,11 +1237,11 @@ function BanditUpdate.OnBanditUpdate(zombie)
     local zy = zombie:getY()
     local zz = zombie:getZ()
 
-    local cell = getCell()
-    local world = getWorld()
-    local gamemode = world:getGameMode()
+    -- local cell = getCell()
+    -- local world = getWorld()
+    -- local gamemode = world:getGameMode()
     local brain = BanditBrain.Get(zombie)
-
+    
     -- BANDITIZE ZOMBIES SPAWNED AND ENQUEUED BY SERVER
     -- OR ZOMBIFY IF QUEUE HAS BEEN REMOVED
     local gmd = GetBanditModData()
@@ -1246,7 +1257,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
             end
         end
     end
-
+    
     -- if true then return end 
     -- ZOMBIES VS BANDITS
     -- Using adaptive performance here.
@@ -1260,7 +1271,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         -- print (skip)
         BanditUpdate.Zombie(zombie)
     end
-
+    
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
     ------------------------------------------------------------------------------------------------------------------------------------
@@ -1318,19 +1329,19 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if bandit:isCrawling() then
         Bandit.Say(bandit, "DEAD")
     end
-
+    
     ------------------------------------------------------------------------------------------------------------------------------------
     -- TASKBUILDER
     ------------------------------------------------------------------------------------------------------------------------------------
-
+    
     local tasks = {}
-
+    
     -- MANAGE BANDIT ENDURANCE LOSS
     local enduranceTasks = BanditUpdate.Endurance(bandit)
     if #enduranceTasks > 0 then
         for _, t in pairs(enduranceTasks) do table.insert(tasks, t) end
     end
-
+    
     -- MANAGE BLEEDING AND HEALING
     if #tasks == 0 then
         local healingTasks = BanditUpdate.Health(bandit)
@@ -1338,7 +1349,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
             for _, t in pairs(healingTasks) do table.insert(tasks, t) end
         end
     end
-
+    
     -- AVOIDANCE
     if #tasks == 0 and uTick % 4 == 0 then
         local avoidanceTasks = BanditUpdate.Avoidance(bandit)
@@ -1348,15 +1359,15 @@ function BanditUpdate.OnBanditUpdate(zombie)
     end
 
     -- MANAGE MELEE / SHOOTING TASKS
-    if #tasks == 0 then
+    if #tasks == 0  then
         local combatTasks = BanditUpdate.Combat(bandit)
         if #combatTasks > 0 then
             for _, t in pairs(combatTasks) do table.insert(tasks, t) end
         end
     end
-
+    
     -- MANAGE COLLISION TASKS
-    if #tasks == 0 then
+    if #tasks == 0  and uTick % 2 then
         local colissionTasks = BanditUpdate.Collisions(bandit)
         if #colissionTasks > 0 then
             for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
@@ -1460,7 +1471,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         end
     end
 
-    -- print ("BU.T:" .. (getTimestampMs() - ts))
+    -- print ("BU:" .. (getTimestampMs() - ts))
 end
 
 function BanditUpdate.OnHitZombie(zombie, attacker, bodyPartType, handWeapon)

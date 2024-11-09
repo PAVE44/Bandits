@@ -578,7 +578,7 @@ function Bandit.Say(zombie, phrase, force)
     if force then zombie:getEmitter():stopAll() end
     
     local player = getPlayer()
-    local dist = math.sqrt(math.pow(player:getX() - zombie:getX(), 2) + math.pow(player:getY() - zombie:getY(), 2))
+    local dist = BanditUtils.DistTo(player:getX(), player:getY(), zombie:getX(), zombie:getY())
     
     if dist <= 14 then
         local id = BanditUtils.GetCharacterID(zombie)

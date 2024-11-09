@@ -5,7 +5,7 @@ local function Hit(attacker, item, victim)
     local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
 
     -- Calculate distance between attacker and victim
-    local dist = math.sqrt(math.pow(tempAttacker:getX() - victim:getX(), 2) + math.pow(tempAttacker:getY() - victim:getY(), 2))
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempAttacker:getX(), tempAttacker:getY())
     local range = item:getMaxRange()
     if dist < range + 0.1 then
         BanditPlayer.WakeEveryone()

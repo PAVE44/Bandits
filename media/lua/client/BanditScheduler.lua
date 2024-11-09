@@ -155,7 +155,7 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
             if player and not BanditPlayer.IsGhost(player) then
-                local dist = math.sqrt(math.pow(x - player:getX(), 2) + math.pow(y - player:getY(), 2))
+                local dist = BanditUtils.DistTo(x, y, player:getX(), player:getY())
                 if dist < 30 then
                     return true
                 end
@@ -867,7 +867,8 @@ end
 -------------------------------------------------------------------------------
 
 function BanditScheduler.CheckEvent()
-    
+    if isServer() then return end
+
     local world = getWorld()
     local gamemode = world:getGameMode()
     local currentPlayer = getPlayer()

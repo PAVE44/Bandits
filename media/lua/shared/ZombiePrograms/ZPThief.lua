@@ -134,7 +134,7 @@ ZombiePrograms.Thief.Operate = function(bandit)
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
     
         if asquare then
-            local dist = math.sqrt(math.pow(bandit:getX() - (asquare:getX() + 0.5), 2) + math.pow(bandit:getY() - (asquare:getY() + 0.5), 2))
+            local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), asquare:getX() + 0.5, asquare:getY() + 0.5)
             if dist > 0.90 or bandit:getZ() ~= asquare:getZ() then
                 local task = BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), walkType, dist, false)
                 table.insert(tasks, task)

@@ -76,7 +76,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     local walkType = "Walk"
     local endurance = 0.00
     local vehicle = master:getVehicle()
-    local dist = math.sqrt(math.pow(bandit:getX() - master:getX(), 2) + math.pow(bandit:getY() - master:getY(), 2))
+    local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), master:getX(), master:getY())
 
     if master:isRunning() or master:isSprinting() or vehicle or dist > 10 then
         walkType = "Run"
@@ -288,11 +288,11 @@ ZombiePrograms.Companion.Follow = function(bandit)
         if wx and wy then
             local asquare = AdjacentFreeTileFinder.Find(wsquare, bandit)
             if asquare then
-                local tx = asquare:getX()
-                local ty = asquare:getY()
+                local tx = asquare:getX() + 0.5
+                local ty = asquare:getY() + 0.5
 
-                local dist = math.sqrt(math.pow(tx - bx, 2) + math.pow(ty - by, 2))
-                if dist < 1.2 then
+                local dist = BanditUtils.DistTo(bx, by, tx, ty)
+                if dist < 1.0 then
                     print ("should fish")
                     local task = {action="Fishing", time=1000, x=wx, y=wy}
                     table.insert(tasks, task)

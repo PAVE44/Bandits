@@ -43,8 +43,17 @@ BanditServer.Commands.BanditRemove  = function(player, args)
     local id = args.id
     if gmd.Queue[id] then
         gmd.Queue[id] = nil
-        print ("[INFO] Bandit removed: " .. id)
+        -- print ("[INFO] Bandit removed: " .. id)
     end
+end
+
+BanditServer.Commands.BanditFlush  = function(player, args)
+    local gmd = GetBanditModData()
+    gmd.Queue = {}
+    gmd.VisitedBuildings = {}
+    gmd.Posts = {}
+    gmd.Bases = {}
+    print ("[INFO] All bandits removed!!!")
 end
 
 BanditServer.Commands.BanditUpdatePart = function(player, args)
@@ -55,7 +64,7 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
         local brain = gmd.Queue[id]
         for k, v in pairs(args) do
             brain[k] = v
-            print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
+            -- print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
         end
 
         gmd.Queue[id] = brain
@@ -100,6 +109,9 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
             -- unique bandit id based on outfit
             brain.id = id
+
+            -- time of birth
+            brain.born = getGameTime():getWorldAgeHours()
 
             -- the player that spawned the bandit becomes his master, 
             -- this plays a role in particular programs like Companion
@@ -161,7 +173,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- not used
             brain.world = {}
 
-            print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
+            -- print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
             gmd.Queue[id] = brain
         end
     end

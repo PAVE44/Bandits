@@ -50,4 +50,4 @@ BanditBroadcaster.BroadCast = function()
 end
 
 
-Events.EveryOneMinute.Add(BanditBroadcaster.BroadCast)
+-- Events.EveryOneMinute.Add(BanditBroadcaster.BroadCast)

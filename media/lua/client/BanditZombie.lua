@@ -20,13 +20,16 @@ BanditZombie.LastSize = 0
 
 -- rebuids cache
 BanditZombie.Update = function(numberTicks)
+    if isServer() then return end
+    
     -- if not numberTicks % 4 == 1 then return end
     
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    local skip = 4
+    local skip = 6
     if numberTicks % skip ~= 0 then return end
 
+    local ts = getTimestampMs()
     local cell = getCell()
     local zombieList = cell:getZombieList()
 
@@ -38,22 +41,23 @@ BanditZombie.Update = function(numberTicks)
     BanditZombie.LastSize = zombieList:size()
 
     for i=0, zombieList:size()-1 do
+        
         local zombie = zombieList:get(i)
-        if zombie:isAlive() then
+        
+        --if zombie:isAlive() then
             local id = BanditUtils.GetCharacterID(zombie)
+
             BanditZombie.Cache[id] = zombie
             
             local light = {}
             light.id = id
-            light.isBandit = zombie:getVariableBoolean("Bandit")
             light.x = zombie:getX()
             light.y = zombie:getY()
             light.z = zombie:getZ()
             light.brain = BanditBrain.Get(zombie)
-            BanditZombie.CacheLight[id] = light
 
-            
-            if light.isBandit then
+            if zombie:getVariableBoolean("Bandit")  then
+                light.isBandit = true
                 BanditZombie.CacheLightB[id] = light
                 -- zombies in hitreaction state are not processed by onzombieupdate
                 -- so we need to make them shut their zombie sound here too
@@ -63,11 +67,17 @@ BanditZombie.Update = function(numberTicks)
                     zombie:getEmitter():stopSoundByName("MaleZombieCombined")
                     zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
                 end
-             else
+            else
+                light.isBandit = false
                 BanditZombie.CacheLightZ[id] = light
             end
-        end
+
+            BanditZombie.CacheLight[id] = light
+        --end
     end
+
+    -- print ("BZ:" .. (getTimestampMs() - ts))
+
 end 
 
 -- returns IsoZombie by id

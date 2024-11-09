@@ -387,7 +387,7 @@ local function Hit(shooter, item, victim)
     local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
 
     -- Calculate the distance between the shooter and the victim
-    local dist = math.sqrt(math.pow(tempShooter:getX() - victim:getX(), 2) + math.pow(tempShooter:getY() - victim:getY(), 2))
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempShooter:getX(), tempShooter:getY())
 
     -- Determine accuracy based on SandboxVars and shooter clan
     local brainShooter = BanditBrain.Get(shooter)

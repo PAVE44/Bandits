@@ -32,7 +32,7 @@ function BanditPost.GetInRadius(character, ptype, radius)
 
     local nearPosts = {}
     for id, gp in pairs(gmd.Posts) do
-        local dist = math.sqrt(math.pow(gp.x - px, 2) + math.pow(gp.y - py, 2))
+        local dist = BanditUtils.DistTo(gp.x, gp.y, px, py)
         if dist < radius and (not ptype or gp.type == ptype) then
             nearPosts[id] = gp
         end
@@ -48,7 +48,7 @@ function BanditPost.GetClosestFree(character, ptype, radius)
     local bestDist = radius
     local bestPost
     for id, gp in pairs(gmd.Posts) do
-        local dist = math.sqrt(math.pow(gp.x - px, 2) + math.pow(gp.y - py, 2))
+        local dist = BanditUtils.DistTo(gp.x, gp.y, px, py)
         if dist <= radius then
             if dist < bestDist and (not ptype or gp.type == ptype) then
                 local square = getCell():getGridSquare(gp.x, gp.y, gp.z)

@@ -36,7 +36,7 @@ BanditPlayerBase.GetBaseClosest = function(character)
     local bestBase
     local bestBaseId
     for baseId, base in pairs(BanditPlayerBase.data) do
-        local dist = math.sqrt(math.pow(base.x - cx, 2) + math.pow(base.y - cy, 2))
+        local dist = BanditUtils.DistTo(base.x, base.y, cx, cy)
         if dist < bestDist then
             bestBase = base
             bestBaseId = baseId
@@ -63,7 +63,7 @@ BanditPlayerBase.GetContainerClosest = function(character, baseId)
         end
 
         if not empty then
-            local dist = math.sqrt(math.pow(cont.x - cx, 2) + math.pow(cont.y - cy, 2))    
+            local dist = BanditUtils.DistTo(cont.x, cont.y, cx, cy)
             if dist < bestDist then
                 bestCont = cont
                 bestContId = contId
@@ -76,6 +76,7 @@ end
 
 -- function that governs player bases regeneration
 BanditPlayerBase.Update = function(numberTicks)
+    if isServer() then return end
 
     if numberTicks % 10 == 0 then 
         local gmd = GetBanditModData()
@@ -395,7 +396,7 @@ BanditPlayerBase.GetContainerWithItem = function(character, item, cnt)
     local bestCont
     for contId, cont in pairs(BanditPlayerBase.data[baseId].items[item]) do
         if cont.cnt >= cnt then
-            local dist = math.sqrt(math.pow(cont.x - x, 2) + math.pow(cont.y - y, 2))
+            local dist = BanditUtils.DistTo(cont.x, cont.y, x, y)
             if dist < bestDist then
                 bestCont = cont
                 bestDist = dist
@@ -435,7 +436,7 @@ BanditPlayerBase.GetContainerOfType = function(character, ctype)
     local bestCont
     for contId, cont in pairs(BanditPlayerBase.data[baseId].containers) do
         if cont.type == ctype then
-            local dist = math.sqrt(math.pow(cont.x - x, 2) + math.pow(cont.y - y, 2))
+            local dist = BanditUtils.DistTo(cont.x, cont.y, x, y)
             if dist < bestDist then
                 bestCont = cont
                 bestDist = dist
@@ -479,7 +480,7 @@ BanditPlayerBase.GetFarm = function(character)
             local plant = CFarmingSystem.instance:getLuaObjectAt(farm.x, farm.y, farm.z)
             if plant then
                 if plant.waterNeeded > 0 and plant.waterLvl < plant.waterNeeded - 20 then
-                    local dist = math.sqrt(math.pow(farm.x - x, 2) + math.pow(farm.y - y, 2))
+                    local dist = BanditUtils.DistTo(farm.x, farm.y, x, y)
                     if dist < bestDist then
                         bestPlant = plant
                         bestDist = dist
@@ -516,7 +517,7 @@ BanditPlayerBase.GetWaterSource = function(character)
             end
 
             if source then
-                local dist = math.sqrt(math.pow(ws.x - x, 2) + math.pow(ws.y - y, 2))
+                local dist = BanditUtils.DistTo(ws.x, ws.y, x, y)
                 if dist < bestDist then
                     bestSource = source
                     bestDist = dist
@@ -546,7 +547,7 @@ BanditPlayerBase.GetGenerator = function(character)
                 local condition = generator:getCondition()
                 local fuel = generator:getFuel()
                 if condition < 60 or fuel < 40 then
-                    local dist = math.sqrt(math.pow(gen.x - x, 2) + math.pow(gen.y - y, 2))
+                    local dist = BanditUtils.DistTo(gen.x, gen.y, x, y)
                     if dist < bestDist then
                         bestGenerator = generator
                         bestDist = dist
@@ -573,7 +574,7 @@ BanditPlayerBase.GetBlood = function(character)
         local square = character:getCell():getGridSquare(blood.x, blood.y, blood.z)
         if square then
             if square:haveBlood() then
-                local dist = math.sqrt(math.pow(blood.x - x, 2) + math.pow(blood.y - y, 2))
+                local dist = BanditUtils.DistTo(blood.x, blood.y, x, y)
                 if dist < bestDist then
                     bestBlood = square
                     bestDist = dist
@@ -598,7 +599,7 @@ BanditPlayerBase.GetTrashcan = function(character)
     for k, trashcan in pairs(BanditPlayerBase.data[baseId].trashcans) do
         local square = character:getCell():getGridSquare(trashcan.x, trashcan.y, trashcan.z)
         if square then
-            local dist = math.sqrt(math.pow(trashcan.x - x, 2) + math.pow(trashcan.y - y, 2))
+            local dist = BanditUtils.DistTo(trashcan.x, trashcan.y, x, y)
             if dist < bestDist then
                 local objects = square:getObjects()
                 for i=0, objects:size()-1 do
@@ -635,7 +636,7 @@ BanditPlayerBase.GetGrave = function(character, isFull)
     for k, grave in pairs(BanditPlayerBase.data[baseId].graves) do
         local square = character:getCell():getGridSquare(grave.x, grave.y, grave.z)
         if square then
-            local dist = math.sqrt(math.pow(grave.x - x, 2) + math.pow(grave.y - y, 2))
+            local dist = BanditUtils.DistTo(grave.x, grave.y, x, y)
             if dist < bestDist then
                 local objects = square:getSpecialObjects()
                 for i=0, objects:size()-1 do
@@ -671,7 +672,7 @@ BanditPlayerBase.GetDeadbody = function(character)
     for k, deadbody in pairs(BanditPlayerBase.data[baseId].deadbodies) do
         local square = character:getCell():getGridSquare(deadbody.x, deadbody.y, deadbody.z)
         if square then
-            local dist = math.sqrt(math.pow(deadbody.x - x, 2) + math.pow(deadbody.y - y, 2))
+            local dist = BanditUtils.DistTo(deadbody.x, deadbody.y, x, y)
             if dist < bestDist then
                 local deadbody = square:getDeadBody()
                 if deadbody then
