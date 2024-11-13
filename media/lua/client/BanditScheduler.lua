@@ -316,7 +316,8 @@ function BanditScheduler.SpawnWave(player, wave)
             end
 
             -- road block spawn
-            if event.hostile and spawnPoint.groundType == "street" and ZombRand(4) == 1 then
+            local vehicleCount = player:getCell():getVehicles():size()
+            if event.hostile and spawnPoint.groundType == "street" and vehicleCount < 4 then
 
                 -- check space
                 local allfree = true
