@@ -90,7 +90,9 @@ ZombieActions.Hit.onStart = function(bandit, task)
     else
 
         local attacks
-        if meleeItemType == WeaponType.twohanded then
+        if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.barehand then
+            attacks = {"AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
+        elseif meleeItemType == WeaponType.twohanded then
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         -- elseif meleeItemType == WeaponType.heavy then
         --    attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}

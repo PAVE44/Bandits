@@ -1,22 +1,21 @@
 Bandit = Bandit or {}
 
-Bandit.SoundTab = {
-    SPOTTED =           {prefix = "ZSSpotted_", chance = 90, randMax = 6, length = 2},
-    HIT =               {prefix = "ZSHit_", chance = 100, randMax = 14, length = 0.5},
-    BREACH =            {prefix = "ZSBreach_", chance = 80, randMax = 6, length = 10},
-    RELOADING =         {prefix = "ZSReloading_", chance = 80, randMax = 6, length = 4},
-    CAR =               {prefix = "ZSCar_", chance = 90, randMax = 6, length = 4},
-    DEATH =             {prefix = "ZSDeath_", chance = 70, randMax = 8, length = 6},
-    DEAD =              {prefix = "ZSDead_", chance = 100, randMax = 6, length = 3},
-    BURN =              {prefix = "ZSBurn_", chance = 100, randMax = 3, length = 8},
-    DRAGDOWN =          {prefix = "ZSDragdown_", chance = 100, randMax = 3, length = 8},
-    INSIDE =            {prefix = "ZSInside_", chance = 40, randMax = 3, length = 25},
-    OUTSIDE =           {prefix = "ZSOutside_", chance = 40, randMax = 3, length = 25},
-    UPSTAIRS =          {prefix = "ZSUpstairs_", chance = 40, randMax = 1, length = 25},
-    ROOM_KITCHEN =      {prefix = "ZSRoom_Kitchen_", chance = 40, randMax = 1, length = 25},
-    ROOM_BATHROOM =     {prefix = "ZSRoom_Bathroom_", chance = 40, randMax = 1, length = 25},
-    DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
-}
+Bandit.SoundTab = Bandit.SoundTab or {}
+Bandit.SoundTab.SPOTTED =           {prefix = "ZSSpotted_", chance = 90, randMax = 6, length = 2}
+Bandit.SoundTab.HIT =               {prefix = "ZSHit_", chance = 100, randMax = 14, length = 0.5}
+Bandit.SoundTab.BREACH =            {prefix = "ZSBreach_", chance = 80, randMax = 6, length = 10}
+Bandit.SoundTab.RELOADING =         {prefix = "ZSReloading_", chance = 80, randMax = 6, length = 4}
+Bandit.SoundTab.CAR =               {prefix = "ZSCar_", chance = 90, randMax = 6, length = 4}
+Bandit.SoundTab.DEATH =             {prefix = "ZSDeath_", chance = 70, randMax = 8, length = 6}
+Bandit.SoundTab.DEAD =              {prefix = "ZSDead_", chance = 100, randMax = 6, length = 3}
+Bandit.SoundTab.BURN =              {prefix = "ZSBurn_", chance = 100, randMax = 3, length = 8}
+Bandit.SoundTab.DRAGDOWN =          {prefix = "ZSDragdown_", chance = 100, randMax = 3, length = 8}
+Bandit.SoundTab.INSIDE =            {prefix = "ZSInside_", chance = 40, randMax = 3, length = 25}
+Bandit.SoundTab.OUTSIDE =           {prefix = "ZSOutside_", chance = 40, randMax = 3, length = 25}
+Bandit.SoundTab.UPSTAIRS =          {prefix = "ZSUpstairs_", chance = 40, randMax = 1, length = 25}
+Bandit.SoundTab.ROOM_KITCHEN =      {prefix = "ZSRoom_Kitchen_", chance = 40, randMax = 1, length = 25}
+Bandit.SoundTab.ROOM_BATHROOM =     {prefix = "ZSRoom_Bathroom_", chance = 40, randMax = 1, length = 25}
+Bandit.SoundTab.DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
 
 Bandit.VisualDamage = {}
 

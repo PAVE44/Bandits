@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSAttackBareHands5</m_Name>
+	<m_AnimName>Bob_AttackPunch03_CritHit</m_AnimName>
+	<m_Priority>4</m_Priority>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_Looped>false</m_Looped>
+	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+	<m_SpeedScale>0.8</m_SpeedScale>
+	<m_BlendTime>0.15</m_BlendTime>
+	<m_BlendOutTime>0.25</m_BlendOutTime>
+	<m_Scalar>AttackVariationX</m_Scalar>
+	<m_Scalar2>AttackVariationY</m_Scalar2>
+	<m_Conditions>
+		<m_Name>BumpType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>AttackBareHands5</m_StringValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>SetVariable</m_EventName>
+		<m_Time>End</m_Time>
+		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
+	</m_Events>
+
+</animNode>
