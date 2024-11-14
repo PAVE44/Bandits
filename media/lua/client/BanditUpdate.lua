@@ -1202,7 +1202,7 @@ function BanditUpdate.Zombie(zombie)
                                 bandit:setHealth(0)
                                 bandit:clearAttachedItems()
                                 -- bandit:changeState(ZombieOnGroundState.instance())
-                                bandit:setAttackedBy(getCell():getFakeZombieForHit())
+                                bandit:setAttackedBy(zombie)
                                 -- bandit:becomeCorpse()
                             end
                         end

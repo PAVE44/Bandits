@@ -28,7 +28,6 @@ local function Hit(attacker, item, victim)
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             else
-                victim:setAttackedBy(attacker)
                 victim:setHitFromBehind(attacker:isBehind(victim))
 
                 if instanceof(victim, "IsoZombie") then
@@ -37,6 +36,7 @@ local function Hit(attacker, item, victim)
                 end
 
                 victim:Hit(item, tempAttacker, 3, false, 1, false)
+                victim:setAttackedBy(attacker)
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then
                     local health = bodyDamage:getOverallBodyHealth()
