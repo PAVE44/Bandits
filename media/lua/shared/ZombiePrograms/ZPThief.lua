@@ -134,6 +134,15 @@ ZombiePrograms.Thief.Operate = function(bandit)
         local asquare = AdjacentFreeTileFinder.Find(square, bandit)
     
         if asquare then
+
+            local playerList = BanditPlayer.GetPlayers()
+            for i=0, playerList:size()-1 do
+                local player = playerList:get(i)
+                if player and not BanditPlayer.IsGhost(player) then
+                    Bandit.Say(bandit, "THIEF_SPOTTED")
+                end
+            end
+                    
             local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), asquare:getX() + 0.5, asquare:getY() + 0.5)
             if dist > 0.90 or bandit:getZ() ~= asquare:getZ() then
                 local task = BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), walkType, dist, false)

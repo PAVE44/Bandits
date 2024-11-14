@@ -353,7 +353,8 @@ function BanditUpdate.ActionState(bandit)
         bandit:changeState(ZombieIdleState.instance())
         bandit:clearAggroList()
         bandit:setTarget(nil)
-    -- elseif asn == "pathfind" then
+    elseif asn == "pathfind" then
+        continue = false
 
     elseif asn == "thump" then
         -- bandit:changeState(ZombieIdleState.instance())
@@ -1222,6 +1223,8 @@ function BanditUpdate.OnBanditUpdate(zombie)
     local ts = getTimestampMs()
     
     if isServer() then return end
+
+    -- if zombie:isRemoteZombie() then return end
 
     if uTick == 16 then uTick = 0 end
     uTick = uTick + 1

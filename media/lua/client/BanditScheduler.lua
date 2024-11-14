@@ -384,20 +384,18 @@ function BanditScheduler.SpawnWave(player, wave)
             if SandboxVars.Bandits.General_ArrivalIcon then
                 local color
                 local icon
-                if event.hostile then
-                    if event.program.name == "Bandit" then
-                        icon = "media/ui/raid.png"
-                        color = {r=1, g=0.5, b=0.5} -- red
-                    elseif event.program.name == "Thief" then
-                        icon = "media/ui/thief.png"
-                        color = {r=1, g=1, b=0.5} -- yellow
-                    else 
-                        icon = "media/ui/loot.png"
-                        color = {r=1, g=0.5, b=0} -- orange
-                    end
-                else
+                if event.program.name == "Bandit" then
+                    icon = "media/ui/raid.png"
+                    color = {r=1, g=0.5, b=0.5} -- red
+                elseif event.program.name == "Thief" then
+                    icon = "media/ui/thief.png"
+                    color = {r=1, g=1, b=0.5} -- yellow
+                elseif event.program.name == "Companion" then
                     icon = "media/ui/friend.png"
                     color = {r=0.5, g=1, b=0.5} -- green
+                else 
+                    icon = "media/ui/loot.png"
+                    color = {r=1, g=0.5, b=0} -- orange
                 end
 
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)

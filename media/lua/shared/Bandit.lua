@@ -16,6 +16,7 @@ Bandit.SoundTab.UPSTAIRS =          {prefix = "ZSUpstairs_", chance = 40, randMa
 Bandit.SoundTab.ROOM_KITCHEN =      {prefix = "ZSRoom_Kitchen_", chance = 40, randMax = 1, length = 25}
 Bandit.SoundTab.ROOM_BATHROOM =     {prefix = "ZSRoom_Bathroom_", chance = 40, randMax = 1, length = 25}
 Bandit.SoundTab.DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
+Bandit.SoundTab.THIEF_SPOTTED =     {prefix = "ZSThief_Spot_", chance = 80, randMax = 6, length = 12}
 
 Bandit.VisualDamage = {}
 

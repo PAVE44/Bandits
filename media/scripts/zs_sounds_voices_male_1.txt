@@ -850,4 +850,76 @@ module BanditsVoiceMale1 {
             reverbFactor = 0.1, volume = 0.4, 
         } 
     }
+
+    sound ZSThief_Spot_Male_1_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_1.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSThief_Spot_Male_1_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_2.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSThief_Spot_Male_1_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_3.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSThief_Spot_Male_1_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_4.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSThief_Spot_Male_1_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_5.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
+
+    sound ZSThief_Spot_Male_1_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_1/thief_spot_male_1_6.wav, 
+            distanceMin = 4,
+            distanceMax = 80, 
+            reverbFactor = 0.1, volume = 0.4, 
+        } 
+    }
 }
