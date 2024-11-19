@@ -1280,6 +1280,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     ------------------------------------------------------------------------------------------------------------------------------------
     if not zombie:getVariableBoolean("Bandit") then return end
     if not brain then return end
+    if not BanditZombie.CacheLightB[id] then return end
     
     local bandit = zombie
 
