@@ -596,7 +596,7 @@ function BanditUpdate.Collisions(bandit)
                                     if SandboxVars.Bandits.General_SmashWindow and Bandit.Can(bandit, "smashWindow") then
                                         local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                         table.insert(tasks, task)
-                                    else
+                                    elseif not object:isPermaLocked() then
                                         local task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                         table.insert(tasks, task)
                                         return tasks
@@ -679,7 +679,7 @@ function BanditUpdate.Collisions(bandit)
                                             z = object:getSquare():getZ(),
                                             index = object:getObjectIndex()
                                         }
-                                        sendClientCommand(getPlayer(), 'Commands', 'ToggleDoor', args)
+                                        sendClientCommand(getPlayer(), 'Commands', 'OpenDoor', args)
 
                                         -- Get the square of the object
                                         local square = getPlayer():getSquare()
@@ -1411,7 +1411,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
     if not task.state then task.state = "NEW" end
 
     if task.state == "NEW" then
-
+        
         if not task.time then task.time = 1000 end
 
         if task.action ~= "Shoot" and task.action ~= "Aim" then
@@ -1441,7 +1441,7 @@ function BanditUpdate.OnBanditUpdate(zombie)
         end
 
     elseif task.state == "WORKING" then
-
+        --zombie:addLineChatElement(task.action .. task.time, 0.5, 0.5, 0.5)
         -- normalize time speed
         local decrement = 1 / ((getAverageFPS() + 0.5) / 60)
 

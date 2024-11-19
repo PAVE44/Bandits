@@ -27,6 +27,16 @@ BanditPlayerBase.Debug = function(buildingDef)
     local debug = BanditPlayerBase.data
 end
 
+-- function that returns a base if the character is inside it
+BanditPlayerBase.GetBase = function(character)
+    local cx = character:getX()
+    local cy = character:getY()
+    local baseId = getBase(cx, cy)
+    if baseId then
+        return BanditPlayerBase.data[baseId]
+    end
+end
+
 -- function that returns the coordinates of the closest base to the character
 BanditPlayerBase.GetBaseClosest = function(character)
     local cx = character:getX()
@@ -322,7 +332,7 @@ BanditPlayerBase.Regenerate = function(baseId)
     -- print ("REGENERATE:" .. (getTimestampMs() - ts))
 end
 
--- registers a new base based on building definition
+-- registers a new base based on the area
 BanditPlayerBase.RegisterBase = function(x, y, x2, y2)
     -- if this base already exists, do not overwrite it
     local baseId = x .. "-" .. y

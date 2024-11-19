@@ -73,6 +73,10 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
     end
 end
 
+BanditServer.Commands.AddEffect = function(player, args)
+    sendServerCommand('BanditEffects', 'Add', args)
+end
+
 BanditServer.Commands.SpawnGroup = function(player, event)
     local radius = 0.5
     local knockedDown = false
@@ -241,13 +245,49 @@ BanditServer.Commands.Barricade = function(player, args)
     end
 end
 
-BanditServer.Commands.ToggleDoor = function(player, args)
+BanditServer.Commands.OpenDoor = function(player, args)
     local sq = getCell():getGridSquare(args.x, args.y, args.z)
     if sq and args.index >= 0 and args.index < sq:getObjects():size() then
         local object = sq:getObjects():get(args.index)
         if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
             if not object:IsOpen() then
                 object:ToggleDoorSilent()
+            end
+        end
+    end
+end
+
+BanditServer.Commands.CloseDoor = function(player, args)
+    local sq = getCell():getGridSquare(args.x, args.y, args.z)
+    if sq and args.index >= 0 and args.index < sq:getObjects():size() then
+        local object = sq:getObjects():get(args.index)
+        if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
+            if object:IsOpen() then
+                object:ToggleDoorSilent()
+            end
+        end
+    end
+end
+
+BanditServer.Commands.LockDoor = function(player, args)
+    local sq = getCell():getGridSquare(args.x, args.y, args.z)
+    if sq and args.index >= 0 and args.index < sq:getObjects():size() then
+        local object = sq:getObjects():get(args.index)
+        if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
+            if not object:isLockedByKey() then
+                object:setLockedByKey(true)
+            end
+        end
+    end
+end
+
+BanditServer.Commands.UnlockDoor = function(player, args)
+    local sq = getCell():getGridSquare(args.x, args.y, args.z)
+    if sq and args.index >= 0 and args.index < sq:getObjects():size() then
+        local object = sq:getObjects():get(args.index)
+        if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
+            if object:isLockedByKey() then
+                object:setLockedByKey(false)
             end
         end
     end
