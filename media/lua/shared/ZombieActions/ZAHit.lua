@@ -66,7 +66,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     local anim 
     local sound
 
-    local enemy = BanditZombie.GetInstanceById(task.eid) or BanditPlayer.getPlayerById(task.eid)
+    local enemy = BanditZombie.GetInstanceById(task.eid) or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
     
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
@@ -148,7 +148,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         end
 
         if Bandit.IsHostile(bandit) then
-            local player = BanditPlayer.getPlayerById(task.eid)
+            local player = BanditPlayer.GetPlayerById(task.eid)
             if player then
                 local eid = BanditUtils.GetCharacterID(player)
                 if player:isAlive() and eid == task.eid then

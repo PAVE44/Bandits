@@ -80,7 +80,7 @@ BanditUtils.ItemVisuals = {
 function BanditUtils.GetCharacterID (character)
 
     -- the following has proven to be much less efficient
-     local function toBits(num)
+    local function toBits(num)
         local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
         while #bits < 16 do bits[#bits+1] = "0" end
         return bits
@@ -92,15 +92,22 @@ function BanditUtils.GetCharacterID (character)
     end
 
     if instanceof(character, "IsoZombie") then
-        local dec = character:getPersistentOutfitID()
-
-        local bits = toBits(dec)
-        local hat = bits[16]
-        if hat == 1 then
-            bits[16] = 0
-            return toDec(bits)
+        local id = character:getVariableString("BanditID")
+        if id then
+            return id
         else
-            return dec
+            local id
+            local dec = character:getPersistentOutfitID()
+
+            local bits = toBits(dec)
+            local hat = bits[16]
+            if hat == 1 then
+                bits[16] = 0
+                id = toDec(bits)
+            else
+                id = dec
+            end
+            character:setVariable("BanditID", tostring(id ))
         end
     end
     
@@ -276,7 +283,7 @@ function BanditUtils.GetClosestBanditLocationFast(character)
 
     local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
-        if math.abs(zombie.x - cx) < 25 or math.abs(zombie.y - cy) < 30 then
+        if math.abs(zombie.x - cx) < 30 or math.abs(zombie.y - cy) < 30 then
             local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
             if dist < result.dist and cid ~= id then
                 result.dist = dist
@@ -509,10 +516,14 @@ end
 
 function BanditUtils.DistTo(x1, y1, x2, y2)
     -- this is the fastest
-    return math.sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
+    return math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
 
     -- return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
     -- return IsoUtils.DistanceTo(x1, y1, x2, y2)
+end
+
+function BanditUtils.DistToManhattan(x1, y1, x2, y2)
+    return math.abs(x1 - x2) + math.abs(y1 - y2)
 end
 
 function BanditUtils.Choice(arr)

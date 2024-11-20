@@ -19,7 +19,7 @@ BanditZombie.CacheLightB = BanditZombie.CacheLightB or {}
 BanditZombie.LastSize = 0
 
 -- rebuids cache
-BanditZombie.Update = function(numberTicks)
+local UpdateZombieCache = function(numberTicks)
     if isServer() then return end
     
     -- if not numberTicks % 4 == 1 then return end
@@ -43,19 +43,18 @@ BanditZombie.Update = function(numberTicks)
     local px = player:getX()
     local py = player:getY()
 
-    -- reset all cache
-    BanditZombie.Cache = {}
-    BanditZombie.CacheLight = {}
-    BanditZombie.CacheLightB = {}
-    BanditZombie.CacheLightZ = {}
-    BanditZombie.LastSize = zombieListSize
+    -- prepare local cache vars
+    local cache = {}
+    local cacheLight = {}
+    local cacheLightB = {}
+    local cacheLightZ = {}
 
     for i = 0, zombieListSize - 1 do
         
         local zombie = zombieList:get(i)
         local id = BanditUtils.GetCharacterID(zombie)
 
-        BanditZombie.Cache[id] = zombie
+        cache[id] = zombie
         
         local zx = zombie:getX()
         local zy = zombie:getY()
@@ -71,9 +70,12 @@ BanditZombie.Update = function(numberTicks)
 
             if zombie:getVariableBoolean("Bandit")  then
                 light.isBandit = true
-                BanditZombie.CacheLightB[id] = light
+                cacheLightB[id] = light
                 -- zombies in hitreaction state are not processed by onzombieupdate
                 -- so we need to make them shut their zombie sound here too
+                -- logically this does not fit here, should be a separate process
+                -- but it's here due to performance optimization to avoid additional iteration
+                -- over zombieList
                 
                 local asn = zombie:getActionStateName()
                 if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
@@ -82,16 +84,22 @@ BanditZombie.Update = function(numberTicks)
                 end
             else
                 light.isBandit = false
-                BanditZombie.CacheLightZ[id] = light
+                cacheLightZ[id] = light
             end
 
-            BanditZombie.CacheLight[id] = light
+            acheLight[id] = light
         end
 
     end
 
-    -- print ("BZ:" .. (getTimestampMs() - ts))
+    -- recreate global cache vars with new findings
+    BanditZombie.Cache = cache
+    BanditZombie.CacheLight = cacheLight
+    BanditZombie.CacheLightB = cacheLightB
+    BanditZombie.CacheLightZ = cacheLightZ
+    BanditZombie.LastSize = zombieListSize
 
+    -- print ("BZ:" .. (getTimestampMs() - ts))
 end 
 
 -- returns IsoZombie by id
@@ -122,4 +130,4 @@ BanditZombie.GetAllCnt = function()
     return BanditZombie.LastSize
 end
 
-Events.OnTick.Add(BanditZombie.Update)
+Events.OnTick.Add(UpdateZombieCache)

@@ -107,7 +107,7 @@ ZombiePrograms.Looter.Operate = function(bandit)
 
     if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist and closestPlayer.dist < closestZombie.dist then
         target = closestPlayer
-        enemy = BanditPlayer.getPlayerById(target.id)
+        enemy = BanditPlayer.GetPlayerById(target.id)
     end
 
     local closeSlow = true

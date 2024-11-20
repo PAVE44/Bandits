@@ -149,7 +149,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
 
     if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist then
         target = closestPlayer
-        enemy = BanditPlayer.getPlayerById(target.id)
+        enemy = BanditPlayer.GetPlayerById(target.id)
     end
 
     local closeSlow = true
