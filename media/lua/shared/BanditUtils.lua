@@ -79,6 +79,8 @@ BanditUtils.ItemVisuals = {
 
 function BanditUtils.GetCharacterID (character)
 
+
+    
     -- the following has proven to be much less efficient
      local function toBits(num)
         local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
@@ -103,6 +105,23 @@ function BanditUtils.GetCharacterID (character)
             return dec
         end
     end
+    
+    
+	--[[
+    -- experimenting
+	-- I don't know that this will work.
+	-- It's assuming that ONLY bit 16 (calling the first bit #1, not 0)
+	--   is involved in the hat. This may not be correct!
+	
+    if instanceof(character, "IsoZombie") then
+		local id = character:getPersistentOutfitID()
+		local temp = id % 32768
+		if temp == 1 then
+			id = id - 32768
+		end
+		return id
+    end
+    --]]
     
     if instanceof(character, "IsoPlayer") then
         local world = getWorld()
@@ -158,11 +177,13 @@ function BanditUtils.IsInAngle(observer, targetX, targetY)
     -- print ("omega:" .. omega)
     -- print ("theta:" .. theta)
 
-    if math.abs(theta - omega) < 45 then 
-        return true
-    else
-        return false
-    end
+--    if math.abs(theta - omega) < 45 then 
+--        return true
+--    else
+--        return false
+--    end
+    
+    return math.abs(theta - omega) < 45 
 end
 
 function BanditUtils.CalcAngle (x1, y1, x2, y2)
@@ -192,12 +213,18 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
 
     local cx, cy = character:getX(), character:getY()
     local playerList = BanditPlayer.GetPlayers()
+    local x, y, dist
 
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py = player:getX(), player:getY()
-            local dist = BanditUtils.DistTo(cx, cy, px, py)
+--            local dist = BanditUtils.DistTo(cx, cy, px, py)
+            x = cx - px
+            x = x * x
+            y = cy - py
+            y = y * y
+            dist = x + y
             if dist < result.dist and (not mustSee or (character:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
                 result.dist = dist
                 result.x = player:getX()
@@ -219,10 +246,17 @@ function BanditUtils.GetClosestZombieLocation(character)
     result.id = false
     
     local cx, cy = character:getX(), character:getY()
-
+    local x, y, dist
+    
     local zombieList = BanditZombie.GetAllZ()
     for id, zombie in pairs(zombieList) do
-        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+--        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+        x = cx - zombie.x
+        x = x * x
+        y = cy - zombie.y
+        y = y * y
+        dist = x + y
+        
         if dist < result.dist then
             result.dist = dist
             result.x = zombie.x
@@ -246,10 +280,17 @@ function BanditUtils.GetClosestBanditLocation(character)
     result.id = false
     
     local cx, cy = character:getX(), character:getY()
-
+    local x, y, dist
+    
     local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
-        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+--        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+        x = cx - zombie.x
+        x = x * x
+        y = cy - zombie.y
+        y = y * y
+        dist = x + y
+
         if dist < result.dist and cid ~= id then
             result.dist = dist
             result.x = zombie.x
@@ -273,11 +314,21 @@ function BanditUtils.GetClosestBanditLocationFast(character)
     result.id = false
     
     local cx, cy = character:getX(), character:getY()
-
+    local x, y, dist
+    
     local zombieList = BanditZombie.GetAllB()
     for id, zombie in pairs(zombieList) do
-        if math.abs(zombie.x - cx) < 25 or math.abs(zombie.y - cy) < 30 then
-            local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+        x = math.abs(cx - zombie.x)
+        y = math.abs(cy - zombie.y)
+
+--        if math.abs(zombie.x - cx) < 25 or math.abs(zombie.y - cy) < 30 then
+--          local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+
+        if (x < 25) or (y < 30) then
+            x = x * x
+            y = y * y
+            dist = x + y
+
             if dist < result.dist and cid ~= id then
                 result.dist = dist
                 result.x = zombie.x
@@ -300,13 +351,22 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     result.id = false
 
     local cx, cy = character:getX(), character:getY()
+    local x, y, dist
 
     local banditList = BanditZombie.GetAllB()
     if instanceof(character, "IsoZombie") then
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do
             if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
-                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
+--                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
+
+                x = cx - otherBandit.x
+                x = x * x
+                y = cy - otherBandit.y
+                y = y * y
+                dist = x + y
+                
+                
                 if dist < result.dist then
                     result.dist = dist
                     result.x = otherBandit.x
@@ -508,8 +568,18 @@ function BanditUtils.ReplaceDrainable(item)
 end
 
 function BanditUtils.DistTo(x1, y1, x2, y2)
+    
+    -- This should be faster but it's not called as much now.
+	-- I've inlined this inside this file in all distance checks, and sqrt() isn't used in those, so it will be even faster
+    local x = x1 - x2
+    x = x * x
+    local y = y1 - y2
+    y = y * y
+    return math.sqrt(x + y)
+
+
     -- this is the fastest
-    return math.sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
+--    return math.sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
 
     -- return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
     -- return IsoUtils.DistanceTo(x1, y1, x2, y2)
@@ -521,18 +591,21 @@ function BanditUtils.Choice(arr)
 end
 
 function BanditUtils.CoinFlip()
-    if ZombRand(2) == 1 then 
-        return true 
-    else 
-        return false 
-    end
+--    if ZombRand(2) == 1 then 
+--        return true 
+--    else 
+--        return false 
+--    end
+    return ZombRand(2) == 1
 end
+
 
 -- deterministic rand for all clients
 function BanditUtils.BanditRand(n)
     local a = 1664525
     local c = 1013904223
-    local m = 2^32
+--    local m = 2^32
+    local m = 4,294,967,296
 
     -- this is probably not perfect but
     -- the seed should be same for all clients most of the time
