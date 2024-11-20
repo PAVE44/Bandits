@@ -1274,13 +1274,19 @@ function BanditUpdate.OnBanditUpdate(zombie)
         -- print (skip)
         BanditUpdate.Zombie(zombie)
     end
-    
+
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
     ------------------------------------------------------------------------------------------------------------------------------------
     if not zombie:getVariableBoolean("Bandit") then return end
     if not brain then return end
-    if not BanditZombie.CacheLightB[id] then return end
+
+    if BanditZombie.CacheLightB[id] then 
+        zombie:setUseless(false)
+    else
+        zombie:setUseless(true)
+        return
+    end
     
     local bandit = zombie
 

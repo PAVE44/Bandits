@@ -26,7 +26,7 @@ BanditZombie.Update = function(numberTicks)
     
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    local skip = 6
+    local skip = 4
     if numberTicks % skip ~= 0 then return end
 
     -- local ts = getTimestampMs()
@@ -38,6 +38,7 @@ BanditZombie.Update = function(numberTicks)
     -- local mr = 40
     local mr = math.ceil(100 - (zombieListSize / 4))
     if mr < 40 then mr = 40 end
+    -- print ("MR: " .. mr)
     local player = getPlayer()
     local px = player:getX()
     local py = player:getY()
@@ -52,44 +53,41 @@ BanditZombie.Update = function(numberTicks)
     for i = 0, zombieListSize - 1 do
         
         local zombie = zombieList:get(i)
+        local id = BanditUtils.GetCharacterID(zombie)
+
+        BanditZombie.Cache[id] = zombie
         
-        --if zombie:isAlive() then
-            local id = BanditUtils.GetCharacterID(zombie)
+        local zx = zombie:getX()
+        local zy = zombie:getY()
+        local zz = zombie:getZ()
+        
+        if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
+            local light = {}
+            light.id = id
+            light.x = zx
+            light.y = zy
+            light.z = zz
+            light.brain = BanditBrain.Get(zombie)
 
-            BanditZombie.Cache[id] = zombie
-            
-            local zx = zombie:getX()
-            local zy = zombie:getY()
-            local zz = zombie:getZ()
-            
-            if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-            -- if zx > px - mr and zx < px + mr and zy > py - mr and zy < py + mr then
-                local light = {}
-                light.id = id
-                light.x = zx
-                light.y = zy
-                light.z = zz
-                light.brain = BanditBrain.Get(zombie)
-
-                if zombie:getVariableBoolean("Bandit")  then
-                    light.isBandit = true
-                    BanditZombie.CacheLightB[id] = light
-                    -- zombies in hitreaction state are not processed by onzombieupdate
-                    -- so we need to make them shut their zombie sound here too
-                    
-                    local asn = zombie:getActionStateName()
-                    if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
-                        zombie:getEmitter():stopSoundByName("MaleZombieCombined")
-                        zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
-                    end
-                else
-                    light.isBandit = false
-                    BanditZombie.CacheLightZ[id] = light
+            if zombie:getVariableBoolean("Bandit")  then
+                light.isBandit = true
+                BanditZombie.CacheLightB[id] = light
+                -- zombies in hitreaction state are not processed by onzombieupdate
+                -- so we need to make them shut their zombie sound here too
+                
+                local asn = zombie:getActionStateName()
+                if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
+                    zombie:getEmitter():stopSoundByName("MaleZombieCombined")
+                    zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
                 end
-
-                BanditZombie.CacheLight[id] = light
+            else
+                light.isBandit = false
+                BanditZombie.CacheLightZ[id] = light
             end
-        --end
+
+            BanditZombie.CacheLight[id] = light
+        end
+
     end
 
     -- print ("BZ:" .. (getTimestampMs() - ts))

@@ -216,6 +216,12 @@ IGUI_RU = {
     IGUI_Bandits_Speech_ZSHit_Male_3_12 = "Aaargh!",
     IGUI_Bandits_Speech_ZSHit_Male_3_13 = "Aaargh!",
     IGUI_Bandits_Speech_ZSHit_Male_3_14 = "Aaargh!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_1 = "Эй, стоп! Бросай все свое дерьмо, и никто не пострадает!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_2 = "Лучше отдайте нам все, что у вас есть! Немедленно!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_3 = "Отдайте нам все, что у вас есть, и мы обещаем, что не причиним вам вреда!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_4 = "Отдай нам все, что у тебя есть, засранец!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_5 = "Стоп! Нам нужно только твое дерьмо, а не ты! Не усложняй нам задачу!",
+    IGUI_Bandits_Speech_ZSThief_Spot_Male_1_6 = "Стой! Брось все на пол!",
     
     IGUI_Bandits_Speech_ZSSpotted_Female_3_1 = "РУКИ ВВЕРХ!",
     IGUI_Bandits_Speech_ZSSpotted_Female_3_2 = "Я вижу его!",
