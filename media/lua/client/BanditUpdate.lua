@@ -88,7 +88,7 @@ local function GetEscapePoint(bandit, radius)
     local segmentEndAngle = segmentStartAngle + segmentSize
     local dir = (segmentStartAngle + segmentEndAngle) * 0.5
 
-    -- Find the space point 10 square away
+    -- Find the space point 25 square away
     local lx = bx + math.floor(25 * math.cos(dir))
     local ly = by + math.floor(25 * math.sin(dir))
     return lx, ly, bz
@@ -477,8 +477,6 @@ end
 -- manages collisions with doors, windows, fences and other objects
 local function ManageCollisions(bandit)
     local tasks = {}
-    local cell = getCell()
-    local weapons = Bandit.GetWeapons(bandit)
 
     local asn = bandit:getActionStateName()
     local sr = bandit:getSquare():getSheetRope()
@@ -501,6 +499,7 @@ local function ManageCollisions(bandit)
         table.insert(sqs, {x=math.floor(bandit:getX()), y=math.floor(bandit:getY()), z=bandit:getZ()})
         table.insert(sqs, {x=math.floor(bandit:getX())+fdx, y=math.floor(bandit:getY())+fdy, z=bandit:getZ()})
 
+        local cell = getCell()
         for _, s in pairs(sqs) do
             local square = cell:getGridSquare(s.x, s.y, s.z)
             if square then
@@ -513,6 +512,7 @@ local function ManageCollisions(bandit)
                     local properties = object:getProperties()
 
                     if properties then
+                        local weapons = Bandit.GetWeapons(bandit)
                         local lowFence = properties:Val("FenceTypeLow")
                         local hoppable = object:isHoppable()
 
@@ -1243,7 +1243,7 @@ end
 -- main function to handle bandits
 local uTick = 0
 local function OnBanditUpdate(zombie)
-    
+
     local ts = getTimestampMs()
     
     if isServer() then return end
@@ -1385,7 +1385,7 @@ local function OnBanditUpdate(zombie)
             for _, t in pairs(avoidanceTasks) do table.insert(tasks, t) end
         end
     end
-
+    
     -- MANAGE MELEE / SHOOTING TASKS
     if #tasks == 0  then
         local combatTasks = ManageCombat(bandit)
@@ -1393,7 +1393,7 @@ local function OnBanditUpdate(zombie)
             for _, t in pairs(combatTasks) do table.insert(tasks, t) end
         end
     end
-    
+
     -- MANAGE COLLISION TASKS
     if #tasks == 0  and uTick % 2 then
         local colissionTasks = ManageCollisions(bandit)
@@ -1401,7 +1401,7 @@ local function OnBanditUpdate(zombie)
             for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
         end
     end
-
+    
     -- CUSTOM PROGRAM 
     if #tasks == 0 and not Bandit.HasTask(bandit) then
         local program = Bandit.GetProgram(bandit)
@@ -1450,7 +1450,11 @@ local function OnBanditUpdate(zombie)
         end
 
         if task.sound then
-            bandit:playSound(task.sound)
+            local emitter = bandit:getEmitter()
+            if not emitter:isPlaying(task.sound) then
+                emitter:playSound(task.sound)
+            end
+            -- bandit:playSound(task.sound)
         end
 
         if task.anim then

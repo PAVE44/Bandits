@@ -93,8 +93,8 @@ function BanditUtils.GetCharacterID (character)
 
     if instanceof(character, "IsoZombie") then
         local id = character:getVariableString("BanditID")
-        if id then
-            return id
+        if id and id ~= "" then
+            return tonumber(id)
         else
             local id
             local dec = character:getPersistentOutfitID()
@@ -107,7 +107,8 @@ function BanditUtils.GetCharacterID (character)
             else
                 id = dec
             end
-            character:setVariable("BanditID", tostring(id ))
+            character:setVariable("BanditID", tostring(id))
+            return id
         end
     end
     

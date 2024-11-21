@@ -18,6 +18,13 @@ Bandit.SoundTab.ROOM_BATHROOM =     {prefix = "ZSRoom_Bathroom_", chance = 40, r
 Bandit.SoundTab.DEFENDER_SPOTTED =  {prefix = "ZSDefender_Spot_", chance = 80, randMax = 4, length = 8}
 Bandit.SoundTab.THIEF_SPOTTED =     {prefix = "ZSThief_Spot_", chance = 80, randMax = 6, length = 12}
 
+Bandit.SoundStopList = Bandit.SoundStopList or {}
+table.insert(Bandit.SoundStopList, "BeginRemoveBarricadePlank")
+table.insert(Bandit.SoundStopList, "BlowTorch")
+table.insert(Bandit.SoundStopList, "GeneratorAddFuel")
+table.insert(Bandit.SoundStopList, "GeneratorRepair")
+table.insert(Bandit.SoundStopList, "GetWaterFromTapMetalBig")
+
 Bandit.VisualDamage = {}
 
 Bandit.VisualDamage.Melee = {"ZedDmg_BACK_Slash", "ZedDmg_BellySlashLeft", "ZedDmg_BellySlashRightv", "ZedDmg_BELLY_Slash", 
@@ -163,16 +170,12 @@ function Bandit.ClearTasks(zombie)
     end
 
     local emitter = zombie:getEmitter()
-    if emitter:isPlaying("BeginRemoveBarricadePlank") then
-        emitter:stopSoundByName("BeginRemoveBarricadePlank")
-    elseif emitter:isPlaying("BlowTorch") then
-        emitter:stopSoundByName("BlowTorch")
-    elseif emitter:isPlaying("GeneratorAddFuel") then
-        emitter:stopSoundByName("GeneratorAddFuel")
-    elseif emitter:isPlaying("GeneratorRepair") then
-        emitter:stopSoundByName("GeneratorRepair")
-    elseif emitter:isPlaying("GetWaterFromTapMetalBig") then
-        emitter:stopSoundByName("GetWaterFromTapMetalBig")
+    local stopList = Bandit.SoundStopList
+
+    for _, stopSound in pairs(stopList) do
+        if emitter:isPlaying(stopSound) then
+            emitter:stopSoundByName(stopSound)
+        end
     end
 end
 

@@ -125,14 +125,14 @@ local PanicHandler = function(player)
     end
 end
 
-local BanditPlayer.ResetBanditKills = function(player)
+local ResetBanditKills = function(player)
     if isServer() then return end
     local args = {}
     args.id = 0
 	sendClientCommand(player, 'Commands', 'ResetBanditKills', args)
 end
 
-local BanditPlayer.UpdateVisitedBuildings = function()
+local UpdateVisitedBuildings = function()
     if isServer() then return end
     local player = getPlayer()
     local building = player:getBuilding()

@@ -82,17 +82,10 @@ function BanditMenu.SetHumanVisuals (player, zombie)
     end
 end
 
-function BanditMenu.VehicleTest (player, square)
-    -- vehicle:tryStartEngine(true)
-    -- vehicle:engineDoStartingSuccess()
-    -- vehicle:engineDoRunning()
-    -- vehicle:setRegulator(true)
-    -- vehicle:setRegulatorSpeed(10)
+function BanditMenu.VehicleTest (player, square, vehicle)
+    -- local driver = BanditUtils.CloneIsoPlayer(player)
 
-    --[[local vx = zombie:getForwardDirection():getX()
-    local vy = zombie:getForwardDirection():getY()
-    local forwardVector = Vector3f.new(vx, vy, 0)
-    zombie:enterVehicle(vehicle, 0, forwardVector)]]
+    BWOVehicles.Register(vehicle)
 
     --[[
     local square = getCell():getGridSquare(player:getX(), player:getY(), player:getZ())
@@ -290,7 +283,15 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         -- context:addOption("[DGB] Regenerate base", player, BanditMenu.RegenerateBase)
         -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
-        -- context:addOption("[DGB] Give me wheels", player, BanditMenu.VehicleTest, square)
+        
+        local vehicle = square:getVehicleContainer()
+        if vehicle then
+            print ("X:" .. vehicle:getAngleX() .. " Y: ".. vehicle:getAngleY() .. " Z: " .. vehicle:getAngleZ())
+            vehicle:setAngles(vehicle:getAngleX(), vehicle:getAngleY() + 3, vehicle:getAngleZ())
+
+            -- y + 1 = turn left
+            context:addOption("[DGB] Drive!", player, BanditMenu.VehicleTest, square, vehicle)
+        end
         -- if generator then
         --    context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
         -- end

@@ -21,7 +21,7 @@ BanditZombie.LastSize = 0
 -- rebuids cache
 local UpdateZombieCache = function(numberTicks)
     if isServer() then return end
-    
+    -- ts = getTimestampMs()
     -- if not numberTicks % 4 == 1 then return end
     
     -- adaptive pefrormance
@@ -87,7 +87,7 @@ local UpdateZombieCache = function(numberTicks)
                 cacheLightZ[id] = light
             end
 
-            acheLight[id] = light
+            cacheLight[id] = light
         end
 
     end
