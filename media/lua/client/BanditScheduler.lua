@@ -694,6 +694,14 @@ function BanditScheduler.GetDensityScore(player, r)
     
 
     
+
+    local getZoneAt = getWorld():getMetaGrid():getZoneAt()
+
+    local r2 = r * r
+    
+    local zone, zoneType
+
+    
     local function isInCircle(x, y, cx, cy)
         local x2 = x - cx
         x2 = x2 * x2
@@ -702,15 +710,8 @@ function BanditScheduler.GetDensityScore(player, r)
         local d2 = x2 + y2
         return d2 <= r2
     end
-    
 
-    local getZoneAt = getWorld():getMetaGrid():getZoneAt()
-
-    local r2 = r * r
-    
-    local zone, zoneType
-
-
+	
     -- todo use numBuildings for additional scoring
     -- local numBuildings = BanditUtils.GetNumNearbyBuildings()
 
