@@ -566,8 +566,16 @@ function BanditUtils.ReplaceDrainable(item)
 end
 
 function BanditUtils.DistTo(x1, y1, x2, y2)
+    -- This should be faster but it's not called as much now.
+	-- I've inlined this inside this file in all distance checks, and sqrt() isn't used in those, so it will be even faster
+    local x = x1 - x2
+    x = x * x
+    local y = y1 - y2
+    y = y * y
+    return math.sqrt(x + y)
+
     -- this is the fastest
-    return math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
+--    return math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
 
     -- return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
     -- return IsoUtils.DistanceTo(x1, y1, x2, y2)
@@ -583,18 +591,14 @@ function BanditUtils.Choice(arr)
 end
 
 function BanditUtils.CoinFlip()
-    if ZombRand(2) == 1 then 
-        return true 
-    else 
-        return false 
-    end
+    return ZombRand(2) == 1
 end
 
 -- deterministic rand for all clients
 function BanditUtils.BanditRand(n)
     local a = 1664525
     local c = 1013904223
-    local m = 2^32
+    local m = 4,294,967,296
 
     -- this is probably not perfect but
     -- the seed should be same for all clients most of the time
