@@ -1,7 +1,7 @@
 BanditPatches = BanditPatches or {}
 
 BanditPatches.DynamicTraits = function()
-    if getActivatedMods():contains("Dynamic Traits") then
+    if getActivatedMods():contains("DynamicTraits") then
         DTOnWeaponHitCharacterMain = function (player, target, weapon, damage)
 
             -- the "player" does not have to be a player if zombie is hitting a zombie
