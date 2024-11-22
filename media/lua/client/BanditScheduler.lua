@@ -682,6 +682,7 @@ function BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max
     return ret
 end
 
+
 function BanditScheduler.GetDensityScore(player, r)
     local score = 0
     local px = player:getX()
@@ -701,25 +702,31 @@ function BanditScheduler.GetDensityScore(player, r)
     zoneScore.LootZone = 3
     zoneScore.ZoneStory = 2
 
-    local function isInCircle(x, y, cx, cy, r)
-        local d2 = (x - cx) ^ 2 + (y - cy) ^ 2
-        return d2 <= r ^ 2
-    end
+    local getZoneAt = getWorld():getMetaGrid():getZoneAt()
 
-    local function calculateDistance(x1, y1, x2, y2)
-        return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+    local r2 = r * r
+    
+    local zone, zoneType
+   
+    local function isInCircle(x, y, cx, cy)
+        local x2 = x - cx
+        x2 = x2 * x2
+        local y2 = y - cy
+        y2 = y2 * y2
+        local d2 = x2 + y2
+        return d2 <= r2
     end
-
+	
     -- todo use numBuildings for additional scoring
     -- local numBuildings = BanditUtils.GetNumNearbyBuildings()
 
     -- about 1250 iterations
-    for x=px-r, px+r, 5 do
-        for y=py-r, py+r, 5 do
-            if isInCircle(x, y, px, py, r) then
-                local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
+    for x = px-r, px+r, 5 do
+        for y = py-r, py+r, 5 do
+            if isInCircle(x, y, px, py) then
+                zone = getZoneAt(x, y, 0)
                 if zone then
-                    local zoneType = zone:getType()
+                    zoneType = zone:getType()
                     if zoneScore[zoneType] then
                         score = score + zoneScore[zoneType]
                     end
@@ -727,7 +734,8 @@ function BanditScheduler.GetDensityScore(player, r)
             end
         end
     end
-    return 1 + (score / 10000)
+
+    return 1 + (score * .0001)
 end
 
 function BanditScheduler.GetSpawnZoneBoost(player, clanId)
