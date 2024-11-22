@@ -316,7 +316,8 @@ function BanditScheduler.SpawnWave(player, wave)
             end
 
             -- road block spawn
-            if event.hostile and spawnPoint.groundType == "street" and ZombRand(4) == 1 then
+            local vehicleCount = player:getCell():getVehicles():size()
+            if event.hostile and spawnPoint.groundType == "street" and vehicleCount < 7 then
 
                 -- check space
                 local allfree = true
@@ -383,20 +384,18 @@ function BanditScheduler.SpawnWave(player, wave)
             if SandboxVars.Bandits.General_ArrivalIcon then
                 local color
                 local icon
-                if event.hostile then
-                    if event.program.name == "Bandit" then
-                        icon = "media/ui/raid.png"
-                        color = {r=1, g=0.5, b=0.5} -- red
-                    elseif event.program.name == "Thief" then
-                        icon = "media/ui/thief.png"
-                        color = {r=1, g=1, b=0.5} -- yellow
-                    else 
-                        icon = "media/ui/loot.png"
-                        color = {r=1, g=0.5, b=0} -- orange
-                    end
-                else
+                if event.program.name == "Bandit" then
+                    icon = "media/ui/raid.png"
+                    color = {r=1, g=0.5, b=0.5} -- red
+                elseif event.program.name == "Thief" then
+                    icon = "media/ui/thief.png"
+                    color = {r=1, g=1, b=0.5} -- yellow
+                elseif event.program.name == "Companion" then
                     icon = "media/ui/friend.png"
                     color = {r=0.5, g=1, b=0.5} -- green
+                else 
+                    icon = "media/ui/loot.png"
+                    color = {r=1, g=0.5, b=0} -- orange
                 end
 
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
@@ -419,11 +418,14 @@ function BanditScheduler.RaiseDefences(x, y)
             local y = buildingDef:getY()
             local w = buildingDef:getX2() - buildingDef:getX()
             local h = buildingDef:getY2() - buildingDef:getY()
+
             BanditBaseGroupPlacements.Junk(x, y, 0, w, h, 3)
-            BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 2)
-            BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 2)
-            BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
-            BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
+            if ZombRand(5) == 0 then    
+                BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
+                BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
+            end
 
             local genSquare = cell:getGridSquare(buildingDef:getX()-1, buildingDef:getY()-1, 0)
             if genSquare then
@@ -444,6 +446,8 @@ function BanditScheduler.RaiseDefences(x, y)
                 end
             end
 
+            local maxc = 5
+            local c = 0
             for z = 0, 7 do
                 for y = buildingDef:getY()-1, buildingDef:getY2()+1 do
                     for x = buildingDef:getX()-1, buildingDef:getX2()+1 do
@@ -481,25 +485,31 @@ function BanditScheduler.RaiseDefences(x, y)
 
                                     local lootAmount = SandboxVars.Bandits.General_DefenderLootAmount - 1
                                     local roomCnt = building:getRoomsNumber()
-                                    if lootAmount > 0 and roomCnt > 2 then
+                                    if lootAmount > 0 and roomCnt > 2 and c < maxc then
                                         local fridge = object:getContainerByType("fridge")
                                         if fridge then
                                             BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, lootAmount)
+                                            c = c + 1
                                         end
 
                                         local freezer = object:getContainerByType("freezer")
                                         if freezer then
                                             BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, lootAmount)
+                                            c = c + 1
                                         end
 
-                                        local counter = object:getContainerByType("counter")
-                                        if counter then
-                                            BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, lootAmount)
-                                        end
+                                        if ZombRand(10) == 1 then
+                                            local counter = object:getContainerByType("counter")
+                                            if counter then
+                                                BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, lootAmount)
+                                                c = c + 1
+                                            end
 
-                                        local crate = object:getContainerByType("crate")
-                                        if crate then
-                                            BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, lootAmount)
+                                            local crate = object:getContainerByType("crate")
+                                            if crate then
+                                                BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, lootAmount)
+                                                c = c + 1
+                                            end
                                         end
                                     end
                                 end
@@ -677,7 +687,6 @@ function BanditScheduler.GetDensityScore(player, r)
     local px = player:getX()
     local py = player:getY()
 
-    
     local zoneScore = {}
     zoneScore.Forest = -3.2
     zoneScore.DeepForest = -4.2
@@ -691,37 +700,26 @@ function BanditScheduler.GetDensityScore(player, r)
     zoneScore.FarmLand = 2
     zoneScore.LootZone = 3
     zoneScore.ZoneStory = 2
-    
 
-    
-
-    local getZoneAt = getWorld():getMetaGrid():getZoneAt()
-
-    local r2 = r * r
-    
-    local zone, zoneType
-
-    
-    local function isInCircle(x, y, cx, cy)
-        local x2 = x - cx
-        x2 = x2 * x2
-        local y2 = y - cy
-        y2 = y2 * y2
-        local d2 = x2 + y2
-        return d2 <= r2
+    local function isInCircle(x, y, cx, cy, r)
+        local d2 = (x - cx) ^ 2 + (y - cy) ^ 2
+        return d2 <= r ^ 2
     end
 
-	
+    local function calculateDistance(x1, y1, x2, y2)
+        return math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+    end
+
     -- todo use numBuildings for additional scoring
     -- local numBuildings = BanditUtils.GetNumNearbyBuildings()
 
     -- about 1250 iterations
-    for x = px-r, px+r, 5 do
-        for y = py-r, py+r, 5 do
-            if isInCircle(x, y, px, py) then
-                zone = getZoneAt(x, y, 0)
+    for x=px-r, px+r, 5 do
+        for y=py-r, py+r, 5 do
+            if isInCircle(x, y, px, py, r) then
+                local zone = getWorld():getMetaGrid():getZoneAt(x, y, 0)
                 if zone then
-                    zoneType = zone:getType()
+                    local zoneType = zone:getType()
                     if zoneScore[zoneType] then
                         score = score + zoneScore[zoneType]
                     end
@@ -729,8 +727,7 @@ function BanditScheduler.GetDensityScore(player, r)
             end
         end
     end
-
-    return 1 + (score * .0001)
+    return 1 + (score / 10000)
 end
 
 function BanditScheduler.GetSpawnZoneBoost(player, clanId)
