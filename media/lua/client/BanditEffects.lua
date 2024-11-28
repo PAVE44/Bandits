@@ -44,8 +44,8 @@ BanditEffects.Process = function()
 
                 effect.object = dummy
 
-                if effect.name == "mist" then
-                    effect.object:setCustomColor(0.6, 0.6, 0.6, 0)
+                if effect.r and effect.g and effect.g then
+                    effect.object:setCustomColor(effect.r, effect.g, effect.b, 0)
                 end
 
             end

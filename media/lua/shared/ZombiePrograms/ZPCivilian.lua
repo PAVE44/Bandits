@@ -97,8 +97,8 @@ ZombiePrograms.Civilian.Follow = function(bandit)
         local dx = master:getX() - lx
         local dy = master:getY() - ly
         local dz = master:getZ()
-        local dxf = ((id % 10) - 5) / 10
-        local dyf = ((id % 11) - 5) / 10
+        local dxf = ((math.abs(id) % 10) - 5) / 10
+        local dyf = ((math.abs(id) % 11) - 5) / 10
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist))
     end
 

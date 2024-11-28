@@ -92,24 +92,24 @@ function BanditUtils.GetCharacterID (character)
     end
 
     if instanceof(character, "IsoZombie") then
-        local id = character:getVariableString("BanditID")
-        if id and id ~= "" then
-            return tonumber(id)
-        else
-            local id
-            local dec = character:getPersistentOutfitID()
+        -- local id = character:getVariableString("BanditID")
+        -- if false and id and id ~= "" then
+        --     return tonumber(id)
+        -- else
+        local id
+        local dec = character:getPersistentOutfitID()
 
-            local bits = toBits(dec)
-            local hat = bits[16]
-            if hat == 1 then
-                bits[16] = 0
-                id = toDec(bits)
-            else
-                id = dec
-            end
-            character:setVariable("BanditID", tostring(id))
-            return id
+        local bits = toBits(dec)
+        local hat = bits[16]
+        if hat == "1" then
+            bits[16] = "0"
+            id = toDec(bits)
+        else
+            id = dec
         end
+            -- character:setVariable("BanditID", tostring(id))
+        return id
+        -- end
     end
     
     if instanceof(character, "IsoPlayer") then

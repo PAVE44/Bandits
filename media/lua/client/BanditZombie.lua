@@ -37,7 +37,7 @@ local UpdateZombieCache = function(numberTicks)
     -- limit zombie map to player surrondings, helps performance
     -- local mr = 40
     local mr = math.ceil(100 - (zombieListSize / 4))
-    if mr < 40 then mr = 40 end
+    if mr < 60 then mr = 60 end
     -- print ("MR: " .. mr)
     local player = getPlayer()
     local px = player:getX()

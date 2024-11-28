@@ -238,8 +238,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
 
             local dx = 0
             local dy = 0
-            local dxf = ((id % 10) - 5) / 10
-            local dyf = ((id % 11) - 5) / 10
+            local dxf = ((math.abs(id) % 10) - 5) / 10
+            local dyf = ((math.abs(id) % 11) - 5) / 10
 
 
             table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist, closeSlow))

@@ -441,12 +441,12 @@ local function ManageHealth(bandit)
 
                 local id = BanditUtils.GetCharacterID(bandit)
 
-                if bandit:getHealth() < 0.4 and id % 3 == 1 then
+                if bandit:getHealth() < 0.4 and math.abs(id) % 3 == 1 then
                     Bandit.ClearTasks(bandit)
                     healing = true
                 end
 
-                if bandit:getHealth() < 0.3 and id % 2 == 1 then
+                if bandit:getHealth() < 0.3 and math.abs(id) % 2 == 1 then
                     Bandit.ClearTasks(bandit)
                     healing = true
                 end
@@ -465,7 +465,7 @@ local function ManageHealth(bandit)
             -- print ("INFECTION: " .. brain.infection)
             local delta = 0.001
             Bandit.UpdateInfection(bandit, delta)
-            if brain.infection > 100 then
+            if brain.infection >= 100 then
                 local task = {action="Zombify", anim="Faint", lock=true, time=200}
                 table.insert(tasks, task)
             end
@@ -1450,9 +1450,20 @@ local function OnBanditUpdate(zombie)
         end
 
         if task.sound then
-            local emitter = bandit:getEmitter()
-            if not emitter:isPlaying(task.sound) then
-                emitter:playSound(task.sound)
+            local play = true
+            if task.soundDistMax then
+                local player = getPlayer()
+                local dist = BanditUtils.DistTo(zx, zy, player:getX(), player:getY())
+                if dist > task.soundDistMax then
+                    play = false
+                end
+            end
+
+            if play then
+                local emitter = bandit:getEmitter()
+                if not emitter:isPlaying(task.sound) then
+                    emitter:playSound(task.sound)
+                end
             end
             -- bandit:playSound(task.sound)
         end

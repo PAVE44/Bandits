@@ -23,7 +23,7 @@ local function GetBodyParts()
 end
 
 local function Heal(zombie)
-    local bpi = 1 + BanditUtils.GetCharacterID(zombie) % 17
+    local bpi = 1 + math.abs(BanditUtils.GetCharacterID(zombie)) % 17
     local bodyParts = GetBodyParts()
     local bodyPart = bodyParts[bpi]
 
