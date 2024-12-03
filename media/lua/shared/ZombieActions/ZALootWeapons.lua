@@ -2,7 +2,7 @@ ZombieActions = ZombieActions or {}
 
 local function predicateAll(item)
     -- item:getType()
-	return true
+    return true
 end
 
 local function lootContainer(zombie, container, task)

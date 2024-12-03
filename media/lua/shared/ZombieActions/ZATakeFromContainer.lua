@@ -45,6 +45,13 @@ ZombieActions.TakeFromContainer.onComplete = function(zombie, task)
                         if BanditUtils.IsController(zombie) then
                             container:removeItemOnServer(item)
                         end
+
+                        if not isClient() then
+                            if container:getParent() and container:getParent():getOverlaySprite() then
+                                ItemPicker.updateOverlaySprite(container:getParent())
+                            end
+                        end
+                        
                         item = BanditUtils.ReplaceDrainable(item)
                         inventory:AddItem(item)
                         Bandit.UpdateItemsToSpawnAtDeath(zombie)

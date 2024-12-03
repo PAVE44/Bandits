@@ -153,7 +153,7 @@ table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol", "
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol2", "Base.45Clip", 7, "M1911Shoot", 47))
 table.insert(BanditWeapons.Secondary, BanditWeapons.MakeHandgun("Base.Pistol3", "Base.44Clip", 8, "DesertEagleShoot", 45))
 
-if getActivatedMods():contains("Brita") then
+if getActivatedMods():contains("Brita") and getActivatedMods():contains("Arsenal(26)GunFighter[MAIN MOD 2.0]") then
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK103", "Base.AKClip", 30, "[1]Shot_762x39", 5))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK12", "Base.545StdClip", 30, "[1]Shot_545", 4))
     table.insert(BanditWeapons.Primary, BanditWeapons.MakeHandgun("Base.AK308", "Base.308ExtClip", 20, "[1]Shot_308", 10))

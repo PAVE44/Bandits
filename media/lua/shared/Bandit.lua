@@ -576,6 +576,7 @@ end
 
 function Bandit.Say(zombie, phrase, force)
     local brain = BanditBrain.Get(zombie)
+    if not brain then return end
     
     if not force and brain.speech and brain.speech > 0 then return end
     if force then zombie:getEmitter():stopAll() end

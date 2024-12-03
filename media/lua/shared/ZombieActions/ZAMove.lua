@@ -71,6 +71,7 @@ ZombieActions.Move.onStart = function(zombie, task)
         end
         
         zombie:getPathFindBehavior2():cancel()
+        -- zombie:getPathFindBehavior2():reset()
         zombie:setPath2(nil)
         -- zombie:setWalkType(task.walkType)
         
@@ -114,6 +115,7 @@ end
 ZombieActions.Move.onComplete = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         zombie:getPathFindBehavior2():cancel()
+        zombie:getPathFindBehavior2():reset()
     end
     return true
 end

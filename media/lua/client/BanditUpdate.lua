@@ -96,6 +96,16 @@ end
 
 -- hostilizes friendlies that witnessed player attacking a friendly
 local function CheckFriendlyFire(bandit, attacker)
+
+    if not attacker then return end
+
+    -- attacking zombies is ok!
+    if not bandit:getVariableBoolean("Bandit") then return end
+
+    -- hostility against civilians (clan=0) is handled by other mods
+    local brain = BanditBrain.Get(bandit)
+    if brain.clan == 0 then return end
+
     if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and attacker:getDisplayName() == getPlayer():getDisplayName() then
            
         -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile

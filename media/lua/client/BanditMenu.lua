@@ -284,14 +284,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
         -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
         
-        local vehicle = square:getVehicleContainer()
-        if vehicle then
-            print ("X:" .. vehicle:getAngleX() .. " Y: ".. vehicle:getAngleY() .. " Z: " .. vehicle:getAngleZ())
-            vehicle:setAngles(vehicle:getAngleX(), vehicle:getAngleY() + 3, vehicle:getAngleZ())
-
-            -- y + 1 = turn left
-            context:addOption("[DGB] Drive!", player, BanditMenu.VehicleTest, square, vehicle)
-        end
         -- if generator then
         --    context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
         -- end

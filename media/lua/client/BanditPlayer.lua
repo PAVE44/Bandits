@@ -60,6 +60,7 @@ BanditPlayer.WakeEveryone = function()
         local player = playerList:get(i)
         if player then
             player:forceAwake()
+            -- setGameSpeed(1)
         end
     end
 end
