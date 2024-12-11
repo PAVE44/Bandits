@@ -1551,47 +1551,50 @@ end
 
 local function OnZombieDead(zombie)
 
-    if zombie:getVariableBoolean("Bandit") then
+    if not bandit:getVariableBoolean("Bandit") then return end
+        
+    local bandit = zombie
 
-        local bandit = zombie
+    -- hostility against civilians (clan=0) is handled by other mods
+    local brain = BanditBrain.Get(bandit)
+    if brain.clan == 0 then return end
 
-        Bandit.Say(bandit, "DEAD", true)
+    Bandit.Say(bandit, "DEAD", true)
 
-        local attacker = bandit:getAttackedBy()
-        CheckFriendlyFire(bandit, attacker)
+    local attacker = bandit:getAttackedBy()
+    CheckFriendlyFire(bandit, attacker)
 
-        local player = getPlayer()
-        local killer = bandit:getAttackedBy()
-        if killer then
-            if killer == player then
-                local args = {}
-                args.id = 0
-                sendClientCommand(player, 'Commands', 'IncrementBanditKills', args)
-                player:setZombieKills(player:getZombieKills() - 1)
-            end
+    local player = getPlayer()
+    local killer = bandit:getAttackedBy()
+    if killer then
+        if killer == player then
+            local args = {}
+            args.id = 0
+            sendClientCommand(player, 'Commands', 'IncrementBanditKills', args)
+            player:setZombieKills(player:getZombieKills() - 1)
         end
-
-        local id = BanditUtils.GetCharacterID(bandit)
-        local brain = BanditBrain.Get(bandit)
-
-        bandit:setUseless(false)
-        bandit:setReanim(false)
-        bandit:setVariable("Bandit", false)
-        bandit:setPrimaryHandItem(nil)
-        bandit:clearAttachedItems()
-        bandit:resetEquippedHandsModels()
-        -- bandit:getInventory():clear()
-
-        local veh = bandit:getVehicle()
-        if veh then
-            veh:exit(bandit)
-        end
-
-        args = {}
-        args.id = id
-        sendClientCommand(player, 'Commands', 'BanditRemove', args)
-        BanditBrain.Remove(bandit)
     end
+
+    local id = BanditUtils.GetCharacterID(bandit)
+    local brain = BanditBrain.Get(bandit)
+
+    bandit:setUseless(false)
+    bandit:setReanim(false)
+    bandit:setVariable("Bandit", false)
+    bandit:setPrimaryHandItem(nil)
+    bandit:clearAttachedItems()
+    bandit:resetEquippedHandsModels()
+    -- bandit:getInventory():clear()
+
+    local veh = bandit:getVehicle()
+    if veh then
+        veh:exit(bandit)
+    end
+
+    args = {}
+    args.id = id
+    sendClientCommand(player, 'Commands', 'BanditRemove', args)
+    BanditBrain.Remove(bandit)
 end
 
 Events.OnZombieUpdate.Add(OnBanditUpdate)
