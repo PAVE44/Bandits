@@ -106,7 +106,7 @@ local function CheckFriendlyFire(bandit, attacker)
     local brain = BanditBrain.Get(bandit)
     if brain.clan == 0 then return end
 
-    if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and attacker:getDisplayName() == getPlayer():getDisplayName() then
+    if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and not attacker:isNPC() then
            
         -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
         local witnesses = BanditZombie.GetAllB()
@@ -1551,7 +1551,7 @@ end
 
 local function OnZombieDead(zombie)
 
-    if not bandit:getVariableBoolean("Bandit") then return end
+    if not zombie:getVariableBoolean("Bandit") then return end
         
     local bandit = zombie
 

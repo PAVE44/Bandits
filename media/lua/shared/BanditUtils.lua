@@ -373,6 +373,8 @@ function BanditUtils.CloneIsoPlayer(originalCharacter)
     tempPlayer:setGodMod(true)    -- Ensure the temp player cannot die
     tempPlayer:setPrimaryHandItem(originalCharacter:getPrimaryHandItem())
     tempPlayer:setSecondaryHandItem(originalCharacter:getSecondaryHandItem())
+    tempPlayer:setSceneCulled(false)
+    tempPlayer:setNPC(true)
 
     -- You can copy more properties as needed, depending on what you need for the Hit function
 
