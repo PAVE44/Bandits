@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>DoorBang</m_Name>
+	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_AnimName>Bob_IdleChopDownTree</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_BlendTime>0.20</m_BlendTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>ThumpType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>DoorBang</m_StringValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>ThumpFrame</m_EventName>
+		<m_TimePc>0.85</m_TimePc>
+		<m_ParameterValue></m_ParameterValue>
+	</m_Events>
+</animNode>

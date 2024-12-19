@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSdefaultStaggerBack.xml">
+	<m_Name>ZSsmall</m_Name>
+	<m_AnimName>Bob_HitReact2H_01</m_AnimName>
+	<m_BlendOutTime>0.40</m_BlendOutTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Type>LESS</m_Type>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>bKnockedDown</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>false</m_BoolValue>
+	</m_Conditions>
+</animNode>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSdefaultStaggerBack.xml">
+	<m_Name>ZSstaggerAndFall</m_Name>
+	<m_AnimName>Bob_StumbleBackFall</m_AnimName>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_FloatValue>0</m_FloatValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>bKnockedDown</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Events />
+	<m_Events>
+		<m_EventName>PlaySound</m_EventName>
+		<m_TimePc>0.33</m_TimePc>
+		<m_ParameterValue>BodyHitGround</m_ParameterValue>
+	</m_Events>
+	<m_Events>
+		<m_EventName>FallOnFront</m_EventName>
+		<m_Time>Start</m_Time>
+		<m_ParameterValue>false</m_ParameterValue>
+	</m_Events>
+</animNode>

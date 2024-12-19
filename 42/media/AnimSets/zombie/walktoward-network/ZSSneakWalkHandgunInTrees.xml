@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="slow.xml">
+	<m_Name>ZSSneakWalkHandgunTrees</m_Name>
+	<m_AnimName>Bob_WalkTrees_Handgun</m_AnimName>
+	<m_Conditions>
+		<m_Name>zombieWalkType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>SneakWalk</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditPrimaryType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>handgun</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>intrees</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>Footstep</m_EventName>
+		<m_TimePc>0.15</m_TimePc>
+		<m_ParameterValue>walk</m_ParameterValue>
+	</m_Events>
+	<m_Events>
+		<m_EventName>Footstep</m_EventName>
+		<m_TimePc>0.6</m_TimePc>
+		<m_ParameterValue>walk</m_ParameterValue>
+	</m_Events>
+</animNode>

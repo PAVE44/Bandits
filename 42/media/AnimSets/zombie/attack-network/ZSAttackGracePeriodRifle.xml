@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>gracePeriod</m_Name>
+	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_AnimName>Bob_IdleRifle</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_BlendTime>0.20</m_BlendTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditPrimaryType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>rifle</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>targetSeenTime</m_Name>
+		<m_Type>LESS</m_Type>
+		<m_FloatValue>0.5</m_FloatValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>AttackType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>bite</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>bHasTarget</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>AttackOutcome</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>start</m_StringValue>
+	</m_Conditions>
+</animNode>

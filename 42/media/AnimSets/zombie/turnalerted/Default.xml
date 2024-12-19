@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>Default</m_Name>
+	<m_AnimName>Bob_IdleRifle</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_SpeedScale>30.23</m_SpeedScale>
+	<m_BlendTime>0.35</m_BlendTime>
+	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
+	<m_Looped>false</m_Looped>
+	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
+	<m_StopAnimOnExit>true</m_StopAnimOnExit>
+	<m_useDeferedRotation>true</m_useDeferedRotation>
+	<m_SpeedScale>1.04</m_SpeedScale>
+	<m_BlendOutTime>0.20</m_BlendOutTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+</animNode>

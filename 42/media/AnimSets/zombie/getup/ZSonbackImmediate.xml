@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSonback.xml">
+	<m_Name>ZSonbackImmediate</m_Name>
+	<m_SpeedScale>31.12</m_SpeedScale>
+	<m_Conditions />
+	<m_Conditions />
+	<m_Conditions />
+	<m_Conditions>
+		<m_Name>BanditImmediateAnim</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>SetVariable</m_EventName>
+		<m_Time>End</m_Time>
+		<m_ParameterValue>BanditImmediateAnim=false</m_ParameterValue>
+	</m_Events>
+</animNode>

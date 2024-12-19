@@ -347,7 +347,9 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     -- Move and GoTo generally do the same thing with a different method
     -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
     -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
-
+    if dist < 0.5 then
+        print ("SMALL DIST")
+    end
     local gamemode = getWorld():getGameMode()
     local task
     if gamemode == "Multiplayer" then
