@@ -125,11 +125,18 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
 
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
+    local weaponItem = instanceItem(weapon.name)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local firingtime = weapon.shotDelay + math.floor(dist ^ 1.1)
     if Bandit.IsDNA(bandit, "slow") then
         firingtime = firingtime + 3
+    end
+
+    local bullets = 1
+    local mode = weaponItem:getFireMode()
+    if dist < 6 and mode == "Auto" then
+        bullets = 2 + ZombRand(4)
     end
 
     local anim
@@ -151,6 +158,10 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
 
     local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
     table.insert(tasks, task)
+    for i=2, bullets do
+        local task = {action="Shoot", anim=anim, time=4, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+        table.insert(tasks, task)
+    end
 
     return tasks
 end

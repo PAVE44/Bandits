@@ -29,18 +29,8 @@ BanditClan.NewOrder.hairStyles = {"Bald", "Fresh", "Demi", "FlatTop", "MohawkSho
 
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}
-if getActivatedMods():contains("KATTAJ1_Military") then
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Patriot")
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Defender")
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Vanguard")
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Patriot")
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Defender")
-    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Vanguard")
-else
-    table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
-    table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
-    -- table.insert(BanditClan.NewOrder.Outfits, "Ghillie")
-end
+table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
+table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
 
 -- available melee weapons
 BanditClan.NewOrder.Melee = BanditClan.NewOrder.Melee or {}
@@ -60,7 +50,6 @@ table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.HandTorch", 100
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 99))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
@@ -75,7 +64,7 @@ table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Toothbrush", 33
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Gum", 14))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))

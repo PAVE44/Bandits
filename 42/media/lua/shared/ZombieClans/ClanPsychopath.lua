@@ -29,18 +29,11 @@ BanditClan.Psychopath.Outfits = BanditClan.Psychopath.Outfits or {}
 table.insert(BanditClan.Psychopath.Outfits, "Naked")
 table.insert(BanditClan.Psychopath.Outfits, "HockeyPsycho")
 table.insert(BanditClan.Psychopath.Outfits, "HospitalPatient")
-table.insert(BanditClan.Psychopath.Outfits, "Trader")
 table.insert(BanditClan.Psychopath.Outfits, "TinFoilHat")
-
-if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticJasonPart3")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat01")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat02")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat03")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticGhostFace")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticPolitician")
-    table.insert(BanditClan.Psychopath.Outfits, "AuthenticShortgunFace")
-end
+table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_RoadRash")
+table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_Spikey")
+table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_TrashPack")
+table.insert(BanditClan.Psychopath.Outfits, "ExterminatorSuited")
 
 -- available melee weapons
 BanditClan.Psychopath.Melee = BanditClan.Psychopath.Melee or {}
@@ -51,7 +44,10 @@ table.insert(BanditClan.Psychopath.Melee, "Base.Plank_Nails")
 table.insert(BanditClan.Psychopath.Melee, "Base.PickAxe")
 table.insert(BanditClan.Psychopath.Melee, "Base.MetalBar")
 table.insert(BanditClan.Psychopath.Melee, "Base.LeadPipe")
-table.insert(BanditClan.Psychopath.Melee, "Base.Scalpel")
+table.insert(BanditClan.Psychopath.Melee, "Base.BucketMace_Metal")
+table.insert(BanditClan.Psychopath.Melee, "Base.LongSpikedClub")
+table.insert(BanditClan.Psychopath.Melee, "Base.LongMace")
+table.insert(BanditClan.Psychopath.Melee, "Base.Mace")
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Psychopath.Melee, "AuthenticZClothing.Chainsaw")
@@ -65,7 +61,7 @@ BanditClan.Psychopath.Secondary = BanditClan.Psychopath.Secondary or BanditWeapo
 
 -- loot table
 BanditClan.Psychopath.Loot = BanditClan.Psychopath.Loot or {}
-table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 30))
+table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.WaterBottle", 30))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Pills", 99))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Pills", 33))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.PillsAntiDep", 77))

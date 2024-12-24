@@ -27,10 +27,7 @@ BanditClan.Biker.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 -- available outfits
 BanditClan.Biker.Outfits = BanditClan.Biker.Outfits or {}
 table.insert(BanditClan.Biker.Outfits, "Biker")
-
-if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Biker.Outfits, "AuthenticBiker")
-end
+table.insert(BanditClan.Biker.Outfits, "Goth")
 
 -- available melee weapons
 BanditClan.Biker.Melee = BanditClan.Biker.Melee or {}
@@ -57,9 +54,9 @@ table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 3
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Disinfectant", 55))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Pills", 12))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Spoon", 40))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 77))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 24))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Whiskey", 77))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Whiskey", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))

@@ -9,7 +9,7 @@ BanditClan.Prepper.id = 7
 BanditClan.Prepper.name = "Prepper"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.Prepper.femaleChance = 0
+BanditClan.Prepper.femaleChance = 20
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.Prepper.health = 4
@@ -27,6 +27,8 @@ BanditClan.Prepper.avoidZones = {"TownZone", "Nav"}
 -- available outfits
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}
 table.insert(BanditClan.Prepper.Outfits, "Survivalist03")
+table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Mid")
+table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Late")
 
 if getActivatedMods():contains("HNDLBR_Preppers") then
     table.insert(BanditClan.Prepper.Outfits, "HNDLBR_Prepper")
@@ -59,7 +61,6 @@ table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("camping.CampfireKit",
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Matches", 99))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.CampingTentKit", 88))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HuntingKnife", 80))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 23))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Disinfectant", 55))
@@ -116,8 +117,8 @@ if getActivatedMods():contains("FarmingTime") then
     table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("filcher.Cauliflower", 4))
 end
 
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 22))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Whiskey", 22))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 7))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Chocolate", 5))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.PeanutButter", 4))

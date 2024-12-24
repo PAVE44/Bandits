@@ -9,7 +9,7 @@ BanditClan.DoomRider.id = 13
 BanditClan.DoomRider.name = "Doomrider"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.DoomRider.femaleChance = 0
+BanditClan.DoomRider.femaleChance = 10
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.DoomRider.health = 5
@@ -27,12 +27,9 @@ BanditClan.DoomRider.avoidZones = {"Forest", "DeepForest"}
 -- available outfits
 BanditClan.DoomRider.Outfits = BanditClan.DoomRider.Outfits or {}
 table.insert(BanditClan.DoomRider.Outfits, "Bandit")
-table.insert(BanditClan.DoomRider.Outfits, "Survivalist")
-
-if getActivatedMods():contains("Brita_2") then
-    table.insert(BanditClan.DoomRider.Outfits, "Brita_Bandit")
-    table.insert(BanditClan.DoomRider.Outfits, "Brita_Bandit_2")
-end
+table.insert(BanditClan.DoomRider.Outfits, "Bandit_Early")
+table.insert(BanditClan.DoomRider.Outfits, "Bandit_Mid")
+table.insert(BanditClan.DoomRider.Outfits, "Bandit_Late")
 
 -- available melee weapons
 BanditClan.DoomRider.Melee = BanditClan.DoomRider.Melee or {}
@@ -40,6 +37,7 @@ table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Nails")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_RailSpike")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Sawblade")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Spiked")
+table.insert(BanditClan.DoomRider.Melee, "Base.LongMace")
 table.insert(BanditClan.DoomRider.Melee, "Base.Katana")
 table.insert(BanditClan.DoomRider.Melee, "Base.Machete")
 table.insert(BanditClan.DoomRider.Melee, "Base.HandAxe")
@@ -57,7 +55,6 @@ BanditClan.DoomRider.Loot = BanditClan.DoomRider.Loot or {}
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.HandTorch", 100))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 99))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Disinfectant", 99))
@@ -70,7 +67,7 @@ table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Toothbrush", 3
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.Gum", 14))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))
 table.insert(BanditClan.DoomRider.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))

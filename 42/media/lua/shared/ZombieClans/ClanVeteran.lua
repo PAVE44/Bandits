@@ -27,6 +27,9 @@ BanditClan.Veteran.avoidZones = {}
 -- available outfits
 BanditClan.Veteran.Outfits = BanditClan.Veteran.Outfits or {}
 table.insert(BanditClan.Veteran.Outfits, "Veteran")
+table.insert(BanditClan.Veteran.Outfits, "CostumeBloodFirst")
+table.insert(BanditClan.Veteran.Outfits, "ArmyInstructor")
+
 
 -- available melee weapons
 BanditClan.Veteran.Melee = BanditClan.Veteran.Melee or {}
@@ -45,7 +48,6 @@ BanditClan.Veteran.Loot = BanditClan.Veteran.Loot or {}
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.HandTorch", 100))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Necklace_DogTag", 100))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 66))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Lighter", 99))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
@@ -59,8 +61,8 @@ table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33)
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Soap", 66))
-table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 44))
+table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Whiskey", 44))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 12))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.BeefJerky", 18))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.TinnedBeans", 1))

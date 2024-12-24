@@ -29,10 +29,6 @@ BanditClan.Cannibal.Outfits = BanditClan.Cannibal.Outfits or {}
 table.insert(BanditClan.Cannibal.Outfits, "Woodcut")
 table.insert(BanditClan.Cannibal.Outfits, "Waiter_Restaurant")
 table.insert(BanditClan.Cannibal.Outfits, "Waiter_Diner")
-if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Cannibal.Outfits, "AuthenticNMRIHButcher")
-    table.insert(BanditClan.Cannibal.Outfits, "AuthenticLeatherFace")
-end
 
 -- available melee weapons
 BanditClan.Cannibal.Melee = BanditClan.Cannibal.Melee or {}
@@ -53,7 +49,7 @@ BanditClan.Cannibal.Secondary = BanditClan.Cannibal.Secondary or BanditWeapons.S
 
 -- loot table
 BanditClan.Cannibal.Loot = BanditClan.Cannibal.Loot or {}
-table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 30))
+table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.WaterBottle", 30))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Salt", 12))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Steak", 99))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Steak", 44))

@@ -3,6 +3,9 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
+    if task.x < 10 or task.y < 10 then
+        print ("got it")
+    end
     -- local oldWalkType = zombie:getVariableString("BanditWalkType")
     if not zombie:getSquare():isFree(false) then
         local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)
@@ -94,11 +97,11 @@ ZombieActions.Move.onWorking = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         local cell = getCell()
 
-        if ZombRand(1000) == 1 then
+        --[[if ZombRand(1000) == 1 then
             zombie:getPathFindBehavior2():pathToLocation(task.x+1, task.y+1, task.z)
             zombie:getPathFindBehavior2():cancel()
             zombie:setPath2(nil)
-        end
+        end]]
         
         local result = zombie:getPathFindBehavior2():update()
         if result == BehaviorResult.Failed then

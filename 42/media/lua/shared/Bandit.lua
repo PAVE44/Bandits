@@ -593,6 +593,9 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 end
 
 function Bandit.SurpressZombieSounds(bandit)
+    bandit:getEmitter():stopSoundByName(bandit:getVoiceSoundName())
+    bandit:getEmitter():stopSoundByName(bandit:getBiteSoundName())
+    --[[
     if bandit:isFemale() then
         bandit:getEmitter():stopSoundByName("FemaleZombieVoiceA")
         bandit:getEmitter():stopSoundByName("FemaleZombieVoiceB")
@@ -619,7 +622,7 @@ function Bandit.SurpressZombieSounds(bandit)
         bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteA")
         bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteB")
         bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteC")
-    end
+    end]]
 end
 
 function Bandit.Say(zombie, phrase, force)

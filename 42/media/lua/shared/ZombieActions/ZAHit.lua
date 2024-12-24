@@ -46,7 +46,16 @@ local function Hit(attacker, item, victim)
                 end
             end
             victim:addBlood(0.6)
-            -- SwipeStatePlayer.splash(victim, item, tempAttacker)
+            
+            local splatNo = item:getSplatNumber()
+            for i=0, splatNo do
+                victim:splatBlood(3, 0.3)
+            end
+            victim:splatBloodFloorBig()
+            victim:playBloodSplatterSound()
+            if instanceof(victim, "IsoPlayer") then
+                victim:playerVoiceSound("PainFromFallHigh")
+            end
 
             if victim:getHealth() <= 0 then 
                 victim:Kill(getCell():getFakeZombieForHit(), true) 

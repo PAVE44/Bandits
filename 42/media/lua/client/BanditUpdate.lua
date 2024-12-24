@@ -1030,6 +1030,8 @@ local function ManageCombat(bandit)
                             end
 
                             if weapons[slot].bulletsLeft > 0 then
+                                local bullets = 1
+
                                 local stasks = BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
 
@@ -1284,7 +1286,7 @@ local function ProcessTask(bandit, task)
             local play = true
             if task.soundDistMax then
                 local player = getPlayer()
-                local dist = BanditUtils.DistTo(zx, zy, player:getX(), player:getY())
+                local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), player:getX(), player:getY())
                 if dist > task.soundDistMax then
                     play = false
                 end

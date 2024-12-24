@@ -25,7 +25,7 @@ local function Hit(shooter, item, victim)
         accuracyCoeff = 0.028
     end
 
-    local accuracyThreshold = 100 / (1 + accuracyCoeff * dist / accuracyBoost)
+    local accuracyThreshold = 100 / (1 + accuracyCoeff * (dist - 1) / accuracyBoost)
 
     -- Warning, this is not perfect, local player mand remote players will not generate the same 
     -- random number.
@@ -62,7 +62,19 @@ local function Hit(shooter, item, victim)
             end
 
             victim:addBlood(0.6)
-            -- SwipeStatePlayer.splash(victim, item, tempShooter)
+
+            -- CombatManager.splash(victim, item, tempShooter) -- waiting for IS to expose combat manager
+            local splatNo = item:getSplatNumber()
+            for i=0, splatNo do
+                victim:splatBlood(3, 0.3)
+            end
+            victim:splatBloodFloorBig()
+            victim:playBloodSplatterSound()
+            if instanceof(victim, "IsoPlayer") then
+                victim:playerVoiceSound("PainFromFallHigh")
+            end
+
+            -- SwipeStatePlayer.splash(victim, item, tempShooter) -- b41 
             if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end
         end
     else
@@ -269,8 +281,18 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
     
-    shooter:startMuzzleFlash() -- it does not work in b42 apparently
+    local square = shooter:getSquare()
+    shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is hgow to do this now:
+    shooter:setMuzzleFlashDuration(getTimestampMs())
+    local lightSource = IsoLightSource.new(square:getX(), square:getY(), square:getZ(), 0.8, 0.8, 0.7, 18, 2)
+    cell:addLamppost(lightSource)
     shooter:playSound(weapon.shotSound)
+
+    --[[local te = FBORenderTracerEffects.getInstance()
+    te:addEffect(shooter, 24)
+
+    local test = shooter:getAnimationPlayer()
+    local test2 = test:isReady()]]
     
     -- this adds world sound that attract zombies, it must be on cooldown
     -- otherwise too many sounds disorient zombies. 
@@ -309,15 +331,15 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                             local item = instanceItem(weapon.name)
                             Hit(shooter, item, victim)
                         end
+                        zombie:setBumpDone(true)
+                        return true
                         
-                        break
                     end
                 end
             end
         end
     end
 
-    zombie:setBumpDone(true)
 
     return true
 end
