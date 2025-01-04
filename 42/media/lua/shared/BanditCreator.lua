@@ -153,7 +153,7 @@ function BanditCreator.MakeFromSpawnType(spawnData)
         config.pistolMagCount = 4
     elseif spawnData.buildingType == "bank" then
         clan = BanditClan.Criminal
-        config.hasRifleChance = 0
+        config.hasRifleChance = 10
         config.hasPistolChance = 80
         config.rifleMagCount = 0
         config.pistolMagCount = 3
@@ -164,8 +164,8 @@ function BanditCreator.MakeFromSpawnType(spawnData)
         config.rifleMagCount = 0
         config.pistolMagCount = 0
     else
-        clan = BanditClan.DesperateCitizen
-        config.hasRifleChance = 0
+        clan = BanditClan.DoomRider
+        config.hasRifleChance = 5
         config.hasPistolChance = 25
         config.rifleMagCount = 0
         config.pistolMagCount = 2

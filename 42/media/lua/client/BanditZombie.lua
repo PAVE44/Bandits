@@ -53,41 +53,45 @@ local UpdateZombieCache = function(numberTicks)
     for i = 0, zombieListSize - 1 do
         
         local zombie = zombieList:get(i)
-        local id = BanditUtils.GetCharacterID(zombie)
 
-        cache[id] = zombie
-        
-        local zx = zombie:getX()
-        local zy = zombie:getY()
-        local zz = zombie:getZ()
-        
-        if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-            local light = {}
-            light.id = id
-            light.x = zx
-            light.y = zy
-            light.z = zz
-            light.brain = BanditBrain.Get(zombie)
+        if not zombie:isReanimatedForGrappleOnly() then
 
-            if zombie:getVariableBoolean("Bandit")  then
-                light.isBandit = true
-                cacheLightB[id] = light
-                -- zombies in hitreaction state are not processed by onzombieupdate
-                -- so we need to make them shut their zombie sound here too
-                -- logically this does not fit here, should be a separate process
-                -- but it's here due to performance optimization to avoid additional iteration
-                -- over zombieList
-                
-                local asn = zombie:getActionStateName()
-                if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
-                    Bandit.SurpressZombieSounds(zombie)
+            local id = BanditUtils.GetCharacterID(zombie)
+
+            cache[id] = zombie
+            
+            local zx = zombie:getX()
+            local zy = zombie:getY()
+            local zz = zombie:getZ()
+            
+            if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
+                local light = {}
+                light.id = id
+                light.x = zx
+                light.y = zy
+                light.z = zz
+                light.brain = BanditBrain.Get(zombie)
+
+                if zombie:getVariableBoolean("Bandit")  then
+                    light.isBandit = true
+                    cacheLightB[id] = light
+                    -- zombies in hitreaction state are not processed by onzombieupdate
+                    -- so we need to make them shut their zombie sound here too
+                    -- logically this does not fit here, should be a separate process
+                    -- but it's here due to performance optimization to avoid additional iteration
+                    -- over zombieList
+                    
+                    local asn = zombie:getActionStateName()
+                    if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
+                        Bandit.SurpressZombieSounds(zombie)
+                    end
+                else
+                    light.isBandit = false
+                    cacheLightZ[id] = light
                 end
-            else
-                light.isBandit = false
-                cacheLightZ[id] = light
-            end
 
-            cacheLight[id] = light
+                cacheLight[id] = light
+            end
         end
 
     end

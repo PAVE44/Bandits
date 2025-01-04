@@ -802,7 +802,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
     end
 
     if SandboxVars.Bandits.General_ArrivalIcon then
-        local color = {r=0.5, g=0.5, b=1}
+        local color = {r=1, g=0, b=0}
         local icon = "media/ui/defend.png"
         BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color)
     end

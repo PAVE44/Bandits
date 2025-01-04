@@ -3,9 +3,6 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
-    if task.x < 10 or task.y < 10 then
-        print ("got it")
-    end
     -- local oldWalkType = zombie:getVariableString("BanditWalkType")
     if not zombie:getSquare():isFree(false) then
         local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)

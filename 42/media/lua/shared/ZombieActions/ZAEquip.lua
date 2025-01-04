@@ -78,14 +78,8 @@ ZombieActions.Equip.onStart = function(zombie, task)
 end
 
 ZombieActions.Equip.onWorking = function(zombie, task)
-    local bumpType = zombie:getBumpType()
-    if bumpType ~= task.anim then return true end
-
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Equip.onComplete = function(zombie, task)

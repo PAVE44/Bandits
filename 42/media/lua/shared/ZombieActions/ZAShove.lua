@@ -46,7 +46,6 @@ end
 
 ZombieActions.Shove.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
-    
     local bumpType = bandit:getBumpType()
     if bumpType ~= task.anim then return false end
 

@@ -27,7 +27,7 @@ table.insert(Bandit.SoundStopList, "GetWaterFromTapMetalBig")
 
 Bandit.VisualDamage = {}
 
-Bandit.VisualDamage.Melee = {"ZedDmg_BACK_Slash", "ZedDmg_BellySlashLeft", "ZedDmg_BellySlashRightv", "ZedDmg_BELLY_Slash", 
+Bandit.VisualDamage.Melee = {"ZedDmg_BACK_Slash", "ZedDmg_BellySlashLeft", "ZedDmg_BellySlashRight", "ZedDmg_BELLY_Slash", 
                              "ZedDmg_ChestSlashLeft", "ZedDmg_CHEST_Slash", "ZedDmg_FaceSkullLeft", "ZedDmg_FaceSkullRight", 
                              "ZedDmg_HeadSlashCentre01", "ZedDmg_HeadSlashCentre02", "ZedDmg_HeadSlashCentre03", "ZedDmg_HeadSlashLeft01", 
                              "ZedDmg_HeadSlashLeft02", "ZedDmg_HeadSlashLeft03", "ZedDmg_HeadSlashLeftBack01", "ZedDmg_HeadSlashLeftBack02", 
@@ -513,7 +513,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     -- update weapons that the bandit has
-    if weapons.melee then 
+    if weapons.melee and weapons.melee ~= "Base.BareHands" then 
         local item = instanceItem(weapons.melee)
         item:setCondition(1+ZombRand(10))
         zombie:addItemToSpawnAtDeath(item)
@@ -595,34 +595,6 @@ end
 function Bandit.SurpressZombieSounds(bandit)
     bandit:getEmitter():stopSoundByName(bandit:getVoiceSoundName())
     bandit:getEmitter():stopSoundByName(bandit:getBiteSoundName())
-    --[[
-    if bandit:isFemale() then
-        bandit:getEmitter():stopSoundByName("FemaleZombieVoiceA")
-        bandit:getEmitter():stopSoundByName("FemaleZombieVoiceB")
-        bandit:getEmitter():stopSoundByName("FemaleZombieVoiceC")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterVoiceA")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterVoiceB")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterVoiceC")
-        bandit:getEmitter():stopSoundByName("FemaleZombieBiteA")
-        bandit:getEmitter():stopSoundByName("FemaleZombieBiteB")
-        bandit:getEmitter():stopSoundByName("FemaleZombieBiteC")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterBiteA")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterBiteB")
-        bandit:getEmitter():stopSoundByName("FemaleZombieSprinterBiteC")
-    else
-        bandit:getEmitter():stopSoundByName("MaleZombieVoiceA")
-        bandit:getEmitter():stopSoundByName("MaleZombieVoiceB")
-        bandit:getEmitter():stopSoundByName("MaleZombieVoiceC")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterVoiceA")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterVoiceB")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterVoiceC")
-        bandit:getEmitter():stopSoundByName("MaleZombieBiteA")
-        bandit:getEmitter():stopSoundByName("MaleZombieBiteB")
-        bandit:getEmitter():stopSoundByName("MaleZombieBiteC")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteA")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteB")
-        bandit:getEmitter():stopSoundByName("MaleZombieSprinterBiteC")
-    end]]
 end
 
 function Bandit.Say(zombie, phrase, force)
@@ -679,13 +651,15 @@ end
 
 function Bandit.AddVisualDamage(bandit, handWeapon)
     
-    local itemVisual
-    local weaponType = WeaponType.getWeaponType(handWeapon)
-    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-        itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Gun)
-    else
-        itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Melee)
-    end
+    if handWeapon then
+        local itemVisual
+        local weaponType = WeaponType.getWeaponType(handWeapon)
+        if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+            itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Gun)
+        else
+            itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Melee)
+        end
 
-    bandit:addVisualDamage(itemVisual)
+        bandit:addVisualDamage(itemVisual)
+    end
 end

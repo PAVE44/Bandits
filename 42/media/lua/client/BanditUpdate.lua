@@ -219,15 +219,34 @@ local function ApplyVisuals(bandit)
                     local part = BloodBodyPartType.FromIndex(i-1)
                     banditVisuals:setBlood(part, 0)
                     banditVisuals:setDirt(part, 0)
+                    
                 end
-                bandit:resetModelNextFrame()
+
+                local itemVisuals = bandit:getItemVisuals()
+                for i=0, itemVisuals:size()-1 do
+                    local item = itemVisuals:get(i)
+                    if item then
+                        for i=1,BloodBodyPartType.MAX:index() do
+                            local part = BloodBodyPartType.FromIndex(i-1)
+                            local hole = item:getHole(part)
+                            if item:getHole(part) ~= 0 then
+                                item:removeHole(i-1)
+                            end
+                            item:setBlood(part, 0)
+                            item:setDirt(part, 0)
+                        end
+                        if item:getInventoryItem() then
+                            item:setInventoryItem(nil)
+                        end 
+                    end
+                end
 
 
                 local toRemove = {}
-                local itemVisuals = banditVisuals:getBodyVisuals()
-                local s = itemVisuals:size()
-                for i=0, itemVisuals:size()-1 do
-                    local item = itemVisuals:get(i)
+                local bodyVisuals = banditVisuals:getBodyVisuals()
+                local s = bodyVisuals:size()
+                for i=0, bodyVisuals:size()-1 do
+                    local item = bodyVisuals:get(i)
                     if item then
                         local itemType = item:getItemType()
                         if BanditUtils.ItemVisuals[itemType] then
@@ -239,6 +258,7 @@ local function ApplyVisuals(bandit)
                     banditVisuals:removeBodyVisualFromItemType(v)
                 end
 
+                bandit:resetModelNextFrame()
                 bandit:resetModel()
             end
         end
@@ -711,7 +731,7 @@ local function ManageCollisions(bandit)
                                         for dx = -radius, radius do
                                             for dy = -radius, radius do
                                                 -- if dx ~= 0 and dy ~= 0 then
-                                                    local surroundingSquare = getCell():getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
+                                                    local surroundingSquare = cell:getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
                                                     --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
                                                     if surroundingSquare then
                                                         --[[
@@ -1199,7 +1219,7 @@ local function UpdateZombies(zombie)
                         local attackingZombieList = BanditZombie.GetAllZ()
                         for id, attackingZombie in pairs(attackingZombieList) do
                             local distManhattan = BanditUtils.DistToManhattan(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
-                            if distManhattan < 0.9 then -- the manhattan distance for 0.6 euclidean distance will range from 0.6 to ~0.8485
+                            if distManhattan < 1 then -- the manhattan distance for 0.6 euclidean distance will range from 0.6 to ~0.8485
                                 local dist = BanditUtils.DistTo(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
                                 if dist < 0.6 then
                                     attackingZombiesNumber = attackingZombiesNumber + 1
@@ -1424,6 +1444,8 @@ local function OnBanditUpdate(zombie)
     if uTick == 16 then uTick = 0 end
     uTick = uTick + 1
 
+    if zombie:isReanimatedForGrappleOnly() then return end
+
     local id = BanditUtils.GetCharacterID(zombie)
     local zx = zombie:getX()
     local zy = zombie:getY()
@@ -1469,7 +1491,7 @@ local function OnBanditUpdate(zombie)
     ------------------------------------------------------------------------------------------------------------------------------------
     if not zombie:getVariableBoolean("Bandit") then return end
     if not brain then return end
-
+    
     -- distant bandits are not updated by this mod so they need to be set useless
     -- to prevent game updating them as if they were zombies
     if BanditZombie.CacheLightB[id] then 

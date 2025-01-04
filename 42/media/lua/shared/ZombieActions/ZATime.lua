@@ -7,10 +7,8 @@ end
 
 ZombieActions.Time.onWorking = function(zombie, task)
     -- zombie:addLineChatElement(task.action .. task.time, 0.5, 0.5, 0.5)
-    local bumpType = zombie:getBumpType()
-    if bumpType ~= task.anim then
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 --[[
     if not zombie:getVariableString("BumpAnimFinished") then
         return false
