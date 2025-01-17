@@ -54,6 +54,11 @@ end
 
 ZombieActions.Shove.onComplete = function(bandit, task)
 
+    local asn = bandit:getActionStateName()
+    -- print ("SHOVE AS:" .. asn)
+    if asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
+             or asn =="staggerback" or asn == "staggerback-knockeddown" then return false end
+
     local enemy = BanditZombie.GetInstanceById(task.eid)
     if enemy then 
         local brainBandit = BanditBrain.Get(bandit)

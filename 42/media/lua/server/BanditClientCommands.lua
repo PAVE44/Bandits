@@ -104,6 +104,14 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             local zombie = zombieList:get(i)
             local id = BanditUtils.GetCharacterID(zombie)
 
+            zombie:setHealth(bandit.health)
+            --[[
+            local h = zombie:getHealth()
+            print("-- SPHP:" .. h .. " / " .. bandit.health)
+            if h < 2.2 or bandit.health < 2.2 then
+                print ("got it")
+            end]]
+
             -- clients will change that flag to true once they recognize the bandit by its ID
             zombie:setVariable("Bandit", false)
 

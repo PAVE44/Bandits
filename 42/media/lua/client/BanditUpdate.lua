@@ -383,7 +383,8 @@ local function ManageActionState(bandit)
     --elseif asn == "turnalerted" then
     --    bandit:changeState(ZombieIdleState.instance())
 
-    elseif asn == "getup" or asn =="staggerback" then
+    elseif asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
+             or asn =="staggerback" or asn == "staggerback-knockeddown" then
         Bandit.ClearTasks(bandit)
         continue = false
         
@@ -449,7 +450,9 @@ end
 -- manages tasks related to bandit health
 local function ManageHealth(bandit)
     local tasks = {}
-    if SandboxVars.Bandits.General_BleedOut then
+
+    -- temporarily removed until bleeding bug in week one investigation is complete
+    if false and SandboxVars.Bandits.General_BleedOut then
         local healing = false
         if bandit:getHealth() < 0.9 then
             local zx = bandit:getX()
@@ -496,6 +499,7 @@ local function ManageHealth(bandit)
             local delta = 0.001
             Bandit.UpdateInfection(bandit, delta)
             if brain.infection >= 100 then
+                Bandit.ClearTasks(bandit)
                 local task = {action="Zombify", anim="Faint", lock=true, time=200}
                 table.insert(tasks, task)
             end

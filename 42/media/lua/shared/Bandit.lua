@@ -2,7 +2,7 @@ Bandit = Bandit or {}
 
 Bandit.SoundTab = Bandit.SoundTab or {}
 Bandit.SoundTab.SPOTTED =           {prefix = "ZSSpotted_", chance = 90, randMax = 6, length = 2}
-Bandit.SoundTab.HIT =               {prefix = "ZSHit_", chance = 100, randMax = 14, length = 0.5}
+Bandit.SoundTab.HIT =               {prefix = "ZSHit_", chance = 100, randMax = 14, length = 0.1}
 Bandit.SoundTab.BREACH =            {prefix = "ZSBreach_", chance = 80, randMax = 6, length = 10}
 Bandit.SoundTab.RELOADING =         {prefix = "ZSReloading_", chance = 80, randMax = 6, length = 4}
 Bandit.SoundTab.CAR =               {prefix = "ZSCar_", chance = 90, randMax = 6, length = 4}

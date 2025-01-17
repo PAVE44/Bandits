@@ -1,3 +1,4 @@
+require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.DesperateCitizen = BanditClan.DesperateCitizen or {}

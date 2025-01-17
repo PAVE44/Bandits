@@ -133,3 +133,49 @@ function PlayerDamageModel.BulletHit(shooter, player)
     
 
 end
+
+function PlayerDamageModel.BareHandHit(shooter, player)
+    local bodyDamage = player:getBodyDamage()
+    local health = bodyDamage:getOverallBodyHealth()
+
+    -- SELECT BODY PART THAT WAS HIT
+    local bodyParts = {}
+    table.insert(bodyParts, {bname=BloodBodyPartType.Head, name=BodyPartType.Head, chance=1000})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Torso_Lower, name=BodyPartType.Torso_Lower, chance=600})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Torso_Upper, name=BodyPartType.Torso_Upper, chance=450})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Groin, name=BodyPartType.Groin, chance=300})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Neck, name=BodyPartType.Neck, chance=200})
+    table.insert(bodyParts, {bname=BloodBodyPartType.UpperArm_R, name=BodyPartType.UpperArm_R, chance=100})
+    table.insert(bodyParts, {bname=BloodBodyPartType.UpperArm_L, name=BodyPartType.UpperArm_L, chance=75})
+    table.insert(bodyParts, {bname=BloodBodyPartType.ForeArm_R, name=BodyPartType.ForeArm_R, chance=50})
+    table.insert(bodyParts, {bname=BloodBodyPartType.ForeArm_L, name=BodyPartType.ForeArm_L, chance=35})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Hand_R, name=BodyPartType.Hand_R, chance=20})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Hand_L, name=BodyPartType.Hand_L, chance=10})
+
+    local r = 1 + ZombRand(1000)
+    local bpi = 0
+    for i, bp in pairs(bodyParts) do
+        if bp.chance >= r then 
+            bpi = i
+        end
+    end
+
+    local sbp = bodyParts[bpi]
+    local hitBodyPart = player:getBodyDamage():getBodyPart(sbp.name)
+    print ("-- PLAYER HIT IN: " .. tostring(sbp.name))
+
+    if ZombRand(4) == 1 then
+        hitBodyPart:setScratched(true, true)
+        bodyDamage:ReduceGeneralHealth(6)
+    else
+        bodyDamage:ReduceGeneralHealth(3)
+    end
+
+    player:addBlood(0.2)
+
+    if sbp.name == BodyPartType.Head then
+        player:helmetFall(true)
+
+    end
+
+end

@@ -32,3 +32,11 @@ end
 function string:insert(pos, text)
     return self:sub(1, pos - 1) .. text .. self:sub(pos)
 end
+
+function string:hasword(needle)
+    -- Escape any special characters in the needle
+    local escaped_needle = needle:gsub("([^%w])", "%%%1")
+    -- Use pattern matching to find the word as a separate word
+    local pattern = "%f[%w]" .. escaped_needle .. "%f[%W]"
+    return self:find(pattern) ~= nil
+end

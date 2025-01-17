@@ -35,15 +35,28 @@ local function Hit(attacker, item, victim)
                     victim:setPlayerAttackPosition(victim:testDotSide(attacker))
                 end
 
-                victim:Hit(item, tempAttacker, 3, false, 1, false)
+                if item:getFullType() == "Base.BareHands" and instanceof(victim, "IsoPlayer") then
+                    PlayerDamageModel.BareHandHit(attacker, victim)
+                    --local meleeItem = instanceItem("Base.Pencil")
+                    --victim:Hit(meleeItem, getCell():getFakeZombieForHit(), 0.01, false, 0.01, false)
+                    --[[local bodyDamage = victim:getBodyDamage()
+                    if bodyDamage then
+                        local health = bodyDamage:getOverallBodyHealth()
+                        health = health - 5
+                        bodyDamage:setOverallBodyHealth(health)
+                    end]]
+                else
+                    victim:Hit(item, tempAttacker, 0.5, false, 1, false)
+                end
                 victim:setAttackedBy(attacker)
+                --[[
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then
                     local health = bodyDamage:getOverallBodyHealth()
                     health = health + 12
                     if health > 100 then health = 100 end
                     bodyDamage:setOverallBodyHealth(health)
-                end
+                end]]
             end
             victim:addBlood(0.6)
             
@@ -90,7 +103,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     end
 
     if prone then
-        if ZombRand(2) == 0 then
+        if ZombRand(2) == 0 and task.weapon ~= "Base.BareHands" then
             anim = "Attack2HFloor"
         else
             anim = "Attack2HStamp"
@@ -142,6 +155,12 @@ ZombieActions.Hit.onWorking = function(bandit, task)
     if bumpType ~= task.anim then return false end
     
     if not task.hit and task.time <= 50 then
+
+        local asn = bandit:getActionStateName()
+        -- print ("HIT AS:" .. asn)
+        if asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
+                 or asn =="staggerback" or asn == "staggerback-knockeddown" then return false end
+
         task.hit = true
         Bandit.UpdateTask(bandit, task)
 

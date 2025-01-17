@@ -244,6 +244,9 @@ local function ManageLineOfFire (shooter, victim)
         end
         D = D + 2 * dy
     end
+
+
+
     return true
 end
 
@@ -327,7 +330,8 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                 if victim then
                     if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
                         local res = ManageLineOfFire(shooter, victim)
-                        if res then
+                        local finalCheck = BanditUtils.LineClear(shooter, victim)
+                        if res and finalCheck then
                             local item = instanceItem(weapon.name)
                             Hit(shooter, item, victim)
                         end

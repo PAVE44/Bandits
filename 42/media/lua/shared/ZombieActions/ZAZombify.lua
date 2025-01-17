@@ -16,6 +16,10 @@ ZombieActions.Zombify.onComplete = function(zombie, task)
     local id = BanditUtils.GetCharacterID(zombie)
     local args = {}
     args.id = id
-    sendClientCommand(getPlayer(), 'Commands', 'BanditRemove', args)
+    if isClient() then
+        sendClientCommand(getPlayer(), 'Commands', 'BanditRemove', args)
+    else
+        BanditServer.Commands.BanditRemove(getPlayer(), args)
+    end
     return true
 end

@@ -78,6 +78,40 @@ BanditUtils.ItemVisuals = {
     ["Base.ZedDmg_BulletLeftTemple"] = true,
     ["Base.ZedDmg_BellySlashLeft"] = true,
     ["Base.ZedDmg_CHEST_Slash"] = true,
+    ["Base.Bandage_LeftUpperArm"] = true,
+    ["Base.Bandage_LeftUpperArm_Blood"] = true,
+    ["Base.Bandage_RightUpperArm"] = true,
+    ["Base.Bandage_RightUpperArm_Blood"] = true,
+    ["Base.Bandage_Abdomen"] = true,
+    ["Base.Bandage_Abdomen_Blood"] = true,
+    ["Base.Bandage_Chest"] = true,
+    ["Base.Bandage_Chest_Blood"] = true,
+    ["Base.Bandage_Groin"] = true,
+    ["Base.Bandage_Groin_Blood"] = true,
+    ["Base.Bandage_LeftLowerLeg"] = true,
+    ["Base.Bandage_LeftLowerLeg_Blood"] = true,
+    ["Base.Bandage_RightLowerLeg"] = true,
+    ["Base.Bandage_RightLowerLeg_Blood"] = true,
+    ["Base.Bandage_LeftFoot"] = true,
+    ["Base.Bandage_LeftFoot_Blood"] = true,
+    ["Base.Bandage_RightFoot"] = true,
+    ["Base.Bandage_RightFoot_Blood"] = true,
+    ["Base.Bandage_LeftHand"] = true,
+    ["Base.Bandage_LeftHand_Blood"] = true,
+    ["Base.Bandage_RightHand"] = true,
+    ["Base.Bandage_RightHand_Blood"] = true,
+    ["Base.Bandage_LeftUpperLeg"] = true,
+    ["Base.Bandage_LeftUpperLeg_Blood"] = true,
+    ["Base.Bandage_RightUpperLeg"] = true,
+    ["Base.Bandage_RightUpperLeg_Blood"] = true,
+    ["Base.Bandage_LeftLowerArm"] = true,
+    ["Base.Bandage_LeftLowerArm_Blood"] = true,
+    ["Base.Bandage_RightLowerArm"] = true,
+    ["Base.Bandage_RightLowerArm_Blood"] = true,
+    ["Base.Bandage_Neck"] = true,
+    ["Base.Bandage_Neck_Blood"] = true,
+    ["Base.Bandage_Head"] = true,
+    ["Base.Bandage_Head_Blood"] = true,
 }
 
 function BanditUtils.GetCharacterID (character)
@@ -528,6 +562,13 @@ function BanditUtils.DistTo(x1, y1, x2, y2)
 
     -- return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
     -- return IsoUtils.DistanceTo(x1, y1, x2, y2)
+end
+
+function BanditUtils.LineClear(obj1, obj2)
+    local cell = obj1:getCell()
+    local x1, y1, z1 = obj1:getX(), obj1:getY(), obj1:getZ()
+    local x2, y2, z2 = obj2:getX(), obj2:getY(), obj2:getZ()
+    return tostring(LosUtil.lineClear(cell, x1, y1, z1, x2, y2, z2, false)) ~= "Blocked"
 end
 
 function BanditUtils.DistToManhattan(x1, y1, x2, y2)

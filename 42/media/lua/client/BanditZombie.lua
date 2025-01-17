@@ -25,6 +25,8 @@ local UpdateZombieCache = function(numberTicks)
     -- ts = getTimestampMs()
     -- if not numberTicks % 4 == 1 then return end
     
+    local silenceStates = {"hitreaction", "hitreaction-hit", "hitreaction-gettingup", "hitreaction-knockeddown", "climbfence", "climbwindow"}
+
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
     local skip = 4
@@ -82,8 +84,11 @@ local UpdateZombieCache = function(numberTicks)
                     -- over zombieList
                     
                     local asn = zombie:getActionStateName()
-                    if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
-                        Bandit.SurpressZombieSounds(zombie)
+                    for _, ss in pairs(silenceStates) do
+                        if asn == ss then
+                            Bandit.SurpressZombieSounds(zombie)
+                            break
+                        end
                     end
                 else
                     light.isBandit = false
