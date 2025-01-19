@@ -90,6 +90,13 @@ local UpdateZombieCache = function(numberTicks)
                             break
                         end
                     end
+
+                    if asn == "bumped" then
+                        local btype = zombie:getBumpType()
+                        if btype and (btype == "ClimbWindow" or btype == "ClimbFence" or btype == "ClimbFenceEnd") then
+                            Bandit.SurpressZombieSounds(zombie)
+                        end
+                    end
                 else
                     light.isBandit = false
                     cacheLightZ[id] = light

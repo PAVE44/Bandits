@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.PrivateMilitia = BanditClan.PrivateMilitia or {}
@@ -35,12 +34,6 @@ table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeBeastMom")
 BanditClan.PrivateMilitia.Melee = BanditClan.PrivateMilitia.Melee or {}
 table.insert(BanditClan.PrivateMilitia.Melee, "Base.Machete")
 table.insert(BanditClan.PrivateMilitia.Melee, "Base.HuntingKnife")
-
--- available primary weapons
-BanditClan.PrivateMilitia.Primary = BanditClan.PrivateMilitia.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.PrivateMilitia.Secondary = BanditClan.PrivateMilitia.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.PrivateMilitia.Loot = BanditClan.PrivateMilitia.Loot or {}

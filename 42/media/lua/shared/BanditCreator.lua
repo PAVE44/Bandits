@@ -14,7 +14,7 @@ function BanditCreator.MakeWeapons(wave, clan)
     weapons.primary.magCount = 0
     local rifleRandom = ZombRandFloat(0, 101)
     if rifleRandom < wave.hasRifleChance then
-        weapons.primary = BanditUtils.Choice(clan.Primary)
+        weapons.primary = BanditUtils.Choice(BanditWeapons.GetPrimary())
         weapons.primary.magCount = wave.rifleMagCount
     end
 
@@ -26,7 +26,7 @@ function BanditCreator.MakeWeapons(wave, clan)
     weapons.secondary.magCount = 0
     local pistolRandom = ZombRandFloat(0, 101)
     if pistolRandom < wave.hasPistolChance then
-        weapons.secondary = BanditUtils.Choice(clan.Secondary)
+        weapons.secondary = BanditUtils.Choice(BanditWeapons.GetSecondary())
         weapons.secondary.magCount = wave.pistolMagCount
     end
 

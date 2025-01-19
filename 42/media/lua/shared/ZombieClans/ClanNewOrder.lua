@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.NewOrder = BanditClan.NewOrder or {}
@@ -36,12 +35,6 @@ table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
 -- available melee weapons
 BanditClan.NewOrder.Melee = BanditClan.NewOrder.Melee or {}
 table.insert(BanditClan.NewOrder.Melee, "Base.HuntingKnife")
-
--- available primary weapons
-BanditClan.NewOrder.Primary = BanditClan.NewOrder.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.NewOrder.Secondary = BanditClan.NewOrder.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.NewOrder.Loot = BanditClan.NewOrder.Loot or {}

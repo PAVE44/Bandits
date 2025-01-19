@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Police = BanditClan.Police or {}
@@ -34,12 +33,6 @@ table.insert(BanditClan.Police.Outfits, "ZSPoliceSpecialOps")
 -- available melee weapons
 BanditClan.Police.Melee = BanditClan.Police.Melee or {}
 table.insert(BanditClan.Police.Melee, "Base.Nightstick")
-
--- available primary weapons
-BanditClan.Police.Primary = BanditClan.Police.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Police.Secondary = BanditClan.Police.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Police.Loot = BanditClan.Police.Loot or {}

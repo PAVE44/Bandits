@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Cannibal = BanditClan.Cannibal or {}
@@ -41,12 +40,6 @@ table.insert(BanditClan.Cannibal.Melee, "Base.Machete")
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Cannibal.Melee, "AuthenticZClothing.Chainsaw")
 end
-
--- available primary weapons
-BanditClan.Cannibal.Primary = BanditClan.Cannibal.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Cannibal.Secondary = BanditClan.Cannibal.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Cannibal.Loot = BanditClan.Cannibal.Loot or {}

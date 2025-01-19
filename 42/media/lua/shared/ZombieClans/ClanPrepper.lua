@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Prepper = BanditClan.Prepper or {}
@@ -44,12 +43,6 @@ table.insert(BanditClan.Prepper.Melee, "Base.HuntingKnife")
 table.insert(BanditClan.Prepper.Melee, "Base.Machete")
 table.insert(BanditClan.Prepper.Melee, "Base.Axe")
 table.insert(BanditClan.Prepper.Melee, "Base.HandAxe")
-
--- available primary weapons
-BanditClan.Prepper.Primary = BanditClan.Prepper.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Prepper.Secondary = BanditClan.Prepper.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Prepper.Loot = BanditClan.Prepper.Loot or {}

@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Psychopath = BanditClan.Psychopath or {}
@@ -53,12 +52,6 @@ table.insert(BanditClan.Psychopath.Melee, "Base.Mace")
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Psychopath.Melee, "AuthenticZClothing.Chainsaw")
 end
-
--- available primary weapons
-BanditClan.Psychopath.Primary = BanditClan.Psychopath.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Psychopath.Secondary = BanditClan.Psychopath.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Psychopath.Loot = BanditClan.Psychopath.Loot or {}

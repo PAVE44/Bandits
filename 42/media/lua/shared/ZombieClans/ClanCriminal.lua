@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Criminal = BanditClan.Criminal or {}
@@ -38,12 +37,6 @@ table.insert(BanditClan.Criminal.Melee, "Base.Crowbar")
 table.insert(BanditClan.Criminal.Melee, "Base.MetalBar")
 table.insert(BanditClan.Criminal.Melee, "Base.BaseballBat")
 table.insert(BanditClan.Criminal.Melee, "Base.KitchenKnife")
-
--- available primary weapons
-BanditClan.Criminal.Primary = BanditClan.Criminal.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Criminal.Secondary = BanditClan.Criminal.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Criminal.Loot = BanditClan.Criminal.Loot or {}

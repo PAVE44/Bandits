@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.Reclaimer = BanditClan.Reclaimer or {}
@@ -42,12 +41,6 @@ if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.MandoSpear")
     table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.Chainsaw")
 end
-
--- available primary weapons
-BanditClan.Reclaimer.Primary = BanditClan.Reclaimer.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.Reclaimer.Secondary = BanditClan.Reclaimer.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Reclaimer.Loot = BanditClan.Reclaimer.Loot or {}

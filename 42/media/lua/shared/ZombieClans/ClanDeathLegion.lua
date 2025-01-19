@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.DeathLegion = BanditClan.DeathLegion or {}
@@ -33,12 +32,6 @@ table.insert(BanditClan.DeathLegion.Outfits, "CostumeChunk")
 BanditClan.DeathLegion.Melee = BanditClan.DeathLegion.Melee or {}
 table.insert(BanditClan.DeathLegion.Melee, "Base.Machete")
 table.insert(BanditClan.DeathLegion.Melee, "Base.HuntingKnife")
-
--- available primary weapons
-BanditClan.DeathLegion.Primary = BanditClan.DeathLegion.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.DeathLegion.Secondary = BanditClan.DeathLegion.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.DeathLegion.Loot = BanditClan.DeathLegion.Loot or {}

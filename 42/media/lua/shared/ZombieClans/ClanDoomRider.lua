@@ -1,4 +1,3 @@
-require "BanditWeapons"
 BanditClan = BanditClan or {}
 
 BanditClan.DoomRider = BanditClan.DoomRider or {}
@@ -43,12 +42,6 @@ table.insert(BanditClan.DoomRider.Melee, "Base.Katana")
 table.insert(BanditClan.DoomRider.Melee, "Base.Machete")
 table.insert(BanditClan.DoomRider.Melee, "Base.HandAxe")
 table.insert(BanditClan.DoomRider.Melee, "Base.Crowbar")
-
--- available primary weapons
-BanditClan.DoomRider.Primary = BanditClan.DoomRider.Primary or BanditWeapons.Primary
-
--- available secondary weapons
-BanditClan.DoomRider.Secondary = BanditClan.DoomRider.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.DoomRider.Loot = BanditClan.DoomRider.Loot or {}

@@ -14,6 +14,14 @@ BanditWeapons.MakeHandgun = function(name, magName, magSize, shotSound, shotDela
     return handgun
 end
 
+BanditWeapons.GetPrimary = function()
+    return BanditWeapons.Primary
+end
+
+BanditWeapons.GetSecondary = function()
+    return BanditWeapons.Secondary
+end
+
 BanditWeapons.Melee = BanditWeapons.Melee or {}
 
 -- wave 1

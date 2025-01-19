@@ -280,10 +280,10 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
             local slots = {"primary", "secondary"}
             for _, slot in pairs(slots) do
 
-                local wTab = BanditWeapons.Primary
+                local wTab = BanditWeapons.GetPrimary()
                 local wType = WeaponType.firearm
                 if slot == "secondary" then
-                    wTab = BanditWeapons.Secondary
+                    wTab = BanditWeapons.GetSecondary()
                     wType = WeaponType.handgun
                 end
 
