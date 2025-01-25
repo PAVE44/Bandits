@@ -135,6 +135,8 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- for keyring
             brain.fullname = BanditNames.GenerateName(zombie:isFemale())
 
+            brain.voice = Bandit.PickVoice(zombie)
+
             -- hostility towards human players
             brain.hostile = event.hostile
 
@@ -178,6 +180,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- inventory
             brain.weapons = bandit.weapons
             brain.loot = bandit.loot
+            brain.key = bandit.key
             brain.inventory = {}
             table.insert(brain.inventory, "weldingGear")
             table.insert(brain.inventory, "crowbar")
