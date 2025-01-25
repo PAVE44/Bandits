@@ -597,6 +597,18 @@ function Bandit.SurpressZombieSounds(bandit)
     bandit:getEmitter():stopSoundByName(bandit:getBiteSoundName())
 end
 
+
+function Bandit.PickVoice(zombie)
+    local maleOptions = {"1", "2", "3", "4", "14", "16", "18", "21"}
+    local femaleOptions = {"3"}
+
+    if zombie:isFemale() then
+        return BanditUtils.Choice(femaleOptions)
+    else
+        return BanditUtils.Choice(maleOptions)
+    end
+end
+
 function Bandit.Say(zombie, phrase, force)
     local brain = BanditBrain.Get(zombie)
     if not brain then return end
@@ -608,14 +620,23 @@ function Bandit.Say(zombie, phrase, force)
     local dist = BanditUtils.DistTo(player:getX(), player:getY(), zombie:getX(), zombie:getY())
     
     if dist <= 14 then
-        local id = BanditUtils.GetCharacterID(zombie)
-        local voice = 1 + math.abs(id) % 5
-        if voice > 4 then voice = 1 end
+        local voice
 
         local sex = "Male"
         if zombie:isFemale() then 
             sex = "Female" 
-            voice = 3
+        end
+
+        if brain.voice then 
+            voice = brain.voice
+        else
+            -- if voice was not assigned on spawn then preserve backward compatibility
+            if zombie:isFemale() then 
+                voice = 3
+            else
+                voice = 1 + math.abs(brain.id) % 5
+                if voice > 4 then voice = 1 end
+            end
         end
 
         local config = Bandit.SoundTab[phrase]

@@ -948,7 +948,7 @@ local function ManageCombat(bandit)
                                         
                                         -- the bandit may need to swich to melee weapon so we need to switch earier
                                         -- before target is in range
-                                        local minRange = itemMelee:getMaxRange() + 0.2
+                                        local minRange = itemMelee:getMaxRange() -- + 0.2
                                         if dist <= minRange then
                                             enemyCharacter = potentialEnemy
                                             local asn = enemyCharacter:getActionStateName()
@@ -1506,6 +1506,10 @@ local function OnBanditUpdate(zombie)
     end
     
     local bandit = zombie
+
+    if brain.id == 5505430 then
+        print ("------------" .. zx .. " " .. zy .. " " .. zz)
+    end
 
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     if bandit:isTeleporting() then
