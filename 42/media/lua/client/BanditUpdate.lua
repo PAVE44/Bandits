@@ -1445,6 +1445,8 @@ local function OnBanditUpdate(zombie)
     
     if isServer() then return end
 
+    if not Bandit.Engine then return end
+
     if uTick == 16 then uTick = 0 end
     uTick = uTick + 1
 
@@ -1506,10 +1508,6 @@ local function OnBanditUpdate(zombie)
     end
     
     local bandit = zombie
-
-    if brain.id == 5505430 then
-        print ("------------" .. zx .. " " .. zy .. " " .. zz)
-    end
 
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     if bandit:isTeleporting() then
@@ -1576,7 +1574,7 @@ local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
 
         Bandit.AddVisualDamage(bandit, handWeapon)
         Bandit.ClearTasks(bandit)
-        Bandit.Say(bandit, "HIT")
+        Bandit.Say(bandit, "HIT", true)
         if Bandit.IsSleeping(bandit) then
             local task = {action="Time", lock=true, anim="GetUp", time=150}
             Bandit.ClearTasks(bandit)

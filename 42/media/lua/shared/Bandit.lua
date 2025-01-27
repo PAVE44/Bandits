@@ -46,6 +46,7 @@ Bandit.VisualDamage.Gun = {"ZedDmg_BulletBelly01", "ZedDmg_BulletBelly02", "ZedD
                            "ZedDmg_ShotgunFaceFull", "ZedDmg_ShotgunFaceLeft", "ZedDmg_ShotgunFaceRight", "ZedDmg_ShotgunLeft",
                            "ZedDmg_ShotgunRight"}
 
+Bandit.Engine = true
 
 local function predicateAll(item)
     return true
@@ -599,7 +600,7 @@ end
 
 
 function Bandit.PickVoice(zombie)
-    local maleOptions = {"1", "2", "3", "4", "14", "16", "18", "21"}
+    local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
     local femaleOptions = {"3"}
 
     if zombie:isFemale() then

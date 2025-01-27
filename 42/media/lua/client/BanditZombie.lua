@@ -22,6 +22,9 @@ BanditZombie.LastSize = 0
 local UpdateZombieCache = function(numberTicks)
     -- if true then return end 
     if isServer() then return end
+
+    if not Bandit.Engine then return end
+    
     -- ts = getTimestampMs()
     -- if not numberTicks % 4 == 1 then return end
     
