@@ -29,12 +29,27 @@ BanditClan.NewOrder.hairStyles = {"Bald", "Fresh", "Demi", "FlatTop", "MohawkSho
 
 -- available outfits
 BanditClan.NewOrder.Outfits = BanditClan.NewOrder.Outfits or {}
-table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
-table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
+if getActivatedMods():contains("KATTAJ1_Military") then
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Patriot")
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Defender")
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Black_Vanguard")
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Patriot")
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Defender")
+    table.insert(BanditClan.NewOrder.Outfits, "KATTAJ1_Army_Green_Vanguard")
+else
+    table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
+    table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
+end
 
 -- available melee weapons
 BanditClan.NewOrder.Melee = BanditClan.NewOrder.Melee or {}
 table.insert(BanditClan.NewOrder.Melee, "Base.HuntingKnife")
+
+-- available primary weapons
+BanditClan.NewOrder.Primary = BanditClan.NewOrder.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.NewOrder.Secondary = BanditClan.NewOrder.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.NewOrder.Loot = BanditClan.NewOrder.Loot or {}

@@ -3,7 +3,7 @@ PlayerDamageModel = PlayerDamageModel or {}
 function PlayerDamageModel.BulletHit(shooter, player)
     local bodyDamage = player:getBodyDamage()
     local health = bodyDamage:getOverallBodyHealth()
-    local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
+    local item = BanditCompatibility.InstanceItem("Base.AssaultRifle2")
 
     -- SELECT BODY PART THAT WAS HIT
     local bodyParts = {}
@@ -63,7 +63,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
     if isSuperficial then
         shotBodyPart:setScratched(true, true)
         player:addBlood(0.2)
-        SwipeStatePlayer.splash(player, item, shooter)
+        BanditCompatibility.Splash(player, item, shooter)
     else
         if sbp.name == BodyPartType.Head then
             print ("HEADSHOT")
@@ -72,7 +72,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             else
                 print ("PLAYER DEAD")
                 player:addBlood(0.6)
-                SwipeStatePlayer.splash(player, item, shooter)
+                BanditCompatibility.Splash(player, item, shooter)
 
                 if not player:isGodMod() then
                     bodyDamage:ReduceGeneralHealth(100)
@@ -96,7 +96,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
                 shotBodyPart:setHaveBullet(true, 1)
                 player:addBlood(0.6)
                 player:addHole(sbp.bname, false)
-                SwipeStatePlayer.splash(player, item, shooter)
+                BanditCompatibility.Splash(player, item, shooter)
             end
 
         elseif sbp.name == BodyPartType.Foot_R or sbp.name == BodyPartType.Foot_L or sbp.name == BodyPartType.LowerLeg_R or sbp.name == BodyPartType.LowerLeg_L then
@@ -104,7 +104,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             shotBodyPart:setHaveBullet(true, 1)
             player:addHole(sbp.bname, true)
             player:addBlood(0.6)
-            SwipeStatePlayer.splash(player, item, shooter)
+            BanditCompatibility.Splash(player, item, shooter)
             if player:isRunning() or player:isSprinting() then
                 player:clearVariable("BumpFallType")
                 player:setBumpType("stagger")
@@ -116,7 +116,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             shotBodyPart:setHaveBullet(true, 1)
             player:addHole(sbp.bname, true)
             player:addBlood(0.6)
-            SwipeStatePlayer.splash(player, item, shooter)
+            BanditCompatibility.Splash(player, item, shooter)
         end
     end
 
@@ -131,5 +131,51 @@ function PlayerDamageModel.BulletHit(shooter, player)
     ]]
 
     
+
+end
+
+function PlayerDamageModel.BareHandHit(shooter, player)
+    local bodyDamage = player:getBodyDamage()
+    local health = bodyDamage:getOverallBodyHealth()
+
+    -- SELECT BODY PART THAT WAS HIT
+    local bodyParts = {}
+    table.insert(bodyParts, {bname=BloodBodyPartType.Head, name=BodyPartType.Head, chance=1000})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Torso_Lower, name=BodyPartType.Torso_Lower, chance=600})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Torso_Upper, name=BodyPartType.Torso_Upper, chance=450})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Groin, name=BodyPartType.Groin, chance=300})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Neck, name=BodyPartType.Neck, chance=200})
+    table.insert(bodyParts, {bname=BloodBodyPartType.UpperArm_R, name=BodyPartType.UpperArm_R, chance=100})
+    table.insert(bodyParts, {bname=BloodBodyPartType.UpperArm_L, name=BodyPartType.UpperArm_L, chance=75})
+    table.insert(bodyParts, {bname=BloodBodyPartType.ForeArm_R, name=BodyPartType.ForeArm_R, chance=50})
+    table.insert(bodyParts, {bname=BloodBodyPartType.ForeArm_L, name=BodyPartType.ForeArm_L, chance=35})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Hand_R, name=BodyPartType.Hand_R, chance=20})
+    table.insert(bodyParts, {bname=BloodBodyPartType.Hand_L, name=BodyPartType.Hand_L, chance=10})
+
+    local r = 1 + ZombRand(1000)
+    local bpi = 0
+    for i, bp in pairs(bodyParts) do
+        if bp.chance >= r then 
+            bpi = i
+        end
+    end
+
+    local sbp = bodyParts[bpi]
+    local hitBodyPart = player:getBodyDamage():getBodyPart(sbp.name)
+    print ("-- PLAYER HIT IN: " .. tostring(sbp.name))
+
+    if ZombRand(4) == 1 then
+        hitBodyPart:setScratched(true, true)
+        bodyDamage:ReduceGeneralHealth(6)
+    else
+        bodyDamage:ReduceGeneralHealth(3)
+    end
+
+    player:addBlood(0.2)
+
+    if sbp.name == BodyPartType.Head then
+        player:helmetFall(true)
+
+    end
 
 end

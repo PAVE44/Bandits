@@ -83,6 +83,8 @@ BanditServer.Commands.SpawnGroup = function(player, event)
     local crawler = false
     local isFallOnFront = false
     local isFakeDead = false
+    local isInvulnerable = false
+    local isSitting = false
     local gmd = GetBanditModData()
 
     local gx = event.x
@@ -96,10 +98,12 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             gy = ZombRand(gy - radius, gy + radius + 1)
         end
 
-        local zombieList = addZombiesInOutfit(gx, gy, gz, 1, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, bandit.health)
+        local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, 1, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, bandit.health)
         for i=0, zombieList:size()-1 do
             local zombie = zombieList:get(i)
             local id = BanditUtils.GetCharacterID(zombie)
+
+            zombie:setHealth(bandit.health)
 
             -- clients will change that flag to true once they recognize the bandit by its ID
             zombie:setVariable("Bandit", false)
@@ -123,6 +127,9 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
             -- for keyring
             brain.fullname = BanditNames.GenerateName(zombie:isFemale())
+
+            -- which voice to use
+            brain.voice = Bandit.PickVoice(zombie)
 
             -- hostility towards human players
             brain.hostile = event.hostile
@@ -167,6 +174,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- inventory
             brain.weapons = bandit.weapons
             brain.loot = bandit.loot
+            brain.key = bandit.key
             brain.inventory = {}
             table.insert(brain.inventory, "weldingGear")
             table.insert(brain.inventory, "crowbar")
@@ -220,17 +228,17 @@ BanditServer.Commands.Barricade = function(player, args)
         local barricade = IsoBarricade.AddBarricadeToObject(object, player)
         if barricade then
             if not barricade:isMetal() and args.isMetal then
-                local metal = InventoryItemFactory.CreateItem('Base.SheetMetal')
+                local metal = BanditCompatibility.InstanceItem("Base.SheetMetal")
                 metal:setCondition(args.condition)
                 barricade:addMetal(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif not barricade:isMetalBar() and args.isMetalBar then
-                local metal = InventoryItemFactory.CreateItem('Base.MetalBar')
+                local metal = BanditCompatibility.InstanceItem("Base.MetalBar")
                 metal:setCondition(args.condition)
                 barricade:addMetalBar(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif barricade:getNumPlanks() < 4 then
-                local plank = InventoryItemFactory.CreateItem('Base.Plank')
+                local plank = BanditCompatibility.InstanceItem("Base.Plank")
                 plank:setCondition(args.condition)
                 barricade:addPlank(nil, plank)
                 if barricade:getNumPlanks() == 1 then

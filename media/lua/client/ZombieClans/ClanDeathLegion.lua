@@ -26,12 +26,17 @@ BanditClan.DeathLegion.avoidZones = {"DeepForest"}
 
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}
+
 if getActivatedMods():contains("Insurgent") then
     table.insert(BanditClan.DeathLegion.Outfits, "InsurgentRifleman")
     table.insert(BanditClan.DeathLegion.Outfits, "InsurgentAssault")
     table.insert(BanditClan.DeathLegion.Outfits, "InsurgentOfficer")
 else
-    table.insert(BanditClan.DeathLegion.Outfits, "ArmyCamoDesert")
+    if BanditCompatibility.GetGameVersion() < 42 then
+        table.insert(BanditClan.DeathLegion.Outfits, "ArmyCamoDesert")
+    else
+        table.insert(BanditClan.DeathLegion.Outfits, "CostumeChunk")
+    end
 end
 
 -- available melee weapons
@@ -53,7 +58,6 @@ table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.HandTorch", 
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 99))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
@@ -68,7 +72,7 @@ table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Toothbrush",
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.Gum", 14))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))
 table.insert(BanditClan.DeathLegion.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))

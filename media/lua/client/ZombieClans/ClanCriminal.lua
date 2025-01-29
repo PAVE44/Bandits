@@ -26,9 +26,16 @@ BanditClan.Criminal.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}
-table.insert(BanditClan.Criminal.Outfits, "Thug")
-table.insert(BanditClan.Criminal.Outfits, "Redneck")
-table.insert(BanditClan.Criminal.Outfits, "Young")
+
+if BanditCompatibility.GetGameVersion() < 42 then
+    table.insert(BanditClan.Criminal.Outfits, "Thug")
+    table.insert(BanditClan.Criminal.Outfits, "Redneck")
+    table.insert(BanditClan.Criminal.Outfits, "Young")
+else
+    table.insert(BanditClan.Criminal.Outfits, "BankRobber")
+    table.insert(BanditClan.Criminal.Outfits, "BankRobberSuit")
+    table.insert(BanditClan.Criminal.Outfits, "BountyHunter")
+end
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Criminal.Outfits, "AuthenticBankRobber")
@@ -59,7 +66,7 @@ BanditClan.Criminal.Secondary = BanditClan.Criminal.Secondary or BanditWeapons.S
 
 -- loot table
 BanditClan.Criminal.Loot = BanditClan.Criminal.Loot or {}
-table.insert(BanditClan.Criminal.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 30))
+table.insert(BanditClan.Criminal.Loot, BanditLoot.MakeItem("Base.WaterBottle", 30))
 table.insert(BanditClan.Criminal.Loot, BanditLoot.MakeItem("Base.Crowbar", 77))
 table.insert(BanditClan.Criminal.Loot, BanditLoot.MakeItem("Base.Hammer", 33))
 table.insert(BanditClan.Criminal.Loot, BanditLoot.MakeItem("Base.Saw", 3))

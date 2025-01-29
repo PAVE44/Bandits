@@ -26,12 +26,29 @@ BanditClan.DeathLegion.avoidZones = {"DeepForest"}
 
 -- available outfits
 BanditClan.DeathLegion.Outfits = BanditClan.DeathLegion.Outfits or {}
-table.insert(BanditClan.DeathLegion.Outfits, "CostumeChunk")
+
+if getActivatedMods():contains("Insurgent") then
+    table.insert(BanditClan.DeathLegion.Outfits, "InsurgentRifleman")
+    table.insert(BanditClan.DeathLegion.Outfits, "InsurgentAssault")
+    table.insert(BanditClan.DeathLegion.Outfits, "InsurgentOfficer")
+else
+    if BanditCompatibility.GetGameVersion() < 42 then
+        table.insert(BanditClan.DeathLegion.Outfits, "ArmyCamoDesert")
+    else
+        table.insert(BanditClan.DeathLegion.Outfits, "CostumeChunk")
+    end
+end
 
 -- available melee weapons
 BanditClan.DeathLegion.Melee = BanditClan.DeathLegion.Melee or {}
 table.insert(BanditClan.DeathLegion.Melee, "Base.Machete")
 table.insert(BanditClan.DeathLegion.Melee, "Base.HuntingKnife")
+
+-- available primary weapons
+BanditClan.DeathLegion.Primary = BanditClan.DeathLegion.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.DeathLegion.Secondary = BanditClan.DeathLegion.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.DeathLegion.Loot = BanditClan.DeathLegion.Loot or {}

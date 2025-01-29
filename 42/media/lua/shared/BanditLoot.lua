@@ -4,7 +4,7 @@ BanditLoot = BanditLoot or {}
 
 BanditLoot.MakeItem = function(name, chance, quantity) 
     local item = {}
-    item.name = name
+    item.name = BanditCompatibility.GetLegacyItem(name)
     item.chance = chance
     return item
 end
@@ -49,9 +49,17 @@ table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Molotov", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.PipeBomb", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Bandage", 21))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Pills", 9))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.PillsVitamins", 9))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Lighter", 21))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.HolsterSimple", 11))
+
+if BanditCompatibility.GetGameVersion() < 42 and not getActivatedMods():contains("Smoker") then
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Cigarettes", 33))
+end
 
 -- food items
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.TinnedBeans", 1))
@@ -102,7 +110,10 @@ table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.CandyFruitSlices", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps2", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps3", 1))
-table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps4", 1))
+
+BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps4", 1))
+end
 
 -- valuables
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.PetrolCan", 1))

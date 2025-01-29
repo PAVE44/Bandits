@@ -51,7 +51,6 @@ BanditClan.Scientist.Loot = BanditClan.Scientist.Loot or {}
 
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.HandTorch", 100))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 66))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
@@ -67,7 +66,7 @@ table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.CottonBalls", 
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.Soap", 22))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.CleaningLiquid", 22))
 table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.Bleach", 22))
-table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 
 if getActivatedMods():contains("ExpandedHelicopterEvents") then
     table.insert(BanditClan.Scientist.Loot, BanditLoot.MakeItem("Base.MealReadytoEatEHE", 80))

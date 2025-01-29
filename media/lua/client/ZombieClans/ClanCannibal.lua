@@ -53,11 +53,11 @@ BanditClan.Cannibal.Secondary = BanditClan.Cannibal.Secondary or BanditWeapons.S
 
 -- loot table
 BanditClan.Cannibal.Loot = BanditClan.Cannibal.Loot or {}
-table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 30))
+table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.WaterBottle", 30))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Salt", 12))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Steak", 99))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Steak", 44))
-table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("farming.BaconBits", 44))
+table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.BaconBits", 44))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.CarvingFork", 33))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.Rope", 66))
 table.insert(BanditClan.Cannibal.Loot, BanditLoot.MakeItem("Base.DuctTape", 65))

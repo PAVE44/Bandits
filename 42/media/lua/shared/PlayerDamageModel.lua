@@ -3,7 +3,7 @@ PlayerDamageModel = PlayerDamageModel or {}
 function PlayerDamageModel.BulletHit(shooter, player)
     local bodyDamage = player:getBodyDamage()
     local health = bodyDamage:getOverallBodyHealth()
-    local item = instanceItem("Base.AssaultRifle2")
+    local item = BanditCompatibility.InstanceItem("Base.AssaultRifle2")
 
     -- SELECT BODY PART THAT WAS HIT
     local bodyParts = {}
@@ -63,7 +63,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
     if isSuperficial then
         shotBodyPart:setScratched(true, true)
         player:addBlood(0.2)
-        -- SwipeStatePlayer.splash(player, item, shooter)
+        BanditCompatibility.Splash(player, item, shooter)
     else
         if sbp.name == BodyPartType.Head then
             print ("HEADSHOT")
@@ -72,7 +72,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             else
                 print ("PLAYER DEAD")
                 player:addBlood(0.6)
-                -- SwipeStatePlayer.splash(player, item, shooter)
+                BanditCompatibility.Splash(player, item, shooter)
 
                 if not player:isGodMod() then
                     bodyDamage:ReduceGeneralHealth(100)
@@ -96,7 +96,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
                 shotBodyPart:setHaveBullet(true, 1)
                 player:addBlood(0.6)
                 player:addHole(sbp.bname, false)
-                -- SwipeStatePlayer.splash(player, item, shooter)
+                BanditCompatibility.Splash(player, item, shooter)
             end
 
         elseif sbp.name == BodyPartType.Foot_R or sbp.name == BodyPartType.Foot_L or sbp.name == BodyPartType.LowerLeg_R or sbp.name == BodyPartType.LowerLeg_L then
@@ -104,7 +104,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             shotBodyPart:setHaveBullet(true, 1)
             player:addHole(sbp.bname, true)
             player:addBlood(0.6)
-            -- SwipeStatePlayer.splash(player, item, shooter)
+            BanditCompatibility.Splash(player, item, shooter)
             if player:isRunning() or player:isSprinting() then
                 player:clearVariable("BumpFallType")
                 player:setBumpType("stagger")
@@ -116,7 +116,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
             shotBodyPart:setHaveBullet(true, 1)
             player:addHole(sbp.bname, true)
             player:addBlood(0.6)
-            -- SwipeStatePlayer.splash(player, item, shooter)
+            BanditCompatibility.Splash(player, item, shooter)
         end
     end
 

@@ -100,7 +100,12 @@ BanditPlayerBase.Update = function(numberTicks)
     if numberTicks % 10 == 0 then 
         for baseId, _ in pairs(BanditPlayerBase.data) do
             BanditPlayerBase.Regenerate(baseId)
-            -- BanditPlayerBase.ReindexItems(baseId)
+        end
+    end
+
+    if numberTicks % 50 == 0 then 
+        for baseId, _ in pairs(BanditPlayerBase.data) do
+            BanditPlayerBase.ReindexItems(baseId)
         end
     end
 end

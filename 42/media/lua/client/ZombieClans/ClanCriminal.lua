@@ -26,10 +26,26 @@ BanditClan.Criminal.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.Criminal.Outfits = BanditClan.Criminal.Outfits or {}
-table.insert(BanditClan.Criminal.Outfits, "BankRobber")
-table.insert(BanditClan.Criminal.Outfits, "BankRobberSuit")
-table.insert(BanditClan.Criminal.Outfits, "BountyHunter")
 
+if BanditCompatibility.GetGameVersion() < 42 then
+    table.insert(BanditClan.Criminal.Outfits, "Thug")
+    table.insert(BanditClan.Criminal.Outfits, "Redneck")
+    table.insert(BanditClan.Criminal.Outfits, "Young")
+else
+    table.insert(BanditClan.Criminal.Outfits, "BankRobber")
+    table.insert(BanditClan.Criminal.Outfits, "BankRobberSuit")
+    table.insert(BanditClan.Criminal.Outfits, "BountyHunter")
+end
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Criminal.Outfits, "AuthenticBankRobber")
+    table.insert(BanditClan.Criminal.Outfits, "AuthenticNMRIHMolotov")
+    table.insert(BanditClan.Criminal.Outfits, "AuthenticPoncho")
+end
+
+if getActivatedMods():contains("Brita_2") then
+    table.insert(BanditClan.Criminal.Outfits, "Brita_Killa_2")
+end
 
 -- available melee weapons
 BanditClan.Criminal.Melee = BanditClan.Criminal.Melee or {}
@@ -37,6 +53,16 @@ table.insert(BanditClan.Criminal.Melee, "Base.Crowbar")
 table.insert(BanditClan.Criminal.Melee, "Base.MetalBar")
 table.insert(BanditClan.Criminal.Melee, "Base.BaseballBat")
 table.insert(BanditClan.Criminal.Melee, "Base.KitchenKnife")
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Criminal.Melee, "AuthenticZClothing.Chainsaw")
+end
+
+-- available primary weapons
+BanditClan.Criminal.Primary = BanditClan.Criminal.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Criminal.Secondary = BanditClan.Criminal.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Criminal.Loot = BanditClan.Criminal.Loot or {}

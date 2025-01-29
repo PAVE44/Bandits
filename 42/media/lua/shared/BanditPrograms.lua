@@ -70,7 +70,7 @@ BanditPrograms.Weapon.Switch = function(bandit, itemName)
     end
 
     -- grab new weapon
-    local new = instanceItem(itemName)
+    local new = BanditCompatibility.InstanceItem(itemName)
     if new then
         local task = {action="Equip", itemPrimary=itemName}
         table.insert(tasks, task)
@@ -125,7 +125,7 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
 
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
-    local weaponItem = instanceItem(weapon.name)
+    local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local firingtime = weapon.shotDelay + math.floor(dist ^ 1.1)
@@ -525,9 +525,13 @@ BanditPrograms.Farm = BanditPrograms.Farm or {}
 
 -- allowed water containers for farming
 BanditPrograms.Farm.fillables = {}
-table.insert(BanditPrograms.Farm.fillables, "Base.WateredCan")
--- table.insert(BanditPrograms.Farm.fillables, "Base.BucketWaterFull")
--- table.insert(BanditPrograms.Farm.fillables, "Base.BucketEmpty")
+
+if BanditCompatibility.GetGameVersion() < 42 then
+    table.insert(BanditPrograms.Farm.fillables, "farming.WateredCanFull")
+    table.insert(BanditPrograms.Farm.fillables, "farming.WateredCan")
+else
+    table.insert(BanditPrograms.Farm.fillables, "Base.WateredCan")
+end
 
 BanditPrograms.Farm.PredicateFillable = function(item)
     for _, itemType in pairs(BanditPrograms.Farm.fillables) do

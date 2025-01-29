@@ -27,7 +27,14 @@ BanditClan.Biker.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 -- available outfits
 BanditClan.Biker.Outfits = BanditClan.Biker.Outfits or {}
 table.insert(BanditClan.Biker.Outfits, "Biker")
-table.insert(BanditClan.Biker.Outfits, "Goth")
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Biker.Outfits, "AuthenticBiker")
+end
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Biker.Outfits, "Goth")
+end
 
 -- available melee weapons
 BanditClan.Biker.Melee = BanditClan.Biker.Melee or {}
@@ -36,6 +43,12 @@ table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Nails")
 table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_RailSpike")
 table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Sawblade")
 table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Spiked")
+
+-- available primary weapons
+BanditClan.Biker.Primary = BanditClan.Biker.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Biker.Secondary = BanditClan.Biker.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Biker.Loot = BanditClan.Biker.Loot or {}

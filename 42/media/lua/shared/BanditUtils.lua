@@ -540,15 +540,15 @@ end
 function BanditUtils.ReplaceDrainable(item)
     local itemType = item:getFullType()
     local newItemType
-    if itemType == "Base.WateredCan" then
-        newItemType = "Base.WateredCan"
-    elseif itemType == "Base.Bucket" then
-        newItemType = "Base.Bucket"
+    if itemType == "farming.WateredCan" then
+        newItemType = "farming.WateredCanFull"
+    elseif itemType == "Base.BucketEmpty" then
+        newItemType = "Base.BucketWaterFull"
     end
 
     local newItem
     if newItemType then
-        newItem = instanceItem(newItemType)
+        newItem = BanditCompatibility.InstanceItem(newItemType)
         newItem:setUsedDelta(0)
     else
         newItem = item

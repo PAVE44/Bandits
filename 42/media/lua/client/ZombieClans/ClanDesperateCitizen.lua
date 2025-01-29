@@ -80,6 +80,12 @@ table.insert(BanditClan.DesperateCitizen.Melee, "Base.LeadPipe")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.WoodenMallet")
 table.insert(BanditClan.DesperateCitizen.Melee, "Base.Broom")
 
+-- available primary weapons
+BanditClan.DesperateCitizen.Primary = BanditClan.DesperateCitizen.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.DesperateCitizen.Secondary = BanditClan.DesperateCitizen.Secondary or BanditWeapons.Secondary
+
 -- loot table
 BanditClan.DesperateCitizen.Loot = BanditClan.DesperateCitizen.Loot or {}
 table.insert(BanditClan.DesperateCitizen.Loot, BanditLoot.MakeItem("Base.WaterBottle", 30))

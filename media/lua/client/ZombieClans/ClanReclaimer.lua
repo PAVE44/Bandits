@@ -28,15 +28,20 @@ BanditClan.Reclaimer.avoidZones = {"Forest", "DeepForest"}
 BanditClan.Reclaimer.Outfits = BanditClan.Reclaimer.Outfits or {}
 table.insert(BanditClan.Reclaimer.Outfits, "Priest")
 
-if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Reclaimer.Outfits, "AuthenticFuneralCoat")
-    table.insert(BanditClan.Reclaimer.Outfits, "AuthenticCultist")
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Reclaimer.Outfits, "CostumeMonster")
+    table.insert(BanditClan.Reclaimer.Outfits, "CostumeVampire")
 end
 
 -- available melee weapons
 BanditClan.Reclaimer.Melee = BanditClan.Reclaimer.Melee or {}
 table.insert(BanditClan.Reclaimer.Melee, "Base.Katana")
 table.insert(BanditClan.Reclaimer.Melee, "Base.HandScythe")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Reclaimer.Melee, "Base.CrudeSword")
+    table.insert(BanditClan.Reclaimer.Melee, "Base.Sword")
+end
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.MandoSpear")

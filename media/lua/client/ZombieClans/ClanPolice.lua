@@ -9,7 +9,7 @@ BanditClan.Police.id = 6
 BanditClan.Police.name = "Police"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.Police.femaleChance = 10
+BanditClan.Police.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.Police.health = 4
@@ -27,10 +27,15 @@ BanditClan.Police.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 -- available outfits
 BanditClan.Police.Outfits = BanditClan.Police.Outfits or {}
 table.insert(BanditClan.Police.Outfits, "Police")
-table.insert(BanditClan.Police.Outfits, "PoliceState")
-table.insert(BanditClan.Police.Outfits, "PoliceRiot")
-table.insert(BanditClan.Police.Outfits, "PrisonGuard")
 table.insert(BanditClan.Police.Outfits, "ZSPoliceSpecialOps")
+
+if BanditCompatibility.GetGameVersion() < 42 then
+    table.insert(BanditClan.Police.Outfits, "PoliceState")
+    table.insert(BanditClan.Police.Outfits, "PoliceRiot")
+    table.insert(BanditClan.Police.Outfits, "PrisonGuard")
+else
+    table.insert(BanditClan.Police.Outfits, "Police_SWAT")
+end
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Police.Outfits, "AuthenticSurvivorPolice")
@@ -54,7 +59,7 @@ BanditClan.Police.Secondary = BanditClan.Police.Secondary or BanditWeapons.Secon
 -- loot table
 BanditClan.Police.Loot = BanditClan.Police.Loot or {}
 table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.PaperBag", 96))
-table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 44))
+table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.WaterBottle", 44))
 table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.DoughnutPlain", 99))
 table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.DoughnutPlain", 88))
 table.insert(BanditClan.Police.Loot, BanditLoot.MakeItem("Base.DoughnutChocolate", 77))

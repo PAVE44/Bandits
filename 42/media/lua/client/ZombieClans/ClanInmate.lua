@@ -37,6 +37,12 @@ table.insert(BanditClan.Inmate.Melee, "Base.MetalBar")
 table.insert(BanditClan.Inmate.Melee, "Base.Shovel2") 
 table.insert(BanditClan.Inmate.Melee, "Base.SmashedBottle")
 
+-- available primary weapons
+BanditClan.Inmate.Primary = BanditClan.Inmate.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Inmate.Secondary = BanditClan.Inmate.Secondary or BanditWeapons.Secondary
+
 -- loot table
 BanditClan.Inmate.Loot = BanditClan.Inmate.Loot or {}
 table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.WaterBottle", 44))

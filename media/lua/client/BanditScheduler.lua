@@ -421,10 +421,10 @@ function BanditScheduler.RaiseDefences(x, y)
 
             BanditBaseGroupPlacements.Junk(x, y, 0, w, h, 3)
             if ZombRand(5) == 0 then    
-                BanditBaseGroupPlacements.Item("Base.WineEmpty", x, y, 0, w, h, 2)
-                BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 2)
-                BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
-                BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.WineOpen"), x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.BeerCanEmpty"), x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.ToiletPaper"), x, y, 0, w, h, 1)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.TinCanEmpty"), x, y, 0, w, h, 2)
             end
 
             local genSquare = cell:getGridSquare(buildingDef:getX()-1, buildingDef:getY()-1, 0)
@@ -437,7 +437,7 @@ function BanditScheduler.RaiseDefences(x, y)
                         generator:setActivated(true)
                     end
                 else
-                    local genItem = InventoryItemFactory.CreateItem("Base.Generator")
+                    local genItem = BanditCompatibility.InstanceItem("Base.Generator")
                     local obj = IsoGenerator.new(genItem, cell, genSquare)
                     obj:setConnected(true)
                     obj:setFuel(30 + ZombRand(60))
@@ -801,7 +801,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
     end
 
     if SandboxVars.Bandits.General_ArrivalIcon then
-        local color = {r=0.5, g=0.5, b=1}
+        local color = {r=1, g=0, b=0}
         local icon = "media/ui/defend.png"
         BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color)
     end

@@ -27,12 +27,34 @@ BanditClan.Police.avoidZones = {"Vegitation", "Forest", "DeepForest"}
 -- available outfits
 BanditClan.Police.Outfits = BanditClan.Police.Outfits or {}
 table.insert(BanditClan.Police.Outfits, "Police")
-table.insert(BanditClan.Police.Outfits, "Police_SWAT")
 table.insert(BanditClan.Police.Outfits, "ZSPoliceSpecialOps")
+
+if BanditCompatibility.GetGameVersion() < 42 then
+    table.insert(BanditClan.Police.Outfits, "PoliceState")
+    table.insert(BanditClan.Police.Outfits, "PoliceRiot")
+    table.insert(BanditClan.Police.Outfits, "PrisonGuard")
+else
+    table.insert(BanditClan.Police.Outfits, "Police_SWAT")
+end
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Police.Outfits, "AuthenticSurvivorPolice")
+end
+
+if getActivatedMods():contains("zReSWATARMORbykK") then
+    table.insert(BanditClan.Police.Outfits, "zReSA_SWAT1")
+    table.insert(BanditClan.Police.Outfits, "zReSA_SWAT2")
+end
 
 -- available melee weapons
 BanditClan.Police.Melee = BanditClan.Police.Melee or {}
 table.insert(BanditClan.Police.Melee, "Base.Nightstick")
+
+-- available primary weapons
+BanditClan.Police.Primary = BanditClan.Police.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Police.Secondary = BanditClan.Police.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Police.Loot = BanditClan.Police.Loot or {}

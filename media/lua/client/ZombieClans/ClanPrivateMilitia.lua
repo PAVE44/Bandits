@@ -26,6 +26,7 @@ BanditClan.PrivateMilitia.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.PrivateMilitia.Outfits = BanditClan.PrivateMilitia.Outfits or {}
+
 if getActivatedMods():contains("USMilitaryPack") then
     table.insert(BanditClan.PrivateMilitia.Outfits, "INFANTRY_USMP1")
     table.insert(BanditClan.PrivateMilitia.Outfits, "INFANTRY_USMP2")
@@ -34,7 +35,12 @@ elseif getActivatedMods():contains("Brita_2") then
     table.insert(BanditClan.PrivateMilitia.Outfits, "Brita_Hunter_2")
 else
     table.insert(BanditClan.PrivateMilitia.Outfits, "PrivateMilitia")
-    table.insert(BanditClan.PrivateMilitia.Outfits, "Camper")
+    if BanditCompatibility.GetGameVersion() < 42 then
+        table.insert(BanditClan.PrivateMilitia.Outfits, "Camper")
+    else
+        table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeCommandoJohn")
+        table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeBeastMom")
+    end
 end
 
 -- available melee weapons
@@ -55,7 +61,6 @@ table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Necklace_
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.HandTorch", 100))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 99))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Disinfectant", 99))
@@ -68,7 +73,7 @@ table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Toothbrus
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.Gum", 14))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))
 table.insert(BanditClan.PrivateMilitia.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))

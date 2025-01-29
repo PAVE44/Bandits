@@ -494,14 +494,9 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     --zombie:resetEquippedHandsModels()
     zombie:clearItemsToSpawnAtDeath()
 
-    -- keyring
-    --
+    -- keyring / id
     if brain.fullname then
-        local itemName = "Base.IDcard"
-        if zombie:isFemale() then itemName = "Base.IDcard_Female" end
-        local item = instanceItem(itemName)
-        item:setName("ID Card:" .. brain.fullname)
-        zombie:addItemToSpawnAtDeath(item)
+        BanditCompatibility.AddId(zombie, brain.fullname)
     end
 
     -- update inventory
@@ -515,7 +510,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     -- update weapons that the bandit has
     if weapons.melee and weapons.melee ~= "Base.BareHands" then 
-        local item = instanceItem(weapons.melee)
+        local item = BanditCompatibility.InstanceItem(weapons.melee)
         item:setCondition(1+ZombRand(10))
         zombie:addItemToSpawnAtDeath(item)
     end
@@ -524,14 +519,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         if weapons.primary.name then
 
             if weapons.primary.magName then
-                local mag = instanceItem(weapons.primary.magName)
+                local mag = BanditCompatibility.InstanceItem(weapons.primary.magName)
                 if mag then
                     mag:setCurrentAmmoCount(weapons.primary.bulletsLeft)
                     mag:setMaxAmmo(weapons.primary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
                 end
 
-                local gun = instanceItem(weapons.primary.name)
+                local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
                 if gun then
                     gun:setCondition(3+ZombRand(15))
                     -- gun:setClip(nil)
@@ -539,7 +534,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 end
 
                 for i=1, weapons.primary.magCount do
-                    local mag = instanceItem(weapons.primary.magName)
+                    local mag = BanditCompatibility.InstanceItem(weapons.primary.magName)
                     if mag then
                         mag:setCurrentAmmoCount(weapons.primary.magSize)
                         mag:setMaxAmmo(weapons.primary.magSize)
@@ -554,14 +549,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         if weapons.secondary.name then
 
             if weapons.secondary.magName then
-                local mag = instanceItem(weapons.secondary.magName)
+                local mag = BanditCompatibility.InstanceItem(weapons.secondary.magName)
                 if mag then
                     mag:setCurrentAmmoCount(weapons.secondary.bulletsLeft)
                     mag:setMaxAmmo(weapons.secondary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
                 end
 
-                local gun = instanceItem(weapons.secondary.name)
+                local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
                 if gun then
                     -- gun:setClip(nil)
                     gun:setCondition(3+ZombRand(22))
@@ -569,7 +564,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 end
 
                 for i=1, weapons.secondary.magCount do
-                    local mag = instanceItem(weapons.secondary.magName)
+                    local mag = BanditCompatibility.InstanceItem(weapons.secondary.magName)
                     if mag then
                         mag:setCurrentAmmoCount(weapons.secondary.magSize)
                         mag:setMaxAmmo(weapons.secondary.magSize)
@@ -581,11 +576,10 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     -- update loot items that the bandit has
-    --
     local loot = brain.loot
     if loot then
         for _, itemType in pairs(brain.loot) do
-            local item = instanceItem(itemType)
+            local item = BanditCompatibility.InstanceItem(itemType)
             if item then
                 zombie:addItemToSpawnAtDeath(item)
             end
@@ -594,13 +588,11 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 end
 
 function Bandit.SurpressZombieSounds(bandit)
-    bandit:getEmitter():stopSoundByName(bandit:getVoiceSoundName())
-    bandit:getEmitter():stopSoundByName(bandit:getBiteSoundName())
+    BanditCompatibility.SurpressZombieSounds(bandit)
 end
 
-
 function Bandit.PickVoice(zombie)
-    local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
+    local maleOptions = {"1", "2", "3", "4", "18"} -- , "14", "16", "18", "21"}
     local femaleOptions = {"3"}
 
     if zombie:isFemale() then

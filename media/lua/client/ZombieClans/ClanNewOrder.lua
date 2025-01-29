@@ -39,7 +39,6 @@ if getActivatedMods():contains("KATTAJ1_Military") then
 else
     table.insert(BanditClan.NewOrder.Outfits, "ArmyCamoGreen")
     table.insert(BanditClan.NewOrder.Outfits, "ZSArmySpecialOps")
-    -- table.insert(BanditClan.NewOrder.Outfits, "Ghillie")
 end
 
 -- available melee weapons
@@ -60,7 +59,6 @@ table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.HandTorch", 100
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Battery", 88))
-table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 99))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
@@ -75,7 +73,7 @@ table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Toothbrush", 33
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
+table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.Gum", 14))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))
 table.insert(BanditClan.NewOrder.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 44))

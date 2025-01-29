@@ -28,6 +28,11 @@ BanditClan.Prepper.avoidZones = {"TownZone", "Nav"}
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}
 table.insert(BanditClan.Prepper.Outfits, "Survivalist03")
 
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Mid")
+    table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Late")
+end
+
 if getActivatedMods():contains("HNDLBR_Preppers") then
     table.insert(BanditClan.Prepper.Outfits, "HNDLBR_Prepper")
     table.insert(BanditClan.Prepper.Outfits, "HNDLBR_DoomsDayPrepper")
@@ -36,7 +41,7 @@ end
 -- available melee weapons
 BanditClan.Prepper.Melee = BanditClan.Prepper.Melee or {}
 table.insert(BanditClan.Prepper.Melee, "Base.SpearHuntingKnife")
-table.insert(BanditClan.Prepper.Melee, "Base.WoodenLance")
+table.insert(BanditClan.Prepper.Melee, "Base.SpearShort")
 table.insert(BanditClan.Prepper.Melee, "Base.HuntingKnife")
 table.insert(BanditClan.Prepper.Melee, "Base.Machete")
 table.insert(BanditClan.Prepper.Melee, "Base.Axe")
@@ -55,11 +60,9 @@ table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandTorch", 100)
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Battery", 77))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandTorch", 66))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("camping.CampfireKit", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Matches", 99))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.CampingTentKit", 88))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HuntingKnife", 80))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 23))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Disinfectant", 55))
@@ -71,19 +74,19 @@ table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Pencil", 35))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Saucepan", 21))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Scissors", 17))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandAxe", 17))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.HandShovel", 7))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandShovel", 7))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Toothbrush", 77))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Toothpaste", 77))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Soap", 66))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 99))
 
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.BroccoliBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.CabbageBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.CarrotBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.PotatoBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.RedRadishBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.StrewberrieBagSeed", 2))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("farming.TomatoBagSeed", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.BroccoliBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.CabbageBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.CarrotBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.PotatoBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.RedRadishBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.StrewberrieBagSeed2", 2))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.TomatoBagSeed2", 2))
 
 if getActivatedMods():contains("MCM") then
     table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("MCM.AvocadoBagSeed", 2))
@@ -116,8 +119,8 @@ if getActivatedMods():contains("FarmingTime") then
     table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("filcher.Cauliflower", 4))
 end
 
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 22))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Whiskey", 22))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 7))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Chocolate", 5))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.PeanutButter", 4))

@@ -79,7 +79,7 @@ function BanditPost.Render()
 end
 
 function BanditPost.OnKeyPressed(keynum)
-    if keynum == getCore():getKey("POSTS") then
+    if keynum == BanditCompatibility.GetGuardpostKey() then
         BanditPost.Render()
     end
 end

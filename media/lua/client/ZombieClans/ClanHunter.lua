@@ -55,7 +55,6 @@ table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Matches", 99))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.CampingTentKit", 88))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.HuntingKnife", 80))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Twine", 80))
-table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Radio.WalkieTalkieMakeShift", 23))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 33))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Disinfectant", 55))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Pills", 2))
@@ -78,8 +77,8 @@ if getActivatedMods():contains("MandelaBowAndArrow") then
     table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("MandelaArrowWoodDucttapeIron", 44))
 end
 
-table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 22))
+table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Whiskey", 22))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 34))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Sausage", 34))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Baloney", 31))

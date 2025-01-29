@@ -14,7 +14,7 @@ function BanditCreator.MakeWeapons(wave, clan)
     weapons.primary.magCount = 0
     local rifleRandom = ZombRandFloat(0, 101)
     if rifleRandom < wave.hasRifleChance then
-        weapons.primary = BanditUtils.Choice(BanditWeapons.GetPrimary())
+        weapons.primary = BanditUtils.Choice(clan.Primary)
         weapons.primary.magCount = wave.rifleMagCount
     end
 
@@ -26,7 +26,7 @@ function BanditCreator.MakeWeapons(wave, clan)
     weapons.secondary.magCount = 0
     local pistolRandom = ZombRandFloat(0, 101)
     if pistolRandom < wave.hasPistolChance then
-        weapons.secondary = BanditUtils.Choice(BanditWeapons.GetSecondary())
+        weapons.secondary = BanditUtils.Choice(clan.Secondary)
         weapons.secondary.magCount = wave.pistolMagCount
     end
 
@@ -50,7 +50,7 @@ function BanditCreator.MakeLoot(clanLoot)
     if not getActivatedMods():contains("Smoker") then
         if ZombRand(4) == 1 then
             for i=1, ZombRand(19) do
-                table.insert(loot, "Base.CigaretteSingle")
+                table.insert(loot, BanditCompatibility.GetLegacyItem("Base.CigaretteSingle"))
             end
             table.insert(loot, "Base.Lighter")
         end
@@ -166,8 +166,8 @@ function BanditCreator.MakeFromSpawnType(spawnData)
     else
         clan = BanditClan.DoomRider
         config.hasRifleChance = 5
-        config.hasPistolChance = 25
-        config.rifleMagCount = 0
+        config.hasPistolChance = 20
+        config.rifleMagCount = 1
         config.pistolMagCount = 2
     end
 

@@ -421,10 +421,10 @@ function BanditScheduler.RaiseDefences(x, y)
 
             BanditBaseGroupPlacements.Junk(x, y, 0, w, h, 3)
             if ZombRand(5) == 0 then    
-                BanditBaseGroupPlacements.Item("Base.WineOpen", x, y, 0, w, h, 2)
-                BanditBaseGroupPlacements.Item("Base.BeerCanEmpty", x, y, 0, w, h, 2)
-                BanditBaseGroupPlacements.Item("Base.ToiletPaper", x, y, 0, w, h, 1)
-                BanditBaseGroupPlacements.Item("Base.TinCanEmpty", x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.WineOpen"), x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.BeerCanEmpty"), x, y, 0, w, h, 2)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.ToiletPaper"), x, y, 0, w, h, 1)
+                BanditBaseGroupPlacements.Item(BanditCompatibility.GetLegacyItem("Base.TinCanEmpty"), x, y, 0, w, h, 2)
             end
 
             local genSquare = cell:getGridSquare(buildingDef:getX()-1, buildingDef:getY()-1, 0)
@@ -437,8 +437,7 @@ function BanditScheduler.RaiseDefences(x, y)
                         generator:setActivated(true)
                     end
                 else
-                    -- local genItem = InventoryItemFactory.CreateItem("Base.Generator")
-                    local genItem = instanceItem("Base.Generator")
+                    local genItem = BanditCompatibility.InstanceItem("Base.Generator")
                     local obj = IsoGenerator.new(genItem, cell, genSquare)
                     obj:setConnected(true)
                     obj:setFuel(30 + ZombRand(60))

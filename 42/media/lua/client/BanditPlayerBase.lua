@@ -173,7 +173,6 @@ BanditPlayerBase.Regenerate = function(baseId)
     
     -- unregisters all items located at the given location for a given base
     local function removeItems(baseId, x, y, z)
-        local debug = BanditPlayerBase.data
         local id = x .. "-" .. y .. "-" .. z
         BanditPlayerBase.data[baseId].containers[id] = nil
     end

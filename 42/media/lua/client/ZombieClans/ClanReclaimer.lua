@@ -27,20 +27,32 @@ BanditClan.Reclaimer.avoidZones = {"Forest", "DeepForest"}
 -- available outfits
 BanditClan.Reclaimer.Outfits = BanditClan.Reclaimer.Outfits or {}
 table.insert(BanditClan.Reclaimer.Outfits, "Priest")
-table.insert(BanditClan.Reclaimer.Outfits, "CostumeMonster")
-table.insert(BanditClan.Reclaimer.Outfits, "CostumeVampire")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Reclaimer.Outfits, "CostumeMonster")
+    table.insert(BanditClan.Reclaimer.Outfits, "CostumeVampire")
+end
 
 -- available melee weapons
 BanditClan.Reclaimer.Melee = BanditClan.Reclaimer.Melee or {}
 table.insert(BanditClan.Reclaimer.Melee, "Base.Katana")
 table.insert(BanditClan.Reclaimer.Melee, "Base.HandScythe")
-table.insert(BanditClan.Reclaimer.Melee, "Base.CrudeSword")
-table.insert(BanditClan.Reclaimer.Melee, "Base.Sword")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Reclaimer.Melee, "Base.CrudeSword")
+    table.insert(BanditClan.Reclaimer.Melee, "Base.Sword")
+end
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.MandoSpear")
     table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.Chainsaw")
 end
+
+-- available primary weapons
+BanditClan.Reclaimer.Primary = BanditClan.Reclaimer.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Reclaimer.Secondary = BanditClan.Reclaimer.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Reclaimer.Loot = BanditClan.Reclaimer.Loot or {}

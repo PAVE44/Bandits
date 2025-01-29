@@ -30,10 +30,23 @@ table.insert(BanditClan.Psychopath.Outfits, "Naked")
 table.insert(BanditClan.Psychopath.Outfits, "HockeyPsycho")
 table.insert(BanditClan.Psychopath.Outfits, "HospitalPatient")
 table.insert(BanditClan.Psychopath.Outfits, "TinFoilHat")
-table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_RoadRash")
-table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_Spikey")
-table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_TrashPack")
-table.insert(BanditClan.Psychopath.Outfits, "ExterminatorSuited")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_RoadRash")
+    table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_Spikey")
+    table.insert(BanditClan.Psychopath.Outfits, "ArmorTest_TrashPack")
+    table.insert(BanditClan.Psychopath.Outfits, "ExterminatorSuited")
+end
+
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticJasonPart3")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat01")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat02")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticFat03")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticGhostFace")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticPolitician")
+    table.insert(BanditClan.Psychopath.Outfits, "AuthenticShortgunFace")
+end
 
 -- available melee weapons
 BanditClan.Psychopath.Melee = BanditClan.Psychopath.Melee or {}
@@ -44,14 +57,23 @@ table.insert(BanditClan.Psychopath.Melee, "Base.Plank_Nails")
 table.insert(BanditClan.Psychopath.Melee, "Base.PickAxe")
 table.insert(BanditClan.Psychopath.Melee, "Base.MetalBar")
 table.insert(BanditClan.Psychopath.Melee, "Base.LeadPipe")
-table.insert(BanditClan.Psychopath.Melee, "Base.BucketMace_Metal")
-table.insert(BanditClan.Psychopath.Melee, "Base.LongSpikedClub")
-table.insert(BanditClan.Psychopath.Melee, "Base.LongMace")
-table.insert(BanditClan.Psychopath.Melee, "Base.Mace")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Psychopath.Melee, "Base.BucketMace_Metal")
+    table.insert(BanditClan.Psychopath.Melee, "Base.LongSpikedClub")
+    table.insert(BanditClan.Psychopath.Melee, "Base.LongMace")
+    table.insert(BanditClan.Psychopath.Melee, "Base.Mace")
+end
 
 if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Psychopath.Melee, "AuthenticZClothing.Chainsaw")
 end
+
+-- available primary weapons
+BanditClan.Psychopath.Primary = BanditClan.Psychopath.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Psychopath.Secondary = BanditClan.Psychopath.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Psychopath.Loot = BanditClan.Psychopath.Loot or {}

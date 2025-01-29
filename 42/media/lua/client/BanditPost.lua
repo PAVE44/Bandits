@@ -79,9 +79,7 @@ function BanditPost.Render()
 end
 
 function BanditPost.OnKeyPressed(keynum)
-    local options = PZAPI.ModOptions:getOptions("Bandits")
-    local option = options:getOption("POSTS"):getValue()
-    if keynum == option then
+    if keynum == BanditCompatibility.GetGuardpostKey() then
         BanditPost.Render()
     end
 end

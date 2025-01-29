@@ -9,7 +9,7 @@ BanditClan.Prepper.id = 7
 BanditClan.Prepper.name = "Prepper"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.Prepper.femaleChance = 20
+BanditClan.Prepper.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.Prepper.health = 4
@@ -27,8 +27,11 @@ BanditClan.Prepper.avoidZones = {"TownZone", "Nav"}
 -- available outfits
 BanditClan.Prepper.Outfits = BanditClan.Prepper.Outfits or {}
 table.insert(BanditClan.Prepper.Outfits, "Survivalist03")
-table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Mid")
-table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Late")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Mid")
+    table.insert(BanditClan.Prepper.Outfits, "Survivalist03_Late")
+end
 
 if getActivatedMods():contains("HNDLBR_Preppers") then
     table.insert(BanditClan.Prepper.Outfits, "HNDLBR_Prepper")
@@ -44,6 +47,12 @@ table.insert(BanditClan.Prepper.Melee, "Base.Machete")
 table.insert(BanditClan.Prepper.Melee, "Base.Axe")
 table.insert(BanditClan.Prepper.Melee, "Base.HandAxe")
 
+-- available primary weapons
+BanditClan.Prepper.Primary = BanditClan.Prepper.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Prepper.Secondary = BanditClan.Prepper.Secondary or BanditWeapons.Secondary
+
 -- loot table
 BanditClan.Prepper.Loot = BanditClan.Prepper.Loot or {}
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.WristWatch_Left_DigitalBlack", 100))
@@ -51,7 +60,6 @@ table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandTorch", 100)
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Battery", 88))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Battery", 77))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandTorch", 66))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("camping.CampfireKit", 33))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Matches", 99))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.CampingTentKit", 88))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HuntingKnife", 80))

@@ -9,7 +9,7 @@ BanditClan.DoomRider.id = 13
 BanditClan.DoomRider.name = "Doomrider"
 
 -- % chance of a clan member to be a female. Outfit must support it.
-BanditClan.DoomRider.femaleChance = 10
+BanditClan.DoomRider.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
 BanditClan.DoomRider.health = 5
@@ -26,10 +26,23 @@ BanditClan.DoomRider.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.DoomRider.Outfits = BanditClan.DoomRider.Outfits or {}
-table.insert(BanditClan.DoomRider.Outfits, "Bandit")
-table.insert(BanditClan.DoomRider.Outfits, "Bandit_Early")
-table.insert(BanditClan.DoomRider.Outfits, "Bandit_Mid")
-table.insert(BanditClan.DoomRider.Outfits, "Bandit_Late")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.DoomRider.Outfits, "Bandit_Early")
+    table.insert(BanditClan.DoomRider.Outfits, "Bandit_Mid")
+    table.insert(BanditClan.DoomRider.Outfits, "Bandit_Late")
+else
+    table.insert(BanditClan.DoomRider.Outfits, "Bandit")
+    table.insert(BanditClan.DoomRider.Outfits, "Survivalist")
+end
+
+if getActivatedMods():contains("Brita_2") then
+    table.insert(BanditClan.DoomRider.Outfits, "Brita_Bandit")
+    table.insert(BanditClan.DoomRider.Outfits, "Brita_Bandit_2")
+end
+
+-- available melee weapons
+BanditClan.DoomRider.Melee = BanditClan.DoomRider.Melee or {}
 
 -- available melee weapons
 BanditClan.DoomRider.Melee = BanditClan.DoomRider.Melee or {}
@@ -37,11 +50,19 @@ table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Nails")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_RailSpike")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Sawblade")
 table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Spiked")
-table.insert(BanditClan.DoomRider.Melee, "Base.LongMace")
-table.insert(BanditClan.DoomRider.Melee, "Base.Katana")
 table.insert(BanditClan.DoomRider.Melee, "Base.Machete")
 table.insert(BanditClan.DoomRider.Melee, "Base.HandAxe")
 table.insert(BanditClan.DoomRider.Melee, "Base.Crowbar")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.DoomRider.Melee, "Base.LongMace")
+end
+
+-- available primary weapons
+BanditClan.DoomRider.Primary = BanditClan.DoomRider.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.DoomRider.Secondary = BanditClan.DoomRider.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.DoomRider.Loot = BanditClan.DoomRider.Loot or {}

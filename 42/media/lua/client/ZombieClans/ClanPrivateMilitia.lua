@@ -26,14 +26,33 @@ BanditClan.PrivateMilitia.avoidZones = {"Forest", "DeepForest"}
 
 -- available outfits
 BanditClan.PrivateMilitia.Outfits = BanditClan.PrivateMilitia.Outfits or {}
-table.insert(BanditClan.PrivateMilitia.Outfits, "PrivateMilitia")
-table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeCommandoJohn")
-table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeBeastMom")
+
+if getActivatedMods():contains("USMilitaryPack") then
+    table.insert(BanditClan.PrivateMilitia.Outfits, "INFANTRY_USMP1")
+    table.insert(BanditClan.PrivateMilitia.Outfits, "INFANTRY_USMP2")
+elseif getActivatedMods():contains("Brita_2") then
+    table.insert(BanditClan.PrivateMilitia.Outfits, "Brita_Gorka")
+    table.insert(BanditClan.PrivateMilitia.Outfits, "Brita_Hunter_2")
+else
+    table.insert(BanditClan.PrivateMilitia.Outfits, "PrivateMilitia")
+    if BanditCompatibility.GetGameVersion() < 42 then
+        table.insert(BanditClan.PrivateMilitia.Outfits, "Camper")
+    else
+        table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeCommandoJohn")
+        table.insert(BanditClan.PrivateMilitia.Outfits, "CostumeBeastMom")
+    end
+end
 
 -- available melee weapons
 BanditClan.PrivateMilitia.Melee = BanditClan.PrivateMilitia.Melee or {}
 table.insert(BanditClan.PrivateMilitia.Melee, "Base.Machete")
 table.insert(BanditClan.PrivateMilitia.Melee, "Base.HuntingKnife")
+
+-- available primary weapons
+BanditClan.PrivateMilitia.Primary = BanditClan.PrivateMilitia.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.PrivateMilitia.Secondary = BanditClan.PrivateMilitia.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.PrivateMilitia.Loot = BanditClan.PrivateMilitia.Loot or {}

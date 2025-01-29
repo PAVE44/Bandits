@@ -98,19 +98,12 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             gy = ZombRand(gy - radius, gy + radius + 1)
         end
 
-        local zombieList = addZombiesInOutfit(gx, gy, gz, 1, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, bandit.health)
-
+        local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, 1, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, bandit.health)
         for i=0, zombieList:size()-1 do
             local zombie = zombieList:get(i)
             local id = BanditUtils.GetCharacterID(zombie)
 
             zombie:setHealth(bandit.health)
-            --[[
-            local h = zombie:getHealth()
-            print("-- SPHP:" .. h .. " / " .. bandit.health)
-            if h < 2.2 or bandit.health < 2.2 then
-                print ("got it")
-            end]]
 
             -- clients will change that flag to true once they recognize the bandit by its ID
             zombie:setVariable("Bandit", false)
@@ -135,6 +128,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- for keyring
             brain.fullname = BanditNames.GenerateName(zombie:isFemale())
 
+            -- which voice to use
             brain.voice = Bandit.PickVoice(zombie)
 
             -- hostility towards human players
@@ -234,17 +228,17 @@ BanditServer.Commands.Barricade = function(player, args)
         local barricade = IsoBarricade.AddBarricadeToObject(object, player)
         if barricade then
             if not barricade:isMetal() and args.isMetal then
-                local metal = instanceItem("Base.SheetMetal")
+                local metal = BanditCompatibility.InstanceItem("Base.SheetMetal")
                 metal:setCondition(args.condition)
                 barricade:addMetal(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif not barricade:isMetalBar() and args.isMetalBar then
-                local metal = instanceItem("Base.MetalBar")
+                local metal = BanditCompatibility.InstanceItem("Base.MetalBar")
                 metal:setCondition(args.condition)
                 barricade:addMetalBar(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif barricade:getNumPlanks() < 4 then
-                local plank = instanceItem("Base.Plank")
+                local plank = BanditCompatibility.InstanceItem("Base.Plank")
                 plank:setCondition(args.condition)
                 barricade:addPlank(nil, plank)
                 if barricade:getNumPlanks() == 1 then

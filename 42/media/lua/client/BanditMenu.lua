@@ -216,9 +216,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local world = getWorld()
     local gamemode = world:getGameMode()
     local player = getSpecificPlayer(playerID)
-    
-    local fetch = ISWorldObjectContextMenu.fetchVars
-    local square = fetch.clickedSquare
+    local square = BanditCompatibility.GetClickedSquare()
     local generator = square:getGenerator()
 
     local zombie = square:getZombie()
@@ -234,15 +232,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             end
         end
     end
-    
-    --[[local map = getScriptManager():getZedDmgMap()
-    for i=0, map:size()-1 do
-        local dmg = map:get(i)
-        print (dmg)
-    end]]
-
-    -- local chunkRegion = IsoRegions.getChunkRegion(square:getX(), square:getY(), square:getZ())
-    -- local enclosed = chunkRegion:getIsEnclosed()
     
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") then

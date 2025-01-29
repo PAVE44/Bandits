@@ -22,9 +22,14 @@ BanditZombie.LastSize = 0
 local UpdateZombieCache = function(numberTicks)
     -- if true then return end 
     if isServer() then return end
+
+    if not Bandit.Engine then return end
+    
     -- ts = getTimestampMs()
     -- if not numberTicks % 4 == 1 then return end
     
+    local silenceStates = {"hitreaction", "hitreaction-hit", "hitreaction-gettingup", "hitreaction-knockeddown", "climbfence", "climbwindow"}
+
     -- adaptive pefrormance
     -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
     local skip = 4
@@ -53,42 +58,55 @@ local UpdateZombieCache = function(numberTicks)
     for i = 0, zombieListSize - 1 do
         
         local zombie = zombieList:get(i)
-        local id = BanditUtils.GetCharacterID(zombie)
 
-        cache[id] = zombie
-        
-        local zx = zombie:getX()
-        local zy = zombie:getY()
-        local zz = zombie:getZ()
-        
-        if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-            local light = {}
-            light.id = id
-            light.x = zx
-            light.y = zy
-            light.z = zz
-            light.brain = BanditBrain.Get(zombie)
+        if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then
 
-            if zombie:getVariableBoolean("Bandit")  then
-                light.isBandit = true
-                cacheLightB[id] = light
-                -- zombies in hitreaction state are not processed by onzombieupdate
-                -- so we need to make them shut their zombie sound here too
-                -- logically this does not fit here, should be a separate process
-                -- but it's here due to performance optimization to avoid additional iteration
-                -- over zombieList
-                
-                local asn = zombie:getActionStateName()
-                if asn == "hitreaction" or asn == "hitreaction-hit" or asn == "climbfence" or asn == "climbwindow" then
-                    zombie:getEmitter():stopSoundByName("MaleZombieCombined")
-                    zombie:getEmitter():stopSoundByName("FemaleZombieCombined")
+            local id = BanditUtils.GetCharacterID(zombie)
+
+            cache[id] = zombie
+            
+            local zx = zombie:getX()
+            local zy = zombie:getY()
+            local zz = zombie:getZ()
+            
+            if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
+                local light = {}
+                light.id = id
+                light.x = zx
+                light.y = zy
+                light.z = zz
+                light.brain = BanditBrain.Get(zombie)
+
+                if zombie:getVariableBoolean("Bandit")  then
+                    light.isBandit = true
+                    cacheLightB[id] = light
+                    -- zombies in hitreaction state are not processed by onzombieupdate
+                    -- so we need to make them shut their zombie sound here too
+                    -- logically this does not fit here, should be a separate process
+                    -- but it's here due to performance optimization to avoid additional iteration
+                    -- over zombieList
+                    
+                    local asn = zombie:getActionStateName()
+                    for _, ss in pairs(silenceStates) do
+                        if asn == ss then
+                            Bandit.SurpressZombieSounds(zombie)
+                            break
+                        end
+                    end
+
+                    if asn == "bumped" then
+                        local btype = zombie:getBumpType()
+                        if btype and (btype == "ClimbWindow" or btype == "ClimbFence" or btype == "ClimbFenceEnd") then
+                            Bandit.SurpressZombieSounds(zombie)
+                        end
+                    end
+                else
+                    light.isBandit = false
+                    cacheLightZ[id] = light
                 end
-            else
-                light.isBandit = false
-                cacheLightZ[id] = light
-            end
 
-            cacheLight[id] = light
+                cacheLight[id] = light
+            end
         end
 
     end

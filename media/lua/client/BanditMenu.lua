@@ -149,6 +149,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
 
     -- add breakpoint below to see data
     local brain = BanditBrain.Get(zombie)
+    local moddata = zombie:getModData()
     local id = BanditUtils.GetCharacterID(zombie)
     local daysPassed = BanditScheduler.DaysSinceApo()
     local isUseless = zombie:isUseless()
@@ -164,8 +165,12 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local ans = zombie:getActionStateName()
     local under = zombie:isUnderVehicle()
     local veh = zombie:getVehicle()
+    local health = zombie:getHealth()
     local zx = zombie:getX()
     local zy = zombie:getY()
+    local hv = zombie:getHumanVisual()
+    local bv = hv:getBodyVisuals()
+    local moddata = zombie:getModData()
     local target = zombie:getTarget()
     local animator = zombie:getAdvancedAnimator()
     -- local astate = zombie:getAnimationDebug()
@@ -210,25 +215,37 @@ end
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local world = getWorld()
     local gamemode = world:getGameMode()
-    local square = clickedSquare
     local player = getSpecificPlayer(playerID)
-    local zombie = square:getZombie()
+    local square = BanditCompatibility.GetClickedSquare()
     local generator = square:getGenerator()
-    
-    -- local chunkRegion = IsoRegions.getChunkRegion(square:getX(), square:getY(), square:getZ())
-    -- local enclosed = chunkRegion:getIsEnclosed()
+
+    local zombie = square:getZombie()
+    if not zombie then
+        local squareS = square:getS()
+        if squareS then
+            zombie = squareS:getZombie()
+            if not zombie then
+                local squareW = square:getW()
+                if squareW then
+                    zombie = squareW:getZombie()
+                end
+            end
+        end
+    end
     
     -- Player options
-    if zombie and zombie:getVariableBoolean("Bandit") and not Bandit.IsHostile(zombie) then
+    if zombie and zombie:getVariableBoolean("Bandit") then
         local brain = BanditBrain.Get(zombie)
-        local banditOption = context:addOption(brain.fullname)
-        local banditMenu = context:getNew(context)
-        context:addSubMenu(banditOption, banditMenu)
+        if not brain.hostile and brain.clan > 0 then
+            local banditOption = context:addOption(brain.fullname)
+            local banditMenu = context:getNew(context)
+            context:addSubMenu(banditOption, banditMenu)
 
-        if brain.program.name ~= "Companion" and brain.program.name ~= "CompanionGuard" then
-            banditMenu:addOption("Join Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
-        else     
-            banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
+            if brain.program.name ~= "Companion" and brain.program.name ~= "CompanionGuard" then
+                banditMenu:addOption("Join Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
+            else     
+                banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
+            end
         end
     end
 

@@ -28,9 +28,23 @@ BanditClan.Scientist.avoidZones = {"Forest", "DeepForest"}
 BanditClan.Scientist.Outfits = BanditClan.Scientist.Outfits or {}
 table.insert(BanditClan.Scientist.Outfits, "HazardSuit")
 
+if getActivatedMods():contains("Authentic Z - Current") then
+    table.insert(BanditClan.Scientist.Outfits, "AuthenticHazardSuit")
+    table.insert(BanditClan.Scientist.Outfits, "AuthenticCEDAHazmatBlue")
+    table.insert(BanditClan.Scientist.Outfits, "AuthenticCEDAHazmatGreen")
+    table.insert(BanditClan.Scientist.Outfits, "AuthenticNBHHazmat")
+    table.insert(BanditClan.Scientist.Outfits, "AuthenticSurvivorHazardSuit")
+end
+
 -- available melee weapons
 BanditClan.Scientist.Melee = BanditClan.Scientist.Melee or {}
 table.insert(BanditClan.Scientist.Melee, "Base.Scalpel")
+
+-- available primary weapons
+BanditClan.Scientist.Primary = BanditClan.Scientist.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Scientist.Secondary = BanditClan.Scientist.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Scientist.Loot = BanditClan.Scientist.Loot or {}

@@ -32,10 +32,17 @@ if getActivatedMods():contains("Authentic Z - Current") then
     table.insert(BanditClan.Biker.Outfits, "AuthenticBiker")
 end
 
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Biker.Outfits, "Goth")
+end
+
 -- available melee weapons
 BanditClan.Biker.Melee = BanditClan.Biker.Melee or {}
 table.insert(BanditClan.Biker.Melee, "Base.BaseballBat")
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBatNails")
+table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Nails")
+table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_RailSpike")
+table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Sawblade")
+table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Spiked")
 
 -- available primary weapons
 BanditClan.Biker.Primary = BanditClan.Biker.Primary or BanditWeapons.Primary
@@ -54,9 +61,9 @@ table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.AlcoholBandage", 3
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Disinfectant", 55))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Pills", 12))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Spoon", 40))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 99))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 77))
-table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WhiskeyFull", 24))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Whiskey", 77))
+table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.Whiskey", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))
 table.insert(BanditClan.Biker.Loot, BanditLoot.MakeItem("Base.BeerCan", 24))

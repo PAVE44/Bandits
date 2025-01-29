@@ -45,7 +45,7 @@ BanditClan.Inmate.Secondary = BanditClan.Inmate.Secondary or BanditWeapons.Secon
 
 -- loot table
 BanditClan.Inmate.Loot = BanditClan.Inmate.Loot or {}
-table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.WaterBottleFull", 44))
+table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.WaterBottle", 44))
 table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.Crowbar", 77))
 table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.Hammer", 33))
 table.insert(BanditClan.Inmate.Loot, BanditLoot.MakeItem("Base.Saw", 3))

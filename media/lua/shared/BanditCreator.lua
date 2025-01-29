@@ -50,7 +50,7 @@ function BanditCreator.MakeLoot(clanLoot)
     if not getActivatedMods():contains("Smoker") then
         if ZombRand(4) == 1 then
             for i=1, ZombRand(19) do
-                table.insert(loot, "Base.Cigarettes")
+                table.insert(loot, BanditCompatibility.GetLegacyItem("Base.CigaretteSingle"))
             end
             table.insert(loot, "Base.Lighter")
         end
@@ -153,7 +153,7 @@ function BanditCreator.MakeFromSpawnType(spawnData)
         config.pistolMagCount = 4
     elseif spawnData.buildingType == "bank" then
         clan = BanditClan.Criminal
-        config.hasRifleChance = 0
+        config.hasRifleChance = 10
         config.hasPistolChance = 80
         config.rifleMagCount = 0
         config.pistolMagCount = 3
@@ -164,10 +164,10 @@ function BanditCreator.MakeFromSpawnType(spawnData)
         config.rifleMagCount = 0
         config.pistolMagCount = 0
     else
-        clan = BanditClan.DesperateCitizen
-        config.hasRifleChance = 0
-        config.hasPistolChance = 25
-        config.rifleMagCount = 0
+        clan = BanditClan.DoomRider
+        config.hasRifleChance = 5
+        config.hasPistolChance = 20
+        config.rifleMagCount = 1
         config.pistolMagCount = 2
     end
 

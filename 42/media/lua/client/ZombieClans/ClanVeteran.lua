@@ -27,13 +27,22 @@ BanditClan.Veteran.avoidZones = {}
 -- available outfits
 BanditClan.Veteran.Outfits = BanditClan.Veteran.Outfits or {}
 table.insert(BanditClan.Veteran.Outfits, "Veteran")
-table.insert(BanditClan.Veteran.Outfits, "CostumeBloodFirst")
-table.insert(BanditClan.Veteran.Outfits, "ArmyInstructor")
+
+if BanditCompatibility.GetGameVersion() >= 42 then
+    table.insert(BanditClan.Veteran.Outfits, "CostumeBloodFirst")
+    table.insert(BanditClan.Veteran.Outfits, "ArmyInstructor")
+end
 
 -- available melee weapons
 BanditClan.Veteran.Melee = BanditClan.Veteran.Melee or {}
 table.insert(BanditClan.Veteran.Melee, "Base.Machete")
 table.insert(BanditClan.Veteran.Melee, "Base.HuntingKnife")
+
+-- available primary weapons
+BanditClan.Veteran.Primary = BanditClan.Veteran.Primary or BanditWeapons.Primary
+
+-- available secondary weapons
+BanditClan.Veteran.Secondary = BanditClan.Veteran.Secondary or BanditWeapons.Secondary
 
 -- loot table
 BanditClan.Veteran.Loot = BanditClan.Veteran.Loot or {}
