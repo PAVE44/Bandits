@@ -26,7 +26,7 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
             local item = object:getItem()
             local itemType = item:getFullType()
             if itemType == task.itemType then
-                -- item = BanditUtils.ReplaceDrainable(item)
+                item = BanditUtils.ReplaceDrainable(item)
                 local test1 = item:getFullType()
                 zinventory:AddItem(item)
                 zinventory:setDrawDirty(true)

@@ -73,7 +73,7 @@ local function Hit(shooter, item, victim)
         end
     else
         local missSound = "ZSMiss".. tostring(1 + ZombRand(8))
-        -- victim:getSquare():playSound(missSound)
+        victim:getSquare():playSound(missSound)
     end
 
     -- Clean up the temporary player after use

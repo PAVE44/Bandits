@@ -1,3 +1,4 @@
+require "BanditCompatibility"
 -- register modded loot items by adding them to tables below
 
 BanditLoot = BanditLoot or {}
@@ -111,7 +112,7 @@ table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps2", 1))
 table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps3", 1))
 
-BanditCompatibility.GetGameVersion() >= 42 then
+if BanditCompatibility.GetGameVersion() >= 42 then
     table.insert(BanditLoot.Items, BanditLoot.MakeItem("Base.Crisps4", 1))
 end
 

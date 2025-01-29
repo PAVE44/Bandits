@@ -48,7 +48,7 @@ end
 
 -- available melee weapons
 BanditClan.Police.Melee = BanditClan.Police.Melee or {}
-table.insert(BanditClan.Police.Melee, "Base.Nightstick")
+table.insert(BanditClan.Police.Melee, BanditCompatibility.GetLegacyItem("Base.Nightstick"))
 
 -- available primary weapons
 BanditClan.Police.Primary = BanditClan.Police.Primary or BanditWeapons.Primary

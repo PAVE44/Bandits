@@ -592,7 +592,7 @@ function Bandit.SurpressZombieSounds(bandit)
 end
 
 function Bandit.PickVoice(zombie)
-    local maleOptions = {"1", "2", "3", "4", "18"} -- , "14", "16", "18", "21"}
+    local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
     local femaleOptions = {"3"}
 
     if zombie:isFemale() then

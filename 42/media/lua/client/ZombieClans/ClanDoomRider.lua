@@ -46,16 +46,16 @@ BanditClan.DoomRider.Melee = BanditClan.DoomRider.Melee or {}
 
 -- available melee weapons
 BanditClan.DoomRider.Melee = BanditClan.DoomRider.Melee or {}
-table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Nails")
-table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_RailSpike")
-table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Sawblade")
-table.insert(BanditClan.DoomRider.Melee, "Base.BaseballBat_Spiked")
-table.insert(BanditClan.DoomRider.Melee, "Base.Machete")
-table.insert(BanditClan.DoomRider.Melee, "Base.HandAxe")
-table.insert(BanditClan.DoomRider.Melee, "Base.Crowbar")
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Nails"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_RailSpike"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Sawblade"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Spiked"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.Machete"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.HandAxe"))
+table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.Crowbar"))
 
 if BanditCompatibility.GetGameVersion() >= 42 then
-    table.insert(BanditClan.DoomRider.Melee, "Base.LongMace")
+    table.insert(BanditClan.DoomRider.Melee, BanditCompatibility.GetLegacyItem("Base.LongMace"))
 end
 
 -- available primary weapons

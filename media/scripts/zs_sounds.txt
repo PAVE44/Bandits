@@ -6,7 +6,8 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_hit1.wav, 
-            distanceMax = 4, 
+            distanceMin = 1,
+            distanceMax = 5, 
             reverbFactor = 0.1, volume = 0.1, 
         } 
     }
@@ -17,7 +18,8 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_hit2.wav, 
-            distanceMax = 4, 
+            distanceMin = 1,
+            distanceMax = 5, 
             reverbFactor = 0.1, volume = 0.1, 
         } 
     }
@@ -28,7 +30,8 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_hit3.wav, 
-            distanceMax = 4, 
+            distanceMin = 1,
+            distanceMax = 5, 
             reverbFactor = 0.1, volume = 0.1, 
         } 
     }
@@ -39,8 +42,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss1.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -50,8 +54,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss2.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -61,8 +66,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss3.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -72,8 +78,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss4.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -83,8 +90,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss5.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -94,8 +102,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss6.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -105,8 +114,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss7.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 
@@ -116,8 +126,9 @@ module Bandits{
         is3D = true,
         clip { 
             file = media/sound/zs_miss8.wav, 
-            distanceMax = 4, 
-            reverbFactor = 0.1, volume = 0.4, 
+            distanceMin = 1,
+            distanceMax = 5, 
+            reverbFactor = 0.1, volume = 0.1, 
         } 
     }
 

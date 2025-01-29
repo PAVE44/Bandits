@@ -38,11 +38,11 @@ end
 
 -- available melee weapons
 BanditClan.Biker.Melee = BanditClan.Biker.Melee or {}
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBat")
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Nails")
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_RailSpike")
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Sawblade")
-table.insert(BanditClan.Biker.Melee, "Base.BaseballBat_Spiked")
+table.insert(BanditClan.Biker.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat"))
+table.insert(BanditClan.Biker.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Nails"))
+table.insert(BanditClan.Biker.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_RailSpike"))
+table.insert(BanditClan.Biker.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Sawblade"))
+table.insert(BanditClan.Biker.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat_Spiked"))
 
 -- available primary weapons
 BanditClan.Biker.Primary = BanditClan.Biker.Primary or BanditWeapons.Primary

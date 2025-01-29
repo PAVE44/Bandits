@@ -40,12 +40,12 @@ end
 
 -- available melee weapons
 BanditClan.Prepper.Melee = BanditClan.Prepper.Melee or {}
-table.insert(BanditClan.Prepper.Melee, "Base.SpearHuntingKnife")
-table.insert(BanditClan.Prepper.Melee, "Base.SpearShort")
-table.insert(BanditClan.Prepper.Melee, "Base.HuntingKnife")
-table.insert(BanditClan.Prepper.Melee, "Base.Machete")
-table.insert(BanditClan.Prepper.Melee, "Base.Axe")
-table.insert(BanditClan.Prepper.Melee, "Base.HandAxe")
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.SpearHuntingKnife"))
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.SpearShort"))
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.HuntingKnife"))
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.Machete"))
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.Axe"))
+table.insert(BanditClan.Prepper.Melee, BanditCompatibility.GetLegacyItem("Base.HandAxe"))
 
 -- available primary weapons
 BanditClan.Prepper.Primary = BanditClan.Prepper.Primary or BanditWeapons.Primary

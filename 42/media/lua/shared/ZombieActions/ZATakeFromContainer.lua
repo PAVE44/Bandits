@@ -47,7 +47,7 @@ ZombieActions.TakeFromContainer.onComplete = function(zombie, task)
                             end
                         end
                         
-                        -- item = BanditUtils.ReplaceDrainable(item)
+                        item = BanditUtils.ReplaceDrainable(item)
                         inventory:AddItem(item)
                         Bandit.UpdateItemsToSpawnAtDeath(zombie)
                         cnt = cnt + 1

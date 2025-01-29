@@ -38,7 +38,7 @@ end
 
 -- available melee weapons
 BanditClan.Scientist.Melee = BanditClan.Scientist.Melee or {}
-table.insert(BanditClan.Scientist.Melee, "Base.Scalpel")
+table.insert(BanditClan.Scientist.Melee, BanditCompatibility.GetLegacyItem("Base.Scalpel"))
 
 -- available primary weapons
 BanditClan.Scientist.Primary = BanditClan.Scientist.Primary or BanditWeapons.Primary

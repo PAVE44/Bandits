@@ -35,8 +35,8 @@ end
 
 -- available melee weapons
 BanditClan.Veteran.Melee = BanditClan.Veteran.Melee or {}
-table.insert(BanditClan.Veteran.Melee, "Base.Machete")
-table.insert(BanditClan.Veteran.Melee, "Base.HuntingKnife")
+table.insert(BanditClan.Veteran.Melee, BanditCompatibility.GetLegacyItem("Base.Machete"))
+table.insert(BanditClan.Veteran.Melee, BanditCompatibility.GetLegacyItem("Base.HuntingKnife"))
 
 -- available primary weapons
 BanditClan.Veteran.Primary = BanditClan.Veteran.Primary or BanditWeapons.Primary

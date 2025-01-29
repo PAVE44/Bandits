@@ -49,13 +49,13 @@ end
 
 -- available melee weapons
 BanditClan.Criminal.Melee = BanditClan.Criminal.Melee or {}
-table.insert(BanditClan.Criminal.Melee, "Base.Crowbar")
-table.insert(BanditClan.Criminal.Melee, "Base.MetalBar")
-table.insert(BanditClan.Criminal.Melee, "Base.BaseballBat")
-table.insert(BanditClan.Criminal.Melee, "Base.KitchenKnife")
+table.insert(BanditClan.Criminal.Melee, BanditCompatibility.GetLegacyItem("Base.Crowbar"))
+table.insert(BanditClan.Criminal.Melee, BanditCompatibility.GetLegacyItem("Base.MetalBar"))
+table.insert(BanditClan.Criminal.Melee, BanditCompatibility.GetLegacyItem("Base.BaseballBat"))
+table.insert(BanditClan.Criminal.Melee, BanditCompatibility.GetLegacyItem("Base.KitchenKnife"))
 
 if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Criminal.Melee, "AuthenticZClothing.Chainsaw")
+    table.insert(BanditClan.Criminal.Melee, BanditCompatibility.GetLegacyItem("AuthenticZClothing.Chainsaw"))
 end
 
 -- available primary weapons

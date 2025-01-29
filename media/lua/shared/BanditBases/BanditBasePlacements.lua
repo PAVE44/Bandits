@@ -164,17 +164,17 @@ function BanditBasePlacements.IsoWindow (sprite, x, y, z)
         local barricade = IsoBarricade.AddBarricadeToObject(obj, true)
         if barricade then
             if b == 1 then
-                local metal = InventoryItemFactory.CreateItem('Base.SheetMetal')
+                local metal = BanditCompatibility.InstanceItem("Base.SheetMetal")
                 metal:setCondition(100)
                 barricade:addMetal(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif b == 2 then
-                local metal = InventoryItemFactory.CreateItem('Base.MetalBar')
+                local metal = BanditCompatibility.InstanceItem("Base.MetalBar")
                 metal:setCondition(100)
                 barricade:addMetalBar(nil, metal)
                 barricade:transmitCompleteItemToClients()
             elseif b == 3 then
-                local plank = InventoryItemFactory.CreateItem('Base.Plank')
+                local plank = BanditCompatibility.InstanceItem("Base.Plank")
                 plank:setCondition(100)
                 barricade:addPlank(nil, plank)
                 if barricade:getNumPlanks() == 1 then
@@ -221,7 +221,7 @@ function BanditBasePlacements.IsoGenerator (sprite, x, y, z)
     local square = GetOrCreateSquare(x, y, z)
     if not square then return end
 
-    local genItem = InventoryItemFactory.CreateItem("Base.Generator")
+    local genItem = BanditCompatibility.InstanceItem("Base.Generator")
     local obj = IsoGenerator.new(genItem, cell, square)
     obj:setConnected(true)
     obj:setFuel(30 + ZombRand(60))

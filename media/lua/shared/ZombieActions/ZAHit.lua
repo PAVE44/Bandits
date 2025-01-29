@@ -160,7 +160,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         task.hit = true
         Bandit.UpdateTask(bandit, task)
 
-        local item = instanceItem(task.weapon)
+        local item = BanditCompatibility.InstanceItem(task.weapon)
         local enemy = BanditZombie.GetInstanceById(task.eid)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)

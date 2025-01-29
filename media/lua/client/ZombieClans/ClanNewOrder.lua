@@ -43,7 +43,7 @@ end
 
 -- available melee weapons
 BanditClan.NewOrder.Melee = BanditClan.NewOrder.Melee or {}
-table.insert(BanditClan.NewOrder.Melee, "Base.HuntingKnife")
+table.insert(BanditClan.NewOrder.Melee, BanditCompatibility.GetLegacyItem("Base.HuntingKnife"))
 
 -- available primary weapons
 BanditClan.NewOrder.Primary = BanditClan.NewOrder.Primary or BanditWeapons.Primary

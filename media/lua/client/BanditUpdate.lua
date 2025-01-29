@@ -1192,7 +1192,7 @@ local function UpdateZombies(zombie)
                     -- we need to use   spotted function to activate the zombie, otherwise setTarget does not work
                     -- unfortunatelly spotted function only works for players, so we need to use it in this context,
                     -- and then retarget on bandit
-                    zombie:pathToCharacter(bandit)
+                    --zombie:pathToCharacter(bandit) -- do not enable in b41
                     zombie:spotted(player, true)
                     zombie:setTarget(bandit)
                     

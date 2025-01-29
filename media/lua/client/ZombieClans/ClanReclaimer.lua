@@ -35,17 +35,17 @@ end
 
 -- available melee weapons
 BanditClan.Reclaimer.Melee = BanditClan.Reclaimer.Melee or {}
-table.insert(BanditClan.Reclaimer.Melee, "Base.Katana")
-table.insert(BanditClan.Reclaimer.Melee, "Base.HandScythe")
+table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("Base.Katana"))
+table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("Base.HandScythe"))
 
 if BanditCompatibility.GetGameVersion() >= 42 then
-    table.insert(BanditClan.Reclaimer.Melee, "Base.CrudeSword")
-    table.insert(BanditClan.Reclaimer.Melee, "Base.Sword")
+    table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("Base.CrudeSword"))
+    table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("Base.Sword"))
 end
 
 if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.MandoSpear")
-    table.insert(BanditClan.Reclaimer.Melee, "AuthenticZClothing.Chainsaw")
+    table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("AuthenticZClothing.MandoSpear"))
+    table.insert(BanditClan.Reclaimer.Melee, BanditCompatibility.GetLegacyItem("AuthenticZClothing.Chainsaw"))
 end
 
 -- available primary weapons

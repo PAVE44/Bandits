@@ -31,11 +31,11 @@ table.insert(BanditClan.Inmate.Outfits, "InmateEscaped")
 
 -- available melee weapons
 BanditClan.Inmate.Melee = BanditClan.Inmate.Melee or {}
-table.insert(BanditClan.Inmate.Melee, "Base.BreadKnife")
-table.insert(BanditClan.Inmate.Melee, "Base.KitchenKnife")
-table.insert(BanditClan.Inmate.Melee, "Base.MetalBar")
-table.insert(BanditClan.Inmate.Melee, "Base.Shovel2") 
-table.insert(BanditClan.Inmate.Melee, "Base.SmashedBottle")
+table.insert(BanditClan.Inmate.Melee, BanditCompatibility.GetLegacyItem("Base.BreadKnife"))
+table.insert(BanditClan.Inmate.Melee, BanditCompatibility.GetLegacyItem("Base.KitchenKnife"))
+table.insert(BanditClan.Inmate.Melee, BanditCompatibility.GetLegacyItem("Base.MetalBar"))
+table.insert(BanditClan.Inmate.Melee, BanditCompatibility.GetLegacyItem("Base.Shovel2")) 
+table.insert(BanditClan.Inmate.Melee, BanditCompatibility.GetLegacyItem("Base.SmashedBottle"))
 
 -- available primary weapons
 BanditClan.Inmate.Primary = BanditClan.Inmate.Primary or BanditWeapons.Primary

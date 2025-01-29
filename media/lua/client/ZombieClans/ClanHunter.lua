@@ -30,9 +30,9 @@ table.insert(BanditClan.Hunter.Outfits, "Hunter")
 
 -- available melee weapons
 BanditClan.Hunter.Melee = BanditClan.Hunter.Melee or {}
-table.insert(BanditClan.Hunter.Melee, "Base.HuntingKnife")
-table.insert(BanditClan.Hunter.Melee, "Base.Machete")
-table.insert(BanditClan.Hunter.Melee, "Base.HandAxe")
+table.insert(BanditClan.Hunter.Melee, BanditCompatibility.GetLegacyItem("Base.HuntingKnife"))
+table.insert(BanditClan.Hunter.Melee, BanditCompatibility.GetLegacyItem("Base.Machete"))
+table.insert(BanditClan.Hunter.Melee, BanditCompatibility.GetLegacyItem("Base.HandAxe"))
 
 -- available primary weapons
 BanditClan.Hunter.Primary = BanditClan.Hunter.Primary or BanditWeapons.Primary

@@ -50,23 +50,23 @@ end
 
 -- available melee weapons
 BanditClan.Psychopath.Melee = BanditClan.Psychopath.Melee or {}
-table.insert(BanditClan.Psychopath.Melee, "Base.WoodAxe")
-table.insert(BanditClan.Psychopath.Melee, "Base.HammerStone")
-table.insert(BanditClan.Psychopath.Melee, "Base.Hammer")
-table.insert(BanditClan.Psychopath.Melee, "Base.Plank_Nails")
-table.insert(BanditClan.Psychopath.Melee, "Base.PickAxe")
-table.insert(BanditClan.Psychopath.Melee, "Base.MetalBar")
-table.insert(BanditClan.Psychopath.Melee, "Base.LeadPipe")
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.WoodAxe"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.HammerStone"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.Hammer"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.Plank_Nails"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.PickAxe"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.MetalBar"))
+table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.LeadPipe"))
 
 if BanditCompatibility.GetGameVersion() >= 42 then
-    table.insert(BanditClan.Psychopath.Melee, "Base.BucketMace_Metal")
-    table.insert(BanditClan.Psychopath.Melee, "Base.LongSpikedClub")
-    table.insert(BanditClan.Psychopath.Melee, "Base.LongMace")
-    table.insert(BanditClan.Psychopath.Melee, "Base.Mace")
+    table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.BucketMace_Metal"))
+    table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.LongSpikedClub"))
+    table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.LongMace"))
+    table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("Base.Mace"))
 end
 
 if getActivatedMods():contains("Authentic Z - Current") then
-    table.insert(BanditClan.Psychopath.Melee, "AuthenticZClothing.Chainsaw")
+    table.insert(BanditClan.Psychopath.Melee, BanditCompatibility.GetLegacyItem("AuthenticZClothing.Chainsaw"))
 end
 
 -- available primary weapons

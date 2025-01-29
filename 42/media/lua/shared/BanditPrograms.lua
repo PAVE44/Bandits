@@ -1,3 +1,4 @@
+require "BanditCompatibility"
 -- shared subprograms available as subs for other programs
 
 local function predicateAll(item)
