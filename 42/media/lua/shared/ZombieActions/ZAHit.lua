@@ -60,14 +60,10 @@ local function Hit(attacker, item, victim)
             end
             victim:addBlood(0.6)
             
-            local splatNo = item:getSplatNumber()
-            for i=0, splatNo do
-                victim:splatBlood(3, 0.3)
-            end
-            victim:splatBloodFloorBig()
-            victim:playBloodSplatterSound()
+            BanditCompatibility.Splash(victim, item, tempAttacker)
+                
             if instanceof(victim, "IsoPlayer") then
-                victim:playerVoiceSound("PainFromFallHigh")
+                BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
 
             if victim:getHealth() <= 0 then 
@@ -92,7 +88,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     if not enemy then return true end
     
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
-    local meleeItem = instanceItem(task.weapon)
+    local meleeItem = BanditCompatibility.InstanceItem(task.weapon)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
     local sound = meleeItem:getSwingSound()
@@ -164,7 +160,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         task.hit = true
         Bandit.UpdateTask(bandit, task)
 
-        local item = instanceItem(task.weapon)
+        local item = BanditCompatibility.InstanceItem(task.weapon)
         local enemy = BanditZombie.GetInstanceById(task.eid)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)

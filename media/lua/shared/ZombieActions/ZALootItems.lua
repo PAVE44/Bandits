@@ -12,13 +12,10 @@ end
 
 ZombieActions.LootItems.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
-    if task.time <= 0 then
-        return true
-    else
-        local bumpType = zombie:getBumpType()
-        if bumpType ~= task.anim then 
-            zombie:setBumpType(task.anim)
-        end
+    if task.time <= 0 then return true end
+
+    if zombie:getBumpType() ~= task.anim then 
+        zombie:setBumpType(task.anim)
     end
 
     return false
@@ -41,7 +38,7 @@ ZombieActions.LootItems.onComplete = function(zombie, task)
                 for i=0, items:size()-1 do
                     local item = items:get(i)
                     local name = item:getFullType() 
-                    print ("ITEM: " .. name)
+                    -- print ("ITEM: " .. name)
                     container:Remove(item)
                     container:removeItemOnServer(item)
                     zinventory:AddItem(item)

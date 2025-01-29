@@ -71,9 +71,34 @@ end
 
 BanditCompatibility.Splash = function(bandit, item, zombie)
     if getGameVersion() >= 42 then
-        -- missing implementation
+        local splatNo = item:getSplatNumber()
+        for i=0, splatNo do
+            bandit:splatBlood(3, 0.3)
+        end
+        bandit:splatBloodFloorBig()
+        bandit:playBloodSplatterSound()
     else
         SwipeStatePlayer.splash(bandit, item, zombie)
+    end
+end
+
+BanditCompatibility.PlayerVoiceSound = function(player, sound)
+    if getGameVersion() >= 42 then
+        player:playerVoiceSound(sound)
+    else
+        -- not implemented
+    end
+end
+
+BanditCompatibility.StartMuzzleFlash = function(shooter)
+    if getGameVersion() >= 42 then
+        local square = shooter:getSquare()
+        shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is how to do this now:
+        shooter:setMuzzleFlashDuration(getTimestampMs())
+        local lightSource = IsoLightSource.new(square:getX(), square:getY(), square:getZ(), 0.8, 0.8, 0.7, 18, 2)
+        getCell():addLamppost(lightSource)
+    else
+        shooter:startMuzzleFlash()
     end
 end
 

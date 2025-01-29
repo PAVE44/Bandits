@@ -7,11 +7,7 @@ end
 
 ZombieActions.PutInContainer.onWorking = function(zombie, task)
     zombie:faceLocationF(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
 
     return false
 end

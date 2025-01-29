@@ -15,11 +15,8 @@ end
 
 ZombieActions.GeneratorRefill.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.GeneratorRefill.onComplete = function(zombie, task)
@@ -44,10 +41,10 @@ ZombieActions.GeneratorRefill.onComplete = function(zombie, task)
     if gasLeft > 0 then
         item:setUsedDelta(gasLeft)
     else
-        item = InventoryItemFactory.CreateItem("Base.EmptyPetrolCan")
+        item = BanditCompatibility.InstanceItem("Base.EmptyPetrolCan")
     end
 
-    if BanditUtils.IsController(zombie) then
+    if BanditUtils.IsController(zombie) and item then
         generator:setFuel(newFuel)
         square:AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
     end

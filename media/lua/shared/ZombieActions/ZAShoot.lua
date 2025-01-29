@@ -1,386 +1,5 @@
 ZombieActions = ZombieActions or {}
 
-local function ATROShoot(bandit, handWeapon)
-    
-    if getSandboxOptions():getOptionByName("Advanced_trajectory.showOutlines"):getValue() and instanceof(handWeapon,"HandWeapon") and not handWeapon:hasTag("Thrown") and not Advanced_trajectory.hasFlameWeapon and not (handWeapon:hasTag("XBow") and not getSandboxOptions():getOptionByName("Advanced_trajectory.DebugEnableBow"):getValue()) and (handWeapon:isRanged() and getSandboxOptions():getOptionByName("Advanced_trajectory.Enablerange"):getValue()) then
-        handWeapon:setMaxHitCount(getSandboxOptions():getOptionByName("Advanced_trajectory.DebugHitCountShoot"):getValue())
-    end
-
-    local banditLevel = 8
-    local modEffectsTable = Advanced_trajectory.getAttachmentEffects(handWeapon)  
-
-    -- print(character)
-    local item
-    local winddir = 1
-    local weaponname = ""
-    local rollspeed = 0
-    local iscanthrough = false
-    local ballisticspeed = 0.15  
-    local ballisticdistance = handWeapon:getMaxRange() 
-    local itemtypename = ""
-    local iscanbigger = 0
-    local sfxname = ""
-    local isthroughwall =true
-    local distancez = 0
-
-    local deltX
-    local deltY
-    local ProjectileCount = 1
-
-    local throwinfo ={}
-    local ispass =false
-
-
-    local square
-    local _damage
-
-    -- direction from -pi to pi OR -180 to 180 deg
-    -- N (top left corner): pi,-pi  (180, -180)
-    -- W (bottom left): pi/2 (90)
-    -- E (top right): -pi/2 (-90)
-    -- S (bottom right corner): 0
-    local banditDir = bandit:getForwardDirection():getDirection()
-
-    -- bullet position 
-    local spawnOffset = getSandboxOptions():getOptionByName("Advanced_trajectory.DebugSpawnOffset"):getValue()
-    local offx = bandit:getX() + spawnOffset * math.cos(banditDir)
-    local offy = bandit:getY() + spawnOffset * math.sin(banditDir)
-    local offz = bandit:getZ()
-
-    --local offx = character:getX()
-    --local offy = character:getY()
-    --local offz = character:getZ()
-
-    -- pi/250 = .7 degrees
-    -- aimnum can go up to (77-9+40) 108 
-    -- max/min -+96 degrees, and even more when drunk (6*24+108 = 252 => 208 deg)
-    -- og denominator was 250
-
-    local maxProjCone = getSandboxOptions():getOptionByName("Advanced_trajectory.MaxProjCone"):getValue()
-    -- 120 as max aimnum
-    local denom = 120 * math.pi / maxProjCone
-    Advanced_trajectory.aimrate = Advanced_trajectory.aimnum * math.pi / denom
-
-    --print("MaxProjCone: ", maxProjCone)
-    --print("Aimrate: ", Advanced_trajectory.aimrate )
-    
-    -- NOTES: I'm assuming aimrate, which is affected by aimnum, determines how wide the bullets can spread.
-    -- adding dirc (direction player is facing) will cause bullets to go towards the direction of where player is looking
-    local dirc = banditDir + ZombRandFloat(-Advanced_trajectory.aimrate, Advanced_trajectory.aimrate)
-
-    --print("Dirc: ", dirc)
-    deltX = math.cos(dirc)
-    deltY = math.sin(dirc)
-
-    local tablez = 
-    {
-        item,                       --1 item obj
-        square,                     --2 square obj
-        {deltX,deltY},              --3 vector
-        {offx, offy, offz},         --4 offset BULLET POS
-        dirc,                       --5 direction
-        _damage,                    --6 damage
-        ballisticdistance,          --7 distance
-        winddir,                    --8 ballistic small categories
-        weaponname,                 --9 types
-        rollspeed,                  --10 rotation speed
-        iscanthrough,               --11 whether it can penetrate
-        ballisticspeed,             --12 ballistic speed
-        iscanbigger,                --13 can be made bigger
-        sfxname,                    --14 ballistic name
-        isthroughwall,              --15 whether it can pass through the wall
-        1,                          --16 size
-        0,                          --17 current distance
-        distancez,                  --18 distance constant
-        bandit,                     --19 players
-        {offx, offy, offz},         --20 original offset PLAYER POS
-        0,                          --21 count
-        throwinfo                   --22 thrown object attributes                                                       
-    }
-
-    tablez["boomsfx"] = {}
-    tablez["animlevels"] = Advanced_trajectory.aimlevels or math.floor(tablez[4][3])
-
-    tablez[22] = {
-        handWeapon:getSmokeRange(),
-        handWeapon:getExplosionPower(),
-        handWeapon:getExplosionRange(),
-        handWeapon:getFirePower(),
-        handWeapon:getFireRange()
-    }
-
-    tablez[22][7] = handWeapon:getExplosionSound()
-
-    tablez["ThroNumber"] = 1
-
-    local isspweapon = Advanced_trajectory.Advanced_trajectory[handWeapon:getFullType()] 
-    if isspweapon then
-        for lk,pk in pairs(isspweapon) do
-            if lk == 4 then
-                tablez[4][1] = tablez[4][1] + pk[1] * tablez[3][1]
-                tablez[4][2] = tablez[4][2] + pk[2] * tablez[3][2]
-                tablez[4][3] = tablez[4][3] + pk[3]
-            else 
-                tablez[lk] = pk
-            end
-            
-        end
-        ispass = true
-    end
-
-    if Advanced_trajectory.aimcursorsq then
-        tablez[18] = ((Advanced_trajectory.aimcursorsq:getX()+0.5-offx) ^ 2 + (Advanced_trajectory.aimcursorsq:getY()+0.5-offy)^2) ^ 0.5
-    else
-        tablez[18] = 32 -- handWeapon:getMaxRange(character)
-    end
-
-    local isHoldingShotgun = false
-    if not ispass then  
-        if getSandboxOptions():getOptionByName("Advanced_trajectory.Enablethrow"):getValue() and handWeapon:getSwingAnim() =="Throw" then 
-   
-            if tablez[22][1] == 0 and tablez[22][2] == 0 and tablez[22][4] == 0 then
-                tablez[22][6] = 0.016
-            else
-                tablez[22][6] = 0.04 -- radian
-            end
-            
-            tablez[22][9] = handWeapon:canBeReused()
-            tablez[7] = tablez[18]
-            tablez[9]="Grenade"
-            tablez[14] = handWeapon:getFullType()
-            tablez[8] = ""
-            tablez[11] = false
-            tablez[15] = false
-
-            tablez[4][1] = tablez[4][1] + 0.3 * tablez[3][1]
-            tablez[4][2] = tablez[4][2] + 0.3 * tablez[3][2]
-
-            tablez[10] = 6
-            tablez[12] = 0.3
-    
-            tablez[22][10] = tablez[14]
-            tablez[22][11] = handWeapon:getNoiseRange()
-
-            tablez["isparabola"] = tablez[22][6]
-        
-            -- disabling enable range means guns don't work (no projectiles)
-        elseif getSandboxOptions():getOptionByName("Advanced_trajectory.Enablerange"):getValue() and (handWeapon:getSubCategory() =="Firearm" or handWeapon:getSubCategory() =="BBGun") then ----枪
-
-            local hideTracer = getSandboxOptions():getOptionByName("Advanced_trajectory.hideTracer"):getValue()
-            --print("Tracer hidden: ", hideTracer)
-
-            local offset = getSandboxOptions():getOptionByName("Advanced_trajectory.DebugOffset"):getValue()
-
-            --print("Range enabled...Weapon is Firearm.")
-            if getIsHoldingShotgun(handWeapon) then
-                local shotgunDistanceModifier = getSandboxOptions():getOptionByName("Advanced_trajectory.shotgunDistanceModifier"):getValue()
-                
-                tablez[9] = "Shotgun" --weapon name
-
-                --print("Weapon has shotgun type ammo.")
-
-                --wpn sndfx
-                if hideTracer then
-                    --print("Empty")
-                    tablez[14] = "Empty.aty_Shotguna"    
-                else
-                    --print("Base")
-                    tablez[14] = "Base.aty_Shotguna"  
-                end
-
-                -- Shotgun's max cone spread is independent from default spread
-                local maxShotgunProjCone = getSandboxOptions():getOptionByName("Advanced_trajectory.maxShotgunProjCone"):getValue()
-                if (dirc > banditDir + maxShotgunProjCone or dirc < banditDir - maxShotgunProjCone) then
-                    tablez[5] = banditDir + ZombRandFloat(-maxShotgunProjCone, maxShotgunProjCone)
-                end
-
-                tablez[12] = 1.6                                    --ballistic speed
-                tablez[7] = tablez[7] * shotgunDistanceModifier     --ballistic distance
-                tablez[15] = false                                  --isthroughwall
-
-                tablez[4][1] = tablez[4][1] + offset*tablez[3][1]    --offsetx=offsetx +.6 * deltX; deltX is cos of dirc
-                tablez[4][2] = tablez[4][2] + offset*tablez[3][2]    --offsety=offsety +.6 * deltY; deltY is sin of dirc
-                tablez[4][3] = tablez[4][3]+0.5                      --offsetz=offsetz +.5
-
-                isHoldingShotgun = true
-            
-            elseif string.contains(handWeapon:getAmmoType() or "", "INCRound") or string.contains(handWeapon:getAmmoType() or "", "HERound") then 
-                -- The idea here is to solve issue of Brita's launchers spawning a bullet along with their grenade.
-                --print("Weapon has round type ammo (Brita grenades).")
-                return
-            elseif Advanced_trajectory.hasFlameWeapon then 
-                -- Break bullet if flamethrower
-                --print("Weapon is flame type.")
-                return
-            elseif ((handWeapon:hasTag("XBow") and not getSandboxOptions():getOptionByName("Advanced_trajectory.DebugEnableBow"):getValue()) or handWeapon:hasTag("Thrown")) then
-                -- Break bullet if bow
-                --print("Weapon is either bow or throwable nonexplosive.")
-                return
-            else
-                --print("Weapon is a normal gun (revolver).")
-
-                tablez[9] = "revolver"
-
-                --wpn sndfx
-                if hideTracer then
-                    --print("Empty")
-                    tablez[14] = "Empty.aty_revolversfx"  
-                else
-                    --print("Base")
-                    tablez[14] = "Base.aty_revolversfx" 
-                end
-
-
-                tablez[12] = 1.8
-                tablez[15]  = false
-
-                tablez[4][1] = tablez[4][1] + offset*tablez[3][1]
-                tablez[4][2] = tablez[4][2] + offset*tablez[3][2]
-                tablez[4][3] = tablez[4][3] + 0.5
-
-                -- determines number of zombies it can hit with one bullet (pen), if enabled set to stat. Else it will be set to 1 in checkontick.
-                if getSandboxOptions():getOptionByName("Advanced_trajectory.enableBulletPenFlesh"):getValue() then
-                    tablez["ThroNumber"] = ScriptManager.instance:getItem(handWeapon:getFullType()):getMaxHitCount()
-                else
-                    tablez["ThroNumber"] = 1
-                end
-
-                isHoldingShotgun = false
-            end
-        else
-            --print("Weapon is not firearm, but ", handWeapon:getSubCategory())
-            return      
-        end
-        
-
-    end
-
-    tablez[2] = tablez[2] or getWorld():getCell():getGridSquare(offx,offy,offz)
-    if tablez[2] == nil then return end
-
-    -- NOTES: tablez[6] is damage, firearm damages vary from 0 to 2. Example, M16 has min to max: 0.8 to 1.4 (source wiki)
-    tablez[6] = tablez[6] or (handWeapon:getMinDamage() + ZombRandFloat(0.1, 1.3) * (0.5 + handWeapon:getMaxDamage() - handWeapon:getMinDamage()))
-
-    if isHoldingShotgun then
-        local shotgunDamageMultiplier = getSandboxOptions():getOptionByName("Advanced_trajectory.shotgunDamageMultiplier"):getValue()
-        tablez[6] = tablez[6] * shotgunDamageMultiplier
-    end
-    
-    -- firearm crit chance can vary from 0 to 30. Ex, M16 has a crit chance of 30 (source wiki)
-    -- Rifles - 25 to 30
-    -- M14 - 0 crit but higher hit chance
-    -- Pistols - 20
-    -- Shotguns - 60 to 80
-    -- Lower aimnum (to reduce spamming crits with god awful bloom) and higher player level means higher crit chance.
-    local critChanceModifier = getSandboxOptions():getOptionByName("Advanced_trajectory.critChanceModifier"):getValue() 
-    local critChanceAdd = (Advanced_trajectory.aimnumBeforeShot*critChanceModifier) + (11-banditLevel)
-
-    -- higher = higher crit chance
-    local critIncreaseShotgun = getSandboxOptions():getOptionByName("Advanced_trajectory.critChanceModifierShotgunsOnly"):getValue() 
-    if isHoldingShotgun then
-        critChanceAdd = (critChanceAdd * 0) - (critIncreaseShotgun - banditLevel)
-    end
-    if ZombRand(100+critChanceAdd) <= handWeapon:getCriticalChance() then
-        tablez[6]=tablez[6] * 2
-    end
-
-
-    -- throwinfo[8] = tablez[6]
-    tablez[22][8] = handWeapon:getMinDamage()
-
-    -- tablez[5] is dirc
-    local dirc1 = tablez[5]
-    tablez[5] = tablez[5]*360 / (2*math.pi)
-
-    -- ballistic speed
-    tablez[12] = tablez[12] * getSandboxOptions():getOptionByName("Advanced_trajectory.bulletspeed"):getValue() 
-
-    -- bullet distance
-    tablez[7] = tablez[7] * getSandboxOptions():getOptionByName("Advanced_trajectory.bulletdistance"):getValue() 
-
-
-    ------------------------------
-    -----RANGE ATTACHMENT EFFECT--
-    ------------------------------
-    local rangeMod = modEffectsTable[4]
-    if rangeMod ~= 0 then
-        tablez[7] = tablez[7] + rangeMod
-    end
-
-    local bulletnumber = getSandboxOptions():getOptionByName("Advanced_trajectory.shotgunnum"):getValue() 
-
-    local damagemutiplier = getSandboxOptions():getOptionByName("Advanced_trajectory.ATY_damage"):getValue()  or 1
-
-    -- NOTES: damage is multiplied by user setting (default 1)
-    tablez[6] = tablez[6] * damagemutiplier
-
-    local damageer = tablez[6]
-
-    Advanced_trajectory.aimnumBeforeShot = Advanced_trajectory.aimnum
-
-    -- print(tablez[5])
-    if tablez[9] == "Shotgun" then
-
-        local aimtable = {}
-
-        for shot = 1, bulletnumber do
-            local adirc
-
-            -- lower value means tighter spread
-            local numpi = getSandboxOptions():getOptionByName("Advanced_trajectory.shotgundivision"):getValue() *0.7
-
-            --------------------------------
-            -----ANGLE ATTACHMENT EFFECT---
-            --------------------------------
-            local angleMod = modEffectsTable[5]
-            if angleMod ~= 0 then
-                numpi = numpi * angleMod
-            end
-
-
-            adirc = dirc1 +ZombRandFloat(-math.pi * numpi,math.pi*numpi)
-
-            tablez[3] = {math.cos(adirc), math.sin(adirc)}
-            tablez[4] = {tablez[4][1], tablez[4][2], tablez[4][3]}
-            tablez[5] = adirc * 360 / (2 * math.pi)
-            tablez[20] = {tablez[4][1], tablez[4][2], tablez[4][3]}
-
-            tablez[6] = damageer / 4
-
-            if getSandboxOptions():getOptionByName("Advanced_trajectory.enableHitOrMiss"):getValue() then
-                tablez["missedShot"] = determineHitOrMiss() 
-            end
-            
-
-            if isClient() then
-                tablez["nonsfx"] = 1
-                sendClientCommand("ATY_shotsfx","true",{tablez, getPlayer():getOnlineID()})
-            end
-            tablez["nonsfx"] = nil
-            table.insert(Advanced_trajectory.table,Advanced_trajectory.twotable(tablez))
-        end
-    else
-
-        -- print(tablez[9])
-        if tablez["wallcarmouse"] then
-            tablez[7] = Advanced_trajectory.aimtexdistance - 1
-        end
-        tablez[20] = {offx, offy, tablez[4][3]}
-
-        if getSandboxOptions():getOptionByName("Advanced_trajectory.enableHitOrMiss"):getValue() then
-            tablez["missedShot"] = determineHitOrMiss() 
-        end
-
-        table.insert(Advanced_trajectory.table,Advanced_trajectory.twotable(tablez))
-        if isClient() then
-            tablez["nonsfx"] = 1
-            sendClientCommand("ATY_shotsfx","true",{tablez,getPlayer():getOnlineID()})
-        end
-
-        -- print(Advanced_trajectory.aimtexdistance)
-    end
-end
-
 local function Hit(shooter, item, victim)
 
     -- Clone the shooter to create a temporary IsoPlayer
@@ -406,7 +25,7 @@ local function Hit(shooter, item, victim)
         accuracyCoeff = 0.028
     end
 
-    local accuracyThreshold = 100 / (1 + accuracyCoeff * dist / accuracyBoost)
+    local accuracyThreshold = 100 / (1 + accuracyCoeff * (dist - 1) / accuracyBoost)
 
     -- Warning, this is not perfect, local player mand remote players will not generate the same 
     -- random number.
@@ -443,7 +62,13 @@ local function Hit(shooter, item, victim)
             end
 
             victim:addBlood(0.6)
-            SwipeStatePlayer.splash(victim, item, tempShooter)
+
+            BanditCompatibility.Splash(victim, item, tempShooter)
+            
+            if instanceof(victim, "IsoPlayer") then
+                BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
+            end
+
             if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end
         end
     else
@@ -613,20 +238,26 @@ local function ManageLineOfFire (shooter, victim)
         end
         D = D + 2 * dy
     end
+
+
+
     return true
 end
 
 ZombieActions.Shoot = {}
 ZombieActions.Shoot.onStart = function(zombie, task)
+    zombie:setBumpType(task.anim)
     return true
 end
 
 ZombieActions.Shoot.onWorking = function(zombie, task)
     zombie:faceLocationF(task.x, task.y)
-    -- print ("SHOOT: " .. task.time)
-    -- local bumpType = zombie:getBumpType()
-    -- if bumpType ~= task.anim then return false end
-    zombie:setBumpType(task.anim)
+
+    if task.time <= 0 then return true end
+
+    if zombie:getBumpType() ~= task.anim then 
+        zombie:setBumpType(task.anim)
+    end
 
     return false
 end
@@ -647,8 +278,15 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
     
-    shooter:startMuzzleFlash()
+    BanditCompatibility.StartMuzzleFlash(shooter)
+    
     shooter:playSound(weapon.shotSound)
+
+    --[[local te = FBORenderTracerEffects.getInstance()
+    te:addEffect(shooter, 24)
+
+    local test = shooter:getAnimationPlayer()
+    local test2 = test:isReady()]]
     
     -- this adds world sound that attract zombies, it must be on cooldown
     -- otherwise too many sounds disorient zombies. 
@@ -683,20 +321,20 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                 if victim then
                     if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
                         local res = ManageLineOfFire(shooter, victim)
-                        if res then
-                            local item = InventoryItemFactory.CreateItem(weapon.name)
+                        local finalCheck = BanditUtils.LineClear(shooter, victim)
+                        if res and finalCheck then
+                            local item = BanditCompatibility.InstanceItem(weapon.name)
                             Hit(shooter, item, victim)
                         end
+                        zombie:setBumpDone(true)
+                        return true
                         
-                        break
                     end
                 end
             end
         end
     end
 
-    zombie:setBumpDone(true)
-    zombie:setVariable("BumpAnimFinished", true)
 
     return true
 end

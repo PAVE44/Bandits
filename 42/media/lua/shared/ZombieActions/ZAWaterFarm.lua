@@ -4,12 +4,12 @@ ZombieActions = ZombieActions or {}
 
 local function getFakeItem(itemType)
     local fakeItemType
-    if itemType == "Base.WateredCan" then
+    if itemType == "farming.WateredCanFull" or itemType == "farming.WateredCan" or itemType == "Base.WateredCan" then
         fakeItemType = "Bandits.WateringCan"
-    elseif itemType == "Base.Bucket" then
+    elseif itemType == "Base.BucketWaterFull" or itemType == "Base.BucketEmpty" or itemType == "Base.Bucket" then
         fakeItemType = "Bandits.Bucket"
     end
-    local fakeItem = instanceItem(fakeItemType)
+    local fakeItem = BanditCompatibility.InstanceItem(fakeItemType)
     return fakeItem
 end
 

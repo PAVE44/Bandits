@@ -105,7 +105,8 @@ ZombiePrograms.Looter.Operate = function(bandit)
         enemy = BanditZombie.GetInstanceById(target.id)
     end
 
-    if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist and closestPlayer.dist < closestZombie.dist then
+    local handicap = 6
+    if Bandit.IsHostile(bandit) and closestPlayer.dist + handicap < closestBandit.dist and closestPlayer.dist < closestZombie.dist then
         target = closestPlayer
         enemy = BanditPlayer.GetPlayerById(target.id)
     end

@@ -4,12 +4,12 @@ ZombieActions = ZombieActions or {}
 
 local function getFakeItem(itemType)
     local fakeItemType
-    if itemType == "farming.WateredCanFull" or itemType == "farming.WateredCan" then
+    if itemType == "farming.WateredCanFull" or itemType == "farming.WateredCan" or itemType == "Base.WateredCan" then
         fakeItemType = "Bandits.WateringCan"
-    elseif itemType == "Base.BucketWaterFull" or itemType == "Base.BucketEmpty" then
+    elseif itemType == "Base.BucketWaterFull" or itemType == "Base.BucketEmpty" or itemType == "Base.Bucket" then
         fakeItemType = "Bandits.Bucket"
     end
-    local fakeItem = InventoryItemFactory.CreateItem(fakeItemType)
+    local fakeItem = BanditCompatibility.InstanceItem(fakeItemType)
     return fakeItem
 end
 
@@ -28,11 +28,8 @@ end
 
 ZombieActions.WaterFarm.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.WaterFarm.onComplete = function(zombie, task)

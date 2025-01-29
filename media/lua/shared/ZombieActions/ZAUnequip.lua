@@ -4,7 +4,7 @@ ZombieActions.Unequip = {}
 ZombieActions.Unequip.onStart = function(zombie, task)
 
     if task.itemPrimary then
-        local primaryItem = InventoryItemFactory.CreateItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
 
         if primaryItem:IsWeapon() then
             local primaryItemType = WeaponType.getWeaponType(primaryItem)
@@ -25,16 +25,13 @@ ZombieActions.Unequip.onStart = function(zombie, task)
 end
 
 ZombieActions.Unequip.onWorking = function(zombie, task)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Unequip.onComplete = function(zombie, task)
     if task.itemPrimary then
-        local primaryItem = InventoryItemFactory.CreateItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
         if primaryItem:IsWeapon() then
             local primaryItemType = WeaponType.getWeaponType(primaryItem)
 

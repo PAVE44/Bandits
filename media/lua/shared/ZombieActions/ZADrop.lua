@@ -6,16 +6,13 @@ ZombieActions.Drop.onStart = function(zombie, task)
 end
 
 ZombieActions.Drop.onWorking = function(zombie, task)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Drop.onComplete = function(zombie, task)
     if BanditUtils.IsController(zombie) then
-        local item = InventoryItemFactory.CreateItem(task.itemType)
+        local item = BanditCompatibility.InstanceItem(task.itemType)
         if item then
             zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
         end

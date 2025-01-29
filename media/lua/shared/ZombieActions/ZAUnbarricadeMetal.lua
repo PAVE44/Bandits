@@ -8,13 +8,11 @@ end
 
 ZombieActions.UnbarricadeMetal.onWorking = function(zombie, task)
     zombie:faceLocation(task.fx, task.fy)
-    if task.time <= 0 then
-        return true
-    else
-        local bumpType = zombie:getBumpType()
-        if bumpType ~= task.anim then 
-            zombie:setBumpType(task.anim)
-        end
+    
+    if task.time <= 0 then return true end
+
+    if zombie:getBumpType() ~= task.anim then 
+        zombie:setBumpType(task.anim)
     end
 
     return false

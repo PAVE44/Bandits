@@ -106,26 +106,29 @@ local function CheckFriendlyFire(bandit, attacker)
     local brain = BanditBrain.Get(bandit)
     if brain.clan == 0 then return end
 
-    if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and not attacker:isNPC() then
+    -- atacking hostiles is ok!
+    if brain.hostile or brain.program.name == "Thief" then return end
+
+    -- attacker is not a real player
+    if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
            
-        -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
-        local witnesses = BanditZombie.GetAllB()
-        for id, witness in pairs(witnesses) do
-            if not witness.brain.hostile then
-                local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
-                if dist < 12 then
-                    local friendly = BanditZombie.GetInstanceById(witness.id)
-                    if friendly:CanSee(attacker) then
-                        Bandit.SetHostile(friendly, true)
-                        Bandit.SetProgram(friendly, "Bandit", {})
-                        
-                        local brain = BanditBrain.Get(friendly)
-                        local syncData = {}
-                        syncData.id = brain.id
-                        syncData.hostile = brain.hostile
-                        syncData.program = brain.program
-                        Bandit.ForceSyncPart(friendly, syncData)
-                    end
+    -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
+    local witnesses = BanditZombie.GetAllB()
+    for id, witness in pairs(witnesses) do
+        if not witness.brain.hostile then
+            local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
+            if dist < 12 then
+                local friendly = BanditZombie.GetInstanceById(witness.id)
+                if friendly:CanSee(attacker) then
+                    Bandit.SetHostile(friendly, true)
+                    Bandit.SetProgram(friendly, "Bandit", {})
+                    
+                    local brain = BanditBrain.Get(friendly)
+                    local syncData = {}
+                    syncData.id = brain.id
+                    syncData.hostile = brain.hostile
+                    syncData.program = brain.program
+                    Bandit.ForceSyncPart(friendly, syncData)
                 end
             end
         end

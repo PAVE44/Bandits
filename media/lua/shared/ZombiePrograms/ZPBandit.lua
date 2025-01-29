@@ -147,7 +147,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
         enemy = BanditZombie.GetInstanceById(target.id)
     end
 
-    if Bandit.IsHostile(bandit) and closestPlayer.dist < closestBandit.dist then
+    local handicap = 6
+    if Bandit.IsHostile(bandit) and closestPlayer.dist + handicap < closestBandit.dist then
         target = closestPlayer
         enemy = BanditPlayer.GetPlayerById(target.id)
     end
@@ -261,21 +262,21 @@ ZombiePrograms.Bandit.Escape = function(bandit)
     if SandboxVars.Bandits.General_Surrender and health < 0.16 then
         bandit:setPrimaryHandItem(nil)
         if weapons.melee then
-            local item = InventoryItemFactory.CreateItem(weapons.melee)
+            local item = BanditCompatibility.InstanceItem(weapons.melee)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.melee = nil
             end
         end
         if weapons.primary and weapons.primary.name then
-            local item = InventoryItemFactory.CreateItem(weapons.primary.name)
+            local item = BanditCompatibility.InstanceItem(weapons.primary.name)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.primary = nil
             end
         end
         if weapons.secondary and weapons.secondary.name then
-            local item = InventoryItemFactory.CreateItem(weapons.secondary.name)
+            local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.secondary = nil

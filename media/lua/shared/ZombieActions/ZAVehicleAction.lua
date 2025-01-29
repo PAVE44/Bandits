@@ -19,11 +19,8 @@ end
 
 ZombieActions.VehicleAction.onWorking = function(zombie, task)
     zombie:faceLocation(task.px, task.py)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.VehicleAction.onComplete = function(zombie, task)

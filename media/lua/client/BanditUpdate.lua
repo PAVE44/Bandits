@@ -106,26 +106,29 @@ local function CheckFriendlyFire(bandit, attacker)
     local brain = BanditBrain.Get(bandit)
     if brain.clan == 0 then return end
 
-    if instanceof(attacker, "IsoPlayer") and not Bandit.IsHostile(bandit) and not attacker:isNPC() then
+    -- atacking hostiles is ok!
+    if brain.hostile or brain.program.name == "Thief" then return end
+
+    -- attacker is not a real player
+    if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
            
-        -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
-        local witnesses = BanditZombie.GetAllB()
-        for id, witness in pairs(witnesses) do
-            if not witness.brain.hostile then
-                local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
-                if dist < 12 then
-                    local friendly = BanditZombie.GetInstanceById(witness.id)
-                    if friendly:CanSee(attacker) then
-                        Bandit.SetHostile(friendly, true)
-                        Bandit.SetProgram(friendly, "Bandit", {})
-                        
-                        local brain = BanditBrain.Get(friendly)
-                        local syncData = {}
-                        syncData.id = brain.id
-                        syncData.hostile = brain.hostile
-                        syncData.program = brain.program
-                        Bandit.ForceSyncPart(friendly, syncData)
-                    end
+    -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
+    local witnesses = BanditZombie.GetAllB()
+    for id, witness in pairs(witnesses) do
+        if not witness.brain.hostile then
+            local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
+            if dist < 12 then
+                local friendly = BanditZombie.GetInstanceById(witness.id)
+                if friendly:CanSee(attacker) then
+                    Bandit.SetHostile(friendly, true)
+                    Bandit.SetProgram(friendly, "Bandit", {})
+                    
+                    local brain = BanditBrain.Get(friendly)
+                    local syncData = {}
+                    syncData.id = brain.id
+                    syncData.hostile = brain.hostile
+                    syncData.program = brain.program
+                    Bandit.ForceSyncPart(friendly, syncData)
                 end
             end
         end
@@ -832,7 +835,7 @@ local function ManageCombat(bandit)
 
     if bandit:isCrawling() then return {} end 
     if Bandit.IsSleeping(bandit) then return {} end
-    if bandit:getActionStateName() == "bumped" then return {} end
+    -- if bandit:getActionStateName() == "bumped" then return {} end
 
     local tasks = {}
     local zx = bandit:getX()
@@ -1186,7 +1189,7 @@ local function UpdateZombies(zombie)
                 local player = getPlayer()
                 if zombie:CanSee(bandit) and zombie:CanSee(player) then
                     
-                    -- we need to use spotted function to activate the zombie, otherwise setTarget does not work
+                    -- we need to use   spotted function to activate the zombie, otherwise setTarget does not work
                     -- unfortunatelly spotted function only works for players, so we need to use it in this context,
                     -- and then retarget on bandit
                     zombie:pathToCharacter(bandit)
@@ -1483,7 +1486,7 @@ local function OnBanditUpdate(zombie)
     ------------------------------------------------------------------------------------------------------------------------------------
     if not zombie:getVariableBoolean("Bandit") then return end
     if not brain then return end
-
+    
     -- distant bandits are not updated by this mod so they need to be set useless
     -- to prevent game updating them as if they were zombies
     if BanditZombie.CacheLightB[id] then 

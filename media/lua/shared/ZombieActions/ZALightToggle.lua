@@ -6,11 +6,9 @@ ZombieActions.LightToggle.onStart = function(zombie, task)
 end
 
 ZombieActions.LightToggle.onWorking = function(zombie, task)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    zombie:faceLocation(task.x, task.y)
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.LightToggle.onComplete = function(zombie, task)

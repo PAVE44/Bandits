@@ -12,7 +12,7 @@ end
 
 ZombieActions.Drop.onComplete = function(zombie, task)
     if BanditUtils.IsController(zombie) then
-        local item = instanceItem(task.itemType)
+        local item = BanditCompatibility.InstanceItem(task.itemType)
         if item then
             zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
         end

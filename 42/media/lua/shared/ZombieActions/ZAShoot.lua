@@ -63,18 +63,12 @@ local function Hit(shooter, item, victim)
 
             victim:addBlood(0.6)
 
-            -- CombatManager.splash(victim, item, tempShooter) -- waiting for IS to expose combat manager
-            local splatNo = item:getSplatNumber()
-            for i=0, splatNo do
-                victim:splatBlood(3, 0.3)
-            end
-            victim:splatBloodFloorBig()
-            victim:playBloodSplatterSound()
+            BanditCompatibility.Splash(victim, item, tempShooter)
+            
             if instanceof(victim, "IsoPlayer") then
-                victim:playerVoiceSound("PainFromFallHigh")
+                BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
 
-            -- SwipeStatePlayer.splash(victim, item, tempShooter) -- b41 
             if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end
         end
     else
@@ -284,11 +278,8 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
     
-    local square = shooter:getSquare()
-    shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is hgow to do this now:
-    shooter:setMuzzleFlashDuration(getTimestampMs())
-    local lightSource = IsoLightSource.new(square:getX(), square:getY(), square:getZ(), 0.8, 0.8, 0.7, 18, 2)
-    cell:addLamppost(lightSource)
+    BanditCompatibility.StartMuzzleFlash(shooter)
+    
     shooter:playSound(weapon.shotSound)
 
     --[[local te = FBORenderTracerEffects.getInstance()
@@ -332,7 +323,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                         local res = ManageLineOfFire(shooter, victim)
                         local finalCheck = BanditUtils.LineClear(shooter, victim)
                         if res and finalCheck then
-                            local item = instanceItem(weapon.name)
+                            local item = BanditCompatibility.InstanceItem(weapon.name)
                             Hit(shooter, item, victim)
                         end
                         zombie:setBumpDone(true)

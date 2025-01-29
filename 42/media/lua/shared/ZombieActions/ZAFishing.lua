@@ -2,7 +2,7 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Fishing = {}
 ZombieActions.Fishing.onStart = function(zombie, task)
-    local primaryItem = instanceItem("Base.SpearShort")
+    local primaryItem = BanditCompatibility.InstanceItem("Base.SpearShort")
     zombie:setPrimaryHandItem(primaryItem)
     zombie:setVariable("BanditPrimary", task.itemPrimary)
     zombie:setVariable("BanditPrimaryType", "spear")
@@ -34,7 +34,7 @@ ZombieActions.Fishing.onWorking = function(zombie, task)
         if rng == 1 then
             local fishTypes = {"Base.Bass", "Base.Crappie", "Base.Perch", "Base.Pike", "Base.Panfish", "Base.Trout"}
             local fishType = fishTypes[1 + BanditUtils.BanditRand(#fishTypes)]
-            local fishItem = instanceItem(fishType)
+            local fishItem = BanditCompatibility.InstanceItem(fishType)
             local inventory = zombie:getInventory()
             inventory:AddItem(fishItem)
             Bandit.UpdateItemsToSpawnAtDeath(zombie)

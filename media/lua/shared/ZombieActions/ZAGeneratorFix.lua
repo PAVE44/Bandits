@@ -8,11 +8,8 @@ end
 
 ZombieActions.GeneratorFix.onWorking = function(zombie, task)
     zombie:faceLocation(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.GeneratorFix.onComplete = function(zombie, task)

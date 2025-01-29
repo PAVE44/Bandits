@@ -4,7 +4,7 @@ ZombieActions.Equip = {}
 ZombieActions.Equip.onStart = function(zombie, task)
     local oldItemPrimary = zombie:getVariableString("BanditPrimary")
     if task.itemPrimary and oldItemPrimary ~= task.itemPrimary then
-        local primaryItem = InventoryItemFactory.CreateItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
 
         zombie:setPrimaryHandItem(primaryItem)
         zombie:setVariable("BanditPrimary", task.itemPrimary)
@@ -44,7 +44,7 @@ ZombieActions.Equip.onStart = function(zombie, task)
             if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
                 local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
                 if oldSecondaryPrimary ~= task.itemSecondary then
-                    local secondaryItem = InventoryItemFactory.CreateItem(task.itemSecondary)
+                    local secondaryItem = BanditCompatibility.InstanceItem(task.itemSecondary)
                     zombie:setSecondaryHandItem(secondaryItem)
                     zombie:setVariable("BanditSecondary", task.itemSecondary)
 
@@ -78,14 +78,8 @@ ZombieActions.Equip.onStart = function(zombie, task)
 end
 
 ZombieActions.Equip.onWorking = function(zombie, task)
-    local bumpType = zombie:getBumpType()
-    if bumpType ~= task.anim then return true end
-
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Equip.onComplete = function(zombie, task)

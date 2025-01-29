@@ -41,10 +41,10 @@ ZombieActions.GeneratorRefill.onComplete = function(zombie, task)
     if gasLeft > 0 then
         item:setUsedDelta(gasLeft)
     else
-        item = instanceItem("Base.EmptyPetrolCan")
+        item = BanditCompatibility.InstanceItem("Base.EmptyPetrolCan")
     end
 
-    if BanditUtils.IsController(zombie) then
+    if BanditUtils.IsController(zombie) and item then
         generator:setFuel(newFuel)
         square:AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
     end

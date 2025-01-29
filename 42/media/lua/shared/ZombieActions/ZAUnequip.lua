@@ -4,7 +4,7 @@ ZombieActions.Unequip = {}
 ZombieActions.Unequip.onStart = function(zombie, task)
 
     if task.itemPrimary then
-        local primaryItem = instanceItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
 
         if primaryItem:IsWeapon() then
             local primaryItemType = WeaponType.getWeaponType(primaryItem)
@@ -31,7 +31,7 @@ end
 
 ZombieActions.Unequip.onComplete = function(zombie, task)
     if task.itemPrimary then
-        local primaryItem = instanceItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
         if primaryItem:IsWeapon() then
             local primaryItemType = WeaponType.getWeaponType(primaryItem)
 

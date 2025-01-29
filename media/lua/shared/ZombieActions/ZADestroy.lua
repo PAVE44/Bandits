@@ -8,11 +8,8 @@ end
 
 ZombieActions.Destroy.onWorking = function(zombie, task)
     zombie:faceLocationF(task.x, task.y)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Destroy.onComplete = function(zombie, task)
@@ -34,7 +31,7 @@ ZombieActions.Destroy.onComplete = function(zombie, task)
 
         if thumpable then
             local health = thumpable:getHealth()
-            print ("thumpable health: " .. thumpable:getHealth())
+            -- print ("thumpable health: " .. thumpable:getHealth())
             health = health - 40
             if health < 0 then health = 0 end
             if health == 0 then

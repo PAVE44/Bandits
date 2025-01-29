@@ -262,21 +262,21 @@ ZombiePrograms.Bandit.Escape = function(bandit)
     if SandboxVars.Bandits.General_Surrender and health < 0.16 then
         bandit:setPrimaryHandItem(nil)
         if weapons.melee then
-            local item = instanceItem(weapons.melee)
+            local item = BanditCompatibility.InstanceItem(weapons.melee)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.melee = nil
             end
         end
         if weapons.primary and weapons.primary.name then
-            local item = instanceItem(weapons.primary.name)
+            local item = BanditCompatibility.InstanceItem(weapons.primary.name)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.primary = nil
             end
         end
         if weapons.secondary and weapons.secondary.name then
-            local item = instanceItem(weapons.secondary.name)
+            local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
             if item then
                 bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 weapons.secondary = nil

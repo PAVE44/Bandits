@@ -7,7 +7,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempAttacker:getX(), tempAttacker:getY())
     local range = item:getMaxRange()
-    if dist < range + 0.1 then
+    if dist < range + 0.2 then
         BanditPlayer.WakeEveryone()
 
         local hitSound
@@ -35,18 +35,36 @@ local function Hit(attacker, item, victim)
                     victim:setPlayerAttackPosition(victim:testDotSide(attacker))
                 end
 
-                victim:Hit(item, tempAttacker, 3, false, 1, false)
+                if item:getFullType() == "Base.BareHands" and instanceof(victim, "IsoPlayer") then
+                    PlayerDamageModel.BareHandHit(attacker, victim)
+                    --local meleeItem = instanceItem("Base.Pencil")
+                    --victim:Hit(meleeItem, getCell():getFakeZombieForHit(), 0.01, false, 0.01, false)
+                    --[[local bodyDamage = victim:getBodyDamage()
+                    if bodyDamage then
+                        local health = bodyDamage:getOverallBodyHealth()
+                        health = health - 5
+                        bodyDamage:setOverallBodyHealth(health)
+                    end]]
+                else
+                    victim:Hit(item, tempAttacker, 0.5, false, 1, false)
+                end
                 victim:setAttackedBy(attacker)
+                --[[
                 local bodyDamage = victim:getBodyDamage()
                 if bodyDamage then
                     local health = bodyDamage:getOverallBodyHealth()
                     health = health + 12
                     if health > 100 then health = 100 end
                     bodyDamage:setOverallBodyHealth(health)
-                end
+                end]]
             end
             victim:addBlood(0.6)
-            SwipeStatePlayer.splash(victim, item, tempAttacker)
+            
+            BanditCompatibility.Splash(victim, item, tempAttacker)
+                
+            if instanceof(victim, "IsoPlayer") then
+                BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
+            end
 
             if victim:getHealth() <= 0 then 
                 victim:Kill(getCell():getFakeZombieForHit(), true) 
@@ -70,7 +88,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     if not enemy then return true end
     
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
-    local meleeItem = InventoryItemFactory.CreateItem(task.weapon)
+    local meleeItem = BanditCompatibility.InstanceItem(task.weapon)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
     local sound = meleeItem:getSwingSound()
@@ -81,7 +99,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     end
 
     if prone then
-        if ZombRand(2) == 0 then
+        if ZombRand(2) == 0 and task.weapon ~= "Base.BareHands" then
             anim = "Attack2HFloor"
         else
             anim = "Attack2HStamp"
@@ -123,20 +141,26 @@ ZombieActions.Hit.onStart = function(bandit, task)
     else
         return false
     end
-
     return true
 end
 
 ZombieActions.Hit.onWorking = function(bandit, task)
     bandit:faceLocation(task.x, task.y)
     local bumpType = bandit:getBumpType()
-    if bumpType ~= task.anim then return false end
 
+    if bumpType ~= task.anim then return false end
+    
     if not task.hit and task.time <= 50 then
+
+        local asn = bandit:getActionStateName()
+        -- print ("HIT AS:" .. asn)
+        if asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
+                 or asn =="staggerback" or asn == "staggerback-knockeddown" then return false end
+
         task.hit = true
         Bandit.UpdateTask(bandit, task)
 
-        local item = InventoryItemFactory.CreateItem(task.weapon)
+        local item = instanceItem(task.weapon)
         local enemy = BanditZombie.GetInstanceById(task.eid)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
@@ -158,16 +182,10 @@ ZombieActions.Hit.onWorking = function(bandit, task)
             end
         end
 
-
-
         return false
 
     end
     
-    if bandit:getVariableString("BumpAnimFinished") then
-        return true
-    end
-
     return false
 end
 

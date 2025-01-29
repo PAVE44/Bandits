@@ -328,7 +328,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         
         local itemType, catName = forageSystem.pickRandomItemType(lootTable)
         if itemType and catName then
-            local item = InventoryItemFactory.CreateItem(itemType)
+            local item = BanditCompatibility.InstanceItem(itemType)
             if instanceof (item, "Food") then
                 local test1 = item:getProteins()
                 local test2 = item:getCalories()

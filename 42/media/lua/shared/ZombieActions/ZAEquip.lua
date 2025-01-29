@@ -4,7 +4,7 @@ ZombieActions.Equip = {}
 ZombieActions.Equip.onStart = function(zombie, task)
     local oldItemPrimary = zombie:getVariableString("BanditPrimary")
     if task.itemPrimary and oldItemPrimary ~= task.itemPrimary then
-        local primaryItem = instanceItem(task.itemPrimary)
+        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
 
         zombie:setPrimaryHandItem(primaryItem)
         zombie:setVariable("BanditPrimary", task.itemPrimary)
@@ -44,7 +44,7 @@ ZombieActions.Equip.onStart = function(zombie, task)
             if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
                 local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
                 if oldSecondaryPrimary ~= task.itemSecondary then
-                    local secondaryItem = instanceItem(task.itemSecondary)
+                    local secondaryItem = BanditCompatibility.InstanceItem(task.itemSecondary)
                     zombie:setSecondaryHandItem(secondaryItem)
                     zombie:setVariable("BanditSecondary", task.itemSecondary)
 

@@ -7,11 +7,8 @@ ZombieActions.Zombify.onStart = function(zombie, task)
 end
 
 ZombieActions.Zombify.onWorking = function(zombie, task)
-    if not zombie:getVariableString("BumpAnimFinished") then
-        return false
-    else
-        return true
-    end
+    if zombie:getBumpType() ~= task.anim then return true end
+    return false
 end
 
 ZombieActions.Zombify.onComplete = function(zombie, task)
@@ -19,6 +16,10 @@ ZombieActions.Zombify.onComplete = function(zombie, task)
     local id = BanditUtils.GetCharacterID(zombie)
     local args = {}
     args.id = id
-    sendClientCommand(getPlayer(), 'Commands', 'BanditRemove', args)
+    if isClient() then
+        sendClientCommand(getPlayer(), 'Commands', 'BanditRemove', args)
+    else
+        BanditServer.Commands.BanditRemove(getPlayer(), args)
+    end
     return true
 end
