@@ -78,6 +78,22 @@ BanditServer.Commands.AddEffect = function(player, args)
 end
 
 BanditServer.Commands.SpawnGroup = function(player, event)
+
+    local getSkinTexture = function(female, id)
+        -- must be deterministc, do not use random
+        if female then
+            local r = 1 + math.abs(id) % 5 
+            return "FemaleBody0" .. tostring(r)
+        else
+            local r = 1 + math.abs(id) % 10
+            if r > 5 then
+                return "MaleBody0" .. tostring(r - 5) .. "a"
+            else
+                return "MaleBody0" .. tostring(r)
+            end
+        end
+    end
+
     local radius = 0.5
     local knockedDown = false
     local crawler = false
@@ -101,6 +117,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
         local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, bandit.health)
         for i=0, zombieList:size()-1 do
             local zombie = zombieList:get(i)
+            local zombieVisuals = zombie:getHumanVisual()
             local id = BanditUtils.GetCharacterID(zombie)
 
             zombie:setHealth(bandit.health)
@@ -118,8 +135,23 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- unique bandit id based on outfit
             brain.id = id
 
+            -- permanent bandits will store bandit details
+            brain.permanent = bandit.permanent
+
+            -- gender
+            brain.female = zombie:isFemale()
+
             -- time of birth
             brain.born = getGameTime():getWorldAgeHours()
+
+            -- place of birth
+            brain.bornCoords = {}
+            brain.bornCoords.x = gx
+            brain.bornCoords.y = gy
+            brain.bornCoords.z = gz
+
+            -- initial health
+            brain.health = bandit.health
 
             -- the player that spawned the bandit becomes his master, 
             -- this plays a role in particular programs like Companion
@@ -134,15 +166,21 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- hostility towards human players
             brain.hostile = event.hostile
 
+            -- looks
+            local hairColor = zombieVisuals:getHairColor()
+            local beardColor = zombieVisuals:getBeardColor()
+
+            brain.skinTexture = bandit.skinTexture and bandit.skinTexture or getSkinTexture(zombie:isFemale(), id)
+            brain.hairStyle = bandit.hairStyle and bandit.hairStyle or zombieVisuals:getHairModel()
+            brain.hairColor = bandit.hairColor and bandit.hairColor or {r=hairColor:getRedFloat(), g=hairColor:getGreenFloat(), b=hairColor:getBlueFloat()}
+            brain.beardStyle = bandit.beardStyle and bandit.beardStyle or zombieVisuals:getBeardModel()
+            brain.beardColor = bandit.beardColor and bandit.beardColor or {r=beardColor:getRedFloat(), g=beardColor:getGreenFloat(), b=beardColor:getBlueFloat()}
+            brain.outfit = bandit.outfit
+
             -- copy clan abilities to the bandit
             brain.clan = bandit.clan
             brain.eatBody = bandit.eatBody
             brain.accuracyBoost = bandit.accuracyBoost
-
-            -- hair style
-            if bandit.hairStyle then
-                brain.hairStyle = bandit.hairStyle
-            end
 
             -- the AI program to follow at start
             brain.program = {}
@@ -187,7 +225,55 @@ BanditServer.Commands.SpawnGroup = function(player, event)
 
             -- print ("[INFO] Bandit " .. brain.fullname .. "(".. id .. ") from clan " .. bandit.clan .. " in outfit " .. bandit.outfit .. " has joined the game.")
             gmd.Queue[id] = brain
+
+            zombie:getModData().IsBandit = true
         end
+    end
+end
+
+BanditServer.Commands.SpawnRestore = function(player, brain)
+    local gmd = GetBanditModData()
+    local knockedDown = false
+    local crawler = false
+    local isFallOnFront = false
+    local isFakeDead = false
+    local isInvulnerable = false
+    local isSitting = false
+    local health = brain.health or 2
+    local outfit = brain.outfit
+    local oldId = brain.id
+    local gx = brain.bornCoords.x
+    local gy = brain.bornCoords.y
+    local gz = brain.bornCoords.z
+
+    local femaleChance = 0
+    if brain.female then
+        femaleChance = 100
+    end
+
+    local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, outfit, femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, health)
+    for i=0, zombieList:size()-1 do
+        local zombie = zombieList:get(i)
+        local id = BanditUtils.GetCharacterID(zombie)
+
+        zombie:setHealth(health)
+
+        -- clients will change that flag to true once they recognize the bandit by its ID
+        zombie:setVariable("Bandit", false)
+
+        -- just in case
+        zombie:setPrimaryHandItem(nil)
+        zombie:setSecondaryHandItem(nil)
+        zombie:clearAttachedItems()
+
+        -- we have new id
+        brain.id = id
+
+        -- swap
+        gmd.Queue[oldId] = nil
+        gmd.Queue[id] = brain
+
+        zombie:getModData().IsBandit = true
     end
 end
 

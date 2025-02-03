@@ -30,6 +30,19 @@ legacyItemMap["Base.StrewberrieBagSeed2"]       = "farming.StrewberrieBagSeed"
 legacyItemMap["Base.TomatoBagSeed2"]            = "farming.TomatoBagSeed"
 legacyItemMap["Base.CigaretteSingle"]           = "Base.Cigarettes"
 legacyItemMap["Base.WateredCan"]                = "farming.WateredCan"
+legacyItemMap["Base.TireIron"]                  = "Base.LugWrench"
+legacyItemMap["Base.Ratchet"]                   = "Base.Wrench"
+legacyItemMap["Base.LightBulbBox"]              = "Base.LightBulb"
+legacyItemMap["Base.Toolbox_Mechanic"]          = "Base.Toolbox"
+legacyItemMap["Base.Bag_Satchel_Medical"]       = "Base.Bag_Satchel"
+legacyItemMap["Base.GuitarElectricBass"]        = "Base.GuitarElectricBassBlack"
+legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
+legacyItemMap["Base.CakeCarrot"]                = "Base.PieApple"
+legacyItemMap["Base.EggOmlette"]                = "Base.Pancakes"
+legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
+legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
+
+
 
 BanditCompatibility.LegacyItemMap = legacyItemMap
 
@@ -65,7 +78,8 @@ BanditCompatibility.InstanceItem = function(itemFullType)
     if getGameVersion() >= 42 then
         return instanceItem(itemFullType)
     else
-        return InventoryItemFactory.CreateItem(itemFullType)
+        local itemFullTypeLegacy = BanditCompatibility.GetLegacyItem(itemFullType)
+        return InventoryItemFactory.CreateItem(itemFullTypeLegacy)
     end
 end
 
@@ -141,5 +155,13 @@ BanditCompatibility.SurpressZombieSounds = function(bandit)
     else
         bandit:getEmitter():stopSoundByName("MaleZombieCombined")
         bandit:getEmitter():stopSoundByName("FemaleZombieCombined")
+    end
+end
+
+BanditCompatibility.HaveRoofFull = function(square)
+    if getGameVersion() >= 42 then
+        return square:haveRoofFull()
+    else
+        return true
     end
 end

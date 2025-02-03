@@ -203,5 +203,3 @@ end
 -- assignment to wave system, clan files append this table
 BanditCreator.GroupMap = BanditCreator.GroupMap or {}
 
-
-

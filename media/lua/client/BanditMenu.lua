@@ -239,11 +239,12 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         if not brain.hostile and brain.clan > 0 then
             local banditOption = context:addOption(brain.fullname)
             local banditMenu = context:getNew(context)
-            context:addSubMenu(banditOption, banditMenu)
 
-            if brain.program.name ~= "Companion" and brain.program.name ~= "CompanionGuard" then
+            if brain.program.name == "Looter" then
+                context:addSubMenu(banditOption, banditMenu)
                 banditMenu:addOption("Join Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
-            else     
+            elseif brain.program.name == "Companion" or brain.program.name == "CompanionGuard" then
+                context:addSubMenu(banditOption, banditMenu)
                 banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
             end
         end

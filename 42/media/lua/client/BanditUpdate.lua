@@ -198,21 +198,23 @@ local function ApplyVisuals(bandit)
             if string.sub(skin, 1, 10) ~= "FemaleBody" and string.sub(skin, 1, 8) ~= "MaleBody" then
                 local brain = BanditBrain.Get(bandit)
                 local id = brain.id
-                
-                if bandit:isFemale() then
-                    local r = 1 + math.abs(id) % 5 -- deterministc for all clients
-                    banditVisuals:setSkinTextureName("FemaleBody0" .. tostring(r))
-                else
-                    local r = 1 + math.abs(id) % 10 -- deterministc for all clients
-                    if r > 5 then
-                        banditVisuals:setSkinTextureName("MaleBody0" .. tostring(r - 5) .. "a")
-                    else
-                        banditVisuals:setSkinTextureName("MaleBody0" .. tostring(r))
-                    end
-                end
 
+                if brain.skinTexture then
+                    banditVisuals:setSkinTextureName(brain.skinTexture)
+                end
                 if brain.hairStyle then
                     banditVisuals:setHairModel(brain.hairStyle)
+                end
+                if brain.hairColor then
+                    local color = ImmutableColor.new(brain.hairColor.r, brain.hairColor.g, brain.hairColor.b)
+                    banditVisuals:setHairColor(color)
+                end
+                if brain.beardStyle then
+                    banditVisuals:setBeardModel(brain.beardStyle)
+                end
+                if brain.beardColor then
+                    local color = ImmutableColor.new(brain.beardColor.r, brain.beardColor.g, brain.beardColor.b)
+                    banditVisuals:setBeardColor(color)
                 end
 
                 banditVisuals:randomDirt()
