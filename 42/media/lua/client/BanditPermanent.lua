@@ -15,7 +15,7 @@ BanditPermanent.Check = function()
 
     local cell = getCell()
     for id, gmdBrain in pairs(gmd.Queue) do
-        if gmdBrain.permanent then
+        if gmdBrain.permanent and not gmdBrain.inVehicle then
             if not cache[id] then
                 local square = cell:getGridSquare(gmdBrain.bornCoords.x, gmdBrain.bornCoords.y, gmdBrain.bornCoords.z)
                 if square then

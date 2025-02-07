@@ -173,6 +173,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local moddata = zombie:getModData()
     local target = zombie:getTarget()
     local animator = zombie:getAdvancedAnimator()
+    local inventory = zombie:getInventory()
     -- local astate = zombie:getAnimationDebug()
     local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
     local baseData = BanditPlayerBase.data

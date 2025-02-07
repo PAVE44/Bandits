@@ -6,6 +6,7 @@ ZombieActions.StoveToggle.onStart = function(zombie, task)
 end
 
 ZombieActions.StoveToggle.onWorking = function(zombie, task)
+    zombie:faceLocationF(task.x, task.y)
     if zombie:getBumpType() ~= task.anim then return true end
     return false
 end

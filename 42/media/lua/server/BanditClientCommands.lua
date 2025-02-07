@@ -138,6 +138,9 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             -- permanent bandits will store bandit details
             brain.permanent = bandit.permanent
 
+            -- flag to simulate being in a vehicle
+            brain.inVehicle = false
+
             -- gender
             brain.female = zombie:isFemale()
 
