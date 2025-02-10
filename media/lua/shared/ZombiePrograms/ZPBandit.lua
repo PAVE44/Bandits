@@ -144,7 +144,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     target = closestZombie
     if closestBandit.dist < closestZombie.dist then
         target = closestBandit
-        enemy = BanditZombie.GetInstanceById(target.id)
+        enemy = BanditZombie.Cache[target.id]
     end
 
     local handicap = 6

@@ -146,7 +146,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
 
         if closestBandit.dist < closestZombie.dist then 
             closestEnemy = closestBandit
-            enemy = BanditZombie.GetInstanceById(closestEnemy.id)
+            enemy = BanditZombie.Cache[closestEnemy.id]
         end
 
         if closestEnemy.dist < 8 then

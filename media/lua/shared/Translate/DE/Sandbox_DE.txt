@@ -20,6 +20,7 @@ Sandbox_DE = {
     Sandbox_Bandits.EnterVehicles = "Freundliche Einheiten können Spielerfahrzeuge betreten [BUGGY]"
     Sandbox_Bandits.GeneratorCutoff = "Banditen können Stromgeneratoren deaktivieren"
     Sandbox_Bandits.BuildBridge = "Banditen können Brücken auf dem Wasser bauen"
+    Sandbox_Bandits.BuildRoadblock = "Straßenblockaden der Banditen"
     Sandbox_Bandits.Speak = "Banditen sprechen"
     Sandbox_Bandits.Captions = "Untertitel für Banditen-Dialoge"
     Sandbox_Bandits.SneakAtNight = "Banditen schleichen in der Nacht"
@@ -47,6 +48,7 @@ Sandbox_DE = {
     Sandbox_Bandits.OverallAccuracy_option5 = "Lasergesteuerter Ninja"
 
     Sandbox_Bandits.DefenderSpawnHourlyChance = "Stündliche Spawn-Chance von Banditen-Verteidigern [%]"
+    Sandbox_Bandits.DefenderMaxOccupants = "Maximale Anzahl von Banditenverteidigern in einem Gebäude"
     Sandbox_Bandits.BaseSpawnHourlyChance = "Stündliche Spawn-Chance für Banditenbasis/-lager (wenn der Standort dies zulässt) [%]"
     Sandbox_Bandits.DefenderLootAmount = "Verteidiger/Basis-Beutebetrag"
 
@@ -77,11 +79,16 @@ Sandbox_DE = {
 
     Sandbox_Bandits.EnemyBehaviour = "Feindliches AI-Modell"
     Sandbox_Bandits.EnemyBehaviour_tooltip = "Feindliches AI-Verhaltensmodell"
-    Sandbox_Bandits.EnemyBehaviour_option1 = "Zufällig"
-    Sandbox_Bandits.EnemyBehaviour_option2 = "Raider"
-    Sandbox_Bandits.EnemyBehaviour_option3 = "Wanderer"
-    Sandbox_Bandits.EnemyBehaviour_option4 = "Wache"
-    Sandbox_Bandits.EnemyBehaviour_option5 = "Dieb"
+    Sandbox_Bandits.EnemyBehaviour_option1 = "BANDIT: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option2 = "BANDIT: RAIDER"
+    Sandbox_Bandits.EnemyBehaviour_option3 = "BANDIT: WANDERER"
+    Sandbox_Bandits.EnemyBehaviour_option4 = "BANDIT: GUARD"
+    Sandbox_Bandits.EnemyBehaviour_option5 = "BANDIT: THIEF"
+    Sandbox_Bandits.EnemyBehaviour_option6 = "BANDIT: RANDOM (NO-RAIDER)"
+    Sandbox_Bandits.EnemyBehaviour_option7 = "FRIENDLY: INDIFFERENT"
+    Sandbox_Bandits.EnemyBehaviour_option8 = "FRIENDLY: COMPANION"
+    Sandbox_Bandits.EnemyBehaviour_option9 = "FRIENDLY: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option10 = "RANDOM (BANDIT/FRIENDLY)"
 
     Sandbox_Bandits.FirstDay = "Start Tag"
     Sandbox_Bandits.FirstDay_tooltip = "Die Anzahl der Tage, die der Spieler überlebt hat, nach denen der Spawn beginnt"

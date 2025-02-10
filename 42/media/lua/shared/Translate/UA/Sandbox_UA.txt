@@ -18,6 +18,7 @@ Sandbox_UA = {
 	Sandbox_Bandits.EnterVehicles = "Дружні NPC можуть заходити в транспорт гравця [Може працювати з помилками]",
 	Sandbox_Bandits.GeneratorCutoff = "Бандити можуть відключати генератори",
 	Sandbox_Bandits.BuildBridge = "Бандити можуть будувати мости через воду",
+    Sandbox_Bandits.BuildRoadblock = "Бандитські перекриття доріг"
 	Sandbox_Bandits.Speak = "Бандити говорять",
 	Sandbox_Bandits.Captions = "Текстові підписи до розмов бандитів",
 	Sandbox_Bandits.SneakAtNight = "Бандити крадуться вночі",
@@ -45,6 +46,7 @@ Sandbox_UA = {
 	Sandbox_Bandits.OverallAccuracy_option5 = "Лазерний ніндзя",
 
 	Sandbox_Bandits.DefenderSpawnHourlyChance = "Шанс щогодинної появи охоронців [%]",
+    Sandbox_Bandits.DefenderMaxOccupants = "Максимальна кількість захисників бандитів у буйдінгу"
 	Sandbox_Bandits.BaseSpawnHourlyChance = "Шанс щогодинної появи бази/табору [%]",
 	Sandbox_Bandits.DefenderLootAmount = "Кількість здобичі у базах/охоронців",
 
@@ -75,11 +77,16 @@ Sandbox_UA = {
 
 	Sandbox_Bandits.EnemyBehaviour = "Модель поведінки ворогів",
 	Sandbox_Bandits.EnemyBehaviour_tooltip = "Модель штучного інтелекту ворогів",
-	Sandbox_Bandits.EnemyBehaviour_option1 = "Випадкова",
-	Sandbox_Bandits.EnemyBehaviour_option2 = "Рейдер",
-	Sandbox_Bandits.EnemyBehaviour_option3 = "Блукач",
-	Sandbox_Bandits.EnemyBehaviour_option4 = "Охоронець",
-	Sandbox_Bandits.EnemyBehaviour_option5 = "Злодій",
+    Sandbox_Bandits.EnemyBehaviour_option1 = "BANDIT: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option2 = "BANDIT: RAIDER"
+    Sandbox_Bandits.EnemyBehaviour_option3 = "BANDIT: WANDERER"
+    Sandbox_Bandits.EnemyBehaviour_option4 = "BANDIT: GUARD"
+    Sandbox_Bandits.EnemyBehaviour_option5 = "BANDIT: THIEF"
+    Sandbox_Bandits.EnemyBehaviour_option6 = "BANDIT: RANDOM (NO-RAIDER)"
+    Sandbox_Bandits.EnemyBehaviour_option7 = "FRIENDLY: INDIFFERENT"
+    Sandbox_Bandits.EnemyBehaviour_option8 = "FRIENDLY: COMPANION"
+    Sandbox_Bandits.EnemyBehaviour_option9 = "FRIENDLY: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option10 = "RANDOM (BANDIT/FRIENDLY)"
 
 	Sandbox_Bandits.FirstDay = "День початку",
 	Sandbox_Bandits.FirstDay_tooltip = "Кількість днів після початку гри, через яку з'являються бандити",

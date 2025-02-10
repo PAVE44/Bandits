@@ -90,7 +90,7 @@ ZombieActions.Move.onWorking = function(zombie, task)
     else
         zombie:setCollidable(false)
     end]]
-
+    -- local finder = zombie:getFinder()
     if BanditUtils.IsController(zombie) then
         local cell = getCell()
 

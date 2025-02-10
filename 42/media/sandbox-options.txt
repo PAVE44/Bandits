@@ -77,6 +77,11 @@ option Bandits.General_BuildBridge = {
     page = Bandits_General, translation = Bandits.BuildBridge,
 }
 
+option Bandits.General_BuildRoadblock = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.BuildRoadblock,
+}
+
 option Bandits.General_Speak = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.Speak,
@@ -148,6 +153,11 @@ option Bandits.General_DefenderSpawnHourlyChanced = {
     page = Bandits_General, translation = Bandits.DefenderSpawnHourlyChance,
 }
 
+option Bandits.General_DefenderMaxOccupants = {
+    type = integer, min = 1, max = 60, default = 16,
+    page = Bandits_General, translation = Bandits.DefenderMaxOccupants,
+}
+
 option Bandits.General_BaseSpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 0.3,
     page = Bandits_General, translation = Bandits.BaseSpawnHourlyChance,
@@ -165,13 +175,8 @@ option Bandits.Clan_1_WaveEnabled = {
     page = Bandits_Clan_1, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_1_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 50,
-    page = Bandits_Clan_1, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_1_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 7,
     page = Bandits_Clan_1, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -186,7 +191,7 @@ option Bandits.Clan_1_LastDay = {
 }
 
 option Bandits.Clan_1_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 40,
+    type = integer, min = 30, max = 100, default = 55,
     page = Bandits_Clan_1, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -232,13 +237,8 @@ option Bandits.Clan_2_WaveEnabled = {
     page = Bandits_Clan_2, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_2_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_2, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_2_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_2, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -253,12 +253,12 @@ option Bandits.Clan_2_LastDay = {
 }
 
 option Bandits.Clan_2_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 42,
+    type = integer, min = 30, max = 100, default = 62,
     page = Bandits_Clan_2, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
 option Bandits.Clan_2_SpawnHourlyChance = {
-    type = double, min = 0, max = 100, default = 4,
+    type = double, min = 0, max = 100, default = 3.2,
     page = Bandits_Clan_2, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
 }
 
@@ -299,13 +299,8 @@ option Bandits.Clan_3_WaveEnabled = {
     page = Bandits_Clan_3, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_3_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_3, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_3_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_3, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -320,12 +315,12 @@ option Bandits.Clan_3_LastDay = {
 }
 
 option Bandits.Clan_3_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 45,
+    type = integer, min = 30, max = 100, default = 65,
     page = Bandits_Clan_3, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
 option Bandits.Clan_3_SpawnHourlyChance = {
-    type = double, min = 0, max = 100, default = 2.2,
+    type = double, min = 0, max = 100, default = 1.9,
     page = Bandits_Clan_3, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
 }
 
@@ -366,13 +361,8 @@ option Bandits.Clan_4_WaveEnabled = {
     page = Bandits_Clan_4, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_4_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_4, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_4_EnemyBehaviour = {
-    type = enum, numValues=5, default = 3,
+    type = enum, numValues=10, default = 5,
     page = Bandits_Clan_4, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -387,12 +377,12 @@ option Bandits.Clan_4_LastDay = {
 }
 
 option Bandits.Clan_4_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_4, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
 option Bandits.Clan_4_SpawnHourlyChance = {
-    type = double, min = 0, max = 100, default = 2.5,
+    type = double, min = 0, max = 100, default = 2.1,
     page = Bandits_Clan_4, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
 }
 
@@ -433,13 +423,8 @@ option Bandits.Clan_5_WaveEnabled = {
     page = Bandits_Clan_5, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_5_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_5, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_5_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 3,
     page = Bandits_Clan_5, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -454,7 +439,7 @@ option Bandits.Clan_5_LastDay = {
 }
 
 option Bandits.Clan_5_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_5, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -500,13 +485,8 @@ option Bandits.Clan_6_WaveEnabled = {
     page = Bandits_Clan_6, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_6_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_6, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_6_EnemyBehaviour = {
-    type = enum, numValues=5, default = 3,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_6, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -521,7 +501,7 @@ option Bandits.Clan_6_LastDay = {
 }
 
 option Bandits.Clan_6_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_6, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -567,13 +547,8 @@ option Bandits.Clan_7_WaveEnabled = {
     page = Bandits_Clan_7, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_7_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 50,
-    page = Bandits_Clan_7, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_7_EnemyBehaviour = {
-    type = enum, numValues=5, default = 3,
+    type = enum, numValues=10, default = 3,
     page = Bandits_Clan_7, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -588,7 +563,7 @@ option Bandits.Clan_7_LastDay = {
 }
 
 option Bandits.Clan_7_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_7, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -634,13 +609,8 @@ option Bandits.Clan_8_WaveEnabled = {
     page = Bandits_Clan_8, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_8_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_8, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_8_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 9,
     page = Bandits_Clan_8, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -655,7 +625,7 @@ option Bandits.Clan_8_LastDay = {
 }
 
 option Bandits.Clan_8_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 40,
+    type = integer, min = 30, max = 100, default = 60,
     page = Bandits_Clan_8, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -701,13 +671,8 @@ option Bandits.Clan_9_WaveEnabled = {
     page = Bandits_Clan_9, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_9_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_9, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_9_EnemyBehaviour = {
-    type = enum, numValues=5, default = 2,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_9, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -722,7 +687,7 @@ option Bandits.Clan_9_LastDay = {
 }
 
 option Bandits.Clan_9_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_9, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -768,13 +733,8 @@ option Bandits.Clan_10_WaveEnabled = {
     page = Bandits_Clan_10, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_10_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_10, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_10_EnemyBehaviour = {
-    type = enum, numValues=5, default = 3,
+    type = enum, numValues=10, default = 2,
     page = Bandits_Clan_10, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -784,22 +744,22 @@ option Bandits.Clan_10_FirstDay = {
 }
 
 option Bandits.Clan_10_LastDay = {
-    type = integer, min = 0, max = 10000, default = 83,
+    type = integer, min = 0, max = 10000, default = 123,
     page = Bandits_Clan_10, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
 option Bandits.Clan_10_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_10, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
 option Bandits.Clan_10_SpawnHourlyChance = {
-    type = double, min = 0, max = 100, default = 0.7,
+    type = double, min = 0, max = 100, default = 0.3,
     page = Bandits_Clan_10, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
 }
 
 option Bandits.Clan_10_GroupSize = {
-    type = integer, min = 0, max = 25, default = 6,
+    type = integer, min = 0, max = 25, default = 1,
     page = Bandits_Clan_10, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
@@ -835,13 +795,8 @@ option Bandits.Clan_11_WaveEnabled = {
     page = Bandits_Clan_11, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_11_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_11, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_11_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 3,
     page = Bandits_Clan_11, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -856,7 +811,7 @@ option Bandits.Clan_11_LastDay = {
 }
 
 option Bandits.Clan_11_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_11, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -902,13 +857,8 @@ option Bandits.Clan_12_WaveEnabled = {
     page = Bandits_Clan_12, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_12_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_12, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_12_EnemyBehaviour = {
-    type = enum, numValues=5, default = 2,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_12, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -923,7 +873,7 @@ option Bandits.Clan_12_LastDay = {
 }
 
 option Bandits.Clan_12_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_12, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -969,13 +919,8 @@ option Bandits.Clan_13_WaveEnabled = {
     page = Bandits_Clan_13, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_13_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_13, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_13_EnemyBehaviour = {
-    type = enum, numValues=5, default = 3,
+    type = enum, numValues=10, default = 3,
     page = Bandits_Clan_13, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -990,7 +935,7 @@ option Bandits.Clan_13_LastDay = {
 }
 
 option Bandits.Clan_13_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_13, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -1036,13 +981,8 @@ option Bandits.Clan_14_WaveEnabled = {
     page = Bandits_Clan_14, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_14_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_14, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_14_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 6,
     page = Bandits_Clan_14, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1057,7 +997,7 @@ option Bandits.Clan_14_LastDay = {
 }
 
 option Bandits.Clan_14_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_14, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -1103,13 +1043,8 @@ option Bandits.Clan_15_WaveEnabled = {
     page = Bandits_Clan_15, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_15_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_15, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_15_EnemyBehaviour = {
-    type = enum, numValues=5, default = 2,
+    type = enum, numValues=10, default = 3,
     page = Bandits_Clan_15, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1124,7 +1059,7 @@ option Bandits.Clan_15_LastDay = {
 }
 
 option Bandits.Clan_15_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 50,
+    type = integer, min = 30, max = 100, default = 70,
     page = Bandits_Clan_15, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
@@ -1170,13 +1105,8 @@ option Bandits.Clan_16_WaveEnabled = {
     page = Bandits_Clan_16, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_16_FriendlyChance = {
-    type = integer, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_16, translation = Bandits.FriendlyChance, _tooltip=Bandits.FriendlyChanceTooltip,
-}
-
 option Bandits.Clan_16_EnemyBehaviour = {
-    type = enum, numValues=5, default = 1,
+    type = enum, numValues=10, default = 8,
     page = Bandits_Clan_16, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
@@ -1191,7 +1121,7 @@ option Bandits.Clan_16_LastDay = {
 }
 
 option Bandits.Clan_16_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 38,
+    type = integer, min = 30, max = 100, default = 58,
     page = Bandits_Clan_16, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 

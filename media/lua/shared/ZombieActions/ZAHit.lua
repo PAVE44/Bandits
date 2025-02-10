@@ -7,7 +7,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempAttacker:getX(), tempAttacker:getY())
     local range = item:getMaxRange()
-    if dist < range + 0.2 then
+    if dist < range + 0.4 then
         BanditPlayer.WakeEveryone()
 
         local hitSound
@@ -84,7 +84,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     local anim 
     local sound
 
-    local enemy = BanditZombie.GetInstanceById(task.eid) or BanditPlayer.GetPlayerById(task.eid)
+    local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
     
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
@@ -161,7 +161,7 @@ ZombieActions.Hit.onWorking = function(bandit, task)
         Bandit.UpdateTask(bandit, task)
 
         local item = BanditCompatibility.InstanceItem(task.weapon)
-        local enemy = BanditZombie.GetInstanceById(task.eid)
+        local enemy = BanditZombie.Cache[task.eid]
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
             local brainEnemy = BanditBrain.Get(enemy)

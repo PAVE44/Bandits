@@ -2,4 +2,5 @@ name=Bandits
 poster=poster.png
 id=Bandits
 description=Adds armed hostile bandits to the game
+incompatible=\BetterFPS_B42
 author=Slayer

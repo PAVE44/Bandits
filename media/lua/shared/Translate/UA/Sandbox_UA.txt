@@ -75,11 +75,16 @@ Sandbox_UA = {
 
 	Sandbox_Bandits.EnemyBehaviour = "Модель поведінки ворогів",
 	Sandbox_Bandits.EnemyBehaviour_tooltip = "Модель штучного інтелекту ворогів",
-	Sandbox_Bandits.EnemyBehaviour_option1 = "Випадкова",
-	Sandbox_Bandits.EnemyBehaviour_option2 = "Рейдер",
-	Sandbox_Bandits.EnemyBehaviour_option3 = "Блукач",
-	Sandbox_Bandits.EnemyBehaviour_option4 = "Охоронець",
-	Sandbox_Bandits.EnemyBehaviour_option5 = "Злодій",
+    Sandbox_Bandits.EnemyBehaviour_option1 = "BANDIT: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option2 = "BANDIT: RAIDER"
+    Sandbox_Bandits.EnemyBehaviour_option3 = "BANDIT: WANDERER"
+    Sandbox_Bandits.EnemyBehaviour_option4 = "BANDIT: GUARD"
+    Sandbox_Bandits.EnemyBehaviour_option5 = "BANDIT: THIEF"
+    Sandbox_Bandits.EnemyBehaviour_option6 = "BANDIT: RANDOM (NO-RAIDER)"
+    Sandbox_Bandits.EnemyBehaviour_option7 = "FRIENDLY: INDIFFERENT"
+    Sandbox_Bandits.EnemyBehaviour_option8 = "FRIENDLY: COMPANION"
+    Sandbox_Bandits.EnemyBehaviour_option9 = "FRIENDLY: RANDOM"
+    Sandbox_Bandits.EnemyBehaviour_option10 = "RANDOM (BANDIT/FRIENDLY)"
 
 	Sandbox_Bandits.FirstDay = "День початку",
 	Sandbox_Bandits.FirstDay_tooltip = "Кількість днів після початку гри, через яку з'являються бандити",

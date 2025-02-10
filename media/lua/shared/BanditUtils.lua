@@ -265,7 +265,7 @@ function BanditUtils.GetClosestZombieLocation(character)
     
     local cx, cy = character:getX(), character:getY()
 
-    local zombieList = BanditZombie.GetAllZ()
+    local zombieList = BanditZombie.CacheLightZ
     for id, zombie in pairs(zombieList) do
         local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist then
@@ -292,7 +292,7 @@ function BanditUtils.GetClosestBanditLocation(character)
     
     local cx, cy = character:getX(), character:getY()
 
-    local zombieList = BanditZombie.GetAllB()
+    local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
         local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist and cid ~= id then
@@ -319,7 +319,7 @@ function BanditUtils.GetClosestBanditLocationFast(character)
     
     local cx, cy = character:getX(), character:getY()
 
-    local zombieList = BanditZombie.GetAllB()
+    local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
         if math.abs(zombie.x - cx) < 30 or math.abs(zombie.y - cy) < 30 then
             local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
@@ -346,7 +346,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
 
     local cx, cy = character:getX(), character:getY()
 
-    local banditList = BanditZombie.GetAllB()
+    local banditList = BanditZombie.CacheLightB
     if instanceof(character, "IsoZombie") then
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do

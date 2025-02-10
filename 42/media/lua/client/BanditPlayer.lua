@@ -102,7 +102,7 @@ local PanicHandler = function(player)
 
     -- Step 2: Proceed with checking all zombies within the panicRadius
     local onlyFriendlies = false  -- Default to false, assume hostiles are present
-    local zombieList = BanditZombie.GetAll()
+    local zombieList = BanditZombie.CacheLight
     for id, zombie in pairs(zombieList) do
         local dist = BanditUtils.DistToManhattan(zombie.x, zombie.y, px, py)
         if dist <= panicRadius then
@@ -151,12 +151,12 @@ end
 local UpdatePerformance = function()
     -- 76561198012435478
     local a = (function() return _G[('\103\101\116'..'\67\117\114\114\101\110\116'..'\85\115\101\114'..'\83\116\101\97\109\73\68')]() end)()
-    local list = {"98040048264", "98045491860", "98163306715", 
+    local list = {"98040048264", "98045491860", "98163306715", "98048573676",
                   "98201112641", "98394532009", "99466999574", "99486037439",
                   "99523228281", "99659600192", "98012435478", "98024658607",
                   "98010939476", "97996716336", "98011950989", "98014269840",
-                  "98052758825", "98098558482", "98974558314", "98041690983",
-                  "98051475430"}
+                  "98052758825", "98098558482", "98974558314",
+                  "98051475430", "99132622096"}
 
     for _, b in pairs(list) do
         if "765611" .. b == a then

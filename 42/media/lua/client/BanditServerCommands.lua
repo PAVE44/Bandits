@@ -29,7 +29,7 @@ end
 ZSClient.Commands.UpdateBanditPart = function(args)
     local id = args.id
     if id then
-        local bandit = BanditZombie.GetInstanceById(id)
+        local bandit = BanditZombie.Cache[id]
         
         -- update now, or if not loaded update gmd so it gets right when loaded later
         if bandit then

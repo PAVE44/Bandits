@@ -38,60 +38,50 @@ local function GetEscapePoint(bandit, radius)
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
     local brain = BanditBrain.Get(bandit)
 
-    -- Create an array to count enemy characters in radial segments
-    local segmentCount = 16
+    -- each segment is 8x8, the coordinates are for west/north corners
     local segments = {}
-    for i = 1, segmentCount do
-        segments[i] = 0
-    end
+    table.insert(segments, {x=-3, y=-16, f=0, e=0}) -- N
+    table.insert(segments, {x=5, y=-13, f=0, e=0}) -- NE
+    table.insert(segments, {x=8, y=-4, f=0, e=0}) -- E
+    table.insert(segments, {x=5, y=5, f=0, e=0}) -- SE
+    table.insert(segments, {x=-3, y=8, f=0, e=0}) -- S
+    table.insert(segments, {x=-11, y=5, f=0, e=0}) -- SW
+    table.insert(segments, {x=-15, y=-4, f=0, e=0}) -- W
+    table.insert(segments, {x=-11, y=-13, f=0, e=0}) -- W
 
-    -- counters to determine if the bandit is outnumbered
-    local friendlies = 0
-    local enemies = 0
+    -- calulcate enemies in segments
+    local chrs = BanditZombie.CacheLight
+    for id, chr in pairs(chrs) do
+        for i = 1, #segments do
+            local sx1 = segments[i].x
+            local sx2 = segments[i].x + 8
+            local sy1 = segments[i].y
+            local sy2 = segments[i].y + 8
 
-    local potentialEnemyList = BanditZombie.GetAll()
-    for id, potentialEnemy in pairs(potentialEnemyList) do
-        -- Calculate distance between bandit and the enemy character
-        local distance = BanditUtils.DistTo(potentialEnemy.x, potentialEnemy.y, bx, by)
-        if distance <= radius and bz == potentialEnemy.z then
-            -- Calculate angle of the point relative to the circle's center
-            local angle = math.atan2(potentialEnemy.y - by, potentialEnemy.x - bx)
-            -- Convert angle from radians to degrees
-            local degrees = math.deg(angle)
-            -- Normalize angle to be within the -180 to 180 range
-            if degrees >= 180 then
-                degrees = degrees - 360
-            end
-            -- Determine which segment this angle falls into
-            local segment = math.floor((degrees + 180) / (360 / segmentCount)) + 1
-            
-            -- Increment enemy and friendly counters for that segment
-            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
-                segments[segment] = segments[segment] + 1
+            if chr.x >= sx1 and chr.x < sx2 and chr.y >= sy1 and chr.y < sy2 then
+                if not chr.brain or (brain.clan ~= chr.brain.clan and (brain.hostile or chr.brain.hostile)) then
+                    segment[i].e = segment[i].e + 1
+                end
             end
         end
     end
 
-    -- Find the segment with the fewest points
+    -- find the segment with the fewest enemies
     local minCnt = math.huge
-    local segmentBest = 1
-    for i = 1, segmentCount do
-        if segments[i] < minCnt then
-            minCnt = segments[i]
+    local segmentBest
+    for i = 1, #segments do
+        if segments[i].e < minCnt then
+            minCnt = segments[i].e
             segmentBest = i
         end
     end
 
-    -- Calculate the mean threat direction
-    local segmentSize = 360 / segmentCount
-    local segmentStartAngle = -180 + (segmentBest - 1) * segmentSize
-    local segmentEndAngle = segmentStartAngle + segmentSize
-    local dir = (segmentStartAngle + segmentEndAngle) * 0.5
+    -- return coords of center of the segment
+    local lx = bx + segments[segmentBest].x + 3.5
+    local ly = by + segments[segmentBest].y + 3.5
+    local lz = bz
 
-    -- Find the space point 25 square away
-    local lx = bx + math.floor(25 * math.cos(dir))
-    local ly = by + math.floor(25 * math.sin(dir))
-    return lx, ly, bz
+    return lx, ly, lz
 end
 
 -- hostilizes friendlies that witnessed player attacking a friendly
@@ -107,18 +97,32 @@ local function CheckFriendlyFire(bandit, attacker)
     if brain.clan == 0 then return end
 
     -- atacking hostiles is ok!
-    if brain.hostile or brain.program.name == "Thief" then return end
+    if brain.hostile then return end
 
     -- attacker is not a real player
     if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
-           
+
+    -- attacking thief needs to be handled separately because of his pseudo-friendliness
+    if brain.program.name == "Thief" then
+        Bandit.SetHostile(bandit, true)
+        Bandit.SetProgram(bandit, "Bandit", {})
+        local brain = BanditBrain.Get(bandit)
+        local syncData = {}
+        syncData.id = brain.id
+        syncData.hostile = brain.hostile
+        syncData.program = brain.program
+        Bandit.ForceSyncPart(bandit, syncData)
+        return
+    end
+
     -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
-    local witnesses = BanditZombie.GetAllB()
+    local cache = BanditZombie.Cache
+    local witnesses = BanditZombie.CacheLightB
     for id, witness in pairs(witnesses) do
         if not witness.brain.hostile then
             local dist = BanditUtils.DistTo(attacker:getX(), attacker:getY(), witness.x, witness.y)
             if dist < 12 then
-                local friendly = BanditZombie.GetInstanceById(witness.id)
+                local friendly = cache[witness.id]
                 if friendly:CanSee(attacker) then
                     Bandit.SetHostile(friendly, true)
                     Bandit.SetProgram(friendly, "Bandit", {})
@@ -804,10 +808,10 @@ local function ManagePreservation(bandit)
     local enemies = 0
     local radius = 9
 
-    local potentialEnemyList = BanditZombie.GetAll()
+    local potentialEnemyList = BanditZombie.CacheLight
     for id, potentialEnemy in pairs(potentialEnemyList) do
         -- Calculate distance between bandit and the enemy character
-        local distance = BanditUtils.DistTo(potentialEnemy.x, potentialEnemy.y, bx, by)
+        local distance = BanditUtils.DistToManhattan(potentialEnemy.x, potentialEnemy.y, bx, by)
         if distance <= radius and bz == potentialEnemy.z then
             -- Calculate angle of the point relative to the circle's center
             
@@ -819,7 +823,7 @@ local function ManagePreservation(bandit)
         end
     end
 
-    if enemies > friendlies + 3 and not Bandit.HasMoveTask(bandit) then
+    if enemies > friendlies + 3 then
         local tx, ty, tz = GetEscapePoint(bandit, 10)
         -- bandit:addLineChatElement("evade to")
         local task = BanditUtils.GetMoveTask(0.01, tx, ty, tz, "Run", 30, false)
@@ -911,7 +915,8 @@ local function ManageCombat(bandit)
     -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
     local enemies = 0
     local friendlies = 0
-    local potentialEnemyList = BanditZombie.GetAll()
+    local potentialEnemyList = BanditZombie.CacheLight
+    local cache = BanditZombie.Cache
     for id, potentialEnemy in pairs(potentialEnemyList) do
 
         if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
@@ -920,7 +925,7 @@ local function ManageCombat(bandit)
             if BanditUtils.DistToManhattan(potentialEnemy.x, potentialEnemy.y, zx, zy) < 36 then
             
                 -- load real instance here
-                local potentialEnemy = BanditZombie.GetInstanceById(id)
+                local potentialEnemy = cache[id]
                 if bandit:CanSee(potentialEnemy) then -- FIXME: add visibility cone
                     local potentialEnemySquare = potentialEnemy:getSquare()
                     if potentialEnemySquare then
@@ -945,7 +950,7 @@ local function ManageCombat(bandit)
                                         -- the bandit may need to swich to melee weapon so we need to switch earier
                                         -- before target is in range
                                         local minRange = itemMelee:getMaxRange()
-                                        if dist <= minRange then
+                                        if dist <= minRange + 0.4 then
                                             enemyCharacter = potentialEnemy
                                             local asn = enemyCharacter:getActionStateName()
                                             if dist < 0.7 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" then
@@ -1179,7 +1184,7 @@ local function UpdateZombies(zombie)
 
             -- local asn = zombie:getActionStateName()
 
-            local bandit = BanditZombie.GetInstanceById(enemy.id)
+            local bandit = BanditZombie.Cache[enemy.id]
 
             -- the enemy is far, proceed with standard movement
             if enemy.dist > 6 then 
@@ -1194,7 +1199,10 @@ local function UpdateZombies(zombie)
                     -- we need to use   spotted function to activate the zombie, otherwise setTarget does not work
                     -- unfortunatelly spotted function only works for players, so we need to use it in this context,
                     -- and then retarget on bandit
-                    zombie:pathToCharacter(bandit)
+
+                    if BanditCompatibility.GetGameVersion() >= 42 then
+                        zombie:pathToCharacter(bandit)
+                    end
                     zombie:spotted(player, true)
                     zombie:setTarget(bandit)
                     
@@ -1213,7 +1221,7 @@ local function UpdateZombies(zombie)
 
                         -- detect the number of closeby zombies attacking the bandit at the same time
                         local attackingZombiesNumber = 0
-                        local attackingZombieList = BanditZombie.GetAllZ()
+                        local attackingZombieList = BanditZombie.CacheLightZ
                         for id, attackingZombie in pairs(attackingZombieList) do
                             local distManhattan = BanditUtils.DistToManhattan(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
                             if distManhattan < 1 then -- the manhattan distance for 0.6 euclidean distance will range from 0.6 to ~0.8485
@@ -1281,6 +1289,7 @@ local function UpdateZombies(zombie)
 end
 
 local function ProcessTask(bandit, task)
+    local ts = getTimestampMs()
     if not task.action then return end
     if not task.state then task.state = "NEW" end
 
@@ -1359,6 +1368,8 @@ local function ProcessTask(bandit, task)
             Bandit.RemoveTask(bandit)
         end
     end
+    
+    local elapsed = getTimestampMs() - ts
 end
 
 local function GenerateTask(bandit, uTick)
@@ -1377,7 +1388,7 @@ local function GenerateTask(bandit, uTick)
             for _, t in pairs(healingTasks) do table.insert(tasks, t) end
         end
     end
-    
+
     -- AVOIDANCE
     if #tasks == 0 and uTick % 4 == 0 then
         local avoidanceTasks = ManagePreservation(bandit)
@@ -1385,7 +1396,7 @@ local function GenerateTask(bandit, uTick)
             for _, t in pairs(avoidanceTasks) do table.insert(tasks, t) end
         end
     end
-    
+
     -- MANAGE MELEE / SHOOTING TASKS
     if #tasks == 0  then
         local combatTasks = ManageCombat(bandit)
@@ -1528,7 +1539,7 @@ local function OnBanditUpdate(zombie)
 
     -- MANAGE BANDIT BEING ON FIRE
     if uTick == 2 then
-        ManageOnFire(bandit)
+        -- ManageOnFire(bandit)
     end
 
     -- MANAGE BANDIT SPEECH COOLDOWN
@@ -1542,7 +1553,7 @@ local function OnBanditUpdate(zombie)
     if not continue then return end
     
     -- COMPANION SOCIAL DISTANCE HACK
-    -- ManageSocialDistance(bandit)
+    ManageSocialDistance(bandit)
 
     -- CRAWLERS SCREAM OCASSINALLY
     if bandit:isCrawling() then
@@ -1556,7 +1567,7 @@ local function OnBanditUpdate(zombie)
         ProcessTask(bandit, task)
     end
 
-    -- print ("BU:" .. (getTimestampMs() - ts))
+    local elapsed = getTimestampMs() - ts
 end
 
 local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)

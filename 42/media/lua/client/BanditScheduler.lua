@@ -103,7 +103,6 @@ function BanditScheduler.GetWaveDataAll()
         local wave = {}
 
         wave.enabled = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_WaveEnabled"]
-        wave.friendlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FriendlyChance"]
         wave.enemyBehaviour = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_EnemyBehaviour"]
         wave.firstDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FirstDay"]
         wave.lastDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_LastDay"]
@@ -228,30 +227,39 @@ function BanditScheduler.SpawnWave(player, wave)
     event.program = {}
 
     event.hostile = true
-    if ZombRand(100) < wave.friendlyChance then
+
+    if wave.enemyBehaviour == 1 then
+        event.program.name = BanditUtils.Choice({"Bandit", "Looter", "BaseGuard", "Thief"})
+    elseif wave.enemyBehaviour == 2 then
+        event.program.name = "Bandit"
+    elseif wave.enemyBehaviour == 3 then
+        event.program.name = "Looter"
+    elseif wave.enemyBehaviour == 4 then
+        event.program.name = "BaseGuard"
+    elseif wave.enemyBehaviour == 5 then
+        event.program.name = "Thief"
+    elseif wave.enemyBehaviour == 6 then
+        event.program.name = BanditUtils.Choice({"Looter", "BaseGuard", "Thief"})        
+    elseif wave.enemyBehaviour == 7 then
+        event.program.name = "Looter"
         event.hostile = false
+    elseif wave.enemyBehaviour == 8 then
         event.program.name = "Companion"
-        -- event.program.name = "Thief"
-    else
-        if wave.enemyBehaviour == 1 then
-            local base = BanditPlayerBase.GetBaseClosest(player)
-            if base then
-                event.program.name = BanditUtils.Choice({"Bandit", "Looter", "Thief"})
-            else
-                event.program.name = BanditUtils.Choice({"Bandit", "Looter"})
-            end
-        elseif wave.enemyBehaviour == 2 then
-            event.program.name = "Bandit"
-        elseif wave.enemyBehaviour == 3 then
-            event.program.name = "Looter"
-        elseif wave.enemyBehaviour == 4 then
-            event.program.name = "BaseGuard"
-        elseif wave.enemyBehaviour == 5 then
-            event.program.name = "Thief"
-            event.hostile = false
+        event.hostile = false
+    elseif wave.enemyBehaviour == 9 then
+        event.program.name = BanditUtils.Choice({"Looter", "Companion"})
+        event.hostile = false
+    elseif wave.enemyBehaviour == 10 then
+        if ZombRand(2) == 0 then
+            event.program.name = BanditUtils.Choice({"Bandit", "Looter", "BaseGuard", "Thief"})
         else
-            event.program.name = "Bandit"
+            event.program.name = BanditUtils.Choice({"Looter", "Companion"})
+            event.hostile = false
         end
+    end
+
+    if event.program.name == "Thief" then
+        event.hostile = false -- pseudo-friendly
     end
 
     event.program.stage = "Prepare"
@@ -316,65 +324,67 @@ function BanditScheduler.SpawnWave(player, wave)
             end
 
             -- road block spawn
-            local vehicleCount = player:getCell():getVehicles():size()
-            if event.hostile and spawnPoint.groundType == "street" and vehicleCount < 7 then
+            if SandboxVars.Bandits.General_BuildRoadblock then
+                local vehicleCount = player:getCell():getVehicles():size()
+                if event.hostile and spawnPoint.groundType == "street" and vehicleCount < 7 then
 
-                -- check space
-                local allfree = true
-                for x=spawnPoint.x-4, spawnPoint.x+4 do
-                    for y=spawnPoint.y-4, spawnPoint.y+4 do
-                        local testSquare = getCell():getGridSquare(x, y, 0)
-                        if testSquare then
-                            if not testSquare:isFree(false) then allfree = false end
-                            
-                            local testVeh = testSquare:getVehicleContainer()
-                            if testVeh then allfree = false end
-                        else
-                            allfree = false
+                    -- check space
+                    local allfree = true
+                    for x=spawnPoint.x-4, spawnPoint.x+4 do
+                        for y=spawnPoint.y-4, spawnPoint.y+4 do
+                            local testSquare = getCell():getGridSquare(x, y, 0)
+                            if testSquare then
+                                if not testSquare:isFree(false) then allfree = false end
+                                
+                                local testVeh = testSquare:getVehicleContainer()
+                                if testVeh then allfree = false end
+                            else
+                                allfree = false
+                            end
                         end
                     end
-                end
-                
-                if allfree then
-                    event.program.name = "BaseGuard"
-
-                    local xcnt = 0
-                    for x=spawnPoint.x-20, spawnPoint.x+20 do
-                        local square = getCell():getGridSquare(x, spawnPoint.y, 0)
-                        if square then
-                            local gt = getGroundType(square)
-                            if gt == "street" then xcnt = xcnt + 1 end
-                        end
-                    end
-
-                    local ycnt = 0
-                    for y=spawnPoint.y-20, spawnPoint.y+20 do
-                        local square = getCell():getGridSquare(spawnPoint.x, y, 0)
-                        if square then
-                            local gt = getGroundType(square)
-                            if gt == "street" then ycnt = ycnt + 1 end
-                        end
-                    end
-
-                    local xm = 0
-                    local ym = 0
-                    local sprite
-                    if xcnt > ycnt then 
-                        -- ywide
-                        ym = 1
-                        sprite = "construction_01_9"
-                    else
-                        -- xwide
-                        xm = 1
-                        sprite = "construction_01_8"
-                    end
-
-                    local carOpts = {"Base.PickUpTruck", "Base.PickUpVan", "Base.VanSeats"}
-                    local args = {type=BanditUtils.Choice(carOpts), x=spawnPoint.x-ym*3, y=spawnPoint.y-xm*3, engine=true, lights=true, lightbar=true}
-                    sendClientCommand(player, 'Commands', 'VehicleSpawn', args)
                     
-                    for b=-4, 4, 2 do
-                        BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
+                    if allfree then
+                        event.program.name = "BaseGuard"
+
+                        local xcnt = 0
+                        for x=spawnPoint.x-20, spawnPoint.x+20 do
+                            local square = getCell():getGridSquare(x, spawnPoint.y, 0)
+                            if square then
+                                local gt = getGroundType(square)
+                                if gt == "street" then xcnt = xcnt + 1 end
+                            end
+                        end
+
+                        local ycnt = 0
+                        for y=spawnPoint.y-20, spawnPoint.y+20 do
+                            local square = getCell():getGridSquare(spawnPoint.x, y, 0)
+                            if square then
+                                local gt = getGroundType(square)
+                                if gt == "street" then ycnt = ycnt + 1 end
+                            end
+                        end
+
+                        local xm = 0
+                        local ym = 0
+                        local sprite
+                        if xcnt > ycnt then 
+                            -- ywide
+                            ym = 1
+                            sprite = "construction_01_9"
+                        else
+                            -- xwide
+                            xm = 1
+                            sprite = "construction_01_8"
+                        end
+
+                        local carOpts = {"Base.PickUpTruck", "Base.PickUpVan", "Base.VanSeats"}
+                        local args = {type=BanditUtils.Choice(carOpts), x=spawnPoint.x-ym*3, y=spawnPoint.y-xm*3, engine=true, lights=true, lightbar=true}
+                        sendClientCommand(player, 'Commands', 'VehicleSpawn', args)
+                        
+                        for b=-4, 4, 2 do
+                            BanditBasePlacements.IsoObject(sprite, spawnPoint.x + xm * b, spawnPoint.y + ym * b, 0)
+                        end
                     end
                 end
             end
@@ -384,7 +394,7 @@ function BanditScheduler.SpawnWave(player, wave)
             if SandboxVars.Bandits.General_ArrivalIcon then
                 local color
                 local icon
-                if event.program.name == "Bandit" then
+                if event.program.name == "Bandit" or event.program.name == "BaseGuard" then
                     icon = "media/ui/raid.png"
                     color = {r=1, g=0.5, b=0.5} -- red
                 elseif event.program.name == "Thief" then
@@ -393,9 +403,13 @@ function BanditScheduler.SpawnWave(player, wave)
                 elseif event.program.name == "Companion" then
                     icon = "media/ui/friend.png"
                     color = {r=0.5, g=1, b=0.5} -- green
-                else 
+                elseif event.program.name == "Looter" then
                     icon = "media/ui/loot.png"
-                    color = {r=1, g=0.5, b=0} -- orange
+                    if event.hostile then
+                        color = {r=1, g=0, b=0} -- red
+                    else
+                        color = {r=0.5, g=1, b=0.5} -- green
+                    end
                 end
 
                 BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
@@ -797,7 +811,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
 
         -- building probably too big, breaking
         cnt = cnt + 1
-        if cnt > 24 then break end
+        if cnt > SandboxVars.Bandits.General_DefenderMaxOccupants then break end
     end
 
     if SandboxVars.Bandits.General_ArrivalIcon then
