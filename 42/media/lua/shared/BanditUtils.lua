@@ -114,19 +114,38 @@ BanditUtils.ItemVisuals = {
     ["Base.Bandage_Head_Blood"] = true,
 }
 
-function BanditUtils.GetCharacterID (character)
+local idcache = {}
 
-    -- the following has proven to be much less efficient
-    local function toBits(num)
-        local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
-        while #bits < 16 do bits[#bits+1] = "0" end
-        return bits
+local function toBits(num)
+    local bits = string.split(string.reverse(Long.toUnsignedString(num, 2)), "")
+    while #bits < 16 do bits[#bits+1] = "0" end
+    return bits
+end
+
+local function toDec(bits)
+    local decimal = Long.parseUnsignedLong(string.reverse(table.concat(bits, "")), 2)
+    return decimal
+end
+
+function BanditUtils.GetZombieID (character)
+    local dec = character:getPersistentOutfitID()
+    local id = idcache[dec]
+    if id then return id end
+
+    local bits = toBits(dec)
+    local hat = bits[16]
+    if hat == "1" then
+        bits[16] = "0"
+        id = toDec(bits)
+        idcache[dec] = id
+    else
+        id = dec
+        idcache[dec] = id
     end
-    
-    local function toDec(bits)
-        local decimal = Long.parseUnsignedLong(string.reverse(table.concat(bits, "")), 2)
-        return decimal
-    end
+    return id
+end
+
+function BanditUtils.GetCharacterID (character)
 
     if instanceof(character, "IsoZombie") then
         -- local id = character:getVariableString("BanditID")
@@ -148,7 +167,7 @@ function BanditUtils.GetCharacterID (character)
         return id
         -- end
     end
-    
+
     if instanceof(character, "IsoPlayer") then
         local world = getWorld()
         local gamemode = world:getGameMode()
@@ -161,7 +180,7 @@ function BanditUtils.GetCharacterID (character)
         return id
     end
 end
-    
+
 function BanditUtils.IsController(zombie)
 
     -- ZOMBIE/BANDIT BEHAVIOUR IS FULLY CLIENT CONTROLLED
@@ -194,7 +213,6 @@ function BanditUtils.IsController(zombie)
 end
 
 function BanditUtils.IsInAngle(observer, targetX, targetY)
-    
     local omega = observer:getDirectionAngle()
     local targer_delta_x = targetX - observer:getX()
     local targer_delta_y = targetY - observer:getY()
@@ -262,7 +280,7 @@ function BanditUtils.GetClosestZombieLocation(character)
     result.y = false
     result.z = false
     result.id = false
-    
+
     local cx, cy = character:getX(), character:getY()
 
     local zombieList = BanditZombie.CacheLightZ
@@ -287,7 +305,7 @@ function BanditUtils.GetClosestZombieLocationFast(character)
     result.y = false
     result.z = false
     result.id = false
-    
+
     local cx, cy = character:getX(), character:getY()
 
     local zombieList = BanditZombie.CacheLightZ
@@ -316,7 +334,7 @@ function BanditUtils.GetClosestBanditLocation(character)
     result.y = false
     result.z = false
     result.id = false
-    
+
     local cx, cy = character:getX(), character:getY()
 
     local zombieList = BanditZombie.CacheLightB
@@ -343,7 +361,7 @@ function BanditUtils.GetClosestBanditLocationFast(character)
     result.y = false
     result.z = false
     result.id = false
-    
+
     local cx, cy = character:getX(), character:getY()
 
     local zombieList = BanditZombie.CacheLightB
@@ -474,22 +492,22 @@ function BanditUtils.findPoint(Ax, Ay, Bx, By, X)
     -- Calculate the direction vector from A to B
     local directionX = Bx - Ax
     local directionY = By - Ay
-    
+
     -- Calculate the length of the direction vector
     local length = math.sqrt(directionX ^ 2 + directionY ^ 2)
-    
+
     -- Normalize the direction vector
     local unitX = directionX / length
     local unitY = directionY / length
-    
+
     -- Scale the unit vector by X units
     local scaledX = unitX * X
     local scaledY = unitY * X
-    
+
     -- Calculate the coordinates of point P
     local Px = Ax + scaledX
     local Py = Ay + scaledY
-    
+
     return Px, Py
 end
 

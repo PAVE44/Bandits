@@ -1,5 +1,4 @@
 -- Zombie cache
-
 BanditZombie = BanditZombie or {}
 
 -- consists of IsoZombie instances
@@ -24,10 +23,10 @@ local UpdateZombieCache = function(numberTicks)
     if isServer() then return end
 
     if not Bandit.Engine then return end
-    
+
     -- ts = getTimestampMs()
     -- if not numberTicks % 4 == 1 then return end
-    
+
     local silenceStates = {"hitreaction", "hitreaction-hit", "hitreaction-gettingup", "hitreaction-knockeddown", "climbfence", "climbwindow"}
 
     -- adaptive pefrormance
@@ -56,48 +55,44 @@ local UpdateZombieCache = function(numberTicks)
     local cacheLightZ = {}
 
     for i = 0, zombieListSize - 1 do
-        
+
         local zombie = zombieList:get(i)
 
         if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then
 
-            local id = BanditUtils.GetCharacterID(zombie)
+            local id = BanditUtils.GetZombieID(zombie)
 
             cache[id] = zombie
-            
-            local zx = zombie:getX()
-            local zy = zombie:getY()
-            local zz = zombie:getZ()
-            
+
+            local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+
             if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-                local light = {}
-                light.id = id
-                light.x = zx
-                light.y = zy
-                light.z = zz
-                light.brain = BanditBrain.Get(zombie)
+                local light = {id = id, x = zx, y = zy, z = zz}
 
                 if zombie:getVariableBoolean("Bandit")  then
                     light.isBandit = true
+                    light.brain = BanditBrain.Get(zombie)
                     cacheLightB[id] = light
+
                     -- zombies in hitreaction state are not processed by onzombieupdate
                     -- so we need to make them shut their zombie sound here too
                     -- logically this does not fit here, should be a separate process
                     -- but it's here due to performance optimization to avoid additional iteration
                     -- over zombieList
-                    
-                    local asn = zombie:getActionStateName()
-                    for _, ss in pairs(silenceStates) do
-                        if asn == ss then
-                            Bandit.SurpressZombieSounds(zombie)
-                            break
+                    if math.abs(px - zx) < 12 and math.abs(py - zy) < 12 then
+                        local asn = zombie:getActionStateName()
+                        for _, ss in pairs(silenceStates) do
+                            if asn == ss then
+                                Bandit.SurpressZombieSounds(zombie)
+                                break
+                            end
                         end
-                    end
 
-                    if asn == "bumped" then
-                        local btype = zombie:getBumpType()
-                        if btype and (btype == "ClimbWindow" or btype == "ClimbFence" or btype == "ClimbFenceEnd") then
-                            Bandit.SurpressZombieSounds(zombie)
+                        if asn == "bumped" then
+                            local btype = zombie:getBumpType()
+                            if btype and (btype == "ClimbWindow" or btype == "ClimbFence" or btype == "ClimbFenceEnd") then
+                                Bandit.SurpressZombieSounds(zombie)
+                            end
                         end
                     end
                 else

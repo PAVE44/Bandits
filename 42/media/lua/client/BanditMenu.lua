@@ -61,75 +61,6 @@ function BanditMenu.Zombify (player, zombie)
     Bandit.AddTask(zombie, task)
 end
 
-function BanditMenu.SetHumanVisuals (player, zombie)
-    local zombieVisuals = zombie:getHumanVisual()
-    if zombieVisuals then
-        local r = 1 + BanditUtils.GetCharacterID(zombie) % 5 -- deterministc for all clients 
-        if zombie:isFemale() then
-            zombieVisuals:setSkinTextureName("FemaleBody0" .. tostring(r))
-        else
-            zombieVisuals:setSkinTextureName("MaleBody0" .. tostring(r))
-        end
-        
-        zombieVisuals:randomDirt()
-        zombieVisuals:removeBlood()
-        zombie:resetModel()
-    end
-    local itemVisuals = zombie:getItemVisuals()
-    if itemVisuals then
-        local mask = itemVisuals:findMask()
-        local hat = itemVisuals:findHat()
-    end
-end
-
-function BanditMenu.VehicleTest (player, square, vehicle)
-    -- local driver = BanditUtils.CloneIsoPlayer(player)
-
-    BWOVehicles.Register(vehicle)
-
-    --[[
-    local square = getCell():getGridSquare(player:getX(), player:getY(), player:getZ())
-    local obj = IsoObject.new(square, "Base.Generator", "")
-
-    -- vehicle:ApplyImpulse(obj, 1000)
-
-    local vx = player:getForwardDirection():getX() + 10
-    local vy = player:getForwardDirection():getY() + 10
-    local forwardVector = Vector2.new(vx, vy)
-
-    local is = IsoObject
-    local carController = vehicle:getController() -- .new(vehicle)
-    local ef = type(carController)
-    local mt = getmetatable(carController)
-    local raw = KahluaUtil.rawTostring2(carController)
-    print (raw)
-    local className = "zombie.core.physics.CarController@4680b27"
-    local fn = getNumClassFunctions(className)
-    for i=0, fn do
-        local cf = getClassFunction(className, i);
-        print (cf)
-    end
-
-    --carController:accelerator(true)
-    --local t = carController:getClientControls()
-    ]]
-
-end
-
-function BanditMenu.VehicleMove(player, vehicle)
-
-    print ("VEH: X:" .. vehicle:getLimpulsex() .. " Y:" .. vehicle:getLimpulsey())
-    local vx = player:getX()
-    local vy = player:getY()
-    local posVector = Vector3f.new(vx, vy, 0)
-
-    local vx = player:getForwardDirection():getX() + 10
-    local vy = player:getForwardDirection():getY() + 10
-    local forwardVector = Vector3f.new(vx, vy, 0)
-
-    vehicle:addImpulse(forwardVector, posVector)
-end
-
 function BanditMenu.SpawnBase (player, square, sceneNo)
     BanditScheduler.SpawnBase(player, sceneNo)
 end
@@ -177,7 +108,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     -- local astate = zombie:getAnimationDebug()
     local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
     local baseData = BanditPlayerBase.data
-    
+
 end
 
 function BanditMenu.BanditFlush(player)
@@ -290,7 +221,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             print ("this zombie dir is: " .. zombie:getDirectionAngle())
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
-            -- context:addOption("[DGB] Set Human Visuals", player, BanditMenu.SetHumanVisuals, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
           
         end
