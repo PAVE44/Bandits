@@ -7,7 +7,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempAttacker:getX(), tempAttacker:getY())
     local range = item:getMaxRange()
-    if dist < range + 0.4 then
+    if dist < range + 0.5 then
         BanditPlayer.WakeEveryone()
 
         local hitSound
@@ -22,7 +22,7 @@ local function Hit(attacker, item, victim)
             else
                 hitSound = item:getZombieHitSound()
             end
-            if victim:isSprinting() or victim:isRunning() and ZombRand(5) == 1 then
+            if victim:isSprinting() or victim:isRunning() and ZombRand(6) == 1 then
                 victim:clearVariable("BumpFallType")
                 victim:setBumpType("stagger")
                 victim:setBumpFall(true)
@@ -87,7 +87,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
     
-    local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" or enemy:getBumpFallType() == "pushedFront" or enemy:getBumpFallType() == "pushedBehind"
+    local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" 
     local meleeItem = BanditCompatibility.InstanceItem(task.weapon)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
@@ -152,12 +152,13 @@ ZombieActions.Hit.onWorking = function(bandit, task)
     
     if not task.hit and task.time <= 50 then
 
+        task.hit = true
+
         local asn = bandit:getActionStateName()
         -- print ("HIT AS:" .. asn)
         if asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
                  or asn =="staggerback" or asn == "staggerback-knockeddown" then return false end
 
-        task.hit = true
         Bandit.UpdateTask(bandit, task)
 
         local item = BanditCompatibility.InstanceItem(task.weapon)

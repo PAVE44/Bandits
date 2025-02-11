@@ -865,12 +865,10 @@ local function ManageCombat(bandit)
                                     if not maxRange then
                                         maxRange = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
                                     end
-                                    if dist <= maxRange + 0.4 then
+                                    if dist <= maxRange + 0.40 then
                                         local asn = enemyCharacter:getActionStateName()
-                                        if dist < 0.7 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" then
-                                            shove = true
-                                            combat = not shove
-                                        end
+                                        shove = dist < 0.7 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
+                                        combat = not shove
                                     end
                                 end
 
@@ -897,7 +895,7 @@ local function ManageCombat(bandit)
             if veh then Bandit.Say(bandit, "CAR") end
 
             if bandit:isFacingObject(enemyCharacter, 0.1) then
-                local eid = BanditUtils.GetZombieID(bandit)
+                local eid = BanditUtils.GetCharacterID(enemyCharacter)
                 local task = {action="Shove", anim="Shove", sound="AttackShove", time=60, endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
@@ -906,7 +904,7 @@ local function ManageCombat(bandit)
         end
 
     elseif combat then
-        if not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
+        if not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Shove") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
@@ -917,7 +915,7 @@ local function ManageCombat(bandit)
             end
 
             if bandit:isFacingObject(enemyCharacter, 0.5) then
-                local eid = BanditUtils.GetZombieID(bandit)
+                local eid = BanditUtils.GetCharacterID(enemyCharacter)
                 local task = {action="Hit", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
@@ -1320,7 +1318,7 @@ local function OnBanditUpdate(zombie)
 
     if BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then return end
 
-    local id = BanditUtils.GetZombieID(bandit)
+    local id = BanditUtils.GetZombieID(zombie)
     local zx = zombie:getX()
     local zy = zombie:getY()
     local zz = zombie:getZ()

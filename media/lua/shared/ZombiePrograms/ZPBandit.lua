@@ -57,7 +57,8 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local weapons = Bandit.GetWeapons(bandit)
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local hands = bandit:getVariableString("BanditPrimaryType")
- 
+    local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+
     local walkType = "Run"
     local endurance = -0.06
     local secondary
@@ -96,17 +97,17 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     end
 
     if SandboxVars.Bandits.General_GeneratorCutoff or SandboxVars.Bandits.General_SabotageVehicles then 
-        for z=0, 2 do
-            for y=-12, 12 do
-                for x=-12, 12 do
-                    local square = cell:getGridSquare(bandit:getX() + x, bandit:getY() + y, z)
+        for z=0, 1 do
+            for y=-10, 10 do
+                for x=-10, 10 do
+                    local square = cell:getGridSquare(bx + x, by + y, z)
                     if square then
 
                         -- only if outside to prevent defenders shuting down their own genny
                         if SandboxVars.Bandits.General_GeneratorCutoff and bandit:isOutside() then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, bandit:getX()+x, bandit:getY()+y, z, walkType, 12, false))
+                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx + x, by + y, z, walkType, 12, false))
                                 return {status=true, next="TurnOffGenerator", tasks=tasks}
                             end
                         end
@@ -114,16 +115,12 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                         if SandboxVars.Bandits.General_SabotageVehicles then
                             local vehicle = square:getVehicleContainer()
                             if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
-                                local vx = square:getX()
-                                local vy = square:getY()
-                                local vz = square:getZ()
+                                local vx, vy, vz = square:getX(), square:getY(), square:getZ()
                                 local test0 = vehicle:isHotwired()
                                 local test1 = vehicle:isEngineRunning()
                                 local vehiclePart = vehicle:getPartById("TireRearLeft")
                                 local vehiclePartSquare = vehiclePart:getSquare()
-                                local vpx = vehiclePartSquare:getX()
-                                local vpy = vehiclePartSquare:getY()
-                                local vpz = vehiclePartSquare:getZ()
+                                -- local vpx, vpy, vpz = vehiclePartSquare:getX(), vehiclePartSquare:getY(), vehiclePartSquare:getZ()
 
                                 table.insert(tasks, BanditUtils.GetMoveTask(endurance, vx, vy, vz, walkType, 12, false))
                                 return {status=true, next="SabotageVehicle", tasks=tasks}
@@ -136,6 +133,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     end
 
     local target = {}
+    local enemy
 
     local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
     local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
@@ -180,7 +178,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                 Bandit.Say(bandit, "OUTSIDE")
             end
             if targetBuilding and banditBuilding then
-                if bandit:getZ() < target.z then
+                if bz < target.z then
                     Bandit.Say(bandit, "UPSTAIRS")
                 else
                     local room = targetSquare:getRoom()

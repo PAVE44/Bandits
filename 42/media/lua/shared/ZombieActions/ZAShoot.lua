@@ -37,7 +37,7 @@ local function Hit(shooter, item, victim)
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)
         else
-            if instanceof(victim, "IsoPlayer") and victim:isSprinting() or (victim:isRunning() and ZombRand(8) == 1) then
+            if instanceof(victim, "IsoPlayer") and victim:isSprinting() or (victim:isRunning() and ZombRand(12) == 1) then
                 victim:clearVariable("BumpFallType")
                 victim:setBumpType("stagger")
                 victim:setBumpFall(true)
@@ -83,15 +83,206 @@ local function Hit(shooter, item, victim)
     return true
 end
 
+local vehicleParts = {
+    [1] = {name="HeadlightLeft", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [2] = {name="HeadlightRight", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [3] = {name="HeadlightRearLeft", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [4] = {name="HeadlightRearRight", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [5] = {name="Windshield", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [6] = {name="WindshieldRear", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [7] = {name="WindowFrontRight", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [8] = {name="WindowFrontLeft", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [9] = {name="WindowRearRight", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [10] = {name="WindowRearLeft", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [11] = {name="WindowMiddleLeft", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [12] = {name="WindowMiddleRight", dmg=20, sndHit="BreakGlassItem", sndDest="SmashWindow"},
+    [13] = {name="DoorFrontRight", dmg=10, sndHit="HitVehiclePartWithWeapon", sndDest="HitVehiclePartWithWeapon"},
+    [14] = {name="DoorFrontLeft", dmg=10, sndHit="HitVehiclePartWithWeapon", sndDest="HitVehiclePartWithWeapon"},
+    [15] = {name="DoorRearRight", dmg=10, sndHit="HitVehiclePartWithWeapon", sndDest="HitVehiclePartWithWeapon"},
+    [16] = {name="DoorRearLeft", dmg=10, sndHit="HitVehiclePartWithWeapon", sndDest="HitVehiclePartWithWeapon"},
+    [17] = {name="EngineDoor", dmg=10, sndHit="HitVehiclePartWithWeapon", sndDest="HitVehiclePartWithWeapon"},
+    [18] = {name="TireFrontRight", dmg=8, sndHit="VehicleTireExplode", sndDest="VehicleTireExplode"},
+    [19] = {name="TireFrontLeft", dmg=8, sndHit="VehicleTireExplode", sndDest="VehicleTireExplode"},
+    [20] = {name="TireRearLeft", dmg=8, sndHit="VehicleTireExplode", sndDest="VehicleTireExplode"},
+    [21] = {name="TireRearRight", dmg=8, sndHit="VehicleTireExplode", sndDest="VehicleTireExplode"}
+}
+
+local sounds = {
+    ["WoodDoor"] = "HitBarricadePlank",
+    ["MetalDoor"] = "HitBarricadeMetal",
+}
 -- Bresenham's line of fire to detect what needs to destroyed between shooter and target
+
+local function thump (object, thumper)
+    local health = object:getHealth()
+    print ("thumpable health: " .. object:getHealth())
+    health = health - 20
+    if health < 0 then health = 0 end
+    if health == 0 then
+        object:destroy()
+    else
+        object:setHealth(health)
+        object:Thump(thumper)
+    end
+end
+
 local function ManageLineOfFire (shooter, victim)
     local cell = getCell()
-    local player = getPlayer()
+
+    local x0 = math.floor(shooter:getX())
+    local y0 = math.floor(shooter:getY())
+    local x1 = math.floor(victim:getX())
+    local y1 = math.floor(victim:getY())
+    local z = victim:getZ()
+
+    local dx = math.abs(x1 - x0)
+    local dy = math.abs(y1 - y0)
+    local sx = (x0 < x1) and 1 or -1
+    local sy = (y0 < y1) and 1 or -1
+    local err = dx - dy
+
+    local cx, cy, cz = x0, y0, z
+
+    local function checkWindow(square, shooter)
+        local window = square:getWindow()
+        if window then
+            if (window:getNorth() and (y0 < cy or y1 < cy)) or 
+               (not window:getNorth() and (x0 < cx or x1 < cx)) then
+                local barricade = window:getBarricadeOnSameSquare()
+                if not barricade then
+                    barricade = window:getBarricadeOnOppositeSquare()
+                end
+                local smash = false
+                if barricade then
+                    if barricade:isMetal() then
+                        barricade:Thump(shooter)
+                        square:playSound("HitBarricadeMetal")
+                        return true
+                    else -- wood
+                        barricade:Thump(shooter)
+                        local p = barricade:getNumPlanks()
+                        if p >= 2 then
+                            square:playSound("HitBarricadePlank")
+                            return true
+                        end
+                    end
+                end
+                if not window:isSmashed() then
+                    square:playSound("SmashWindow")
+                    window:smashWindow()
+                end
+            end
+        end
+        return false
+    end
+
+    local function checkDoor(square, shooter)
+        local snds = sounds
+        local door = square:getIsoDoor()
+        if door and not door:IsOpen() then
+            if (door:getNorth() and (y0 < cy or y1 < cy)) or 
+               (not door:getNorth() and (x0 < cx or x1 < cx)) then
+                -- small chance to shoot through a small window in door
+                if ZombRand(10) > 1 then 
+                    local sprite = door:getSprite()
+                    local props = sprite:getProperties()
+                    if props:Is("DoorSound") then
+                        doorSound = props:Val("DoorSound")
+                        if snds[doorSound] then
+                            square:playSound(snds[doorSound])
+                        end
+                    end
+
+                    thump(door, shooter)
+                    
+                    return true
+                end
+            end
+        end
+        return false
+    end
+
+    local function checkVehicle(square, shooter)
+        local player = getPlayer()
+        local vp = vehicleParts
+        local vehicle = square:getVehicleContainer()
+        if vehicle then
+            local partRandom = ZombRand(30)
+            local vehiclePart
+            local dmg
+            if vp[partRandom] then
+                vehiclePart = vehicle:getPartById(vp[partRandom].name)
+                if vehiclePart and vehiclePart:getInventoryItem() then
+                    
+                    local vehiclePartId = vehiclePart:getId()
+
+                    local dmg = vp[partRandom].dmg
+                    vehiclePart:damage(dmg)
+
+                    if vehiclePart:getCondition() <= 0 then
+                        vehiclePart:setInventoryItem(nil)
+                        square:playSound(vp[partRandom].sndDest)
+                    else
+                        square:playSound(vp[partRandom].sndHit)
+                        return true
+                    end
+
+                    vehicle:updatePartStats()
+                    
+                    local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                    sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+                    
+                end
+            end
+        end
+        return false
+    end
+
+    while true do
+        
+        local square = cell:getGridSquare(cx, cy, cz)
+        if square then
+
+            local obstacle
+            -- manage window obstacle
+            obstacle = checkWindow(square, shooter)
+            if obstacle then return false end
+
+            -- manage for door obstacle
+            obstacle = checkDoor(square, shooter)
+            if obstacle then return false end
+
+            -- manage vehicle obstacle
+            obstacle = checkVehicle(square, shooter)
+            if obstacle then return false end
+            
+        end
+
+        if cx == x1 and cy == y1 then break end
+        local e2 = 2 * err
+        if e2 > -dy then
+            err = err - dy
+            cx = cx + sx
+        end
+        if e2 < dx then
+            err = err + dx
+            cy = cy + sy
+        end
+    end
     
-    local x0 = shooter:getX()
-    local y0 = shooter:getY()
-    local x1 = victim:getX()
-    local y1 = victim:getY()
+    -- no bullet stop
+    return true
+end
+
+
+local function ManageLineOfFire2 (shooter, victim)
+    local cell = getCell()
+    local player = getPlayer()
+    local vp = vehicleParts
+    local x0 = math.floor(shooter:getX())
+    local y0 = math.floor(shooter:getY())
+    local x1 = math.floor(victim:getX())
+    local y1 = math.floor(victim:getY())
 
     if x0 > x1 then x0, x1 = x1, x0 end
     if y0 > y1 then y0, y1 = y1, y0 end
@@ -102,13 +293,15 @@ local function ManageLineOfFire (shooter, victim)
     local y = y0
     
     for x = x0, x1 do
+        -- for sx = -1, 1 do
+            -- for sy = -1, 1 do
 
-        for sx = -1, 1 do
-            for sy = -1, 1 do
-
-                local square = cell:getGridSquare(math.floor(x + 0.5) + sx, math.floor(y + 0.5) + sy, 0)
+                local square = cell:getGridSquare(x, y, 0)
 
                 if square then
+
+                    local sx = square:getX()
+                    local sy = square:getY()
                     -- smash windows
                     local window = square:getWindow()
                     if window and not window:isSmashed() then
@@ -119,118 +312,48 @@ local function ManageLineOfFire (shooter, victim)
                     local vehicle = square:getVehicleContainer()
                     if vehicle then
                         local partRandom = ZombRand(30)
-
                         local vehiclePart
-                        if partRandom == 1 then
-                            vehiclePart = vehicle:getPartById("HeadlightLeft")
-                        elseif partRandom == 2 then
-                            vehiclePart = vehicle:getPartById("HeadlightRight")
-                        elseif partRandom == 3 then
-                            vehiclePart = vehicle:getPartById("HeadlightRearLeft")
-                        elseif partRandom == 4 then
-                            vehiclePart = vehicle:getPartById("HeadlightRight")
-                        elseif partRandom == 5 then
-                            vehiclePart = vehicle:getPartById("Windshield")
-                        elseif partRandom == 6 then
-                            vehiclePart = vehicle:getPartById("WindshieldRear")
-                        elseif partRandom == 7 then
-                            vehiclePart = vehicle:getPartById("WindowFrontRight")
-                        elseif partRandom == 8 then
-                            vehiclePart = vehicle:getPartById("WindowFrontLeft")
-                        elseif partRandom == 9 then
-                            vehiclePart = vehicle:getPartById("WindowRearRight")
-                        elseif partRandom == 10 then
-                            vehiclePart = vehicle:getPartById("WindowRearLeft")
-                        elseif partRandom == 11 then
-                            vehiclePart = vehicle:getPartById("WindowMiddleLeft")
-                        elseif partRandom == 12 then
-                            vehiclePart = vehicle:getPartById("WindowMiddleRight")
-                        elseif partRandom == 13 then
-                            vehiclePart = vehicle:getPartById("DoorFrontRight")
-                        elseif partRandom == 14 then
-                            vehiclePart = vehicle:getPartById("DoorFrontLeft")
-                        elseif partRandom == 15 then
-                            vehiclePart = vehicle:getPartById("DoorRearRight")
-                        elseif partRandom == 16 then
-                            vehiclePart = vehicle:getPartById("DoorRearLeft")
-                        elseif partRandom == 17 then
-                            vehiclePart = vehicle:getPartById("EngineDoor")
-                        elseif partRandom == 18 then
-                            vehiclePart = vehicle:getPartById("TireFrontRight")
-                        elseif partRandom == 19 then
-                            vehiclePart = vehicle:getPartById("TireFrontLeft")
-                        elseif partRandom == 20 then
-                            vehiclePart = vehicle:getPartById("TireRearLeft")
-                        elseif partRandom == 21 then
-                            vehiclePart = vehicle:getPartById("TireRearRight")
-                        else
-                            return false
-                        end
+                        local dmg
+                        if vp[partRandom] then
+                            vehiclePart = vehicle:getPartById(vp[partRandom].name)
+                            if vehiclePart and vehiclePart:getInventoryItem() then
+                                
+                                local vehiclePartId = vehiclePart:getId()
 
-                        if vehiclePart and vehiclePart:getInventoryItem() then
-                            
-                            local vehiclePartId = vehiclePart:getId()
-
-                            if vehiclePart:getCondition() <= 0 then
-                                vehiclePart:setInventoryItem(nil)
-                            end
-
-                            if partRandom <= 4 then
-                                local dmg = 12
+                                local dmg = vp[partRandom].dmg
                                 vehiclePart:damage(dmg)
-                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
 
-                                square:playSound("BreakGlassItem")
-                                return false
-                            elseif partRandom <= 12 then
-                                local dmg = 12
-                                vehiclePart:damage(dmg)
-                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-
+                                local gothrough = true
                                 if vehiclePart:getCondition() <= 0 then
-                                    square:playSound("SmashWindow")
+                                    vehiclePart:setInventoryItem(nil)
+                                    square:playSound(vp[partRandom].sndDest)
                                 else
-                                    square:playSound("BreakGlassItem")
-                                    return false
+                                    square:playSound(vp[partRandom].sndHit)
+                                    gothrough = false
                                 end
-                            elseif partRandom <= 17 then
-                                local dmg = 9
-                                vehiclePart:damage(dmg)
+
+                                vehicle:updatePartStats()
+                                
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-
-                                square:playSound("HitVehiclePartWithWeapon")
-                                if vehiclePart:getCondition() > 0 then
-                                    return false
-                                end
-                            elseif partRandom <= 21 then
-                                local dmg = 7
-                                vehiclePart:damage(dmg)
-                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-
-                                if vehiclePart:getCondition() <= 0 then
-                                    square:playSound("VehicleTireExplode")
-                                end
-                                return false
+                                
+                                if not gothrough then return end
                             end
-
-			                vehicle:updatePartStats()
                         end
-
-                        --
                     end
 
                     -- cant shoot through the closed door (although bandits can see through them)
                     local door = square:getIsoDoor()
                     if door and not door:IsOpen() then
-                        return false
+                        if door:getNorth() then
+                            if y0 < sy or y1 < sy then
+                                return false
+                            end
+                        end
                     end
                 end
-            end
-        end
+            -- end
+        -- end
 
         if D > 0 then
             y = y + 1
