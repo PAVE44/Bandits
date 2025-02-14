@@ -6,7 +6,7 @@ BanditEventMarkerHandler.expirations = {} --[player] = {["id]=time}
 --unSet
 --OnPlayerUpdate
 
-function BanditEventMarkerHandler.setOrUpdate(eventID, icon, duration, posX, posY, color)
+function BanditEventMarkerHandler.setOrUpdate(eventID, icon, duration, posX, posY, color, desc)
 
     --print("eventMarker: eventID:"..tostring(eventID).." icon:"..tostring(icon).." duration:"..tostring(duration).." posX:"..tostring(posX).." posY:"..tostring(posY).." override:"..tostring(override))
 
@@ -38,8 +38,8 @@ function BanditEventMarkerHandler.setOrUpdate(eventID, icon, duration, posX, pos
                         local screenX = oldX or (getCore():getScreenWidth()/2) - (BanditEventMarker.iconSize/2)
                         local screenY = oldY or (BanditEventMarker.iconSize/2)
                         --print("BanditEventMarkerHandler: generateNewMarker: "..p:getUsername().." ".."("..screenX..","..screenY..")")
-
-                        marker = BanditEventMarker:new(eventID, icon, duration, posX, posY, player, screenX, screenY, color)
+                        
+                        marker = BanditEventMarker:new(eventID, icon, duration, posX, posY, player, screenX, screenY, color, desc)
                         BanditEventMarkerHandler.markers[player][eventID] = marker
                     else
                         --print("-- dist not valid: "..tostring(dist))

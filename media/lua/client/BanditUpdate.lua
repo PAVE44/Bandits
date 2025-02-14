@@ -95,7 +95,7 @@ local function CheckFriendlyFire(bandit, attacker)
         Bandit.SetHostile(bandit, true)
         Bandit.SetProgram(bandit, "Bandit", {})
 
-        local syncData = { id = brain.id, hostile = true, program = "Bandit" }
+        local syncData = { id = brain.id, hostile = true, program = {name="Bandit", stage="Prepare"} }
         Bandit.ForceSyncPart(bandit, syncData)
         return
     end
@@ -114,7 +114,7 @@ local function CheckFriendlyFire(bandit, attacker)
                     Bandit.SetProgram(friendly, "Bandit", {})
 
                     local fBrain = BanditBrain.Get(friendly)
-                    local syncData = { id = fBrain.id, hostile = true, program = "Bandit" }
+                    local syncData = { id = fBrain.id, hostile = true, program = {name="Bandit", stage="Prepare"} }
                     Bandit.ForceSyncPart(friendly, syncData)
                 end
             end

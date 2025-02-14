@@ -171,168 +171,155 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_1.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromGlassCut,
         } 
+
     }
 
     sound ZSHit_Female_3_2 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_2.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = event = Character/Voice/Female/Pain/FromHitBlunt,
         } 
+
     }
 
     sound ZSHit_Female_3_3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_3.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromRunIntoWall,
         } 
+
     }
 
     sound ZSHit_Female_3_4 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_4.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromLacerate,
         } 
+
     }
 
     sound ZSHit_Female_3_5 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_5.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_6 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_6.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromScratch,
         } 
+
+
     }
 
     sound ZSHit_Female_3_7 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_7.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_8 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_8.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_9 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_9.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_10 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_10.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_11 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_11.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_12 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_12.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_13 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_13.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSHit_Female_3_14 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/hit_female_3_14.wav, 
-            distanceMin = 1, 
-            distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.4, 
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromBite,
         } 
+
     }
 
     sound ZSBreach_Female_3_1 {
@@ -563,15 +550,73 @@ module BanditsVoiceFemale3 {
         } 
     }
 
+    sound ZSDead_Female_3_1 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromFallHigh,
+        } 
+     }
+
+    sound ZSDead_Female_3_2 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/Pain/FromFallHigh,
+        } 
+     }
+
+    sound ZSDead_Female_3_3 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/DeathFall,
+        }
+    }
+
+    sound ZSDead_Female_3_4 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/DeathFall,
+        }
+    }
+
+    sound ZSDead_Female_3_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/DeathFall,
+        }
+    }
+
+    sound ZSDead_Female_3_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip
+        {
+            event = Character/Voice/Female/DeathFall,
+        }
+    }
+
     sound ZSBurn_Female_3_1 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/burn_female_3_1.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
@@ -579,11 +624,9 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/burn_female_3_2.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
@@ -591,11 +634,9 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/burn_female_3_3.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
@@ -603,11 +644,9 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/dragdown_female_3_1.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
@@ -615,11 +654,9 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/dragdown_female_3_2.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
@@ -627,11 +664,9 @@ module BanditsVoiceFemale3 {
         category = Object, 
         loop = false
         is3D = true,
-        clip { 
-            file = media/sound/female_3/dragdown_female_3_3.wav, 
-            distanceMin = 4,
-            distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+        clip
+        {
+            event = Character/Voice/Female/Death/Eaten,
         } 
     }
 
