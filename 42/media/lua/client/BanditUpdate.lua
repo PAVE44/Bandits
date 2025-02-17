@@ -1022,11 +1022,14 @@ end
 
 -- manages zombie behavior towards bandits
 local function UpdateZombies(zombie)
-    local asn = zombie:getActionStateName()
-    local isBandit = zombie:getVariableBoolean("Bandit")
-    local isProne = zombie:isProne()
 
-    if isBandit or isProne or asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
+    zombie:setVariable("NoLungeAttack", true)
+    
+    if zombie:getVariableBoolean("Bandit") then return end
+    if zombie:isProne() then return end
+
+    local asn = zombie:getActionStateName()
+    if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
         return
     end
 
