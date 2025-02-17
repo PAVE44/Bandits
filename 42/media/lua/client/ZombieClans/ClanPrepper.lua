@@ -12,7 +12,7 @@ BanditClan.Prepper.name = "Prepper"
 BanditClan.Prepper.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Prepper.health = 4
+BanditClan.Prepper.health = 1.6
 
 -- if the bandit will eat player's body after death
 BanditClan.Prepper.eatBody = false

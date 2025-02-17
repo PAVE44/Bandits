@@ -12,7 +12,7 @@ BanditClan.Psychopath.name = "Psychopath"
 BanditClan.Psychopath.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Psychopath.health = 2
+BanditClan.Psychopath.health = 1.1
 
 -- if the bandit will eat player's body after death
 BanditClan.Psychopath.eatBody = false

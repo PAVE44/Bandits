@@ -12,7 +12,7 @@ BanditClan.Cannibal.name = "Cannibal"
 BanditClan.Cannibal.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Cannibal.health = 2
+BanditClan.Cannibal.health = 1.2
 
 -- if the bandit will eat player's body after death
 BanditClan.Cannibal.eatBody = true

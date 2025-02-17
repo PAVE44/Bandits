@@ -12,7 +12,7 @@ BanditClan.DesperateCitizen.name = "Desperate Cizizen"
 BanditClan.DesperateCitizen.femaleChance = 40
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.DesperateCitizen.health = 2
+BanditClan.DesperateCitizen.health = 1.1
 
 -- if the bandit will eat player's body after death
 BanditClan.DesperateCitizen.eatBody = false
