@@ -88,6 +88,9 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
 
     if instanceof(enemyCharacter, "IsoZombie") then
         aimTimeSurp = math.floor(aimTimeSurp / 2)
+    else
+        -- player handicap
+        aimTimeSurp = aimTimeSurp + 10
     end
     if Bandit.IsDNA(bandit, "slow") then
         aimTimeSurp = aimTimeSurp + 11

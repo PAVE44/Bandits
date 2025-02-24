@@ -483,6 +483,13 @@ function Bandit.SetLoot(zombie, loot)
     -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
 end
 
+function Bandit.AddLoot(zombie, item)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        table.insert(brain.loot, item)
+    end
+end
+
 -- This translates weapons, loot, inventory to actual items to be
 -- spawned at bandit death
 function Bandit.UpdateItemsToSpawnAtDeath(zombie)
@@ -526,11 +533,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                     zombie:addItemToSpawnAtDeath(mag)
                 end
 
-                local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
-                if gun then
-                    gun:setCondition(3+ZombRand(15))
-                    -- gun:setClip(nil)
-                    zombie:addItemToSpawnAtDeath(gun)
+                local attachedBack = zombie:getAttachedItem("Rifle On Back")
+                if not attachedBack then
+                    local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
+                    if gun then
+                        gun:setCondition(3+ZombRand(15))
+                        -- gun:setClip(nil)
+                        zombie:addItemToSpawnAtDeath(gun)
+                    end
                 end
 
                 for i=1, weapons.primary.magCount do
@@ -556,11 +566,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                     zombie:addItemToSpawnAtDeath(mag)
                 end
 
-                local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
-                if gun then
-                    -- gun:setClip(nil)
-                    gun:setCondition(3+ZombRand(22))
-                    zombie:addItemToSpawnAtDeath(gun)
+                local attachedHolster = zombie:getAttachedItem("Holster Right")
+                if not attachedHolster then
+                    local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
+                    if gun then
+                        -- gun:setClip(nil)
+                        gun:setCondition(3+ZombRand(22))
+                        zombie:addItemToSpawnAtDeath(gun)
+                    end
                 end
 
                 for i=1, weapons.secondary.magCount do
@@ -581,6 +594,11 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         for _, itemType in pairs(brain.loot) do
             local item = BanditCompatibility.InstanceItem(itemType)
             if item then
+                if item:IsDrainable() then
+                    item:setUses(1+ZombRand(2))
+                elseif item:IsWeapon() then
+                    item:setCondition(1+ZombRand(3))
+                end
                 zombie:addItemToSpawnAtDeath(item)
             end
         end

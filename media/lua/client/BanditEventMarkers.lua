@@ -172,6 +172,9 @@ function BanditEventMarker:render()
         local _color = colorBlend(mColor, base, aFromDist)
 
         self:drawTexture(self.textureBG, centerX-(BanditEventMarker.iconSize/2), centerY-(BanditEventMarker.iconSize/2), 1, _color.r, _color.g, _color.b)
+        if self.desc then
+            self:drawTextCentre(self.desc, centerX, centerY + 25, 1, 1, 1, 1, UIFont.Small);
+        end
 
         local textureForPoint = self.texturePoint
         local distanceOverRadius = self.distanceToPoint/self.radius
@@ -221,7 +224,7 @@ function BanditEventMarker:getPlayer()
 end
 
 
-function BanditEventMarker:new(eventID, icon, duration, posX, posY, player, screenX, screenY, color)
+function BanditEventMarker:new(eventID, icon, duration, posX, posY, player, screenX, screenY, color, desc)
     --print(" --- marker new: eventID:"..eventID..": tex:"..icon.." d:"..duration.." x/y:"..posX..","..posY.." "..tostring(player).." screen:"..screenX..","..screenY)
     local o = {}
     o = ISUIElement:new(screenX, screenY, 1, 1)
@@ -264,6 +267,10 @@ function BanditEventMarker:new(eventID, icon, duration, posX, posY, player, scre
         getTexture("media/ui/coop4.png")}
     if icon then
         o.textureIcon = getTexture(icon)
+    end
+
+    if desc then
+        o.desc = desc
     end
 
     o:initialise()

@@ -12,7 +12,7 @@ BanditClan.Veteran.name = "Veteran"
 BanditClan.Veteran.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Veteran.health = 4
+BanditClan.Veteran.health = 2.4
 
 -- if the bandit will eat player's body after death
 BanditClan.Veteran.eatBody = false

@@ -543,7 +543,7 @@ local function ManageCollisions(bandit)
                         if instanceof(object, "IsoWindow") then
                             if bandit:isFacingObject(object, 0.5) then
                                 if object:isBarricaded() then
-                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") then
                                         local barricade = object:getBarricadeOnSameSquare()
                                         local fx, fy
                                         if barricade then
@@ -613,7 +613,7 @@ local function ManageCollisions(bandit)
                             if bandit:isFacingObject(object, 0.5) then
 
                                 if object:isBarricaded() then
-                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") then
 
                                         local barricade = object:getBarricadeOnSameSquare()
                                         local fx, fy

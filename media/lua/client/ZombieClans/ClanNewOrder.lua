@@ -12,7 +12,7 @@ BanditClan.NewOrder.name = "New Order"
 BanditClan.NewOrder.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.NewOrder.health = 6
+BanditClan.NewOrder.health = 2.9
 
 -- if the bandit will eat player's body after death
 BanditClan.NewOrder.eatBody = false

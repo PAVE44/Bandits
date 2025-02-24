@@ -12,7 +12,7 @@ BanditClan.DoomRider.name = "Doomrider"
 BanditClan.DoomRider.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.DoomRider.health = 5
+BanditClan.DoomRider.health = 2
 
 -- if the bandit will eat player's body after death
 BanditClan.DoomRider.eatBody = false

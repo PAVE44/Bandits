@@ -12,7 +12,7 @@ BanditClan.Scientist.name = "Scientist"
 BanditClan.Scientist.femaleChance = 60
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Scientist.health = 4
+BanditClan.Scientist.health = 1.9
 
 -- if the bandit will eat player's body after death
 BanditClan.Scientist.eatBody = false

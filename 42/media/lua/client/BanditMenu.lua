@@ -8,22 +8,105 @@
 
 BanditMenu = BanditMenu or {}
 
-function BanditMenu.SpawnGroup (player, waveId)
+function BanditMenu.MakeProcedure (player, square)
+    local cell = getCell()
 
+    local sx = square:getX()
+    local sy = square:getY()
+    local sz = square:getZ()
+
+    local w = 44
+    local h = 44
+
+    local lines = {}
+
+    table.insert(lines, "require \"MysteryPlacements\"\n")
+    table.insert(lines, "\n")
+    table.insert(lines, "function ProcMedicalTent (sx, sy, sz)\n")
+    
+    for x = 0, w do
+        for y = 0, h do
+            for z = 0, 4 do
+                local square = cell:getGridSquare(sx + x, sy + y, sz + z)
+                if square then
+                    local objects = square:getObjects()
+
+                    for i=0, objects:size()-1 do
+                        local object = objects:get(i)
+                        if object then
+
+                            local objectType = object:getType()
+                            local spriteName = object:getSprite():getName()
+                            local spriteProps = object:getSprite():getProperties()
+
+                            local isSolidFloor = spriteProps:Is(IsoFlagType.solidfloor)
+                            local isAttachedFloor = spriteProps:Is(IsoFlagType.attachedFloor)
+                            local isExterior = spriteProps:Is(IsoFlagType.exterior)
+                            local isCanBeRemoved = spriteProps:Is(IsoFlagType.canBeRemoved)
+                            
+                            if spriteName then
+                                --[[if isSolidFloor and isExterior and not isAttachedFloor then
+                                    --nature floor - skip it
+                                    print ("nature floor")
+                                elseif objectType == IsoObjectType.tree then
+                                    print ("tree")
+
+                                elseif isCanBeRemoved == true then
+                                    print ("grass")
+
+                                elseif isSolidFloor or isAttachedFloor then
+                                    --floors
+                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                
+                                elseif false and objectType == IsoObjectType.wall then
+                                    -- walls 
+                                    table.insert(lines, "\tBanditBasePlacements.IsoThumpable (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                ]]
+                                if instanceof(object, 'IsoDoor') then
+                                    -- door
+                                    table.insert(lines, "\tBanditBasePlacements.IsoDoor (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+
+                                elseif instanceof(object, 'IsoWindow') then
+                                    -- window
+                                    table.insert(lines, "\tBanditBasePlacements.IsoWindow (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+
+                                else
+                                    -- special objects?
+                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    local fileWriter = getFileWriter("test6.txt", true, true)
+    table.insert(lines, "end\n\n")
+
+    local output = ""
+    for k, v in pairs(lines) do
+        output = output .. v
+    end
+    print (output)
+    fileWriter:write(output)
+    fileWriter:close()
+                            
+end
+
+function BanditMenu.SpawnGroup (player, waveId)
     local waveData = BanditScheduler.GetWaveDataAll()
     local wave = waveData[waveId]
     wave.spawnDistance = 3
     BanditScheduler.SpawnWave(player, wave)
-
 end
 
 function BanditMenu.SpawnGroupFar (player, waveId)
-
     local waveData = BanditScheduler.GetWaveDataAll()
     local wave = waveData[waveId]
     wave.spawnDistance = 50
     BanditScheduler.SpawnWave(player, wave)
-
 end
 
 function BanditMenu.SpawnDefenders (player, square)
@@ -215,6 +298,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
         print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
+        context:addOption("[DGB] Make Prcedure", player, BanditMenu.MakeProcedure, square)
+        context:addOption("[DGB] Place Plane", player, BanditMenu.PlacePlane, square)
 
         if zombie then
             print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
@@ -222,6 +307,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
             context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
             context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
+
           
         end
 

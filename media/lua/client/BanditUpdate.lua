@@ -286,8 +286,7 @@ local function ManageOnFire(bandit)
     if bandit:isOnFire() then
         if not Bandit.HasTaskType(bandit, "Die") then
             Bandit.ClearTasks(bandit)
-            Bandit.AddTask(bandit, {action="Die", lock=true, anim="Die", fire=true, 
-                sound = bandit:isFemale() and "FemaleBeingEatenDeath" or nil, time=150})
+            Bandit.AddTask(bandit, {action="Die", lock=true, anim="Die", fire=true, time=250})
         end
         return
     end
@@ -544,7 +543,7 @@ local function ManageCollisions(bandit)
                         if instanceof(object, "IsoWindow") then
                             if bandit:isFacingObject(object, 0.5) then
                                 if object:isBarricaded() then
-                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") then
                                         local barricade = object:getBarricadeOnSameSquare()
                                         local fx, fy
                                         if barricade then
@@ -614,7 +613,7 @@ local function ManageCollisions(bandit)
                             if bandit:isFacingObject(object, 0.5) then
 
                                 if object:isBarricaded() then
-                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") and Bandit.Has(bandit, "crowbar") then
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.Can(bandit, "unbarricade") then
 
                                         local barricade = object:getBarricadeOnSameSquare()
                                         local fx, fy
@@ -1022,11 +1021,14 @@ end
 
 -- manages zombie behavior towards bandits
 local function UpdateZombies(zombie)
-    local asn = zombie:getActionStateName()
-    local isBandit = zombie:getVariableBoolean("Bandit")
-    local isProne = zombie:isProne()
 
-    if isBandit or isProne or asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
+    zombie:setVariable("NoLungeAttack", true)
+    
+    if zombie:getVariableBoolean("Bandit") then return end
+    if zombie:isProne() then return end
+
+    local asn = zombie:getActionStateName()
+    if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
         return
     end
 
@@ -1280,8 +1282,10 @@ local function GenerateTask(bandit, uTick)
     -- CUSTOM PROGRAM 
     if #tasks == 0 and not Bandit.HasTask(bandit) then
         local program = Bandit.GetProgram(bandit)
-        if program and program.name and program.stage then
+        if program and program.name and program.stage  then
+            -- local ts = getTimestampMs()
             local res = ZombiePrograms[program.name][program.stage](bandit)
+            -- print ("AT: " .. program.name .. "." .. program.stage .. " " .. (getTimestampMs() - ts))
             if res.status and res.next then
                 Bandit.SetProgramStage(bandit, res.next)
                 for _, task in pairs(res.tasks) do
@@ -1403,7 +1407,7 @@ local function OnBanditUpdate(zombie)
 
     -- MANAGE BANDIT BEING ON FIRE
     if uTick == 2 then
-        -- ManageOnFire(bandit)
+        ManageOnFire(bandit)
     end
 
     -- MANAGE BANDIT SPEECH COOLDOWN

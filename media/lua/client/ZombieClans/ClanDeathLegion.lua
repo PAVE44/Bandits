@@ -12,7 +12,7 @@ BanditClan.DeathLegion.name = "Death Legion"
 BanditClan.DeathLegion.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.DeathLegion.health = 7
+BanditClan.DeathLegion.health = 2.8
 
 -- if the bandit will eat player's body after death
 BanditClan.DeathLegion.eatBody = false

@@ -12,7 +12,7 @@ BanditClan.Psychopath.name = "Psychopath"
 BanditClan.Psychopath.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Psychopath.health = 2
+BanditClan.Psychopath.health = 1.1
 
 -- if the bandit will eat player's body after death
 BanditClan.Psychopath.eatBody = false
@@ -87,8 +87,8 @@ table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.CandyFruitSli
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Doll", 33))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.CatToy", 22))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Rubberducky ", 22))
-table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.ToyCar ", 22))
-table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Bricktoys ", 11))
+table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.ToyCar", 22))
+table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Bricktoys", 11))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.Cube", 11))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.FrillyUnderpants_Red", 5))
 table.insert(BanditClan.Psychopath.Loot, BanditLoot.MakeItem("Base.FrillyUnderpants_Pink", 4))

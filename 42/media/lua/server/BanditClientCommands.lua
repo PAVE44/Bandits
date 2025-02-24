@@ -217,8 +217,6 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             brain.loot = bandit.loot
             brain.key = bandit.key
             brain.inventory = {}
-            table.insert(brain.inventory, "weldingGear")
-            table.insert(brain.inventory, "crowbar")
             
             -- empty task table, will be populated during bandit life
             brain.tasks = {}

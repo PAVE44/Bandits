@@ -12,7 +12,7 @@ BanditClan.PrivateMilitia.name = "Private Militia"
 BanditClan.PrivateMilitia.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.PrivateMilitia.health = 6
+BanditClan.PrivateMilitia.health = 2
 
 -- if the bandit will eat player's body after death
 BanditClan.PrivateMilitia.eatBody = false

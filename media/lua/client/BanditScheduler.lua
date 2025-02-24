@@ -394,25 +394,35 @@ function BanditScheduler.SpawnWave(player, wave)
             if SandboxVars.Bandits.General_ArrivalIcon then
                 local color
                 local icon
-                if event.program.name == "Bandit" or event.program.name == "BaseGuard" then
+                local desc
+                if event.program.name == "Bandit" then 
                     icon = "media/ui/raid.png"
                     color = {r=1, g=0.5, b=0.5} -- red
+                    desc = "Hostile Raiders"
+                elseif event.program.name == "BaseGuard" then
+                    icon = "media/ui/raid.png"
+                    color = {r=1, g=0.5, b=0.5} -- red
+                    desc = "Hostile Guards"
                 elseif event.program.name == "Thief" then
                     icon = "media/ui/thief.png"
                     color = {r=1, g=1, b=0.5} -- yellow
+                    desc = "Hostile Thiefs"
                 elseif event.program.name == "Companion" then
                     icon = "media/ui/friend.png"
                     color = {r=0.5, g=1, b=0.5} -- green
+                    desc = "Friendly Companions"
                 elseif event.program.name == "Looter" then
                     icon = "media/ui/loot.png"
                     if event.hostile then
                         color = {r=1, g=0, b=0} -- red
+                        desc = "Hostile Wanderers"
                     else
                         color = {r=0.5, g=1, b=0.5} -- green
+                        desc = "Friendly Wanderers"
                     end
                 end
 
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color)
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color, desc)
             end
         end
     end  
@@ -817,7 +827,8 @@ function BanditScheduler.SpawnDefenders(player, min, max)
     if SandboxVars.Bandits.General_ArrivalIcon then
         local color = {r=1, g=0, b=0}
         local icon = "media/ui/defend.png"
-        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color)
+        local desc = "Hostile Defenders"
+        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color, desc)
     end
 end
 
@@ -832,8 +843,9 @@ function BanditScheduler.SpawnBase(player, sceneNo)
             BanditBaseScenes[sceneNo](player, square)
 
             if SandboxVars.Bandits.General_ArrivalIcon then
-                color = {r=1, g=0, b=1}
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 10, spawnPoint.x, spawnPoint.y, color)
+                color = {r=1, g=0, b=0}
+                local desc = "Hostile Camp"
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 10, spawnPoint.x, spawnPoint.y, color, desc)
             end
         else
             print ("[INFO] Camp site has no space to spawn.")

@@ -12,7 +12,7 @@ BanditClan.Reclaimer.name = "Reclaimer"
 BanditClan.Reclaimer.femaleChance = 0
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Reclaimer.health = 9
+BanditClan.Reclaimer.health = 3.1
 
 -- if the bandit will eat player's body after death
 BanditClan.Reclaimer.eatBody = true

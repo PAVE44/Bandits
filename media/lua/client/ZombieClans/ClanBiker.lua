@@ -12,7 +12,7 @@ BanditClan.Biker.name = "Biker"
 BanditClan.Biker.femaleChance = 20
 
 -- health ranges from 1 - 14. Higher values may produce unexpected results,
-BanditClan.Biker.health = 3
+BanditClan.Biker.health = 1.4
 
 -- if the bandit will eat player's body after death
 BanditClan.Biker.eatBody = false

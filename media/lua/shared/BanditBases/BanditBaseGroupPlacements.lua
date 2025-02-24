@@ -19,16 +19,19 @@ function BanditBaseGroupPlacements.CheckSpace (x, y, w, h)
                         local sprite = object:getSprite()
                         if sprite then 
                             local sn = sprite:getName()
+                            local props = sprite:getProperties()
                             if sn ~= "" then
-                                local naturefloor = sprite:getProperties():Val("natureFloor")
-                                local floor = sprite:getProperties():Is(IsoFlagType.solidfloor)
-                                local canBeRemoved = sprite:getProperties():Is(IsoFlagType.canBeRemoved)
-                                local vegi = sprite:getProperties():Is(IsoFlagType.vegitation)
-                                local tree = sprite:getProperties():Val("tree")
-                                if naturefloor or canBeRemoved or vegi or tree then
+                                local naturefloor = props:Val("natureFloor")
+                                local floor = props:Is(IsoFlagType.solidfloor)
+                                local canBeRemoved = props:Is(IsoFlagType.canBeRemoved)
+                                local vegi = props:Is(IsoFlagType.vegitation)
+                                local stone = props:Is("CustomName") and (props:Val("CustomName"):embodies("Stone") or props:Val("CustomName"):embodies("Stump"))
+                                local tree = props:Val("tree")
+                                if naturefloor or canBeRemoved or vegi or tree or stone then
                                     good = true
                                 else
                                     local sn = sprite:getName()
+                                    local test = props:Val("CustomName")
                                     print ("bad")
                                 end
                             end
