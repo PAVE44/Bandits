@@ -1,0 +1,297 @@
+name
+desc
+clan_id
+gender
+hair styles [4 slots]
+hair colors [4 slots]
+beard style [4 slots]
+beard color [4 slots]
+makeup [slots]
+
+-- https://projectzomboid.com/modding/zombie/Lua/LuaManager.GlobalObject.html#getAllItemsForBodyLocation(java.lang.String)
+body location1 [4 slots]
+body location2 [4 slots]
+...
+
+melee weapon
+primary weapon [mags?]
+secondary weapon [mags?]
+backpack
+loot 10xslots
+
+blood level
+dirt level
+holes
+
+
+
+
+
+
+bodyLocations = [
+        "TankTop",
+        "Tshirt",
+        "ShortSleeveShirt",
+        "Shirt",
+        "Sweater",
+        "Jacket",
+        "TorsoExtra",
+        "TorsoExtraVest",
+        "Pants",
+        "Skirt",
+        "Hands",
+        "Torso1Legs1",
+        "Legs1",
+        "Socks",
+        "Shoes",
+        "Underwear",
+        "UnderwearTop",
+        "UnderwearBottom",
+        "UnderwearExtra1",
+        "UnderwearExtra2",
+        "Tail",
+        "Eyes",
+        "LeftEye",
+        "RightEye",
+        "Mask",
+        "Hat",
+        "Scarf",
+        "Belt",
+        "BeltExtra",
+        "AmmoStrap",
+        "Neck",
+        "Necklace",
+        "Necklace_Long",
+        "Nose",
+        "Ears",
+        "EarTop",
+        "Right_MiddleFinger",
+        "Left_MiddleFinger",
+        "Right_RingFinger",
+        "Left_RingFinger",
+        "RightWrist",
+        "LeftWrist",
+        "BellyButton",
+
+
+"FullHat",
+        "MaskEyes",
+        "MaskFull",
+        "JacketSuit",
+        "FullTop",
+        "JackHat_Bulky",
+        "SweaterHat",
+        "JacketHat",
+        "JacketDown",
+        "MakeUp_FullFace",
+        "MakeUp_Eyes",
+        "MakeUp_EyesShadow",
+        "MakeUp_Lips",
+        "UnderwearInner",
+        "BathRobe",
+        "FullSuitHead",
+        "FullSuit",
+        "Boilersuit",
+        "Dress",]
+
+
+
+
+Bags:
+        BodyLocation = FannyPackFront,
+		BodyLocation = FannyPackBack,
+		BodyLocation = Webbing,
+
+Body
+        BodyLocation = ZedDmg
+
+
+Dresses:
+		BodyLocation = Dress,
+		BodyLocation = LongDress,
+		BodyLocation = FullSuit,
+		BodyLocation = BathRobe,
+
+Ears:   
+BodyLocation = Hat,
+
+Gloves: 
+BodyLocation = Hands,
+
+Hats / Helmets
+		BodyLocation = Hat,
+		BodyLocation = FullHat,
+
+
+Holsters:
+		BodyLocation = AmmoStrap,
+		BodyLocation = AnkleHolster,
+		BodyLocation = BeltExtra,
+		BodyLocation = ShoulderHolster,
+
+
+
+Jacket:
+
+		BodyLocation = JacketSuit,
+		BodyLocation = FullTop,
+		BodyLocation = Jacket,
+		BodyLocation = JacketHat_Bulky,
+		BodyLocation = Jacket_Bulky,
+		BodyLocation = Sweater,
+		BodyLocation = SweaterHat,
+		BodyLocation = JacketHat,
+		BodyLocation = Jacket_Down,
+		BodyLocation = Sweater,
+		BodyLocation = SweaterHat,
+
+    Jewellery
+
+    		BodyLocation = Necklace,
+		BodyLocation = Necklace_Long,
+        BodyLocation = Neck,
+		BodyLocation = Nose,
+BodyLocation = Ears,
+		BodyLocation = EarTop,
+BodyLocation = Right_MiddleFinger,
+		BodyLocation = Left_MiddleFinger,
+		BodyLocation = Right_RingFinger,
+		BodyLocation = Left_RingFinger,
+		BodyLocation = RightWrist,
+		BodyLocation = LeftWrist,
+        		BodyLocation = BellyButton,
+
+Masks:
+        BodyLocation = Mask,
+		BodyLocation = MaskEyes,
+BodyLocation = FullHat,
+		BodyLocation = Hat,
+BodyLocation = Neck,
+BodyLocation = MaskFull,
+BodyLocation = FullHat,
+
+others:
+BodyLocation = TorsoExtra,
+BodyLocation = Scarf,
+BodyLocation = Underwear,   
+BodyLocation = MakeUp_FullFace,
+BodyLocation = MakeUp_Eyes,
+BodyLocation = MakeUp_EyesShadow,
+BodyLocation = MakeUp_Lips,
+BodyLocation = Belt,
+BodyLocation = SCBA,
+BodyLocation = SCBAnotank,
+
+Pants:
+
+Legs1
+ShortPants
+ShortsShort
+Skirt
+LongSkirt
+Pants
+PantsExtra
+ShortPants
+
+protection body
+       BodyLocation = SportShoulderpad,
+        BodyLocation = SportShoulderpadOnTop,
+        BodyLocation = ShoulderpadLeft,
+        BodyLocation = ShoulderpadRight,
+		BodyLocation = TorsoExtraVestBullet,
+		BodyLocation = Gorget,
+		BodyLocation = UnderwearBottom,
+
+
+protection body crafter bone
+		BodyLocation = Cuirass,
+		BodyLocation = Calf_Right,
+		BodyLocation = Calf_Left,
+		BodyLocation = ForeArm_Right,
+		BodyLocation = ForeArm_Left,
+        BodyLocation = ShoulderpadLeft,
+        BodyLocation = ShoulderpadRight,
+		BodyLocation = Thigh_Right,
+		BodyLocation = Thigh_Left,
+		BodyLocation = Hands,
+		BodyLocation = Gorget,
+		BodyLocation = MaskEyes,
+		BodyLocation = Necklace_Long,
+
+ptrotection body bulletvest
+
+		BodyLocation = Calf_Right,
+		BodyLocation = Calf_Left,
+		BodyLocation = Thigh_Right,
+		BodyLocation = Thigh_Left,
+		BodyLocation = ForeArm_Right,
+		BodyLocation = ForeArm_Left,
+
+leahther
+		BodyLocation = ForeArm_Right,
+		BodyLocation = ForeArm_Left,
+		BodyLocation = Gorget,
+		BodyLocation = Codpiece,
+
+protection limb
+
+        BodyLocation = Calf_Left_Texture,
+        BodyLocation = Calf_Right_Texture,
+       BodyLocation = Calf_Left,
+        BodyLocation = Calf_Right,
+		BodyLocation = Knee_Right,
+		BodyLocation = Knee_Left,
+		BodyLocation = Elbow_Right,
+		BodyLocation = Elbow_Left,
+        BodyLocation = RightArm,
+        BodyLocation = LeftArm,
+		BodyLocation = Thigh_Right,
+		BodyLocation = Thigh_Left,
+
+Shorts:
+
+BodyLocation = ShortSleeveShirt,
+BodyLocation = Shirt,
+BodyLocation = Tshirt,
+BodyLocation = Jersey,
+
+Shoes:
+
+BodyLocation = Socks,
+		BodyLocation = Legs1,
+		BodyLocation = Shoes,
+
+Tails:
+		BodyLocation = Tail,
+		BodyLocation = Tail,
+
+Underwear:
+
+    BodyLocation = UnderwearTop,
+    BodyLocation = UnderwearBottom,
+    BodyLocation = UnderwearExtra1,
+    BodyLocation = UnderwearExtra2,
+
+vests
+    BodyLocation = TorsoExtraVestBullet,
+    BodyLocation = TankTop,
+    BodyLocation = TorsoExtraVest,
+    BodyLocation = VestTexture
+
+watches:
+		BodyLocation = RightWrist,
+		BodyLocation = LeftWrist,
+
+dmg
+    BodyLocation = ZedDmg,
+	BodyLocation = Bandage,
+    BodyLocation = Wound,
+
+full suit
+
+BodyLocation = Boilersuit,
+		BodyLocation = FullSuitHead,
+		BodyLocation = LongDress,
+		BodyLocation = BathRobe,
+		BodyLocation = Torso1Legs1,
+		BodyLocation = FullSuit,
