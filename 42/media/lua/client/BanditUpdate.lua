@@ -466,15 +466,6 @@ end
 local function ManageCollisions(bandit)
     local tasks = {}
 
-    local asn = bandit:getActionStateName()
-    local sr = bandit:getSquare():getSheetRope()
-    if not Bandit.HasActionTask(bandit) and sr and asn ~= "climbrope" then
-        bandit:changeState(ClimbSheetRopeState.instance())
-        bandit:setVariable("ClimbUp", true)
-    else
-        bandit:setVariable("ClimbUp", false)
-    end
-
     if not Bandit.HasActionTask(bandit) and bandit:isCollidedThisFrame() then
         bandit:getPathFindBehavior2():cancel()
         bandit:setPath2(nil)
