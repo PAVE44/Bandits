@@ -8,6 +8,12 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.BanditCreator(player)
+    local modal = BanditCreationMain:new(200, 100, 1520, 880)
+    modal:initialise()
+    modal:addToUIManager()
+end
+
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -295,6 +301,10 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     
     -- Debug options
     if isDebugEnabled() then
+
+        BanditCustom.Load()
+        context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
+
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
         print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")

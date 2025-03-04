@@ -127,6 +127,10 @@ local PanicHandler = function(player)
     end
 end
 
+local StunlockRecalc = function(player)
+    player:setVariable("StunlockHitSpeed", SandboxVars.Bandits.General_StunlockHitSpeed)
+end
+
 local ResetBanditKills = function(player)
     if isServer() then return end
     local args = {}
@@ -166,6 +170,7 @@ end
 
 Events.EveryOneMinute.Add(UpdatePlayersOnline)
 Events.OnPlayerUpdate.Add(PanicHandler)
+Events.OnPlayerUpdate.Add(StunlockRecalc)
 Events.OnPlayerDeath.Add(ResetBanditKills)
 Events.EveryTenMinutes.Add(UpdateVisitedBuildings)
 Events.EveryTenMinutes.Add(UpdatePerformance)

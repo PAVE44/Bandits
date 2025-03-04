@@ -4,6 +4,7 @@ Sandbox_ES = {
     Sandbox_Bandits_General = "Bandidos - General"
 
     Sandbox_Bandits.KillCounter = "Contador de muertes"
+    Sandbox_Bandits.StunlockHitSpeed = "Velocidad de animación del golpe del jugador (un valor más alto significa menos aturdimiento)"
     Sandbox_Bandits.DensityScore = "Tasa de aparicion aumentada en pueblos y reducida en areas aisladas"
     Sandbox_Bandits.Surrender = "Bandidos heridos pueden rendirse"
     Sandbox_Bandits.BleedOut = "Bandidos heridos pueden sangrar y morir"

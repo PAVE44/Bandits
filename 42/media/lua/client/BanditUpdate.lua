@@ -241,6 +241,14 @@ local function ApplyVisuals(bandit, brain)
         banditVisuals:removeBodyVisualFromItemType(toRemove[i])
     end
 
+    local clothing = BanditCustom.GetClothing("bandit1")
+
+    for i=1, #clothing do
+        local item = BanditCompatibility.InstanceItem(clothing[i])
+        local clothingItem = item:getClothingItem()
+        local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+    end
+
     -- Reset model to apply changes
     bandit:resetModelNextFrame()
     bandit:resetModel()

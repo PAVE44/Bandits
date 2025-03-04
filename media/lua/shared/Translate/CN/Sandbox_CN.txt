@@ -6,6 +6,7 @@ Sandbox_CN = {
  
     Sandbox_Bandits.KillCounter = "启用暴徒击杀数统计"
 	Sandbox_Bandits.KillCounter_tooltip = "这会切入角色信息菜单UI的代码进行修改。如遇兼容性问题，停用该选项"
+    Sandbox_Bandits.StunlockHitSpeed = "玩家命中动画速度（数值越高，眩晕时间越短"
     Sandbox_Bandits.DensityScore = "基于区域的暴徒刷新率调整"
 	Sandbox_Bandits.DensityScore_tooltip = "刷新率会依据区域调整：城镇区域将增加，野外区域则相反"
     Sandbox_Bandits.Surrender = "暴徒被击伤后有概率投降"

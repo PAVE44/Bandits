@@ -4,6 +4,7 @@ Sandbox_UA = {
     Sandbox_Bandits_General = "Bandits General"
 
 	Sandbox_Bandits.KillCounter = "Лічильник убитих бандитів",
+	Sandbox_Bandits.StunlockHitSpeed = "Швидкість анімації удару гравця (більше значення означає менший ступор)"
 	Sandbox_Bandits.DensityScore = "Частота появи бандитів вища в містах і нижча в ізольованих районах",
 	Sandbox_Bandits.Surrender = "Поранені бандити можуть здатися",
 	Sandbox_Bandits.BleedOut = "Поранені бандити можуть кровоточити й помирати",

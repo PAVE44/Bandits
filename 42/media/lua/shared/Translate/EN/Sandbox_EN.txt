@@ -4,6 +4,7 @@ Sandbox_EN = {
     Sandbox_Bandits_General = "Bandits General"
 
     Sandbox_Bandits.KillCounter = "Bandit kill counter"
+    Sandbox_Bandits.StunlockHitSpeed = "Player hit animation speed (higher value means less stunlock)"
     Sandbox_Bandits.DensityScore = "Bandit spawn rate boosted in towns and lowered in secluded areas"
     Sandbox_Bandits.Surrender = "Hurt Bandits may surrender"
     Sandbox_Bandits.BleedOut = "Hurt Bandits may bleed and die"

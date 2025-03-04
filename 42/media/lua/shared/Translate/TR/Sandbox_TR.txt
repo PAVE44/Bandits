@@ -4,6 +4,7 @@ Sandbox_TR = {
     Sandbox_Bandits_General = "Haydutlar - Genel"
 
     Sandbox_Bandits.KillCounter = "Haydut öldürme sayacı"
+    Sandbox_Bandits.StunlockHitSpeed = "Oyuncu vuruş animasyon hızı (daha yüksek değer daha az sersemletme anlamına gelir)"
     Sandbox_Bandits.DensityScore = "Haydutların ortaya çıkma oranı şehirlerde artar, tenha bölgelerde azalır"
     Sandbox_Bandits.Surrender = "Yaralanan haydutlar teslim olabilir"
     Sandbox_Bandits.BleedOut = "Yaralanan haydutlar kan kaybından ölebilir"

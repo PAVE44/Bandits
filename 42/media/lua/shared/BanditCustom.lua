@@ -3,6 +3,17 @@ BanditCustom = BanditCustom or {}
 BanditCustom.data = {}
 
 BanditCustom.Load = function()
+
+    function splitString(input, separator)
+        local result = {}
+        for match in (input .. separator):gmatch("(.-)" .. separator) do
+            table.insert(result, match:match("^%s*(.-)%s*$")) -- Trim spaces
+        end
+        return result
+    end
+
+    local types = {clothing="array", hairstyles="array"}
+
     local file = getFileReader("bandit_custom.txt", false)
     if not file then return end
 
@@ -29,10 +40,16 @@ BanditCustom.Load = function()
             if not BanditCustom.data[bname] then
                 BanditCustom.data[bname] = {}
             end
-            BanditCustom.data[bname][k] = v
+
+            if types[k] == "array" then
+                BanditCustom.data[bname][k] = splitString(v, ",")
+            else
+                BanditCustom.data[bname][k] = v
+            end
             --print ("BanditCustom.data[" .. bname .. "][" .. k .. "] = " .. v)
         end
     end
+    local test = BanditCustom
 end
 
 BanditCustom.Save = function()
@@ -53,10 +70,20 @@ BanditCustom.Save = function()
 end
 
 BanditCustom.Reset = function()
-
-
     BanditCustom.data = BanditCustom.dataDefault
     BanditCustom.Save()
-
 end
 
+BanditCustom.GetClothing = function(bname)
+    local data = BanditCustom.data[bname]
+    if not data then return end
+
+    return BanditCustom.data[bname].clothing
+end
+
+BanditCustom.GetHairstyles = function(bname)
+    local data = BanditCustom.data[bname]
+    if not data then return end
+
+    return BanditCustom.data[bname].hairstyles
+end
