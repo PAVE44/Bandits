@@ -217,6 +217,20 @@ function BanditCreationMain:initialise()
 	self.weapons.secondary.internal = "secondary"
 	self.weapons.secondary.mode = "weapons"
 	self:addChild(self.weapons.secondary)
+    rowY = rowY + iconSize + 4
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Melee", 1, 1, 1, 1, UIFont.Small)
+	lbl:initialise()
+	lbl:instantiate()
+	self:addChild(lbl)
+
+	self.weapons.melee = BanditItemDropBox:new(leftX, topY + rowY, iconSize, iconSize, true, self, BanditCreationMain.addItem, BanditCreationMain.removeItem, BanditCreationMain.verifyItem, nil)
+	self.weapons.melee:initialise()
+	self.weapons.melee:setToolTip(true, "Melee Weapon")
+	self.weapons.melee.internal = "melee"
+	self.weapons.melee.mode = "weapons"
+	self:addChild(self.weapons.melee)
+	rowY = rowY + iconSize + 4
 
 
     -- CLOTHING
@@ -279,19 +293,30 @@ function BanditCreationMain:onClothingChanged()
         end
     end
 
-	local primary = self.weapons.primary.storedItem
-	if primary then
-		self.model:setAttachedItem("Rifle On Back", primary)
-	else
-		self.model:setAttachedItem("Rifle On Back", nil)
-	end
+    for _, def in pairs(ISHotbarAttachDefinition) do
+        if def.name == "Holster" or def.name == "Back" then
+            for k, v in pairs(def.attachments) do
+                self.model:setAttachedItem(v, nil)
+            end
+        end
+    end
 
-	local secondary = self.weapons.secondary.storedItem
-	if secondary then
-		self.model:setAttachedItem("Holster Right", secondary)
-	else
-		self.model:setAttachedItem("Holster Right", nil)
-	end
+    for _, slot in pairs({"primary", "secondary", "melee"}) do
+        local weapon = self.weapons[slot].storedItem
+        if weapon then
+            local attachmentType = weapon:getAttachmentType()
+            for _, def in pairs(ISHotbarAttachDefinition) do
+                if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
+                    for k, v in pairs(def.attachments) do
+                        if k == attachmentType then
+                            self.model:setAttachedItem(v, weapon)
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
 
     self.avatarPanel:setCharacter(self.model)
 
@@ -478,14 +503,12 @@ function BanditCreationMain:loadConfig()
 	end
 
 	if data.weapons then
-		if data.weapons.primary then
-			local item = BanditCompatibility.InstanceItem(data.weapons.primary)
-			self.weapons.primary:setStoredItem(item)
-		end
-		if data.weapons.secondary then
-			local item = BanditCompatibility.InstanceItem(data.weapons.secondary)
-			self.weapons.secondary:setStoredItem(item)
-		end
+        for _, slot in pairs({"primary", "secondary", "melee"}) do
+            if data.weapons[slot] then
+                local item = BanditCompatibility.InstanceItem(data.weapons[slot])
+                self.weapons[slot]:setStoredItem(item)
+            end
+        end
         self:onClothingChanged()
 	end
 end
@@ -516,14 +539,11 @@ function BanditCreationMain:saveConfig()
     end
 
 	data.weapons = {}
-	local primary = self.weapons.primary:getStoredItem()
-	if primary then
-		data.weapons.primary = primary:getFullType()
-	end
-
-	local secondary = self.weapons.secondary:getStoredItem()
-	if secondary then
-		data.weapons.secondary = secondary:getFullType()
+    for _, slot in pairs({"primary", "secondary", "melee"}) do
+        local item = self.weapons[slot]:getStoredItem()
+        if item then
+            data.weapons[slot] = item:getFullType()
+        end
 	end
 
     BanditCustom.Save()

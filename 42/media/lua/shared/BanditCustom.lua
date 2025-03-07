@@ -6,7 +6,26 @@ BanditCustom.clanData = {}
 BanditCustom.clanFile = "b_custom_clans.txt"
 BanditCustom.banditFile = "b_custom_bandits.txt"
 
-local load = function(dataKey, file)
+local saveFile = function(dataKey, fileName)
+    local file = getFileWriter(fileName, true, false)
+    local output = ""
+
+    local data = BanditCustom[dataKey]
+    for id, sections in pairs(data) do
+        output = output .. "[" .. id .. "]\n"
+        for sname, tab in pairs(sections) do
+            for k, v in pairs(tab) do
+                output = output .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
+            end
+        end
+        output = output .. "\n"
+    end
+
+    file:write(output)
+    file:close()
+end
+
+local loadFile = function(dataKey, fileName)
 
     local function splitString(input, separator)
         local result = {}
@@ -18,10 +37,10 @@ local load = function(dataKey, file)
 
     local types = {} -- {clothing="array", hairstyles="array"}
 
-    local file = getFileReader(file, false)
+    local file = getFileReader(fileName, false)
     if not file then 
-        save(data, file)
-        file = getFileReader(file, false)
+        saveFile(dataKey, fileName)
+        file = getFileReader(fileName, false)
     end
 
     local line
@@ -67,33 +86,14 @@ local load = function(dataKey, file)
     end
 end
 
-local save = function(dataKey, file)
-    local file = getFileWriter(file, true, false)
-    local output = ""
-
-    local data = BanditCustom[dataKey]
-    for id, sections in pairs(data) do
-        output = output .. "[" .. id .. "]\n"
-        for sname, tab in pairs(sections) do
-            for k, v in pairs(tab) do
-                output = output .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
-            end
-        end
-        output = output .. "\n"
-    end
-
-    file:write(output)
-    file:close()
-end
-
 BanditCustom.Load = function()
-    load("banditData", BanditCustom.banditFile)
-    load("clanData", BanditCustom.clanFile)
+    loadFile("banditData", BanditCustom.banditFile)
+    loadFile("clanData", BanditCustom.clanFile)
 end
 
 BanditCustom.Save = function()
-    save("banditData", BanditCustom.banditFile)
-    save("clanData", BanditCustom.clanFile)
+    saveFile("banditData", BanditCustom.banditFile)
+    saveFile("clanData", BanditCustom.clanFile)
 end
 
 -- clan methods

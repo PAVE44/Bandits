@@ -45,24 +45,32 @@ function BanditItemsListTable:initialise()
 
     local internal = self.dropbox.internal
     local mode = self.dropbox.mode
-    local items
+    local items = {}
 
     if mode == "outfit" then
         items = getAllItemsForBodyLocation(internal)
     elseif mode == "weapons" then
-        --[[local all = getAllItems()
+        local all = getAllItems()
         for i=0, all:size()-1 do
             local item = all:get(i)
-            if not item:getObsolete() and not item:isHidden() then
-                if 
+            if not item:getObsolete() and not item:isHidden() and item:getMinDamage() > 0 then
+                local itemType = item:getFullName()
+                local invItem = BanditCompatibility.InstanceItem(itemType)
+                if invItem then
+                    local invItemType = WeaponType.getWeaponType(invItem)
+            
+                    if internal == "primary" and invItemType == WeaponType.firearm then
+                        table.insert(items, itemType)
+                    elseif internal == "secondary" and invItemType == WeaponType.handgun then
+                        table.insert(items, itemType)
+                    elseif internal == "melee" then
+                        table.insert(items, itemType)
+                    end
+                end
             end
-        end]]
-        if internal == "primary" then
-            items = {"Base.AssaultRifle", "Base.AssaultRifle2"}
-        else
-            items = {"Base.Pistol", "Base.Pistol2", "Base.Pistol3"}
         end
     end
+
     table.sort(items, function(a,b) return not string.sort(a, b) end)
 
     for i, itemType in pairs(items) do

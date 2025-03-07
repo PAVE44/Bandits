@@ -21,9 +21,13 @@ function BanditCreationAvatar:createChildren()
 
 	if self.clickable then
 		if self.name then
-			local nameBox = ISTextBox:new(2, self.height - 4 - NAME_HGT, self.width - 4, NAME_HGT, self.name)
+			local x = (self.width / 2) + (getTextManager():MeasureStringX(UIFont.Small, self.name) / 2)
+			local nameBox = ISLabel:new(x, self.height - 4 - NAME_HGT, NAME_HGT, self.name, 1, 1, 1, 0.8, UIFont.Small, false)
 			nameBox:initialise()
 			nameBox:instantiate()
+			-- nameBox.center = true
+			nameBox:setWidth(self.width)
+			
 			self:addChild(nameBox)
 		end
 		self.clickButton = ISButton:new(2, 2, self.width - 4, self.height - 4, "", self, self.onClick)
