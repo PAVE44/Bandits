@@ -295,3 +295,36 @@ BodyLocation = Boilersuit,
 		BodyLocation = BathRobe,
 		BodyLocation = Torso1Legs1,
 		BodyLocation = FullSuit,
+
+
+
+
+
+
+
+
+is winter  - will spawn only if temperature is < 10 degrees C
+
+health 1.0, 1.25, 1.50, 1.75, 2, 2.25, 2.5
+sight -6, -4, -2, 0, 2, 4, 6
+weapon accuracy 0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.8
+determination 0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35 (flee if health below the threshold)
+endurance 0.7, 0.8, 0.9, 1.0, 1.2, 1.6, 2.4
+
+expertise:
+assasin - will only apprach the player if unseen, can kill with a single knife stab, will not speak nor make walking noise
+breaker - can easily break barricades and doors, carry extra tools
+electrician - can sabotage generators or other electrical equipment, can remove bulbs
+cook - can steal or sabotage player crops, carry extra food
+goblin - will plant waste, dirt or other inpurinities in player base
+infected - can bite the player / invisible to zombies
+mechanic - can sabotage cars and steal fuel, carry extra tools and gas carnister
+medic - can heal himself or comrades, carry extra medical equipment
+recon - can sprint very fast, has high endurance
+thief - focues on stealing player items
+repairman - will carry useful tools and items
+tracker - can find player more easily, carry maps
+trapper - will plant bear traps for player
+traitor - may pretend to be a friend
+sacrificer - will explode when dying
+zombiemaster - will bring zombies to player location but emiting loud sound

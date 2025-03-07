@@ -9,17 +9,24 @@ local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local UI_BORDER_SPACING = 10
 local BUTTON_HGT = FONT_HGT_SMALL + 6
+local NAME_HGT = FONT_HGT_SMALL + 8
 
 function BanditCreationAvatar:createChildren()
 	self.avatarBackgroundTexture = getTexture("media/ui/avatarBackgroundWhite.png")
 
-	self.avatarPanel = ISUI3DModel:new(2, 2, self.width -4, self.height -4 )
+	self.avatarPanel = ISUI3DModel:new(2, 2, self.width - 4, self.height - 4 - NAME_HGT)
 	self.avatarPanel.backgroundColor = {r=0, g=0, b=0, a=0.0}
 	self.avatarPanel.borderColor = {r=1, g=1, b=1, a=0.0}
 	self:addChild(self.avatarPanel)
 
 	if self.clickable then
-		self.clickButton = ISButton:new(2, 2, self.width -4, self.height -4, "", self, self.onClick)
+		if self.name then
+			local nameBox = ISTextBox:new(2, self.height - 4 - NAME_HGT, self.width - 4, NAME_HGT, self.name)
+			nameBox:initialise()
+			nameBox:instantiate()
+			self:addChild(nameBox)
+		end
+		self.clickButton = ISButton:new(2, 2, self.width - 4, self.height - 4, "", self, self.onClick)
 		self.clickButton.internal = self.bid
 		self.clickButton.displayBackground = nil
 		self.clickButton.backgroundColor = {r=0, g=0, b=0, a=0.0}
@@ -34,7 +41,7 @@ function BanditCreationAvatar:createChildren()
 		self.avatarPanel:setIsometric(false)
 		self.avatarPanel:setDoRandomExtAnimations(true)
 		self:setFacePreview(false)
-	
+
 		self.turnLeftButton = ISButton:new(self.avatarPanel.x, self.avatarPanel:getBottom()-BUTTON_HGT, BUTTON_HGT, BUTTON_HGT, "", self, self.onTurnChar)
 		self.turnLeftButton.internal = "TURNCHARACTERLEFT"
 		self.turnLeftButton:initialise()

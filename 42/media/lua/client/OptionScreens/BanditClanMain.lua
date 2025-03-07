@@ -55,14 +55,16 @@ function BanditClanMain:initialise()
     self.models = {}
     self.avatarPanel = {}
     local i = 0
+    local j = 0
     for bid, data in pairs(allData) do
         local x = i * (avatarWidth + avatarSpacing) + avatarSpacing
-        local y = topY
+        local y = topY + j * (avatarHeight + avatarSpacing)
 
         self.avatarPanel[bid] = BanditCreationAvatar:new(x, y, avatarWidth, avatarHeight)
         self.avatarPanel[bid].onclick = BanditClanMain.onClick
         self.avatarPanel[bid].controls = false
         self.avatarPanel[bid].clickable = true
+        self.avatarPanel[bid].name = data.general.name
         self.avatarPanel[bid].bid = bid
         self:addChild(self.avatarPanel[bid])
 
@@ -72,10 +74,8 @@ function BanditClanMain:initialise()
         self.models[bid]:setGodMod(true)
         self.models[bid]:setInvisible(true)
         self.models[bid]:setGhostMode(true)
-        
-        if data.general then
-            local name = data.general.name
 
+        if data.general then
             if data.general.female then
                 self.models[bid]:setFemale(true)
             else
@@ -126,6 +126,10 @@ function BanditClanMain:initialise()
 
         self.avatarPanel[bid]:setCharacter(self.models[bid])
         i = i + 1
+        if i == 8 then
+            j = j + 1
+            i = 0
+        end
     end
 
 end

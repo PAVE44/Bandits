@@ -112,7 +112,7 @@ function BanditCreationMain:initialise()
     skinColorBtn.backgroundColor = {r = color.r, g = color.g, b = color.b, a = 1}
     self:addChild(skinColorBtn)
     self.skinColorButton = skinColorBtn
-    
+
     self.colorPickerSkin = ISColorPicker:new(0, 0, nil)
     self.colorPickerSkin:initialise()
     self.colorPickerSkin.keepOnScreen = true
@@ -192,7 +192,7 @@ function BanditCreationMain:initialise()
     rowY = rowY + BUTTON_HGT + 8
 
 	self.weapons = {}
-	
+
 	lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Primary Gun", 1, 1, 1, 1, UIFont.Small)
 	lbl:initialise()
 	lbl:instantiate()
@@ -255,7 +255,7 @@ function BanditCreationMain:initialise()
 
         for col, bodyLocation in pairs(group) do
             local x = clothingX + (col - 1) * (iconSize + 4) + 10
-            
+
             self.clothing[bodyLocation] = BanditItemDropBox:new(x, y, iconSize, iconSize, true, self, BanditCreationMain.addItem, BanditCreationMain.removeItem, BanditCreationMain.verifyItem, nil)
             self.clothing[bodyLocation]:initialise()
             self.clothing[bodyLocation]:setToolTip(true, bodyLocation)
@@ -474,6 +474,7 @@ function BanditCreationMain:loadConfig()
 				end
 			end
 		end
+        self:onClothingChanged()
 	end
 
 	if data.weapons then
@@ -485,9 +486,8 @@ function BanditCreationMain:loadConfig()
 			local item = BanditCompatibility.InstanceItem(data.weapons.secondary)
 			self.weapons.secondary:setStoredItem(item)
 		end
+        self:onClothingChanged()
 	end
-    self:onClothingChanged()
-
 end
 
 function BanditCreationMain:saveConfig()
