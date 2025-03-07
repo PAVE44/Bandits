@@ -114,7 +114,7 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             gy = ZombRand(gy - radius, gy + radius + 1)
         end
 
-        bandit.outfit = "Naked"
+        -- bandit.outfit = "Naked"
         local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, bandit.outfit, bandit.femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, bandit.health)
         for i=0, zombieList:size()-1 do
             local zombie = zombieList:get(i)

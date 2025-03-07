@@ -9,7 +9,8 @@
 BanditMenu = BanditMenu or {}
 
 function BanditMenu.BanditCreator(player)
-    local modal = BanditCreationMain:new(200, 100, 1520, 880)
+    -- local modal = BanditCreationMain:new(200, 100, 1520, 880)
+    local modal = BanditClanMain:new(200, 100, 1520, 880)
     modal:initialise()
     modal:addToUIManager()
 end
