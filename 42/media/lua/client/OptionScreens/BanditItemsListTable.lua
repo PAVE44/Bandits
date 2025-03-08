@@ -15,7 +15,7 @@ local LABEL_HGT = FONT_HGT_MEDIUM + 6
 function BanditItemsListTable:initialise()
     ISPanel.initialise(self);
 
-    local btnCancelWidth = getTextManager():MeasureStringX(UIFont.Small, "Close") + 64
+    local btnCancelWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Close") + 64
     local btnCancelX = math.floor(self:getWidth() / 2) - (btnCancelWidth / 2)
     
     self.cancel = ISButton:new(btnCancelX, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnCancelWidth, BUTTON_HGT, "Close", self, BanditItemsListTable.onClick)

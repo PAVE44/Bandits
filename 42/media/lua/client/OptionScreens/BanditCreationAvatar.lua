@@ -19,6 +19,11 @@ function BanditCreationAvatar:createChildren()
 	self.avatarPanel.borderColor = {r=1, g=1, b=1, a=0.0}
 	self:addChild(self.avatarPanel)
 
+	self.avatarPanel:setState("idle")
+	self.avatarPanel:setDirection(IsoDirections.S)
+	self.avatarPanel:setIsometric(false)
+	self.avatarPanel:setDoRandomExtAnimations(true)
+
 	if self.clickable then
 		if self.name then
 			local x = (self.width / 2) + (getTextManager():MeasureStringX(UIFont.Small, self.name) / 2)
@@ -30,8 +35,9 @@ function BanditCreationAvatar:createChildren()
 			
 			self:addChild(nameBox)
 		end
-		self.clickButton = ISButton:new(2, 2, self.width - 4, self.height - 4, "", self, self.onClick)
-		self.clickButton.internal = self.bid
+		self.clickButton = BanditButtonCounter:new(2, 2, self.width - 4, self.height - 4, "", self, self.onClick, self.onRightClick)
+		self.clickButton.bid = self.bid
+		self.clickButton.cid = self.cid
 		self.clickButton.displayBackground = nil
 		self.clickButton.backgroundColor = {r=0, g=0, b=0, a=0.0}
 		self.clickButton:initialise()
@@ -40,12 +46,6 @@ function BanditCreationAvatar:createChildren()
 	end
 
 	if self.controls then
-		self.avatarPanel:setState("idle")
-		self.avatarPanel:setDirection(IsoDirections.S)
-		self.avatarPanel:setIsometric(false)
-		self.avatarPanel:setDoRandomExtAnimations(true)
-		self:setFacePreview(false)
-
 		self.turnLeftButton = ISButton:new(self.avatarPanel.x, self.avatarPanel:getBottom()-BUTTON_HGT, BUTTON_HGT, BUTTON_HGT, "", self, self.onTurnChar)
 		self.turnLeftButton.internal = "TURNCHARACTERLEFT"
 		self.turnLeftButton:initialise()
@@ -99,13 +99,36 @@ function BanditCreationAvatar:onMouseMoveOutside(dx, dy)
 	self.selected = false
 end
 
+function BanditCreationAvatar:onDelete(button)
+	if button.internal == "YES" then
+		BanditCustom.Load()
+		BanditCustom.Delete(self.bid)
+		BanditCustom.Save()
+		self.parent:onAvatarListChange()
+	end
+end
+
 function BanditCreationAvatar:onClick(button)
-	local modal = BanditCreationMain:new(200, 100, 1520, 880)
-	modal.bid = button.internal
+	local modal = BanditCreationMain:new(500, 80, 1220, 900, self.bid, self.cid)
     modal:initialise()
     modal:addToUIManager()
+	self.parent:removeFromUIManager()
 	self.parent:close()
+end
 
+function BanditCreationAvatar:onRightClick(button)
+	if self.add then return end
+	local player = 0
+    local width = 380
+	local height = 120
+    local x = getPlayerScreenLeft(player) + (getPlayerScreenWidth(player) - width) / 2
+    local y = getPlayerScreenTop(player) + (getPlayerScreenHeight(player) - height) / 2
+
+	local modal = ISModalDialog:new(x, y, width, height, "Delete bandit \"" .. self.name .. "\" ?", true, self, BanditCreationAvatar.onDelete, player)
+    modal:initialise()
+    modal:addToUIManager()
+    modal:setAlwaysOnTop(true)
+    modal:bringToTop()
 end
 
 function BanditCreationAvatar:onTurnChar(button, x, y)
@@ -159,9 +182,11 @@ function BanditCreationAvatar:rescaleAvatarViewer()
 	self.animCombo:setY(self.avatarPanel:getBottom() + UI_BORDER_SPACING+2)
 end
 
-function BanditCreationAvatar:new(x, y, width, height)
+function BanditCreationAvatar:new(x, y, width, height, bid, cid)
 	local o = ISPanel.new(self, x, y, width, height)
-	o.borderColor = {r=1, g=1, b=1, a=0.25}
+	o.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+	o.bid = bid
+	o.cid = cid
 	o.direction = IsoDirections.E
 	return o
 end

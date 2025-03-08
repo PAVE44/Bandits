@@ -8,8 +8,8 @@ local BUTTON_HGT = FONT_HGT_SMALL + 6
 function BanditCreationMain:initialise()
     ISPanel.initialise(self)
 
-    local btnCancelWidth = getTextManager():MeasureStringX(UIFont.Small, "Cancel") + 64
-    local btnSaveWidth = getTextManager():MeasureStringX(UIFont.Small, "Save") + 64
+    local btnCancelWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Cancel") + 64
+    local btnSaveWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Save") + 64
     local btnCancelX = math.floor(self:getWidth() / 2) - ((btnCancelWidth + btnSaveWidth) / 2) - 4
     local btnCancelY = math.floor(self:getWidth() / 2) - ((btnCancelWidth + btnSaveWidth) / 2) + btnCancelWidth + 4
 
@@ -33,9 +33,9 @@ function BanditCreationMain:initialise()
 
     local topY = 60
     local iconSize = 40
-    local avatarWidth = 320
-    local avatarHeight = 640
-    self.avatarPanel = BanditCreationAvatar:new((self:getWidth() / 2) - (avatarWidth / 2), topY, avatarWidth, avatarHeight)
+    local avatarWidth = 360
+    local avatarHeight = 720
+    self.avatarPanel = BanditCreationAvatar:new(380, topY, avatarWidth, avatarHeight)
     self.avatarPanel.controls = true
     self.avatarPanel.clickable = false
     self.avatarPanel:noBackground()
@@ -49,6 +49,14 @@ function BanditCreationMain:initialise()
     self.model:setGodMod(true)
     self.model:setInvisible(true)
     self.model:setGhostMode(true)
+    self.model:setFemale(false)
+    self.model:getHumanVisual():setSkinTextureIndex(0)
+    self.model:getHumanVisual():setHairModel(BanditCustom.GetHairStyle(false, 1))
+    self.model:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
+    self.model:Kill(nil)
+    self.model:removeFromSquare()
+    self.model:removeFromWorld()
+    self.model:removeSaveFile()
 
     -- self.avatarPanel:setSurvivorDesc(self.desc)
 
@@ -183,7 +191,7 @@ function BanditCreationMain:initialise()
 
     self:updateHairCombo()
 
-    -- WEAPONS
+    -- WEAPONS & AMMO
 
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Weapons", 1, 1, 1, 1, UIFont.Medium, false)
     lbl:initialise()
@@ -204,6 +212,19 @@ function BanditCreationMain:initialise()
 	self.weapons.primary.internal = "primary"
 	self.weapons.primary.mode = "weapons"
 	self:addChild(self.weapons.primary)
+
+    self.ammo = {}
+
+    self.ammo.primary = BanditButtonCounter:new(leftX + iconSize + 20, topY + rowY, iconSize, iconSize, "1", self, self.onClick, self.onRightClick)
+    self.ammo.primary.internal = "AMMO"
+    self.ammo.primary.slot = "primary"
+    self.ammo.primary.value = 1
+    self.ammo.primary.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self.ammo.primary:initialise()
+    self.ammo.primary:instantiate()
+    self.ammo.primary:setVisible(false)
+    self:addChild(self.ammo.primary)
+
 	rowY = rowY + iconSize + 4
 
 	lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Secondary Gun", 1, 1, 1, 1, UIFont.Small)
@@ -217,6 +238,17 @@ function BanditCreationMain:initialise()
 	self.weapons.secondary.internal = "secondary"
 	self.weapons.secondary.mode = "weapons"
 	self:addChild(self.weapons.secondary)
+
+    self.ammo.secondary = BanditButtonCounter:new(leftX + iconSize + 20, topY + rowY, iconSize, iconSize, "1", self, self.onClick, self.onRightClick)
+    self.ammo.secondary.internal = "AMMO"
+    self.ammo.secondary.slot = "secondary"
+    self.ammo.secondary.value = 1
+    self.ammo.secondary.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self.ammo.secondary:initialise()
+    self.ammo.secondary:instantiate()
+    self.ammo.secondary:setVisible(false)
+    self:addChild(self.ammo.secondary)
+
     rowY = rowY + iconSize + 4
 
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Melee", 1, 1, 1, 1, UIFont.Small)
@@ -230,29 +262,133 @@ function BanditCreationMain:initialise()
 	self.weapons.melee.internal = "melee"
 	self.weapons.melee.mode = "weapons"
 	self:addChild(self.weapons.melee)
-	rowY = rowY + iconSize + 4
+	rowY = rowY + iconSize + 18
 
+    -- CHARACTER
 
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Properties", 1, 1, 1, 1, UIFont.Medium, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+    rowY = rowY + BUTTON_HGT + 8
+
+    -- EXPERTISE
+
+    local expertiseList ={None = "No expertise",
+                          Assasin = "Will only apprach the player if unseen, can kill with a single knife stab, will not speak nor make walking noise.",
+                          Breaker = "Can easily break barricades and doors, carry extra tools",
+                          Electrician = "Can sabotage generators or other electrical equipment, can remove bulbs.",
+                          Cook = "Can steal or sabotage player crops, carry extra food.",
+                          Goblin = "Will plant waste, dirt or other inpurinities in player base.",
+                          Infected = "Can bite the player / invisible to zombies.",
+                          Mechanic = "Can sabotage cars and steal fuel, carry extra tools and gas carnister.",
+                          Medic = "Can heal himself or comrades, carry extra medical equipment.",
+                          Recon = "Can sprint very fast, has high endurance.",
+                          Thief = "Focues on stealing player items.",
+                          Repairman = "Will carry useful tools and items.",
+                          Tracker = "Can find player more easily, carry maps.",
+                          Trapper = "Will plant bear traps for player.",
+                          Traitor = "May pretend to be a friend.",
+                          Sacrificer = "Will explode when dying.",
+                          Zombiemaster = "Will bring zombies to player location but emiting loud sound."}
+
+    self.expertise = {}
+
+    for i=1, 3 do
+        lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Expertise " .. i, 1, 1, 1, 1, UIFont.Small, false)
+        lbl:initialise()
+        lbl:instantiate()
+        self:addChild(lbl)
+
+        self.expertise[i] = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onExpertiseSelected)
+        self.expertise[i]:initialise();
+        
+        for k, v in pairs(expertiseList) do
+            local option = {text=k, tooltip=v}
+            self.expertise[i]:addOption(option)
+        end
+        self.expertise[i].borderColor = {r=0.4, g=0.4, b=0.4, a=1};
+        self:addChild(self.expertise[i])
+        rowY = rowY + BUTTON_HGT + 8
+    end
+
+    -- SLIDERS
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Health", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.healthSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
+	self.healthSlider:initialise()
+	self.healthSlider:instantiate()
+	self.healthSlider:setValues(1.0, 9.0, 1, 2)
+	self.healthSlider:setCurrentValue(5, true)
+	self:addChild(self.healthSlider)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Strength", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.strengthSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
+	self.strengthSlider:initialise()
+	self.strengthSlider:instantiate()
+	self.strengthSlider:setValues(1.0, 9.0, 1, 2)
+	self.strengthSlider:setCurrentValue(5, true)
+	self:addChild(self.strengthSlider)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Endurance", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.enduranceSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
+	self.enduranceSlider:initialise()
+	self.enduranceSlider:instantiate()
+	self.enduranceSlider:setValues(1.0, 9.0, 1, 2)
+	self.enduranceSlider:setCurrentValue(5, true)
+	self:addChild(self.enduranceSlider)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Sight", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.sightSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
+	self.sightSlider:initialise()
+	self.sightSlider:instantiate()
+	self.sightSlider:setValues(1.0, 9.0, 1, 2)
+	self.sightSlider:setCurrentValue(5, true)
+	self:addChild(self.sightSlider)
+    rowY = rowY + BUTTON_HGT + 8
+    
+    
     -- CLOTHING
 
-    local clothingX = math.floor(self:getWidth() * 0.70)
+    local clothingX = 820
 
     local bodyLocations = {Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
-                           Face = {"Mask", "MaskEyes", "RightEye", "LeftEye"},
-                           Neck = {"Neck", "Necklace", "Scarf"},
+                           Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
+                           Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
                            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress"},
                            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
                            TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit"},
                            TopVest = {"TorsoExtraVest", "TorsoExtraVestBullet", "VestTexture", "Sweater", "SweaterHat"},
                            Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
+                           TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left"},
+                           Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
                            Bags = {"FannyPackFront", "FannyPackBack", "Webbing"},
                            Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
-                           Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
                            Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
+                           BottomArmor = {"Thigh_Right", "Thigh_Left", "Calf_Right", "Calf_Left"},
                            Shoes = {"Shoes"}
      }
 
-    lbl = ISLabel:new(clothingX - UI_BORDER_SPACING, topY, BUTTON_HGT, "Outfit", 1, 1, 1, 1, UIFont.Medium, false)
+    lbl = ISLabel:new(clothingX, topY, BUTTON_HGT, "Outfit", 1, 1, 1, 1, UIFont.Medium, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
@@ -302,14 +438,32 @@ function BanditCreationMain:onClothingChanged()
     end
 
     for _, slot in pairs({"primary", "secondary", "melee"}) do
+        if self.ammo[slot] then
+            self.ammo[slot]:setVisible(false)
+        end
         local weapon = self.weapons[slot].storedItem
         if weapon then
             local attachmentType = weapon:getAttachmentType()
+            -- local magazineType = weapon:getMagazineType()
+            local ammoType = weapon:getAmmoType()
+            local ammoBoxType = weapon:getAmmoBox()
+            local ammoBox
+            if ammoType and ammoBoxType then
+                local mod = ammoType:match("([^%.]+)")
+                ammoBoxType = mod .. "." .. ammoBoxType
+                ammoBox = BanditCompatibility.InstanceItem(ammoBoxType)
+            end
+            
             for _, def in pairs(ISHotbarAttachDefinition) do
                 if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
                     for k, v in pairs(def.attachments) do
                         if k == attachmentType then
                             self.model:setAttachedItem(v, weapon)
+                            if self.ammo[slot] then
+                                self.ammo[slot].textureBackground = ammoBox:getTexture()
+                                self.ammo[slot]:setTitle(tostring(tostring(self.ammo[slot].value)))
+                                self.ammo[slot]:setVisible(true)
+                            end
                             break
                         end
                     end
@@ -366,6 +520,7 @@ function BanditCreationMain:onGenderSelected(combo)
         -- self.avatar:setFemale(false)
         self.model:setFemale(false)
         self.model:getHumanVisual():removeBodyVisualFromItemType("Base.F_Hair_Stubble")
+        self.model:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
     end
     self.avatarPanel:setCharacter(self.model)
     self:updateHairCombo()
@@ -443,12 +598,33 @@ function BanditCreationMain:onClick(button)
 
     if button.internal == "SAVE" then
         self:saveConfig()
+        local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
+        modal:initialise()
+        modal:addToUIManager()
+        self:removeFromUIManager()
+        self:close()
+    elseif button.internal == "CANCEL" then
+        local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
+        modal:initialise()
+        modal:addToUIManager()
+        self:removeFromUIManager()
+        self:close()
+    elseif button.internal == "AMMO" then
+        button.value = button.value + 1
+        button:setTitle(tostring(button.value))
     end
     
-    local modal = BanditClanMain:new(200, 100, 1520, 880)
-    modal:initialise()
-    modal:addToUIManager()
-	self:close()
+    
+end
+
+function BanditCreationMain:onRightClick(button)
+
+    if button.internal == "AMMO" then
+        button.value = button.value - 1
+        button:setTitle(tostring(button.value))
+    end
+    
+    
 end
 
 function BanditCreationMain:update()
@@ -464,6 +640,14 @@ function BanditCreationMain:loadConfig()
     BanditCustom.Load()
 
     local data = BanditCustom.Get(self.bid)
+    if not data then 
+        self.genderCombo.selected = 2
+        self.colorPickerSkin.index = 1
+        self.hairTypeCombo.selected = 1
+        self.beardTypeCombo.selected = 1
+        self.colorPickerHair.index = 1
+        return
+    end
 
 	if data.general then
 		self.nameEntry:setText(data.general.name)
@@ -475,19 +659,43 @@ function BanditCreationMain:loadConfig()
 		end
 		self:onGenderSelected(self.genderCombo)
 
-		self.colorPickerSkin.index = data.general.skin
-		local color = self.skinColors[data.general.skin]
-		self:onSkinColorPicked(color)
+        if data.general.skin then
+            self.colorPickerSkin.index = data.general.skin
+            local color = self.skinColors[data.general.skin]
+            self:onSkinColorPicked(color)
+        end
 
-		self.hairTypeCombo.selected = data.general.hairType
-		self:onHairTypeSelected(self.hairTypeCombo)
+        if data.general.hairType then
+            self.hairTypeCombo.selected = data.general.hairType
+            self:onHairTypeSelected(self.hairTypeCombo)
+        end
 
-		self.beardTypeCombo.selected = data.general.beardType
-		self:onBeardTypeSelected(self.beardTypeCombo)
+        if data.general.beardType then
+            self.beardTypeCombo.selected = data.general.beardType
+            self:onBeardTypeSelected(self.beardTypeCombo)
+        end
 
-		self.colorPickerHair.index = data.general.hairColor
-		local color = self.hairColors[data.general.hairColor]
-		self:onHairColorPicked(color)
+		if data.general.hairColor then
+            self.colorPickerHair.index = data.general.hairColor
+            local color = self.hairColors[data.general.hairColor]
+            self:onHairColorPicked(color)
+        end
+
+        if data.general.health then
+            self.healthSlider:setCurrentValue(data.general.health)
+        end
+
+        if data.general.strength then
+            self.strengthSlider:setCurrentValue(data.general.strength)
+        end
+
+        if data.general.endurance then
+            self.enduranceSlider:setCurrentValue(data.general.endurance)
+        end
+
+        if data.general.sight then
+            self.sightSlider:setCurrentValue(data.general.sight)
+        end
 	end
 
 	if data.clothing then
@@ -507,6 +715,11 @@ function BanditCreationMain:loadConfig()
             if data.weapons[slot] then
                 local item = BanditCompatibility.InstanceItem(data.weapons[slot])
                 self.weapons[slot]:setStoredItem(item)
+                if data.ammo then
+                    if self.ammo[slot] then
+                        self.ammo[slot].value = data.ammo[slot]
+                    end
+                end
             end
         end
         self:onClothingChanged()
@@ -514,9 +727,10 @@ function BanditCreationMain:loadConfig()
 end
 
 function BanditCreationMain:saveConfig()
-    local data = BanditCustom.Get(self.bid)
+    local data = BanditCustom.Create(self.bid)
 
 	data.general = {}
+    data.general.cid = self.cid
     data.general.name = self.nameEntry:getText()
 
     if self.genderCombo.selected == 1 then
@@ -530,6 +744,11 @@ function BanditCreationMain:saveConfig()
     data.general.beardType = self.beardTypeCombo.selected
     data.general.hairColor = self.colorPickerHair.index
 
+    data.general.health = self.healthSlider:getCurrentValue()
+    data.general.strength = self.strengthSlider:getCurrentValue()
+    data.general.endurance = self.enduranceSlider:getCurrentValue()
+    data.general.sight = self.sightSlider:getCurrentValue()
+
     data.clothing = {}
     for _, dropbox in pairs(self.clothing) do
         local item = dropbox:getStoredItem()
@@ -539,17 +758,21 @@ function BanditCreationMain:saveConfig()
     end
 
 	data.weapons = {}
+    data.ammo = {}
     for _, slot in pairs({"primary", "secondary", "melee"}) do
         local item = self.weapons[slot]:getStoredItem()
         if item then
             data.weapons[slot] = item:getFullType()
+            if self.ammo[slot] then
+                data.ammo[slot] = tonumber(self.ammo[slot].value)
+            end
         end
 	end
 
     BanditCustom.Save()
 end
 
-function BanditCreationMain:new(x, y, width, height)
+function BanditCreationMain:new(x, y, width, height, bid, cid)
     local o = {}
     x = getCore():getScreenWidth() / 2 - (width / 2);
     y = getCore():getScreenHeight() / 2 - (height / 2);
@@ -560,9 +783,9 @@ function BanditCreationMain:new(x, y, width, height)
     o.backgroundColor = {r=0, g=0, b=0, a=0.8};
     o.width = width;
     o.height = height;
+    o.bid = bid
+    o.cid = cid
     o.moveWithMouse = true;
-    o.bid = "1"
-    -- o.bid = bid
     BanditCreationMain.instance = o;
     ISDebugMenu.RegisterClass(self);
     return o;

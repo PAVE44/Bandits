@@ -52,8 +52,9 @@ local loadFile = function(dataKey, fileName)
             break
         end
 
-        if line:match("%[([%w]+)%]") then
-            id = line:match("%[([%w]+)%]")
+        -- guid match
+        if line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]") then
+            id = line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]")
         end
 
         -- format:
@@ -97,6 +98,19 @@ BanditCustom.Save = function()
 end
 
 -- clan methods
+
+BanditCustom.ClanCreate = function(cid)
+    local data = {}
+    data.general = {}
+
+    BanditCustom.clanData[cid] = data
+    return BanditCustom.clanData[cid]
+end
+
+BanditCustom.Delete = function(cid)
+    BanditCustom.clanData[cid] = nil
+end
+
 BanditCustom.ClanGetAll = function()
     return BanditCustom.clanData
 end
@@ -106,6 +120,39 @@ BanditCustom.ClanGet = function(cid)
 end
 
 -- bandit methods
+BanditCustom.Create = function(bid)
+    local data = {}
+    data.general = {}
+    data.general.female = false
+    data.general.skin = 1
+    data.general.hairType = 1
+    data.general.beardType = 1
+    data.general.hairColor = 1
+    data.clothing = {}
+    data.weapons = {}
+    data.ammo = {}
+
+    BanditCustom.banditData[bid] = data
+    return BanditCustom.banditData[bid]
+end
+
+BanditCustom.Delete = function(bid)
+    BanditCustom.banditData[bid] = nil
+end
+
+BanditCustom.GetNextId = function(bid)
+    --[[
+    local newid = 0
+    for id, _ in pairs(BanditCustom.banditData) do
+        if id > newid then
+            newid = id
+        end
+    end
+    return newid + 1
+    ]]
+    return getRandomUUID()
+end
+
 BanditCustom.GetAll = function()
     return BanditCustom.banditData
 end

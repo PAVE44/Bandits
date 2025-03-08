@@ -213,10 +213,7 @@ protection body crafter bone
         BodyLocation = ShoulderpadRight,
 		BodyLocation = Thigh_Right,
 		BodyLocation = Thigh_Left,
-		BodyLocation = Hands,
 		BodyLocation = Gorget,
-		BodyLocation = MaskEyes,
-		BodyLocation = Necklace_Long,
 
 ptrotection body bulletvest
 
