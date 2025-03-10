@@ -403,7 +403,9 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     
     BanditCompatibility.StartMuzzleFlash(shooter)
     
-    shooter:playSound(weapon.shotSound)
+    local item = BanditCompatibility.InstanceItem(weapon.name)
+
+    shooter:playSound(item:getSwingSound())
 
     --[[local te = FBORenderTracerEffects.getInstance()
     te:addEffect(shooter, 24)
@@ -446,7 +448,6 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                         local res = ManageLineOfFire(shooter, victim)
                         local finalCheck = BanditUtils.LineClear(shooter, victim)
                         if res and finalCheck then
-                            local item = BanditCompatibility.InstanceItem(weapon.name)
                             Hit(shooter, item, victim)
                         end
                         zombie:setBumpDone(true)

@@ -77,6 +77,153 @@ BanditServer.Commands.AddEffect = function(player, args)
     sendServerCommand('BanditEffects', 'Add', args)
 end
 
+BanditServer.Commands.SpawnCustom = function(player, args)
+    local radius = 0.5
+    local knockedDown = false
+    local crawler = false
+    local fallOnFront = false
+    local fakeDead = false
+    local invulnerable = false
+    local sitting = false
+
+    local size = args.size
+    local cid = args.cid
+    local gx = args.x or player:getX()
+    local gy = args.y or player:getY()
+    local gz = args.z or player:getZ()
+
+    local gmd = GetBanditModData()
+    local pid = BanditUtils.GetCharacterID(player)
+
+    BanditCustom.Load()
+
+    local banditOptions = BanditCustom.GetFromClan(cid)
+
+    if not banditOptions then return end
+
+    local keys = {}
+    for key in pairs(banditOptions) do
+        table.insert(keys, key)
+    end
+
+    for i = #keys, 2, -1 do
+        local j = ZombRand(i) + 1
+        keys[i], keys[j] = keys[j], keys[i]
+    end
+
+    local banditSelected = {}
+    for i = 1, math.min(size, #keys) do
+        local key = keys[i]
+        banditSelected[key] = banditOptions[key]
+    end
+
+    for bid, bandit in pairs(banditSelected) do
+        local femaleChance = bandit.general.female and 100 or 0
+        local health = 1 -- will be updated later
+
+        local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, "Naked", femaleChance, 
+                                                                  crawler, fallOnFront, fakeDead, 
+                                                                  knockedDown, invulnerable, sitting,
+                                                                  health)
+        for i=0, zombieList:size()-1 do
+            local zombie = zombieList:get(i)
+            local id = BanditUtils.GetCharacterID(zombie)
+
+            local brain = {}
+
+            -- auto-generated properties 
+            brain.id = id
+            brain.master = pid
+            brain.inVehicle = false
+            brain.fullname = BanditNames.GenerateName(bandit.general.female)
+            brain.voice = Bandit.PickVoice(zombie)
+
+            brain.born = getGameTime():getWorldAgeHours()
+            brain.bornCoords = {}
+            brain.bornCoords.x = gx
+            brain.bornCoords.y = gy
+            brain.bornCoords.z = gz
+
+            brain.stationary = false
+            brain.sleeping = false
+            brain.aiming = false
+            brain.moving = false
+            brain.endurance = 1.00
+            brain.speech = 0.00
+            brain.sound = 0.00
+            brain.infection = 0
+
+            -- random DNA
+            local dna = {}
+            dna.slow = BanditUtils.CoinFlip()
+            dna.blind = BanditUtils.CoinFlip()
+            dna.sneak = BanditUtils.CoinFlip()
+            dna.unfit = BanditUtils.CoinFlip()
+            dna.coward = BanditUtils.CoinFlip()
+            brain.dna = dna
+
+            -- properties taken from args
+            brain.hostile = args.hostile and true or true
+            brain.permanent = args.permanent and true or false
+            brain.key = args.key
+
+            brain.program = {}
+            brain.program.name = args.program or "Bandit"
+            brain.program.stage = "Prepare"
+
+            -- properties taken from bandit custom profile
+            brain.cid = bandit.general.cid
+            brain.female = bandit.general.female or false
+            brain.skin = bandit.general.skin or 1
+            brain.hairType = bandit.general.hairType or 1
+            brain.hairColor = bandit.general.hairColor or 1
+            brain.beardType = bandit.general.beardType or 1
+            brain.eatBody = false
+
+            local health = bandit.general.health or 5
+            brain.health = BanditUtils.Lerp(health, 1, 9, 1, 2.6)
+
+            local accuracyBoost = bandit.general.sight or 5
+            brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, 0.5, 1.5)
+
+            local enduranceBoost = bandit.general.endurance or 5
+            brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.5, 1.5)
+
+            local strengthBoost = bandit.general.strength or 5
+            brain.strengthBoost = BanditUtils.Lerp(strengthBoost, 1, 9, 0.5, 1.5)
+            
+            brain.weapons = {}
+            if bandit.weapons then
+                brain.weapons.melee = bandit.weapons.melee
+
+                for _, slot in pairs({"primary", "secondary"}) do
+                    brain.weapons[slot] = {}
+                    brain.weapons[slot].bulletsLeft = 0
+                    brain.weapons[slot].magCount = 0
+                    if bandit.weapons[slot] and bandit.ammo[slot] then
+                        brain.weapons[slot] = BanditWeapons.Make(bandit.weapons[slot], bandit.ammo[slot])
+                    end
+                end
+            end
+
+            brain.clothing = bandit.clothing
+
+            brain.loot = {}
+            brain.inventory = {}
+            brain.tasks = {}
+
+            gmd.Queue[id] = brain
+
+            zombie:setHealth(health)
+            zombie:setVariable("Bandit", false)
+            zombie:setPrimaryHandItem(nil)
+            zombie:setSecondaryHandItem(nil)
+            zombie:clearAttachedItems()
+            zombie:getModData().IsBandit = true
+        end
+    end
+end
+
 BanditServer.Commands.SpawnGroup = function(player, event)
 
     local getSkinTexture = function(female, id)

@@ -184,21 +184,64 @@ local function ApplyVisuals(bandit, brain)
     local skin = banditVisuals:getSkinTexture()
     if not skin or skin:find("^FemaleBody") or skin:find("^MaleBody") then return end
 
-    -- Apply bandit visual modifications
-    if brain.skinTexture then 
-        banditVisuals:setSkinTextureName(brain.skinTexture)
-    end
-    if brain.hairStyle then 
-        banditVisuals:setHairModel(brain.hairStyle) 
-    end
-    if brain.hairColor then
-        banditVisuals:setHairColor(ImmutableColor.new(brain.hairColor.r, brain.hairColor.g, brain.hairColor.b))
-    end
-    if brain.beardStyle then 
-        banditVisuals:setBeardModel(brain.beardStyle)
-    end
-    if brain.beardColor then
-        banditVisuals:setBeardColor(ImmutableColor.new(brain.beardColor.r, brain.beardColor.g, brain.beardColor.b))
+    local itemVisuals = bandit:getItemVisuals()
+
+    if brain.cid then
+        banditVisuals:setSkinTextureName(BanditCustom.GetSkinTexture(brain.female, brain.skin))
+        banditVisuals:setHairModel(BanditCustom.GetHairStyle(brain.female, brain.hairType)) 
+        banditVisuals:setBeardModel(BanditCustom.GetBeardStyle(brain.female, brain.beardType)) 
+
+        local hairColor = BanditCustom.GetHairColor(brain.hairColor)
+        local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
+        banditVisuals:setHairColor(icolor) 
+        banditVisuals:setBeardColor(icolor) 
+
+        for bodyLocation, itemType in pairs(brain.clothing) do
+            local item = BanditCompatibility.InstanceItem(itemType)
+            local clothingItem = item:getClothingItem()
+            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+        end
+
+        for _, slot in pairs({"primary", "secondary", "melee"}) do
+
+            if brain.weapons[slot] then
+                local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
+
+                if weapon then
+                    local attachmentType = weapon:getAttachmentType()
+                    
+                    for _, def in pairs(ISHotbarAttachDefinition) do
+                        if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
+                            if def.attachments then
+                                for k, v in pairs(def.attachments) do
+                                    if k == attachmentType then
+                                        bandit:setAttachedItem(v, weapon)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+    else
+        if brain.skinTexture then 
+            banditVisuals:setSkinTextureName(brain.skinTexture)
+        end
+        if brain.hairStyle then 
+            banditVisuals:setHairModel(brain.hairStyle) 
+        end
+        if brain.hairColor then
+            banditVisuals:setHairColor(ImmutableColor.new(brain.hairColor.r, brain.hairColor.g, brain.hairColor.b))
+        end
+        if brain.beardStyle then 
+            banditVisuals:setBeardModel(brain.beardStyle)
+        end
+        if brain.beardColor then
+            banditVisuals:setBeardColor(ImmutableColor.new(brain.beardColor.r, brain.beardColor.g, brain.beardColor.b))
+        end
     end
 
     banditVisuals:randomDirt()
@@ -213,7 +256,7 @@ local function ApplyVisuals(bandit, brain)
     end
 
     -- Cleanup item visuals
-    local itemVisuals = bandit:getItemVisuals()
+    
     for i = 0, itemVisuals:size() - 1 do
         local item = itemVisuals:get(i)
         if item then
@@ -783,7 +826,33 @@ local function ManageCombat(bandit)
     local weapons = brain.weapons
     local canMelee = Bandit.Can(bandit, "melee")
     local canShoot = Bandit.Can(bandit, "shoot")
-    
+    local isMeleeEquipped = bandit:isPrimaryEquipped(weapons.melee) or false
+    local isPrimaryEquipped = bandit:isPrimaryEquipped(weapons.primary.name) or false
+    local isSecondaryEquipped = bandit:isPrimaryEquipped(weapons.secondary.name) or false
+
+    -- MANAGE RELOAD BEFORE ANYTHNG ELSE
+    if not Bandit.HasActionTask(bandit) then
+        for _, slot in pairs({"primary", "secondary"}) do
+            if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft == 0 and weapons[slot].magCount > 0) or
+               (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft == 0 and weapons[slot].ammoCount > 0) or 
+                weapons[slot].racked == false then 
+                
+                if bandit:isPrimaryEquipped(weapons[slot].name) then
+                    Bandit.ClearTasks(bandit)
+                    Bandit.Say(bandit, "RELOADING")
+                    local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
+                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                    return tasks
+                else
+                    Bandit.ClearTasks(bandit)
+                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
+                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                    return tasks
+                end
+            end
+        end
+    end
+
     local bestDist = 40
     local enemyCharacter
     local combat, firing, shove = false, false, false
@@ -823,10 +892,10 @@ local function ManageCombat(bandit)
                         end
 
                         --determine if bandit will be in shooting mode
-                        if canShoot then
-                            if weapons.primary and (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < rifleRange then
+                        if canShoot and not Bandit.IsOutOfAmmo(bandit) then
+                            if isPrimaryEquipped and dist < rifleRange then
                                 firing = true
-                            elseif weapons.secondary and (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < pistolRange then
+                            elseif isSecondaryEquipped and dist < pistolRange then
                                 firing = true
                             end
                         end
@@ -872,10 +941,10 @@ local function ManageCombat(bandit)
                                 end
 
                                 --determine if bandit will be in shooting mode
-                                if canShoot then
-                                    if weapons.primary and  (weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0) and dist < rifleRange then 
+                                if canShoot and not Bandit.IsOutOfAmmo(bandit) then
+                                    if isPrimaryEquipped and dist < rifleRange then
                                         firing = true
-                                    elseif weapons.secondary and  (weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0) and dist < pistolRange then
+                                    elseif isSecondaryEquipped and dist < pistolRange then
                                         firing = true
                                     end
                                 end
@@ -886,6 +955,7 @@ local function ManageCombat(bandit)
             end
         end
     end
+
 
     if shove then
         if not Bandit.HasTaskType(bandit, "Shove") then
@@ -908,12 +978,10 @@ local function ManageCombat(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
 
-            if not bandit:isPrimaryEquipped(weapons.melee) then
+            if not isMeleeEquipped then
                 local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
                 for _, t in pairs(stasks) do table.insert(tasks, t) end
-            end
-
-            if bandit:isFacingObject(enemyCharacter, 0.5) then
+            elseif bandit:isFacingObject(enemyCharacter, 0.5) then
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
                 local task = {action="Hit", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
@@ -928,7 +996,6 @@ local function ManageCombat(bandit)
             Bandit.Say(bandit, "DEATH")
         end
 
-
     elseif firing then
         if not Bandit.HasActionTask(bandit) then
             Bandit.ClearTasks(bandit)
@@ -939,30 +1006,22 @@ local function ManageCombat(bandit)
 
                 if bandit:isFacingObject(enemyCharacter, 0.5) then
                     for _, slot in pairs({"primary", "secondary"}) do
-                        if weapons[slot].name and (weapons[slot].bulletsLeft > 0 or weapons[slot].magCount > 0) then
+                        if weapons[slot].name and weapons[slot].bulletsLeft > 0 then
                             if not bandit:isPrimaryEquipped(weapons[slot].name) then
                                 Bandit.Say(bandit, "SPOTTED")
 
                                 local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
-                            end
 
-                            if not Bandit.IsAim(bandit) then
+                            elseif not Bandit.IsAim(bandit) then
                                 local stasks = BanditPrograms.Weapon.Aim(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
-                            end
 
-                            if weapons[slot].bulletsLeft > 0 then
+                            elseif weapons[slot].bulletsLeft > 0 then
                                 local stasks = BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
 
-                            elseif weapons[slot].magCount > 0 then
-                                Bandit.Say(bandit, "RELOADING")
-
-                                local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
-                                for _, t in pairs(stasks) do table.insert(tasks, t) end
                             end
-                            -- Bandit.SetWeapons(bandit, weapons)
                             break
                         end
                     end
@@ -1162,9 +1221,9 @@ local function ProcessTask(bandit, task)
     if not task.state then task.state = "NEW" end
 
     if task.state == "NEW" then
-        
-        if not task.time then task.time = 1000 end
 
+        if not task.time then task.time = 1000 end
+        print (task.action)
         if task.action ~= "Shoot" and task.action ~= "Aim" then
             Bandit.SetAim(bandit, false)
         end
@@ -1197,7 +1256,7 @@ local function ProcessTask(bandit, task)
         if task.anim then
             bandit:setBumpType(task.anim)
         end
-        
+
         local done = ZombieActions[task.action].onStart(bandit, task)
 
         if done then 

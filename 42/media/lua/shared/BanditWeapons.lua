@@ -4,14 +4,79 @@ BanditWeapons = BanditWeapons or {}
 
 BanditWeapons.MakeHandgun = function(name, magName, magSize, shotSound, shotDelay) 
     local handgun = {}
+    handgun.type = "mag"
+    handgun.clipIn = true
+    handgun.racked = false
     handgun.name = name
     handgun.magName = magName
     handgun.magSize = magSize
     handgun.bulletsLeft = magSize
-    handgun.shotSound = shotSound
-    handgun.shotDelay = shotDelay
 
     return handgun
+end
+
+BanditWeapons.Make = function(itemType, boxCount)
+
+    -- for now, harcoded
+    local box2ammo = {}
+    box2ammo["Base.ShotgunShellsBox"] = 25
+    box2ammo["Base.556Box"] = 50
+    box2ammo["Base.223Bullets"] = 50
+    box2ammo["Base.308Bullets"] = 20
+    box2ammo["Base.Bullets9mm"] = 50
+    box2ammo["Base.Bullets45"] = 50
+    box2ammo["Base.Bullets38"] = 50
+    box2ammo["Base.Bullets44"] = 20
+
+    local weapon = BanditCompatibility.InstanceItem(itemType)
+    if not weapon then return end
+
+    local ammoType = weapon:getAmmoType()
+    if not ammoType then return end 
+
+    local boxSize = 20
+    if box2ammo[ammoType] then
+        boxSize = box2ammo[ammoType]
+    end
+
+    local ammoBoxType = weapon:getAmmoBox()
+    if not ammoBoxType then return end
+
+    local ret = {}
+    ret.name = itemType
+    ret.racked = false
+
+    -- getAmmoBox returns type, not fullType
+    -- so we need to fix this
+    -- assume that ammo box type is from the same module as the ammo
+    local mod = ammoType:match("([^%.]+)")
+    ammoBoxType = mod .. "." .. ammoBoxType
+
+    if weapon:usesExternalMagazine() then
+        local magazineType = weapon:getMagazineType()
+        if magazineType then
+            local magazine = BanditCompatibility.InstanceItem(magazineType)
+            if magazine then
+                local magSize = magazine:getMaxAmmo()
+                local magCount = math.floor(boxCount * boxSize / magSize) - 1
+                ret.type = "mag"
+                ret.bulletsLeft = magSize
+                ret.magSize = magSize
+                ret.magCount = magCount
+                ret.magName = magazineType
+                ret.clipIn = true
+            end
+        end
+    else
+        local ammoSize = weapon:getMaxAmmo()
+        ret.type = "nomag"
+        ret.bulletsLeft = ammoSize
+        ret.ammoSize = ammoSize
+        ret.ammoCount = boxCount * boxSize - ammoSize
+        ret.ammoName = ammoType
+    end
+
+    return ret
 end
 
 BanditWeapons.GetPrimary = function()

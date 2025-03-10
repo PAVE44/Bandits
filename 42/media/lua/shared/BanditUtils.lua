@@ -633,6 +633,10 @@ function BanditUtils.CoinFlip()
     end
 end
 
+function BanditUtils.Lerp(x, min1, max1, min2, max2)
+    return min2 + ((x - min1) / (max1 - min1)) * (max2 - min2)
+end
+
 -- deterministic rand for all clients
 function BanditUtils.BanditRand(n)
     local a = 1664525

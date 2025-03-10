@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
-	<m_Name>ZSAimPistol</m_Name>
-	<m_AnimName>Bob_IdleAimHandgun</m_AnimName>
-	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_Name>ZSRackShotgun</m_Name>
+	<m_AnimReverse>true</m_AnimReverse>
+	<m_AnimName>Bob_Reload_Shotgun_Rack</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_Looped>false</m_Looped>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-	<m_BlendTime>0.35</m_BlendTime>
-	<m_BlendOutTime>1.25</m_BlendOutTime>
+	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+	<m_SpeedScale>ReloadSpeed</m_SpeedScale>
+	<m_BlendTime>0.20</m_BlendTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>AimPistol</m_StringValue>
+		<m_StringValue>RackShotgun</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>

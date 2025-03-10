@@ -6,6 +6,7 @@
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 	<m_BlendTime>0.35</m_BlendTime>
+	<m_BlendOutTime>1.25</m_BlendOutTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>

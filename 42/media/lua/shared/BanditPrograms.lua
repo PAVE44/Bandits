@@ -61,9 +61,8 @@ BanditPrograms.Weapon = BanditPrograms.Weapon or {}
 BanditPrograms.Weapon.Switch = function(bandit, itemName)
 
     local tasks = {}
-    bandit:clearAttachedItems()
 
-    -- check what is equippped that needs to be deattached
+    -- check what is equipped that needs to be deattached
     local old = bandit:getPrimaryHandItem()
     if old then
         local task = {action="Unequip", time=100, itemPrimary=old:getFullType()}
@@ -132,7 +131,7 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
-    local firingtime = weapon.shotDelay + math.floor(dist ^ 1.1)
+    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1)
     if Bandit.IsDNA(bandit, "slow") then
         firingtime = firingtime + 3
     end
@@ -176,21 +175,71 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
 
-    local soundEject
-    local soundInsert
-    if slot == "primary" then
-        soundEject = "M14EjectAmmo"
-        soundInsert = "M14InsertAmmo"
-    else
-        soundEject = "M9EjectAmmo"
-        soundInsert = "M9InsertAmmo"
+    local primaryItem = BanditCompatibility.InstanceItem(weapon.name)
+    local reloadType = primaryItem:getWeaponReloadType()
+    local magazineType = primaryItem:getMagazineType()
+    local unloadSound = primaryItem:getEjectAmmoSound()
+    local loadSound = primaryItem:getInsertAmmoSound()
+    local rackSound = primaryItem:getRackSound()
+
+    local clipMode
+    local unloadAnim
+    local loadAnim
+    local rackAnim
+
+    if reloadType == "boltaction" then
+        clipMode = true
+        unloadAnim = "UnloadRifle"
+        loadAnim = "LoadRifle"
+        rackAnim = "RackRifle"
+    elseif reloadType == "boltactionnomag" then
+        clipMode = false
+        loadAnim = "LoadShotgun"
+        rackAnim = "RackRifle"
+    elseif reloadType == "shotgun" then
+        clipMode = false
+        loadAnim = "LoadShotgun"
+        rackAnim = "RackShotgun"
+    elseif reloadType == "doublebarrelshotgun" then
+        clipMode = false
+        loadAnim = "LoadDBShotgun"
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "doublebarrelshotgunsawn" then
+        clipMode = false
+        loadAnim = "LoadDBShotgun"
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "handgun" then
+        clipMode = true
+        unloadAnim = "UnLoadPistol"
+        loadAnim = "LoadPistol"
+        rackAnim = "RackPistol"
+    elseif reloadType == "revolver" then
+        clipMode = false
+        loadAnim = "LoadRevolver"
+        rackAnim = "RackRevolver"
     end
 
-    local task = {action="Drop", itemType=weapon.magName, anim="UnloadRifle", sound=soundEject, time=90}
-    table.insert(tasks, task)
-
-    local task = {action="Reload", anim="ReloadRifle", slot=slot, sound=soundInsert, time=90}
-    table.insert(tasks, task)
+    if weapon.bulletsLeft == 0 then
+        if clipMode then 
+            if weapon.clipIn then
+                local task = {action="Unload", slot=slot, drop=magazineType, anim=unloadAnim, sound=unloadSound, time=90}
+                table.insert(tasks, task)
+                return tasks
+            else
+                local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+                table.insert(tasks, task)
+                return tasks
+            end
+        else
+            local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+            table.insert(tasks, task)
+            return tasks
+        end
+    elseif not weapon.racked then
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        table.insert(tasks, task)
+        return tasks
+    end
 
     return tasks
 end
@@ -305,8 +354,6 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
                                 -- found gun
                                 local weaponMagName = v.magName
                                 local weaponMagSize = v.magSize
-                                local weaponShotSound = v.shotSound
-                                local weaponShotDelay = v.shotDelay
 
                                 -- now find mags in the same container
                                 local weaponBullets = 0
@@ -355,8 +402,6 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
                                         toAdd[slot].name = weaponName
                                         toAdd[slot].magSize = weaponMagSize
                                         toAdd[slot].magName = weaponMagName
-                                        toAdd[slot].shotSound = weaponShotSound
-                                        toAdd[slot].shotDelay = weaponShotDelay
                                         toAdd[slot].magCount = math.floor(weaponBullets / weaponMagSize)
                                         toAdd[slot].bulletsLeft = weaponBullets % weaponMagSize
 

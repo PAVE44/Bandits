@@ -456,15 +456,17 @@ function BanditCreationMain:onClothingChanged()
             
             for _, def in pairs(ISHotbarAttachDefinition) do
                 if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
-                    for k, v in pairs(def.attachments) do
-                        if k == attachmentType then
-                            self.model:setAttachedItem(v, weapon)
-                            if self.ammo[slot] then
-                                self.ammo[slot].textureBackground = ammoBox:getTexture()
-                                self.ammo[slot]:setTitle(tostring(tostring(self.ammo[slot].value)))
-                                self.ammo[slot]:setVisible(true)
+                    if def.attachments then
+                        for k, v in pairs(def.attachments) do
+                            if k == attachmentType then
+                                self.model:setAttachedItem(v, weapon)
+                                if self.ammo[slot] then
+                                    self.ammo[slot].textureBackground = ammoBox:getTexture()
+                                    self.ammo[slot]:setTitle(tostring(tostring(self.ammo[slot].value)))
+                                    self.ammo[slot]:setVisible(true)
+                                end
+                                break
                             end
-                            break
                         end
                     end
                 end

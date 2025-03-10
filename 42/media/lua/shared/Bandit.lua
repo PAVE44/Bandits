@@ -420,9 +420,15 @@ function Bandit.GetBestWeapon(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         local weapons = brain.weapons
-        if weapons.primary.bulletsLeft > 0 or weapons.primary.magCount > 0 then
+        if weapons.primary.bulletsLeft > 0 or 
+           (weapons.primary.type == "mag" and weapons.primary.magCount > 0) or 
+           (weapons.primary.type == "nomag" and weapons.primary.ammoCount > 0) then
+
             return weapons.primary.name
-        elseif weapons.secondary.bulletsLeft > 0 or weapons.secondary.magCount > 0 then
+        elseif weapons.secondary.bulletsLeft > 0 or 
+           (weapons.secondary.type == "mag" and weapons.secondary.magCount > 0) or 
+           (weapons.secondary.type == "nomag" and weapons.secondary.ammoCount > 0) then
+
             return weapons.secondary.name
         else
             return weapons.melee
@@ -434,7 +440,10 @@ function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         local weapons = brain.weapons
-        if weapons.primary.bulletsLeft == 0 and weapons.primary.magCount == 0 and weapons.secondary.bulletsLeft == 0 and weapons.secondary.magCount == 0 then
+        if weapons.primary.bulletsLeft == 0 and 
+            ((weapons.primary.type == "mag" and weapons.primary.magCount == 0) or
+             (weapons.primary.type == "nomag" and weapons.primary.ammoCount == 0))
+            and weapons.secondary.bulletsLeft == 0 and (weapons.secondary.magCount == 0 or weapons.secondary.ammoCount == 0) then
             return true
         end
     end
@@ -525,22 +534,21 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if weapons.primary then
         if weapons.primary.name then
 
-            if weapons.primary.magName then
+            local attachedBack = zombie:getAttachedItem("Rifle On Back")
+            if not attachedBack then
+                local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
+                if gun then
+                    gun:setCondition(3+ZombRand(15))
+                    zombie:addItemToSpawnAtDeath(gun)
+                end
+            end
+
+            if weapons.primary.type == "mag" and weapons.primary.magName then
                 local mag = BanditCompatibility.InstanceItem(weapons.primary.magName)
                 if mag then
                     mag:setCurrentAmmoCount(weapons.primary.bulletsLeft)
                     mag:setMaxAmmo(weapons.primary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
-                end
-
-                local attachedBack = zombie:getAttachedItem("Rifle On Back")
-                if not attachedBack then
-                    local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
-                    if gun then
-                        gun:setCondition(3+ZombRand(15))
-                        -- gun:setClip(nil)
-                        zombie:addItemToSpawnAtDeath(gun)
-                    end
                 end
 
                 for i=1, weapons.primary.magCount do
@@ -551,6 +559,13 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                         zombie:addItemToSpawnAtDeath(mag)
                     end
                 end
+            elseif weapons.primary.type == "nomag" and weapons.primary.ammoName then
+                for i=1, weapons.primary.ammoCount do
+                    local ammo = BanditCompatibility.InstanceItem(weapons.primary.ammoName)
+                    if ammo then
+                        zombie:addItemToSpawnAtDeath(ammo)
+                    end
+                end
             end
         end
     end
@@ -558,22 +573,22 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if weapons.secondary then
         if weapons.secondary.name then
 
-            if weapons.secondary.magName then
+            local attachedHolster = zombie:getAttachedItem("Holster Right")
+            if not attachedHolster then
+                local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
+                if gun then
+                    -- gun:setClip(nil)
+                    gun:setCondition(3+ZombRand(22))
+                    zombie:addItemToSpawnAtDeath(gun)
+                end
+            end
+
+            if weapons.secondary.type == "mag" and weapons.secondary.magName then
                 local mag = BanditCompatibility.InstanceItem(weapons.secondary.magName)
                 if mag then
                     mag:setCurrentAmmoCount(weapons.secondary.bulletsLeft)
                     mag:setMaxAmmo(weapons.secondary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
-                end
-
-                local attachedHolster = zombie:getAttachedItem("Holster Right")
-                if not attachedHolster then
-                    local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
-                    if gun then
-                        -- gun:setClip(nil)
-                        gun:setCondition(3+ZombRand(22))
-                        zombie:addItemToSpawnAtDeath(gun)
-                    end
                 end
 
                 for i=1, weapons.secondary.magCount do
@@ -582,6 +597,13 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                         mag:setCurrentAmmoCount(weapons.secondary.magSize)
                         mag:setMaxAmmo(weapons.secondary.magSize)
                         zombie:addItemToSpawnAtDeath(mag)
+                    end
+                end
+            elseif weapons.secondary.type == "nomag" and weapons.secondary.ammoName then
+                for i=1, weapons.secondary.ammoCount do
+                    local ammo = BanditCompatibility.InstanceItem(weapons.secondary.ammoName)
+                    if ammo then
+                        zombie:addItemToSpawnAtDeath(ammo)
                     end
                 end
             end

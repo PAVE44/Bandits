@@ -15,6 +15,15 @@ function BanditMenu.BanditCreator(player)
     modal:addToUIManager()
 end
 
+function BanditMenu.TestSpawn(player, square)
+    local args = {cid = "c5c7f769-e5e8-44bb-ada6-cdf00ee2c234", 
+                  size=1,
+                  x=square:getX(),
+                  y=square:getY(),
+                  z=square:getZ(),
+                  program="Bandit"}
+    BanditServer.Commands.SpawnCustom(player, args)
+end
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -298,12 +307,14 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
 
         context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
+
+        context:addOption("New Spawn Test", player, BanditMenu.TestSpawn, square)
+        
     end
     
     -- Debug options
     if isDebugEnabled() then
 
-        BanditCustom.Load()
         context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
 
         print (BanditUtils.GetCharacterID(player))

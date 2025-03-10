@@ -157,8 +157,27 @@ BanditCustom.GetAll = function()
     return BanditCustom.banditData
 end
 
+BanditCustom.GetFromClan = function(cid)
+    local ret = {}
+    for bid, data in pairs(BanditCustom.banditData) do
+        if data.general.cid == cid then
+            ret[bid] = data
+        end
+    end
+    return ret
+end
+
 BanditCustom.Get = function(bid)
     return BanditCustom.banditData[bid]
+end
+
+BanditCustom.GetSkinTexture = function(female, idx)
+    if female then
+        return "FemaleBody0" .. tostring(idx)
+    else
+        return "MaleBody0" .. tostring(idx) .. "a"
+        --return "MaleBody0" .. tostring(idx)
+    end
 end
 
 BanditCustom.GetHairColor = function(idx)

@@ -39,9 +39,6 @@ ZombiePrograms.Bandit.Prepare = function(bandit)
         secondary = "Base.HandTorch"
     end
 
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task)
-
     return {status=true, next="Follow", tasks=tasks}
 end
 
