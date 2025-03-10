@@ -65,14 +65,16 @@ BanditPrograms.Weapon.Switch = function(bandit, itemName)
     -- check what is equipped that needs to be deattached
     local old = bandit:getPrimaryHandItem()
     if old then
-        local task = {action="Unequip", time=100, itemPrimary=old:getFullType()}
+        local sound = old:getUnequipSound()
+        local task = {action="Unequip", sound=sound, time=100, itemPrimary=old:getFullType()}
         table.insert(tasks, task)
     end
 
     -- grab new weapon
     local new = BanditCompatibility.InstanceItem(itemName)
     if new then
-        local task = {action="Equip", itemPrimary=itemName}
+        local sound = old:getEquipSound()
+        local task = {action="Equip", sound=sound, itemPrimary=itemName}
         table.insert(tasks, task)
     end
     return tasks
@@ -81,6 +83,11 @@ end
 BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     local tasks = {}
 
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+    local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+
+    local sound = weaponItem:getBringToBearSound()
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
     local aimTimeSurp = math.floor(dist * 5)
@@ -98,18 +105,15 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     if aimTimeMin + aimTimeSurp > 0 then
 
         local anim
-        local sound
         local asn = enemyCharacter:getActionStateName()
         local down = enemyCharacter:isProne() or enemyCharacter:isBumpFall() or asn == "onground" or asn == "getup"
         if slot == "primary" then
-            sound = "M14BringToBear"
             if dist < 2.5 and down then
                 anim = "AimRifleLow"
             else
                 anim = "IdleToAimRifle"
             end
         else
-            sound = "M9BringToBear"
             if dist < 2.5 and down then
                 anim = "AimPistolLow"
             else
@@ -194,18 +198,22 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         rackAnim = "RackRifle"
     elseif reloadType == "boltactionnomag" then
         clipMode = false
+        unloadAnim = "UnloadShotgun"
         loadAnim = "LoadShotgun"
         rackAnim = "RackRifle"
     elseif reloadType == "shotgun" then
         clipMode = false
+        unloadAnim = "UnloadShotgun"
         loadAnim = "LoadShotgun"
         rackAnim = "RackShotgun"
     elseif reloadType == "doublebarrelshotgun" then
         clipMode = false
+        unloadAnim = "UnloadDBShotgun"
         loadAnim = "LoadDBShotgun"
         rackAnim = "RackDBShotgun"
     elseif reloadType == "doublebarrelshotgunsawn" then
         clipMode = false
+        unloadAnim = "UnloadDBShotgun"
         loadAnim = "LoadDBShotgun"
         rackAnim = "RackDBShotgun"
     elseif reloadType == "handgun" then
@@ -215,6 +223,7 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         rackAnim = "RackPistol"
     elseif reloadType == "revolver" then
         clipMode = false
+        unloadAnim = "UnloadRevolver"
         loadAnim = "LoadRevolver"
         rackAnim = "RackRevolver"
     end

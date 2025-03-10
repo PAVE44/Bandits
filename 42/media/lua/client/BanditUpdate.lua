@@ -826,37 +826,25 @@ local function ManageCombat(bandit)
     local weapons = brain.weapons
     local canMelee = Bandit.Can(bandit, "melee")
     local canShoot = Bandit.Can(bandit, "shoot")
-    local isMeleeEquipped = bandit:isPrimaryEquipped(weapons.melee) or false
-    local isPrimaryEquipped = bandit:isPrimaryEquipped(weapons.primary.name) or false
-    local isSecondaryEquipped = bandit:isPrimaryEquipped(weapons.secondary.name) or false
 
-    -- MANAGE RELOAD BEFORE ANYTHNG ELSE
+    local bestDist = 40
+    local enemyCharacter
+    local combat, reload, firing, shove = false, false, false, false
+    local maxRange
+
+    -- RELOAD TASKS (WHEN NOT IN COMBAT)
     if not Bandit.HasActionTask(bandit) then
         for _, slot in pairs({"primary", "secondary"}) do
-            if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft == 0 and weapons[slot].magCount > 0) or
-               (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft == 0 and weapons[slot].ammoCount > 0) or 
-                weapons[slot].racked == false then 
-                
-                if bandit:isPrimaryEquipped(weapons[slot].name) then
-                    Bandit.ClearTasks(bandit)
-                    Bandit.Say(bandit, "RELOADING")
-                    local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
-                    for _, t in pairs(stasks) do table.insert(tasks, t) end
-                    return tasks
-                else
-                    Bandit.ClearTasks(bandit)
-                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
-                    for _, t in pairs(stasks) do table.insert(tasks, t) end
-                    return tasks
+            if weapons[slot].name then
+                if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft == 0 and weapons[slot].magCount > 0) or
+                   (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft < weapons[slot].ammoSize and weapons[slot].ammoCount > 0) or 
+                    weapons[slot].racked == false then 
+                    
+                    reload = true
                 end
             end
         end
     end
-
-    local bestDist = 40
-    local enemyCharacter
-    local combat, firing, shove = false, false, false
-    local maxRange
 
     -- PRECOMPUTE WEAPON RANGES
     local pistolRange, rifleRange = SandboxVars.Bandits.General_PistolRange - 1, SandboxVars.Bandits.General_RifleRange - 1
@@ -893,9 +881,9 @@ local function ManageCombat(bandit)
 
                         --determine if bandit will be in shooting mode
                         if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                            if isPrimaryEquipped and dist < rifleRange then
+                            if bandit:isPrimaryEquipped(weapons.primary.name) and dist < rifleRange then
                                 firing = true
-                            elseif isSecondaryEquipped and dist < pistolRange then
+                            elseif bandit:isPrimaryEquipped(weapons.secondary.name) and dist < pistolRange then
                                 firing = true
                             end
                         end
@@ -942,9 +930,9 @@ local function ManageCombat(bandit)
 
                                 --determine if bandit will be in shooting mode
                                 if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                                    if isPrimaryEquipped and dist < rifleRange then
+                                    if bandit:isPrimaryEquipped(weapons.primary.name) and dist < rifleRange then
                                         firing = true
-                                    elseif isSecondaryEquipped and dist < pistolRange then
+                                    elseif bandit:isPrimaryEquipped(weapons.secondary.name) and dist < pistolRange then
                                         firing = true
                                     end
                                 end
@@ -978,7 +966,7 @@ local function ManageCombat(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
 
-            if not isMeleeEquipped then
+            if not bandit:isPrimaryEquipped(weapons.melee) then
                 local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
                 for _, t in pairs(stasks) do table.insert(tasks, t) end
             elseif bandit:isFacingObject(enemyCharacter, 0.5) then
@@ -1006,23 +994,39 @@ local function ManageCombat(bandit)
 
                 if bandit:isFacingObject(enemyCharacter, 0.5) then
                     for _, slot in pairs({"primary", "secondary"}) do
-                        if weapons[slot].name and weapons[slot].bulletsLeft > 0 then
-                            if not bandit:isPrimaryEquipped(weapons[slot].name) then
-                                Bandit.Say(bandit, "SPOTTED")
+                        
+                        if weapons[slot].name then
+                            if weapons[slot].bulletsLeft > 0 then
+                                if not bandit:isPrimaryEquipped(weapons[slot].name) then
+                                    Bandit.Say(bandit, "SPOTTED")
 
-                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
+                                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
+                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+
+                                elseif not Bandit.IsAim(bandit) then
+                                    local stasks = BanditPrograms.Weapon.Aim(bandit, enemyCharacter, slot)
+                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+
+                                elseif weapons[slot].bulletsLeft > 0 then
+                                    local stasks = BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
+                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+
+                                end
+
+                                break
+
+                            elseif (weapons[slot].type == "mag"  and weapons[slot].magCount > 0) or
+                                (weapons[slot].type == "nomag" and weapons[slot].ammoCount > 0) or 
+                                weapons[slot].racked == false then
+
+                                Bandit.Say(bandit, "RELOADING")
+
+                                local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
                                 for _, t in pairs(stasks) do table.insert(tasks, t) end
 
-                            elseif not Bandit.IsAim(bandit) then
-                                local stasks = BanditPrograms.Weapon.Aim(bandit, enemyCharacter, slot)
-                                for _, t in pairs(stasks) do table.insert(tasks, t) end
-
-                            elseif weapons[slot].bulletsLeft > 0 then
-                                local stasks = BanditPrograms.Weapon.Shoot(bandit, enemyCharacter, slot)
-                                for _, t in pairs(stasks) do table.insert(tasks, t) end
-
+                                break
                             end
-                            break
+                            
                         end
                     end
                 else
@@ -1035,6 +1039,18 @@ local function ManageCombat(bandit)
                 Bandit.Say(bandit, "DEATH")
             end
 
+        end
+    elseif reload then
+        if not Bandit.HasActionTask(bandit) then
+            Bandit.ClearTasks(bandit)
+            if bandit:isPrimaryEquipped(weapons[slot].name) then
+                Bandit.Say(bandit, "RELOADING")
+                local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
+                for _, t in pairs(stasks) do table.insert(tasks, t) end
+            else
+                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
+                for _, t in pairs(stasks) do table.insert(tasks, t) end
+            end
         end
     end
 
