@@ -242,6 +242,7 @@ function BanditEventMarker:new(eventID, icon, duration, posX, posY, player, scre
     o.angle = 0
     o.opacity = 255
     o.opacityGain = 2
+    o.start = getGametimeTimestamp()
     o.duration = duration
     o.lastUpdateTime = -1
     o.enabled = true
