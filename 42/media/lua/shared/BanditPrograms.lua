@@ -73,7 +73,7 @@ BanditPrograms.Weapon.Switch = function(bandit, itemName)
     -- grab new weapon
     local new = BanditCompatibility.InstanceItem(itemName)
     if new then
-        local sound = old:getEquipSound()
+        local sound = new:getEquipSound()
         local task = {action="Equip", sound=sound, itemPrimary=itemName}
         table.insert(tasks, task)
     end
@@ -121,7 +121,10 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
             end
         end
 
-        local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=aimTimeMin + aimTimeSurp}
+        local time = aimTimeMin + aimTimeSurp
+        if time > 60 then time = 60 end
+
+        local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=time}
         table.insert(tasks, task)
     end
     return tasks
@@ -171,6 +174,40 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     end
 
     return tasks
+end
+BanditPrograms.Weapon.Rack = function(bandit, slot)
+    local tasks = {}
+
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+
+    local primaryItem = BanditCompatibility.InstanceItem(weapon.name)
+    local reloadType = primaryItem:getWeaponReloadType()
+    local magazineType = primaryItem:getMagazineType()
+
+    local rackSound = primaryItem:getRackSound()
+    local rackAnim
+    if reloadType == "boltaction" then
+        rackAnim = "RackRifle"
+    elseif reloadType == "boltactionnomag" then
+        rackAnim = "RackRifleAim" -- this is different than in Reload
+    elseif reloadType == "shotgun" then
+        rackAnim = "RackShotgunAim" -- this is different than in Reload
+    elseif reloadType == "doublebarrelshotgun" then
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "doublebarrelshotgunsawn" then
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "handgun" then
+        rackAnim = "RackPistol"
+    elseif reloadType == "revolver" then
+        rackAnim = "RackRevolver"
+    end
+
+    if not weapon.racked then
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        table.insert(tasks, task)
+        return tasks
+    end
 end
 
 BanditPrograms.Weapon.Reload = function(bandit, slot)
@@ -228,7 +265,9 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         rackAnim = "RackRevolver"
     end
 
-    if weapon.bulletsLeft == 0 then
+    if (weapon.type == "mag" and weapon.bulletsLeft == 0 and weapon.magCount > 0) or
+       (weapon.type == "nomag" and weapon.bulletsLeft < weapon.ammoSize and weapon.ammoCount > 0) then
+        
         if clipMode then 
             if weapon.clipIn then
                 local task = {action="Unload", slot=slot, drop=magazineType, anim=unloadAnim, sound=unloadSound, time=90}

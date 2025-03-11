@@ -163,7 +163,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.dna = dna
 
             -- properties taken from args
-            brain.hostile = args.hostile and true or true
+            brain.hostile = args.hostile and true or false
             brain.permanent = args.permanent and true or false
             brain.key = args.key
 

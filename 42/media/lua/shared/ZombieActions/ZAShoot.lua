@@ -406,6 +406,14 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local item = BanditCompatibility.InstanceItem(weapon.name)
 
     shooter:playSound(item:getSwingSound())
+    -- local test = item:getShellFallSound()
+    if not item:isManuallyRemoveSpentRounds() then
+        shooter:playSound(item:getShellFallSound())
+    end
+    
+    if item:isRackAfterShoot() then
+        weapon.racked = false
+    end
 
     --[[local te = FBORenderTracerEffects.getInstance()
     te:addEffect(shooter, 24)

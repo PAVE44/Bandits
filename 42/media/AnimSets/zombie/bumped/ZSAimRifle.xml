@@ -2,10 +2,9 @@
 <animNode>
 	<m_Name>ZSAimRifle</m_Name>
 	<m_AnimName>Bob_IdleAimRifle</m_AnimName>
-	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_SpeedScale>0.85</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-	<m_BlendTime>0.35</m_BlendTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>

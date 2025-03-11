@@ -19,6 +19,12 @@ ZombieActions.Unload.onComplete = function(zombie, task)
         weapon.clipIn = false
         weapon.racked = false
 
+        local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+        if weaponItem:isManuallyRemoveSpentRounds() then
+            shooter:playSound(item:getShellFallSound())
+            shooter:playSound(item:getShellFallSound())
+        end
+        
         if BanditUtils.IsController(zombie) then
             local item = BanditCompatibility.InstanceItem(task.drop)
             if item then

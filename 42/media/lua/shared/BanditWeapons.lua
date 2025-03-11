@@ -20,7 +20,7 @@ BanditWeapons.Make = function(itemType, boxCount)
     -- for now, harcoded
     local box2ammo = {}
     box2ammo["Base.ShotgunShellsBox"] = 25
-    box2ammo["Base.556Box"] = 50
+    box2ammo["Base.556Bullets"] = 50
     box2ammo["Base.223Bullets"] = 50
     box2ammo["Base.308Bullets"] = 20
     box2ammo["Base.Bullets9mm"] = 50

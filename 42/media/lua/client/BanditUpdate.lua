@@ -204,7 +204,7 @@ local function ApplyVisuals(bandit, brain)
 
         for _, slot in pairs({"primary", "secondary", "melee"}) do
 
-            if brain.weapons[slot] then
+            if brain.weapons[slot].name then
                 local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
 
                 if weapon then
@@ -835,7 +835,7 @@ local function ManageCombat(bandit)
     -- RELOAD TASKS (WHEN NOT IN COMBAT)
     if not Bandit.HasActionTask(bandit) then
         for _, slot in pairs({"primary", "secondary"}) do
-            if weapons[slot].name then
+            if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
                 if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft == 0 and weapons[slot].magCount > 0) or
                    (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft < weapons[slot].ammoSize and weapons[slot].ammoCount > 0) or 
                     weapons[slot].racked == false then 
@@ -881,9 +881,9 @@ local function ManageCombat(bandit)
 
                         --determine if bandit will be in shooting mode
                         if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                            if bandit:isPrimaryEquipped(weapons.primary.name) and dist < rifleRange then
+                            if weapons.primary.name and weapons.primary.bulletsLeft > 0 and dist < rifleRange then
                                 firing = true
-                            elseif bandit:isPrimaryEquipped(weapons.secondary.name) and dist < pistolRange then
+                            elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 and dist < pistolRange then
                                 firing = true
                             end
                         end
@@ -930,9 +930,9 @@ local function ManageCombat(bandit)
 
                                 --determine if bandit will be in shooting mode
                                 if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                                    if bandit:isPrimaryEquipped(weapons.primary.name) and dist < rifleRange then
+                                    if weapons.primary.name and weapons.primary.bulletsLeft > 0 and dist < rifleRange then
                                         firing = true
-                                    elseif bandit:isPrimaryEquipped(weapons.secondary.name) and dist < pistolRange then
+                                    elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 and dist < pistolRange then
                                         firing = true
                                     end
                                 end
@@ -996,12 +996,17 @@ local function ManageCombat(bandit)
                     for _, slot in pairs({"primary", "secondary"}) do
                         
                         if weapons[slot].name then
+
                             if weapons[slot].bulletsLeft > 0 then
                                 if not bandit:isPrimaryEquipped(weapons[slot].name) then
                                     Bandit.Say(bandit, "SPOTTED")
 
                                     local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
                                     for _, t in pairs(stasks) do table.insert(tasks, t) end
+
+                                elseif not weapons[slot].racked then
+                                        local stasks = BanditPrograms.Weapon.Rack(bandit, slot)
+                                        for _, t in pairs(stasks) do table.insert(tasks, t) end
 
                                 elseif not Bandit.IsAim(bandit) then
                                     local stasks = BanditPrograms.Weapon.Aim(bandit, enemyCharacter, slot)
@@ -1016,8 +1021,7 @@ local function ManageCombat(bandit)
                                 break
 
                             elseif (weapons[slot].type == "mag"  and weapons[slot].magCount > 0) or
-                                (weapons[slot].type == "nomag" and weapons[slot].ammoCount > 0) or 
-                                weapons[slot].racked == false then
+                                (weapons[slot].type == "nomag" and weapons[slot].ammoCount > 0) then
 
                                 Bandit.Say(bandit, "RELOADING")
 
@@ -1042,14 +1046,13 @@ local function ManageCombat(bandit)
         end
     elseif reload then
         if not Bandit.HasActionTask(bandit) then
-            Bandit.ClearTasks(bandit)
-            if bandit:isPrimaryEquipped(weapons[slot].name) then
-                Bandit.Say(bandit, "RELOADING")
-                local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
-                for _, t in pairs(stasks) do table.insert(tasks, t) end
-            else
-                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
-                for _, t in pairs(stasks) do table.insert(tasks, t) end
+            for _, slot in pairs({"primary", "secondary"}) do
+                if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
+                    Bandit.ClearTasks(bandit)
+                    Bandit.Say(bandit, "RELOADING")
+                    local stasks = BanditPrograms.Weapon.Reload(bandit, slot)
+                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                end
             end
         end
     end
@@ -1240,7 +1243,7 @@ local function ProcessTask(bandit, task)
 
         if not task.time then task.time = 1000 end
         print (task.action)
-        if task.action ~= "Shoot" and task.action ~= "Aim" then
+        if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
             Bandit.SetAim(bandit, false)
         end
 

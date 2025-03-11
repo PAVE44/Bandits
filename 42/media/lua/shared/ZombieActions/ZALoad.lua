@@ -14,6 +14,7 @@ ZombieActions.Load.onComplete = function(zombie, task)
 
     local brain = BanditBrain.Get(zombie)
     local weapon = brain.weapons[task.slot]
+    local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
 
     if weapon.type == "mag" and not weapon.clipIn then
         if weapon.magCount > 0 then
@@ -24,8 +25,12 @@ ZombieActions.Load.onComplete = function(zombie, task)
         end
     elseif weapon.type == "nomag" then
         if weapon.bulletsLeft < weapon.ammoSize then
-            weapon.bulletsLeft = weapon.bulletsLeft + 1
-            weapon.ammoCount = weapon.ammoCount - 1
+            local b = 1
+            if weaponItem:isInsertAllBulletsReload() then
+                b = weapon.ammoSize
+            end
+            weapon.bulletsLeft = weapon.bulletsLeft + b
+            weapon.ammoCount = weapon.ammoCount - b
             weapon.racked = false
         end
     end

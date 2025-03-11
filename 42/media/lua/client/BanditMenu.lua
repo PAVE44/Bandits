@@ -16,12 +16,13 @@ function BanditMenu.BanditCreator(player)
 end
 
 function BanditMenu.TestSpawn(player, square)
-    local args = {cid = "c5c7f769-e5e8-44bb-ada6-cdf00ee2c234", 
+    local args = {cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", 
                   size=1,
                   x=square:getX(),
                   y=square:getY(),
                   z=square:getZ(),
-                  program="Bandit"}
+                  program="Companion",
+                  hostile=false}
     BanditServer.Commands.SpawnCustom(player, args)
 end
 function BanditMenu.MakeProcedure (player, square)
