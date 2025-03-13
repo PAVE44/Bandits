@@ -67,6 +67,7 @@ local function Hit(attacker, item, victim)
             end
 
             if victim:getHealth() <= 0 then 
+                -- victim:setKnifeDeath(true)
                 victim:Kill(getCell():getFakeZombieForHit(), true) 
             end
         end
@@ -120,6 +121,8 @@ ZombieActions.Hit.onStart = function(bandit, task)
             attacks = {"AttackS1", "AttackS2"}
         elseif meleeItemType == WeaponType.chainsaw then
             attacks = {"AttackChainsaw1", "AttackChainsaw2"}
+        elseif meleeItemType == WeaponType.knife then
+            attacks = {"AttackKnife", "AttackKnifeMiss"}
         else -- two handed / knife ?
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         end

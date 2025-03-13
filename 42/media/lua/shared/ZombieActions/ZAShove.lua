@@ -22,7 +22,10 @@ end
 local function ShoveZombie (attacker, zombie)
     local facing = zombie:isFacingObject(attacker, 0.5)
     if facing then
-        zombie:setBumpType("ZombiePushedFront")
+        -- zombie:setBumpType("ZombiePushedFront")
+        zombie:setStaggerBack(true)
+        zombie:setKnockedDown(true)
+        zombie:setHitReaction("")
     else
         zombie:setBumpType("ZombiePushedBack")
     end

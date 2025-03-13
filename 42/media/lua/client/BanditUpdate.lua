@@ -189,7 +189,10 @@ local function ApplyVisuals(bandit, brain)
     if brain.cid then
         banditVisuals:setSkinTextureName(BanditCustom.GetSkinTexture(brain.female, brain.skin))
         banditVisuals:setHairModel(BanditCustom.GetHairStyle(brain.female, brain.hairType)) 
-        banditVisuals:setBeardModel(BanditCustom.GetBeardStyle(brain.female, brain.beardType)) 
+
+        if not bandit:isFemale() then
+            banditVisuals:setBeardModel(BanditCustom.GetBeardStyle(brain.female, brain.beardType)) 
+        end
 
         local hairColor = BanditCustom.GetHairColor(brain.hairColor)
         local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
@@ -828,8 +831,8 @@ local function ManageCombat(bandit)
     local canShoot = Bandit.Can(bandit, "shoot")
 
     local bestDist = 40
-    local enemyCharacter
-    local combat, reload, firing, shove = false, false, false, false
+    local enemyCharacter, switchTo
+    local combat, reload, switch, firing, shove = false, false, false, false, false
     local maxRange
 
     -- RELOAD TASKS (WHEN NOT IN COMBAT)
@@ -849,8 +852,12 @@ local function ManageCombat(bandit)
     -- PRECOMPUTE WEAPON RANGES
     local pistolRange, rifleRange = SandboxVars.Bandits.General_PistolRange - 1, SandboxVars.Bandits.General_RifleRange - 1
     if Bandit.IsDNA(bandit, "blind") then
-        pistolRange, rifleRange = pistolRange - 4, rifleRange - 7
+        pistolRange, rifleRange = pistolRange - 2, rifleRange - 5
     end
+
+    -- SWITCH WEAPON DISTANCES
+    local meleeDist = 4.5
+    local meleeRifle = 5
 
     -- COMBAT AGAIST PLAYERS 
     if Bandit.IsHostile(bandit) then
@@ -867,24 +874,43 @@ local function ManageCombat(bandit)
                     if not bandit:getSquare():isSomethingTo(potentialEnemy:getSquare()) and spottedScore > 0.32 then
                         bestDist, enemyCharacter = dist, potentialEnemy
 
+                        --reset action flags, only one can be true
+                        combat, reload, switch, firing, shove = false, false, false, false, false
+
                         --determine if bandit will be in combat mode
                         if weapons.melee and canMelee then
                             if not maxRange then
                                 maxRange = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
                             end
-                            if dist <= maxRange - 0.2 then
+                            local prone = potentialEnemy:isProne()
+                            if dist <= maxRange then
                                 local asn = enemyCharacter:getActionStateName()
-                                shove = dist < 0.6 and not potentialEnemy:isProne() and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
+                                shove = dist < 0.6 and not prone and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
                                 combat = not shove
+                            elseif dist <= meleeDist and not bandit:isPrimaryEquipped(weapons.melee) then
+                                switch = true
+                                switchTo = weapons.melee
                             end
                         end
 
                         --determine if bandit will be in shooting mode
-                        if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                            if weapons.primary.name and weapons.primary.bulletsLeft > 0 and dist < rifleRange then
-                                firing = true
-                            elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 and dist < pistolRange then
-                                firing = true
+                        if canShoot and not Bandit.IsOutOfAmmo(bandit) and dist > meleeDist + 4 then
+                            if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
+                                if dist < rifleRange then
+                                    firing = true
+                                elseif dist < rifleRange + meleeRifle and not bandit:isPrimaryEquipped(weapons.primary.name) then
+                                    Bandit.Say(bandit, "SPOTTED")
+                                    switch = true
+                                    switchTo = weapons.primary.name
+                                end
+                            elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
+                                if dist < pistolRange then
+                                    firing = true
+                                elseif dist < rifleRange + meleeRifle and not bandit:isPrimaryEquipped(weapons.secondary.name) then
+                                    Bandit.Say(bandit, "SPOTTED")
+                                    switch = true
+                                    switchTo = weapons.secondary.name
+                                end
                             end
                         end
                     end
@@ -915,25 +941,50 @@ local function ManageCombat(bandit)
                         if dist < 25 then
                             if dist < bestDist then
                                 bestDist, enemyCharacter = dist, potentialEnemy
+
+                                --reset action flags, only one can be true
+                                combat, reload, switch, firing, shove = false, false, false, false, false
                                 
                                 --determine if bandit will be in combat mode
                                 if canMelee and weapons.melee and zz == pz then
                                     if not maxRange then
                                         maxRange = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
                                     end
-                                    if dist <= maxRange + 0.40 then
+                                    local prone = potentialEnemy:isProne()
+                                    local fix = 0.4
+                                    if prone then fix = -0.2 end
+                                    if dist <= maxRange + fix and bandit:isPrimaryEquipped(weapons.melee) then
                                         local asn = enemyCharacter:getActionStateName()
-                                        shove = dist < 0.7 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
+                                        shove = dist < 0.8 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
                                         combat = not shove
+                                    elseif dist <= meleeDist and not bandit:isPrimaryEquipped(weapons.melee) then
+                                        switch = true
+                                        switchTo = weapons.melee
                                     end
                                 end
 
                                 --determine if bandit will be in shooting mode
-                                if canShoot and not Bandit.IsOutOfAmmo(bandit) then
-                                    if weapons.primary.name and weapons.primary.bulletsLeft > 0 and dist < rifleRange then
-                                        firing = true
-                                    elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 and dist < pistolRange then
-                                        firing = true
+                                if canShoot and not Bandit.IsOutOfAmmo(bandit) and dist > meleeDist + 1 then
+                                    combat = false
+                                    shove = false
+                                    if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
+                                        local hasWeapon = bandit:isPrimaryEquipped(weapons.primary.name)
+                                        if dist < rifleRange and hasWeapon then
+                                            firing = true
+                                        elseif dist < rifleRange + meleeRifle and not hasWeapon then
+                                            Bandit.Say(bandit, "SPOTTED")
+                                            switch = true
+                                            switchTo = weapons.primary.name
+                                        end
+                                    elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
+                                        local hasWeapon = bandit:isPrimaryEquipped(weapons.secondary.name)
+                                        if dist < pistolRange and hasWeapon then
+                                            firing = true
+                                        elseif dist < rifleRange + meleeRifle and not hasWeapon then
+                                            Bandit.Say(bandit, "SPOTTED")
+                                            switch = true
+                                            switchTo = weapons.secondary.name
+                                        end
                                     end
                                 end
                             end
@@ -960,16 +1011,20 @@ local function ManageCombat(bandit)
             end
         end
 
+    elseif switch then
+        if not Bandit.HasActionTask(bandit) and enemyCharacter:isAlive() then
+            Bandit.ClearTasks(bandit)
+            local stasks = BanditPrograms.Weapon.Switch(bandit, switchTo)
+            for _, t in pairs(stasks) do table.insert(tasks, t) end
+        end
+
     elseif combat then
         if not Bandit.HasTaskType(bandit, "Hit") and not Bandit.HasTaskType(bandit, "Shove") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") and enemyCharacter:isAlive() then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
 
-            if not bandit:isPrimaryEquipped(weapons.melee) then
-                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                for _, t in pairs(stasks) do table.insert(tasks, t) end
-            elseif bandit:isFacingObject(enemyCharacter, 0.5) then
+            if bandit:isFacingObject(enemyCharacter, 0.5) then
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
                 local task = {action="Hit", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
@@ -985,7 +1040,7 @@ local function ManageCombat(bandit)
         end
 
     elseif firing then
-        if not Bandit.HasActionTask(bandit) then
+        if not Bandit.HasTaskType(bandit, "Shoot") and not Bandit.HasTaskType(bandit, "Aim") and not Bandit.HasTaskType(bandit, "Rack") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") then
             Bandit.ClearTasks(bandit)
             if enemyCharacter:isAlive() then
                 
@@ -998,13 +1053,7 @@ local function ManageCombat(bandit)
                         if weapons[slot].name then
 
                             if weapons[slot].bulletsLeft > 0 then
-                                if not bandit:isPrimaryEquipped(weapons[slot].name) then
-                                    Bandit.Say(bandit, "SPOTTED")
-
-                                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons[slot].name)
-                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
-
-                                elseif not weapons[slot].racked then
+                                if not weapons[slot].racked then
                                         local stasks = BanditPrograms.Weapon.Rack(bandit, slot)
                                         for _, t in pairs(stasks) do table.insert(tasks, t) end
 
@@ -1097,13 +1146,56 @@ local function ManageSocialDistance(bandit)
     end
 end
 
+-- table of bandits being attacked by zombies
+local biteTab = {}
+
 -- manages zombie behavior towards bandits
 local function UpdateZombies(zombie)
 
     zombie:setVariable("NoLungeAttack", true)
-    
     if zombie:getVariableBoolean("Bandit") then return end
     if zombie:isProne() then return end
+
+    local toRemove = {}    
+    for id, tab in pairs(biteTab) do
+        if tab.tick >= 60 then
+            local attackId = zombie:getModData().attackId
+            if attackId and tab.attackId == attackId and zombie:getBumpType() == "Bite" and zombie:getActionStateName() == "bumped" then 
+
+                local asn = zombie:getActionStateName()
+                local bandit = tab.bandit
+                if ZombRand(4) == 1 then
+                    zombie:playSound("ZombieBite")
+                else
+                    zombie:playSound("ZombieScratch")
+                end
+
+                local teeth = BanditCompatibility.InstanceItem("Base.RollingPin")
+                BanditCompatibility.Splash(bandit, teeth, zombie)
+                bandit:setHitFromBehind(zombie:isBehind(bandit))
+        
+                if instanceof(bandit, "IsoZombie") then
+                    bandit:setHitAngle(zombie:getForwardDirection())
+                    bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
+                end
+        
+                bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                Bandit.UpdateInfection(bandit, 0.001)
+                if bandit:getHealth() <= 0 then
+                    bandit:setHealth(0)
+                    bandit:clearAttachedItems()
+                    bandit:setAttackedBy(zombie)
+                end
+                table.insert(toRemove, id)
+            end
+        end
+        tab.tick = tab.tick + 1
+    end
+
+    for _, v in pairs(toRemove) do
+        biteTab[v] = nil
+        zombie:getModData().attackId = nil
+    end
 
     local asn = zombie:getActionStateName()
     if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
@@ -1203,28 +1295,12 @@ local function UpdateZombies(zombie)
                         return
                     end
 
-                    zombie:setBumpType("Bite")
-                    if ZombRand(4) == 1 then
-                        bandit:playSound("ZombieScratch")
-                    else
-                        bandit:playSound("ZombieBite")
-                    end
-
-                    local teeth = BanditCompatibility.InstanceItem("Base.RollingPin")
-                    BanditCompatibility.Splash(bandit, teeth, zombie)
-                    bandit:setHitFromBehind(zombie:isBehind(bandit))
-
-                    if instanceof(bandit, "IsoZombie") then
-                        bandit:setHitAngle(zombie:getForwardDirection())
-                        bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
-                    end
-
-                    bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                    Bandit.UpdateInfection(bandit, 0.001)
-                    if bandit:getHealth() <= 0 then
-                        bandit:setHealth(0)
-                        bandit:clearAttachedItems()
-                        bandit:setAttackedBy(zombie)
+                    if zombie:getBumpType() ~= "Bite" then
+                        -- print ("BITE: " .. asn .. " " .. zombie:getBumpType())
+                        zombie:setBumpType("Bite")
+                        local attackId = ZombRand(1000000)
+                        zombie:getModData().attackId = attackId 
+                        biteTab[enemy.id] = {attackId=attackId, bandit=bandit, tick=0}
                     end
                 else
                     zombie:faceThisObject(bandit)
@@ -1242,7 +1318,7 @@ local function ProcessTask(bandit, task)
     if task.state == "NEW" then
 
         if not task.time then task.time = 1000 end
-        print (task.action)
+        -- print (task.action)
         if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
             Bandit.SetAim(bandit, false)
         end

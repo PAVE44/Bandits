@@ -8,6 +8,12 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.InitProjectile(player)
+    -- local modal = BanditCreationMain:new(200, 100, 1520, 880)
+    BanditProjectile.Add(player:getX(), player:getY(), player:getZ(), player:getDirectionAngle())
+end
+
+
 function BanditMenu.BanditCreator(player)
     -- local modal = BanditCreationMain:new(200, 100, 1520, 880)
     local modal = BanditClansMain:new(500, 80, 1220, 900)
@@ -16,13 +22,15 @@ function BanditMenu.BanditCreator(player)
 end
 
 function BanditMenu.TestSpawn(player, square)
-    local args = {cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", 
+    local args = {--cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", --blm
+                  cid = "84d300b0-25a2-42ac-922d-5e8839a010fb",
                   size=1,
                   x=square:getX(),
                   y=square:getY(),
                   z=square:getZ(),
                   program="Companion",
-                  hostile=false}
+                  hostile=false,
+                  size = 4}
     BanditServer.Commands.SpawnCustom(player, args)
 end
 function BanditMenu.MakeProcedure (player, square)
@@ -248,6 +256,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local world = getWorld()
     local gamemode = world:getGameMode()
     local player = getSpecificPlayer(playerID)
+    print (player:getDirectionAngle())
     local square = BanditCompatibility.GetClickedSquare()
     local generator = square:getGenerator()
 
@@ -317,6 +326,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     if isDebugEnabled() then
 
         context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
+
+        context:addOption("Init Projectile", player, BanditMenu.InitProjectile)
 
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)

@@ -46,6 +46,14 @@ legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
 
 BanditCompatibility.LegacyItemMap = legacyItemMap
 
+BanditCompatibility.GetConfigPath = function()
+    if getGameVersion() < 42 then
+        return "media" .. getFileSeparator() .. "bandits" .. getFileSeparator() -- that'll be /media/bandits/
+    else
+        return "bandits" .. getFileSeparator() -- that'll be common/bandits/
+    end
+end
+
 BanditCompatibility.GetLegacyItem = function(itemFullType)
     if getGameVersion() < 42 then
         local map = BanditCompatibility.LegacyItemMap

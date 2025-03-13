@@ -400,13 +400,21 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local weapon = brainShooter.weapons[task.slot]
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
+
+    local item = BanditCompatibility.InstanceItem(weapon.name)
+    
+    -- projectile count
+    local reloadType = item:getWeaponReloadType()
+    local projectiles = 1
+    if reloadType == "shotgun" or reloadType == "doublebarrelshotgun" or reloadType == "doublebarrelshotgunsawn" then
+        projectiles = 5
+    end
     
     BanditCompatibility.StartMuzzleFlash(shooter)
+    BanditProjectile.Add(shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle(), projectiles)
     
-    local item = BanditCompatibility.InstanceItem(weapon.name)
-
     shooter:playSound(item:getSwingSound())
-    -- local test = item:getShellFallSound()
+
     if not item:isManuallyRemoveSpentRounds() then
         shooter:playSound(item:getShellFallSound())
     end

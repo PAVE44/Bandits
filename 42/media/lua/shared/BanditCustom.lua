@@ -3,26 +3,59 @@ BanditCustom = BanditCustom or {}
 BanditCustom.banditData = {}
 BanditCustom.clanData = {}
 
-BanditCustom.clanFile = "b_custom_clans.txt"
-BanditCustom.banditFile = "b_custom_bandits.txt"
+-- BanditCustom.filePath = getFileSeparator() .. "media" .. getFileSeparator() .. "bandits" .. getFileSeparator()
+BanditCustom.filePath = BanditCompatibility.GetConfigPath()
+BanditCustom.clanFile = "clans.txt"
+BanditCustom.banditFile = "bandits.txt"
 
-local saveFile = function(dataKey, fileName)
-    local file = getFileWriter(fileName, true, false)
-    local output = ""
+local saveFile = function()
+    local mods = BanditCustom.GetMods()
+    
+    for i=1, #mods do
+        local modid = mods[i]
+        local banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
+        local banditFile = getModFileWriter("\\" .. modid, banditFileName, true, false)
+        local clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
+        local clanFile = getModFileWriter("\\" .. modid, clanFileName, true, false)
+        if banditFile and clanFile then
+            local data = BanditCustom.banditData
+            local banditOutput = ""
+            local clanOutput = ""
+            local cids = {}
+            for id, sections in pairs(data) do
+                if sections.general.modid == modid then
 
-    local data = BanditCustom[dataKey]
-    for id, sections in pairs(data) do
-        output = output .. "[" .. id .. "]\n"
-        for sname, tab in pairs(sections) do
-            for k, v in pairs(tab) do
-                output = output .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
+                    banditOutput = banditOutput .. "[" .. id .. "]\n"
+                    for sname, tab in pairs(sections) do
+                        for k, v in pairs(tab) do
+                            banditOutput = banditOutput .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
+                        end
+                    end
+                    banditOutput = banditOutput .. "\n"
+
+                    local cid = sections.general.cid
+                    if not cids[cid] then
+                        local clanData = BanditCustom.clanData[cid]
+                        if not clanData then
+                            clanData = BanditCustom.ClanCreate(cid)
+                        end
+                        clanOutput = clanOutput .. "[" .. cid .. "]\n"
+                        for sname, tab in pairs(clanData) do
+                            for k, v in pairs(tab) do
+                                clanOutput = clanOutput .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
+                            end
+                        end
+                        clanOutput = clanOutput .. "\n"
+                        cids[cid] = true
+                    end
+                end
             end
+            banditFile:write(banditOutput)
+            clanFile:write(clanOutput)
+            banditFile:close()
+            clanFile:close()
         end
-        output = output .. "\n"
     end
-
-    file:write(output)
-    file:close()
 end
 
 local loadFile = function(dataKey, fileName)
@@ -37,64 +70,83 @@ local loadFile = function(dataKey, fileName)
 
     local types = {} -- {clothing="array", hairstyles="array"}
 
-    local file = getFileReader(fileName, false)
-    if not file then 
-        saveFile(dataKey, fileName)
-        file = getFileReader(fileName, false)
-    end
+    local mods = getActivatedMods()
+    for i=0, mods:size()-1 do
+        local modid = mods:get(i):gsub("^\\", "")
 
-    local line
-    local id
-    while true do
-        line = file:readLine()
-        if line == nil then
+        local file = getModFileReader("\\" .. modid, fileName, false)
+        if file then 
+
+            local line
+            local id
+            while true do
+                line = file:readLine()
+                if line == nil then
+                    file:close()
+                    break
+                end
+
+                -- guid match
+                if line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]") then
+                    id = line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]")
+                end
+
+                -- format:
+                -- section: key=value
+                local s, k, v = line:match("([%w_]+)%s*:%s*([%w_]+)%s*=%s*([^ \n]*)")
+                if id and k and v then
+                    if v == "true" then 
+                        v = true 
+                    elseif v == "false" then
+                        v = false 
+                    elseif v:match("^%-?%d+%.?%d*$") then 
+                        v = tonumber(v) 
+                    end
+
+                    if not BanditCustom[dataKey][id] then
+                        BanditCustom[dataKey][id] = {}
+                    end
+
+                    if not BanditCustom[dataKey][id][s] then
+                        BanditCustom[dataKey][id][s] = {}
+                    end
+
+                    if types[k] == "array" then
+                        BanditCustom[dataKey][id][s][k] = splitString(v, ",")
+                    else
+                        BanditCustom[dataKey][id][s][k] = v
+                    end
+                    --print ("BanditCustom.banditData[" .. id .. "][" .. k .. "] = " .. v)
+                end
+            end
+        end
+    end
+end
+
+BanditCustom.GetMods = function()
+    local ret = {}
+    local mods = getActivatedMods()
+    local fileName = BanditCustom.filePath .. BanditCustom.banditFile
+    for i=0, mods:size()-1 do
+        local modid = mods:get(i):gsub("^\\", "")
+        local file = getModFileReader("\\" .. modid, fileName, false)
+        if file then
+            table.insert(ret, modid)
             file:close()
-            break
-        end
-
-        -- guid match
-        if line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]") then
-            id = line:match("%[(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)%]")
-        end
-
-        -- format:
-        -- section: key=value
-        local s, k, v = line:match("([%w_]+)%s*:%s*([%w_]+)%s*=%s*([^ \n]*)")
-        if id and k and v then
-            if v == "true" then 
-                v = true 
-            elseif v == "false" then
-                 v = false 
-            elseif v:match("^%-?%d+%.?%d*$") then 
-                v = tonumber(v) 
-            end
-
-            if not BanditCustom[dataKey][id] then
-                BanditCustom[dataKey][id] = {}
-            end
-
-            if not BanditCustom[dataKey][id][s] then
-                BanditCustom[dataKey][id][s] = {}
-            end
-
-            if types[k] == "array" then
-                BanditCustom[dataKey][id][s][k] = splitString(v, ",")
-            else
-                BanditCustom[dataKey][id][s][k] = v
-            end
-            --print ("BanditCustom.banditData[" .. id .. "][" .. k .. "] = " .. v)
         end
     end
+    return ret
 end
 
 BanditCustom.Load = function()
-    loadFile("banditData", BanditCustom.banditFile)
-    loadFile("clanData", BanditCustom.clanFile)
+    BanditCustom.banditData = {}
+    BanditCustom.clanData = {}
+    loadFile("banditData", BanditCustom.filePath .. BanditCustom.banditFile)
+    loadFile("clanData", BanditCustom.filePath .. BanditCustom.clanFile)
 end
 
 BanditCustom.Save = function()
-    saveFile("banditData", BanditCustom.banditFile)
-    saveFile("clanData", BanditCustom.clanFile)
+    saveFile()
 end
 
 -- clan methods
@@ -102,6 +154,7 @@ end
 BanditCustom.ClanCreate = function(cid)
     local data = {}
     data.general = {}
+    data.general.name = "Untitled"
 
     BanditCustom.clanData[cid] = data
     return BanditCustom.clanData[cid]

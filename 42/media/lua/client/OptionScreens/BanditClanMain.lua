@@ -59,6 +59,9 @@ function BanditClanMain:onAvatarListChange()
     BanditCustom.Load()
 
     local clanData = BanditCustom.ClanGet(self.cid)
+    if not clanData then
+        clanData = BanditCustom.ClanCreate(self.cid)
+    end
 
     local rowY = 0
 

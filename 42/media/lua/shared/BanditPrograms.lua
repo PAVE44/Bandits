@@ -144,9 +144,15 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     end
 
     local bullets = 1
-    local mode = weaponItem:getFireMode()
-    if dist < 6 and mode == "Auto" then
-        bullets = 2 + ZombRand(4)
+    local modes = weaponItem:getFireModePossibilities()
+    if modes then
+        for i=0, modes:size()-1 do
+            local mode = modes:get(i)
+            if dist < 12 and mode == "Auto" then
+                bullets = 2 + ZombRand(6)
+                break
+            end
+        end
     end
 
     local anim
@@ -166,10 +172,11 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
         end
     end
 
-    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+    local x, y, z, dir = enemyCharacter:getX(), enemyCharacter:getY(), enemyCharacter:getZ()
+    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=x, y=y, z=z}
     table.insert(tasks, task)
     for i=2, bullets do
-        local task = {action="Shoot", anim=anim, time=4, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+        local task = {action="Shoot", anim=anim, time=3, slot=slot, x=x, y=y, z=z}
         table.insert(tasks, task)
     end
 
@@ -330,30 +337,6 @@ BanditPrograms.Idle = function(bandit)
     elseif action == 7 then
         local task = {action="Time", anim="WipeHead", time=200}
         table.insert(tasks, task)
-
-    elseif not outOfAmmo then
-        local anim
-        local sound
-        local weaponType = bandit:getVariableString("BanditPrimaryType")
-        if weaponType == "rifle" then
-            sound = "M14BringToBear"
-            anim1 = "IdleToAimRifle"
-            anim2 = "AimRifle"
-        end
-        if weaponType == "handgun" then 
-            sound = "M9BringToBear"
-            anim1 = "IdleToAimPistol"
-            anim2 = "AimPistol"
-        end
-
-        local task1 = {action="Aim", sound=sound, anim=anim1, x=x1, y=y1, time=30}
-        table.insert(tasks, task1)
-
-        local task2 = {action="Aim", anim=anim2, x=x1, y=y1, time=100}
-        table.insert(tasks, task2)
-
-        local task3 = {action="Aim", anim=anim2, x=x1, y=y1, time=100}
-        table.insert(tasks, task3)
     else
         local task = {action="Time", anim="ShiftWeight", time=200}
         table.insert(tasks, task)

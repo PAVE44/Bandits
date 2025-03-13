@@ -66,6 +66,27 @@ function BanditCreationMain:initialise()
     local lbl
     local rowY = 0
 
+    -- MODID
+
+    local mods = BanditCustom.GetMods()
+    
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Save in mod", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.modCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, nil)
+    self.modCombo:initialise()
+
+    for i=1, #mods do
+        self.modCombo:addOption(mods[i])
+    end
+    
+    self.modCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1};
+    self:addChild(self.modCombo)
+    rowY = rowY + BUTTON_HGT + 18
+
+
     -- APPEARANCE
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Appearance", 1, 1, 1, 1, UIFont.Medium, false)
     lbl:initialise()
@@ -385,7 +406,7 @@ function BanditCreationMain:initialise()
                            Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
                            Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
                            BottomArmor = {"Thigh_Right", "Thigh_Left", "Calf_Right", "Calf_Left"},
-                           Shoes = {"Shoes"}
+                           Shoes = {"Shoes", "Socks"}
      }
 
     lbl = ISLabel:new(clothingX, topY, BUTTON_HGT, "Outfit", 1, 1, 1, 1, UIFont.Medium, false)
@@ -652,6 +673,15 @@ function BanditCreationMain:loadConfig()
     end
 
 	if data.general then
+
+        if data.general.modid then
+            for i=1, #self.modCombo.options do
+                if self.modCombo.options[i] == data.general.modid then
+                    self.modCombo.selected = i
+                end
+            end
+        end
+
 		self.nameEntry:setText(data.general.name)
 
 		if data.general.female then
@@ -732,6 +762,8 @@ function BanditCreationMain:saveConfig()
     local data = BanditCustom.Create(self.bid)
 
 	data.general = {}
+
+    data.general.modid = self.modCombo:getSelectedText()
     data.general.cid = self.cid
     data.general.name = self.nameEntry:getText()
 

@@ -422,7 +422,7 @@ function BanditScheduler.SpawnWave(player, wave)
                     end
                 end
 
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, event.x, event.y, color, desc)
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, event.x, event.y, color, desc)
             end
         end
     end  
@@ -828,7 +828,7 @@ function BanditScheduler.SpawnDefenders(player, min, max)
         local color = {r=1, g=0, b=0}
         local icon = "media/ui/defend.png"
         local desc = "Hostile Defenders"
-        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 10, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color, desc)
+        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, spawnData.buildingCenterCoords.x, spawnData.buildingCenterCoords.y, color, desc)
     end
 end
 
@@ -845,7 +845,7 @@ function BanditScheduler.SpawnBase(player, sceneNo)
             if SandboxVars.Bandits.General_ArrivalIcon then
                 color = {r=1, g=0, b=0}
                 local desc = "Hostile Camp"
-                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 10, spawnPoint.x, spawnPoint.y, color, desc)
+                BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), "media/ui/tent.png", 3600, spawnPoint.x, spawnPoint.y, color, desc)
             end
         else
             print ("[INFO] Camp site has no space to spawn.")

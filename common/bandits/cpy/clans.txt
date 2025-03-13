@@ -1,0 +1,9 @@
+[c5c7f769-e5e8-44bb-ada6-cdf00ee2c234]
+	general: name = Test
+
+[d7ba1cc0-de47-4162-b5bd-6295c47b890d]
+	general: name = Criminals
+
+[eacda00e-6f8f-4afa-a813-f847d54720d8]
+	general: name = BLM
+

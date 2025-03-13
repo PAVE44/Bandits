@@ -25,6 +25,8 @@ function BanditClansMain:initialise()
     local clanButtonHeight = 130
     local clanButtonSpacing = 20
 
+    local rowY = 0
+
     BanditCustom.Load()
     local allData = BanditCustom.ClanGetAll()
 
@@ -36,7 +38,7 @@ function BanditClansMain:initialise()
     local y
     for cid, data in pairs(allData) do
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
-        y = topY + j * (clanButtonHeight + clanButtonSpacing)
+        y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
 
         self.clanButton[cid] = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, data.general.name, self, self.onClick, self.onRightClick)
         self.clanButton[cid].internal = "CLAN"
@@ -56,7 +58,7 @@ function BanditClansMain:initialise()
 
     if total < 48 then 
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
-        y = topY + j * (clanButtonHeight + clanButtonSpacing)
+        y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
         local cid = BanditCustom.GetNextId()
 
         self.clanButton[cid] = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, "New Clan", self, self.onClick, self.onRightClick)
@@ -76,9 +78,9 @@ function BanditClansMain:onClick(button)
         self:close()
     elseif button.internal == "CLAN" then
         if button.add then
-            BanditCustom.Load()
+            --[[BanditCustom.Load()
             BanditCustom.ClanCreate(button.cid)
-            BanditCustom.Save()
+            BanditCustom.Save()]]
         end
         local modal = BanditClanMain:new(500, 80, 1220, 900, button.cid)
         modal:initialise()
