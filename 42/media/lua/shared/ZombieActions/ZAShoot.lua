@@ -11,25 +11,32 @@ local function Hit(shooter, item, victim)
     -- Determine accuracy based on SandboxVars and shooter clan
     local brainShooter = BanditBrain.Get(shooter)
     local accuracyBoost = brainShooter.accuracyBoost or 1
-    local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
-    local accuracyCoeff = 0.11
-    if accuracyLevel == 1 then
-        accuracyCoeff = 0.5
-    elseif accuracyLevel == 2 then
-        accuracyCoeff = 0.22
-    elseif accuracyLevel == 3 then
-        accuracyCoeff = 0.11
-    elseif accuracyLevel == 4 then
-        accuracyCoeff = 0.06
-    elseif accuracyLevel == 5 then
-        accuracyCoeff = 0.028
+
+    -- Logistic curve
+    local function calculateHitChance(distance, accuracy)
+        local baseChance = 9000  -- 90% hit chance at point blank
+        local d50 = 16 + accuracy -- Distance where hit chance is 50%
+        local k = 0.2   -- Steepness of falloff
+        return baseChance / (1 + math.exp(k * (distance - d50)))
     end
 
-    local accuracyThreshold = 100 / (1 + accuracyCoeff * (dist - 1) / accuracyBoost)
+    local accuracyLevelMap = {-5, -2, 0, 2, 5}
+    local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
+    
+    -- general sandbox setting for accuracy 
+    local sightGeneral = accuracyLevelMap[accuracyLevel] or 0
+
+    -- accuracy set in bandit creator
+    local sightCharacter = brainShooter.accuracyBoost or 0
+
+    -- individual accuracy set after spawn
+    local sightIndividual = brainShooter.dna.sight or 0
+
+    local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightIndividual)
 
     -- Warning, this is not perfect, local player mand remote players will not generate the same 
     -- random number.
-    if ZombRand(100) < accuracyThreshold then
+    if ZombRand(10000) < accuracyThreshold then
         local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
         victim:playSound(hitSound)
         BanditPlayer.WakeEveryone()
@@ -412,8 +419,10 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     
     BanditCompatibility.StartMuzzleFlash(shooter)
     BanditProjectile.Add(shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle(), projectiles)
-    
-    shooter:playSound(item:getSwingSound())
+
+    local emitter = getWorld():getFreeEmitter(shooter:getX(), shooter:getY(), shooter:getZ())
+    emitter:playSound(item:getSwingSound())
+    --shooter:playSound(item:getSwingSound())
 
     if not item:isManuallyRemoveSpentRounds() then
         shooter:playSound(item:getShellFallSound())

@@ -156,7 +156,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             -- random DNA
             local dna = {}
             dna.slow = BanditUtils.CoinFlip()
-            dna.blind = BanditUtils.CoinFlip()
+            dna.sight = -2 + ZombRand(3)
             dna.sneak = BanditUtils.CoinFlip()
             dna.unfit = BanditUtils.CoinFlip()
             dna.coward = BanditUtils.CoinFlip()
@@ -184,7 +184,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.health = BanditUtils.Lerp(health, 1, 9, 1, 2.6)
 
             local accuracyBoost = bandit.general.sight or 5
-            brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, 0.5, 1.5)
+            brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, -4, 4)
 
             local enduranceBoost = bandit.general.endurance or 5
             brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.5, 1.5)

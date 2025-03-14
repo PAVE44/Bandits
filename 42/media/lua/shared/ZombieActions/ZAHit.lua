@@ -122,7 +122,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
         elseif meleeItemType == WeaponType.chainsaw then
             attacks = {"AttackChainsaw1", "AttackChainsaw2"}
         elseif meleeItemType == WeaponType.knife then
-            attacks = {"AttackKnife", "AttackKnifeMiss"}
+            attacks = {"AttackKnife"} -- , "AttackKnifeMiss"
         else -- two handed / knife ?
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         end
@@ -139,7 +139,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
 
     if anim then
         task.anim = anim
-        Bandit.UpdateTask(bandit, task)
+        -- Bandit.UpdateTask(bandit, task)
         bandit:setBumpType(anim)
     else
         return false

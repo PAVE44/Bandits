@@ -10,3 +10,6 @@
 [84d300b0-25a2-42ac-922d-5e8839a010fb]
 	general: name = FBI
 
+[b6c61446-ad6c-4529-9bac-751b9b64843f]
+	general: name = SWAT
+

@@ -23,7 +23,8 @@ end
 
 function BanditMenu.TestSpawn(player, square)
     local args = {--cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", --blm
-                  cid = "84d300b0-25a2-42ac-922d-5e8839a010fb",
+                  -- cid = "84d300b0-25a2-42ac-922d-5e8839a010fb", -- fbi
+                  cid = "b6c61446-ad6c-4529-9bac-751b9b64843f",
                   size=1,
                   x=square:getX(),
                   y=square:getY(),

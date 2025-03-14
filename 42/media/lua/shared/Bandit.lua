@@ -440,10 +440,10 @@ function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
         local weapons = brain.weapons
-        if weapons.primary.bulletsLeft == 0 and 
-            ((weapons.primary.type == "mag" and weapons.primary.magCount == 0) or
-             (weapons.primary.type == "nomag" and weapons.primary.ammoCount == 0))
-            and weapons.secondary.bulletsLeft == 0 and (weapons.secondary.magCount == 0 or weapons.secondary.ammoCount == 0) then
+        if weapons.primary.bulletsLeft <= 0 and 
+            ((weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
+             (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0))
+            and weapons.secondary.bulletsLeft <= 0 and (weapons.secondary.magCount <= 0 or weapons.secondary.ammoCount <= 0) then
             return true
         end
     end

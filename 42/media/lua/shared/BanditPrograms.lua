@@ -272,7 +272,7 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         rackAnim = "RackRevolver"
     end
 
-    if (weapon.type == "mag" and weapon.bulletsLeft == 0 and weapon.magCount > 0) or
+    if (weapon.type == "mag" and weapon.bulletsLeft <= 0 and weapon.magCount > 0) or
        (weapon.type == "nomag" and weapon.bulletsLeft < weapon.ammoSize and weapon.ammoCount > 0) then
         
         if clipMode then 
@@ -372,7 +372,7 @@ BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
                 end
 
                 -- no primary weapon or empty, check if we can grab weapon
-                if not weapons[slot] or (weapons[slot].magCount == 0 and weapons[slot].bulletsLeft == 0) then
+                if not weapons[slot] or (weapons[slot].magCount == 0 and weapons[slot].bulletsLeft <= 0) then
                     
                     -- it must be correct type, and it must in in bandit weapon registry
                     if weaponType == wType then

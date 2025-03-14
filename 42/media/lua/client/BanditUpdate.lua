@@ -187,6 +187,9 @@ local function ApplyVisuals(bandit, brain)
     local itemVisuals = bandit:getItemVisuals()
 
     if brain.cid then
+
+        bandit:setHealth(brain.health)
+
         banditVisuals:setSkinTextureName(BanditCustom.GetSkinTexture(brain.female, brain.skin))
         banditVisuals:setHairModel(BanditCustom.GetHairStyle(brain.female, brain.hairType)) 
 
@@ -833,13 +836,13 @@ local function ManageCombat(bandit)
     local bestDist = 40
     local enemyCharacter, switchTo
     local combat, reload, switch, firing, shove = false, false, false, false, false
-    local maxRange
+    local maxRangeMelee, maxRangePistol, maxRangeRifle
 
     -- RELOAD TASKS (WHEN NOT IN COMBAT)
     if not Bandit.HasActionTask(bandit) then
         for _, slot in pairs({"primary", "secondary"}) do
             if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
-                if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft == 0 and weapons[slot].magCount > 0) or
+                if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft <= 0 and weapons[slot].magCount > 0) or
                    (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft < weapons[slot].ammoSize and weapons[slot].ammoCount > 0) or 
                     weapons[slot].racked == false then 
                     
@@ -849,15 +852,9 @@ local function ManageCombat(bandit)
         end
     end
 
-    -- PRECOMPUTE WEAPON RANGES
-    local pistolRange, rifleRange = SandboxVars.Bandits.General_PistolRange - 1, SandboxVars.Bandits.General_RifleRange - 1
-    if Bandit.IsDNA(bandit, "blind") then
-        pistolRange, rifleRange = pistolRange - 2, rifleRange - 5
-    end
-
     -- SWITCH WEAPON DISTANCES
     local meleeDist = 4.5
-    local meleeRifle = 5
+    local rifleDist = 5
 
     -- COMBAT AGAIST PLAYERS 
     if Bandit.IsHostile(bandit) then
@@ -875,41 +872,60 @@ local function ManageCombat(bandit)
                         bestDist, enemyCharacter = dist, potentialEnemy
 
                         --reset action flags, only one can be true
-                        combat, reload, switch, firing, shove = false, false, false, false, false
+                        combat, switch, firing, shove = false, false, false, false
 
                         --determine if bandit will be in combat mode
                         if weapons.melee and canMelee then
-                            if not maxRange then
-                                maxRange = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
+                            if not maxRangeMelee then
+                                maxRangeMelee = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
                             end
                             local prone = potentialEnemy:isProne()
-                            if dist <= maxRange then
-                                local asn = enemyCharacter:getActionStateName()
-                                shove = dist < 0.6 and not prone and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
-                                combat = not shove
-                            elseif dist <= meleeDist and not bandit:isPrimaryEquipped(weapons.melee) then
-                                switch = true
-                                switchTo = weapons.melee
+                            
+                            if dist <= meleeDist then 
+                                if bandit:isPrimaryEquipped(weapons.melee) then
+                                    if dist <= maxRangeMelee then
+                                        local asn = enemyCharacter:getActionStateName()
+                                        shove = dist < 0.6 and not prone and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
+                                        combat = not shove
+                                    end
+                                else
+                                    switch = true
+                                    switchTo = weapons.melee
+                                end
                             end
                         end
 
                         --determine if bandit will be in shooting mode
                         if canShoot and not Bandit.IsOutOfAmmo(bandit) and dist > meleeDist + 4 then
                             if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
-                                if dist < rifleRange then
-                                    firing = true
-                                elseif dist < rifleRange + meleeRifle and not bandit:isPrimaryEquipped(weapons.primary.name) then
-                                    Bandit.Say(bandit, "SPOTTED")
-                                    switch = true
-                                    switchTo = weapons.primary.name
+                                if not maxRangeRifle then
+                                    maxRangeRifle = BanditCompatibility.InstanceItem(weapons.primary.name):getMaxRange()
+                                end
+                                if dist < maxRangeRifle then
+                                    if bandit:isPrimaryEquipped(weapons.primary.name) then
+                                        if dist < maxRangeRifle + rifleDist then
+                                            firing = true
+                                        end
+                                    else
+                                        Bandit.Say(bandit, "SPOTTED")
+                                        switch = true
+                                        switchTo = weapons.primary.name
+                                    end
                                 end
                             elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
-                                if dist < pistolRange then
-                                    firing = true
-                                elseif dist < rifleRange + meleeRifle and not bandit:isPrimaryEquipped(weapons.secondary.name) then
-                                    Bandit.Say(bandit, "SPOTTED")
-                                    switch = true
-                                    switchTo = weapons.secondary.name
+                                if not maxRangePistol then
+                                    maxRangePistol = BanditCompatibility.InstanceItem(weapons.secondary.name):getMaxRange()
+                                end
+                                if dist < maxRangePistol then
+                                    if bandit:isPrimaryEquipped(weapons.secondary.name) then
+                                        if dist < maxRangePistol + rifleDist then
+                                            firing = true
+                                        end
+                                    else
+                                        Bandit.Say(bandit, "SPOTTED")
+                                        switch = true
+                                        switchTo = weapons.secondary.name
+                                    end
                                 end
                             end
                         end
@@ -943,47 +959,63 @@ local function ManageCombat(bandit)
                                 bestDist, enemyCharacter = dist, potentialEnemy
 
                                 --reset action flags, only one can be true
-                                combat, reload, switch, firing, shove = false, false, false, false, false
+                                combat, switch, firing, shove = false, false, false, false
                                 
                                 --determine if bandit will be in combat mode
-                                if canMelee and weapons.melee and zz == pz then
-                                    if not maxRange then
-                                        maxRange = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
-                                    end
-                                    local prone = potentialEnemy:isProne()
-                                    local fix = 0.4
-                                    if prone then fix = -0.2 end
-                                    if dist <= maxRange + fix and bandit:isPrimaryEquipped(weapons.melee) then
-                                        local asn = enemyCharacter:getActionStateName()
-                                        shove = dist < 0.8 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
-                                        combat = not shove
-                                    elseif dist <= meleeDist and not bandit:isPrimaryEquipped(weapons.melee) then
-                                        switch = true
-                                        switchTo = weapons.melee
+                                if weapons.melee and canMelee and zz == pz then
+                                    if dist <= meleeDist then
+                                        if bandit:isPrimaryEquipped(weapons.melee) then
+
+                                            if not maxRangeMelee then
+                                                maxRangeMelee = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
+                                            end
+                                            local prone = potentialEnemy:isProne()
+                                            local fix = 0.4
+                                            if prone then fix = -0.2 end
+
+                                            if dist <= maxRangeMelee + fix then
+                                                local asn = enemyCharacter:getActionStateName()
+                                                shove = dist < 0.8 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
+                                                combat = not shove
+                                            end
+                                        else
+                                            switch = true
+                                            switchTo = weapons.melee
+                                        end
                                     end
                                 end
 
                                 --determine if bandit will be in shooting mode
-                                if canShoot and not Bandit.IsOutOfAmmo(bandit) and dist > meleeDist + 1 then
-                                    combat = false
-                                    shove = false
+                                if canShoot and not Bandit.IsOutOfAmmo(bandit) and dist > meleeDist + 4 then
                                     if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
-                                        local hasWeapon = bandit:isPrimaryEquipped(weapons.primary.name)
-                                        if dist < rifleRange and hasWeapon then
-                                            firing = true
-                                        elseif dist < rifleRange + meleeRifle and not hasWeapon then
-                                            Bandit.Say(bandit, "SPOTTED")
-                                            switch = true
-                                            switchTo = weapons.primary.name
+                                        if not maxRangeRifle then
+                                            maxRangeRifle = BanditCompatibility.InstanceItem(weapons.primary.name):getMaxRange()
+                                        end
+                                        if dist < maxRangeRifle then
+                                            if bandit:isPrimaryEquipped(weapons.primary.name) then
+                                                if dist < maxRangeRifle + rifleDist then
+                                                    firing = true
+                                                end
+                                            else
+                                                Bandit.Say(bandit, "SPOTTED")
+                                                switch = true
+                                                switchTo = weapons.primary.name
+                                            end
                                         end
                                     elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
-                                        local hasWeapon = bandit:isPrimaryEquipped(weapons.secondary.name)
-                                        if dist < pistolRange and hasWeapon then
-                                            firing = true
-                                        elseif dist < rifleRange + meleeRifle and not hasWeapon then
-                                            Bandit.Say(bandit, "SPOTTED")
-                                            switch = true
-                                            switchTo = weapons.secondary.name
+                                        if not maxRangePistol then
+                                            maxRangePistol = BanditCompatibility.InstanceItem(weapons.secondary.name):getMaxRange()
+                                        end
+                                        if dist < maxRangePistol then
+                                            if bandit:isPrimaryEquipped(weapons.secondary.name) then
+                                                if dist < maxRangePistol + rifleDist then
+                                                    firing = true
+                                                end
+                                            else
+                                                Bandit.Say(bandit, "SPOTTED")
+                                                switch = true
+                                                switchTo = weapons.secondary.name
+                                            end
                                         end
                                     end
                                 end
@@ -1040,14 +1072,18 @@ local function ManageCombat(bandit)
         end
 
     elseif firing then
-        if not Bandit.HasTaskType(bandit, "Shoot") and not Bandit.HasTaskType(bandit, "Aim") and not Bandit.HasTaskType(bandit, "Rack") and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip") then
+        if not Bandit.HasTaskType(bandit, "Shoot") and not Bandit.HasTaskType(bandit, "Aim") and not Bandit.HasTaskType(bandit, "Rack") 
+           and not Bandit.HasTaskType(bandit, "Equip") and not Bandit.HasTaskType(bandit, "Unequip")
+           and not Bandit.HasTaskType(bandit, "Load") and not Bandit.HasTaskType(bandit, "Unload")
+           and not Bandit.HasTaskType(bandit, "Rack") then
+
             Bandit.ClearTasks(bandit)
             if enemyCharacter:isAlive() then
                 
                 local veh = enemyCharacter:getVehicle()
                 if veh then Bandit.Say(bandit, "CAR") end
 
-                if bandit:isFacingObject(enemyCharacter, 0.5) then
+                if bandit:isFacingObject(enemyCharacter, 0.1) then
                     for _, slot in pairs({"primary", "secondary"}) do
                         
                         if weapons[slot].name then
