@@ -32,7 +32,7 @@ function BanditCreationAvatar:createChildren()
 			nameBox:instantiate()
 			-- nameBox.center = true
 			nameBox:setWidth(self.width)
-			
+
 			self:addChild(nameBox)
 		end
 		self.clickButton = BanditButtonCounter:new(2, 2, self.width - 4, self.height - 4, "", self, self.onClick, self.onRightClick)

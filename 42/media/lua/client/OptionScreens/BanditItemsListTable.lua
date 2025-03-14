@@ -17,7 +17,7 @@ function BanditItemsListTable:initialise()
 
     local btnCancelWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Close") + 64
     local btnCancelX = math.floor(self:getWidth() / 2) - (btnCancelWidth / 2)
-    
+
     self.cancel = ISButton:new(btnCancelX, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnCancelWidth, BUTTON_HGT, "Close", self, BanditItemsListTable.onClick)
     self.cancel.internal = "CLOSE"
     self.cancel.anchorTop = false
@@ -49,22 +49,28 @@ function BanditItemsListTable:initialise()
 
     if mode == "outfit" then
         items = getAllItemsForBodyLocation(internal)
-    elseif mode == "weapons" then
+    elseif mode == "carriable" then
         local all = getAllItems()
         for i=0, all:size()-1 do
             local item = all:get(i)
             if not item:getObsolete() and not item:isHidden() and item:getMinDamage() > 0 then
                 local itemType = item:getFullName()
                 local invItem = BanditCompatibility.InstanceItem(itemType)
+                local invItemType = WeaponType.getWeaponType(invItem)
                 if invItem then
-                    local invItemType = WeaponType.getWeaponType(invItem)
-            
                     if internal == "primary" and invItemType == WeaponType.firearm then
                         table.insert(items, itemType)
                     elseif internal == "secondary" and invItemType == WeaponType.handgun then
                         table.insert(items, itemType)
-                    elseif internal == "melee" then
+                    elseif internal == "melee" and invItemType ~= WeaponType.firearm and invItemType ~= WeaponType.handgun then
                         table.insert(items, itemType)
+                    elseif internal == "bag" then
+                        local container = invItem:getContainer()
+                        if container then
+                            if container:setCanBeEquipped() == "Back" then
+                                table.insert(items, itemType)
+                            end
+                        end
                     end
                 end
             end

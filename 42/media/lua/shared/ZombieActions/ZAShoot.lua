@@ -22,7 +22,7 @@ local function Hit(shooter, item, victim)
 
     local accuracyLevelMap = {-5, -2, 0, 2, 5}
     local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
-    
+
     -- general sandbox setting for accuracy 
     local sightGeneral = accuracyLevelMap[accuracyLevel] or 0
 
@@ -40,7 +40,7 @@ local function Hit(shooter, item, victim)
         local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
         victim:playSound(hitSound)
         BanditPlayer.WakeEveryone()
-        
+
         if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
             PlayerDamageModel.BulletHit(tempShooter, victim)
         else
@@ -71,7 +71,7 @@ local function Hit(shooter, item, victim)
             victim:addBlood(0.6)
 
             BanditCompatibility.Splash(victim, item, tempShooter)
-            
+
             if instanceof(victim, "IsoPlayer") then
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
@@ -201,7 +201,7 @@ local function ManageLineOfFire (shooter, victim)
                     end
 
                     thump(door, shooter)
-                    
+
                     return true
                 end
             end
@@ -220,7 +220,7 @@ local function ManageLineOfFire (shooter, victim)
             if vp[partRandom] then
                 vehiclePart = vehicle:getPartById(vp[partRandom].name)
                 if vehiclePart and vehiclePart:getInventoryItem() then
-                    
+
                     local vehiclePartId = vehiclePart:getId()
 
                     local dmg = vp[partRandom].dmg
@@ -235,10 +235,10 @@ local function ManageLineOfFire (shooter, victim)
                     end
 
                     vehicle:updatePartStats()
-                    
+
                     local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                     sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-                    
+
                 end
             end
         end
@@ -246,7 +246,7 @@ local function ManageLineOfFire (shooter, victim)
     end
 
     while true do
-        
+
         local square = cell:getGridSquare(cx, cy, cz)
         if square then
 
@@ -262,7 +262,7 @@ local function ManageLineOfFire (shooter, victim)
             -- manage vehicle obstacle
             obstacle = checkVehicle(square, shooter)
             if obstacle then return false end
-            
+
         end
 
         if cx == x1 and cy == y1 then break end
@@ -276,7 +276,7 @@ local function ManageLineOfFire (shooter, victim)
             cy = cy + sy
         end
     end
-    
+
     -- no bullet stop
     return true
 end
@@ -298,7 +298,7 @@ local function ManageLineOfFire2 (shooter, victim)
     local dy = y1 - y0
     local D = 2 * dy - dx
     local y = y0
-    
+
     for x = x0, x1 do
         -- for sx = -1, 1 do
             -- for sy = -1, 1 do
@@ -324,7 +324,7 @@ local function ManageLineOfFire2 (shooter, victim)
                         if vp[partRandom] then
                             vehiclePart = vehicle:getPartById(vp[partRandom].name)
                             if vehiclePart and vehiclePart:getInventoryItem() then
-                                
+
                                 local vehiclePartId = vehiclePart:getId()
 
                                 local dmg = vp[partRandom].dmg
@@ -340,10 +340,10 @@ local function ManageLineOfFire2 (shooter, victim)
                                 end
 
                                 vehicle:updatePartStats()
-                                
+
                                 local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                                 sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-                                
+
                                 if not gothrough then return end
                             end
                         end
@@ -409,14 +409,14 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
 
     local item = BanditCompatibility.InstanceItem(weapon.name)
-    
+
     -- projectile count
     local reloadType = item:getWeaponReloadType()
     local projectiles = 1
     if reloadType == "shotgun" or reloadType == "doublebarrelshotgun" or reloadType == "doublebarrelshotgunsawn" then
         projectiles = 5
     end
-    
+
     BanditCompatibility.StartMuzzleFlash(shooter)
     BanditProjectile.Add(shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle(), projectiles)
 
@@ -427,7 +427,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     if not item:isManuallyRemoveSpentRounds() then
         shooter:playSound(item:getShellFallSound())
     end
-    
+
     if item:isRackAfterShoot() then
         weapon.racked = false
     end
@@ -437,7 +437,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
 
     local test = shooter:getAnimationPlayer()
     local test2 = test:isReady()]]
-    
+
     -- this adds world sound that attract zombies, it must be on cooldown
     -- otherwise too many sounds disorient zombies. 
     if not brainShooter.sound or brainShooter.sound == 0 then
@@ -467,7 +467,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                         end
                     end
                 end
-                
+
                 if victim then
                     if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
                         local res = ManageLineOfFire(shooter, victim)
@@ -477,7 +477,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
                         end
                         zombie:setBumpDone(true)
                         return true
-                        
+
                     end
                 end
             end

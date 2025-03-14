@@ -39,7 +39,7 @@ function BanditClanMain:onAvatarListChange()
     self:addChild(self.save)
 
     local topY = 60
-    local iconSize = 40
+    local leftX = 130
     local avatarWidth = 130
     local avatarHeight = 240
     local avatarSpacing = 20
@@ -65,27 +65,68 @@ function BanditClanMain:onAvatarListChange()
 
     local rowY = 0
 
-    lbl = ISLabel:new(avatarSpacing, topY + rowY, BUTTON_HGT, "Clan name", 1, 1, 1, 1, UIFont.Small, true)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Clan Settings", 1, 1, 1, 1, UIFont.Medium, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Clan name", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
 
-    if not clanData.general.name then
-        clanData.general.name = ""
-    end
-
-    self.clanNameEntry = ISTextEntryBox:new(clanData.general.name, avatarSpacing + getTextManager():MeasureStringX(UIFont.Small, "Clan name") + UI_BORDER_SPACING, topY + rowY, 200, BUTTON_HGT)
+    self.clanNameEntry = ISTextEntryBox:new(clanData.general.name, leftX, topY + rowY, 200, BUTTON_HGT)
     self.clanNameEntry:initialise()
     self.clanNameEntry:instantiate()
     self:addChild(self.clanNameEntry)
-    rowY = rowY + BUTTON_HGT + 18
+    rowY = rowY + BUTTON_HGT + 8
 
-    --[[lbl = ISLabel:new(avatarSpacing, topY + rowY, BUTTON_HGT, "Clan Members", 1, 1, 1, 1, UIFont.Medium, true)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Spawn wave", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
-    rowY = rowY + BUTTON_HGT + 8]]
 
+    self.waveCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self)
+    self.waveCombo:initialise();
+    for i=1, 16 do
+        self.waveCombo:addOption(i)
+    end
+    self.waveCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self:addChild(self.waveCombo)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Favorite zone", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.zoneCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self)
+    self.zoneCombo:initialise();
+    self.zoneCombo:addOption("Urban")
+    self.zoneCombo:addOption("Suburban")
+    self.zoneCombo:addOption("Wilderness")
+    self.zoneCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self:addChild(self.zoneCombo)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Spawn AI", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.boolOptions = ISTickBox:new(leftX, topY + rowY, 200, BUTTON_HGT, "", self, BanditClanMain.onBoolOptionsChange)
+    self.boolOptions:initialise()
+    self:addChild(self.boolOptions)
+    self.boolOptions:addOption("Friendly")
+    self.boolOptions:addOption("Defenders")
+    self.boolOptions:addOption("Campers")
+    self.boolOptions:addOption("Assault")
+    self.boolOptions:addOption("Wanderer")
+    self.boolOptions:addOption("Roadblock")
+    rowY = rowY + (6 * BUTTON_HGT) + 8
+
+    leftX = 260
     local allData = BanditCustom.GetAll()
 
     self.models = {}
@@ -97,8 +138,8 @@ function BanditClanMain:onAvatarListChange()
     local y
     for bid, data in pairs(allData) do
         if data.general.cid == self.cid then
-            x = i * (avatarWidth + avatarSpacing) + avatarSpacing
-            y = topY + rowY + j * (avatarHeight + avatarSpacing)
+            x = leftX + (i * (avatarWidth + avatarSpacing)) + avatarSpacing
+            y = topY + j * (avatarHeight + avatarSpacing)
 
             self.avatarPanel[bid] = BanditCreationAvatar:new(x, y, avatarWidth, avatarHeight, bid, data.general.cid)
             self.avatarPanel[bid].onclick = BanditClanMain.onClick
@@ -169,7 +210,7 @@ function BanditClanMain:onAvatarListChange()
 
             self.avatarPanel[bid]:setCharacter(self.models[bid])
             i = i + 1
-            if i == 8 then
+            if i == 6 then
                 j = j + 1
                 i = 0
             end
@@ -177,9 +218,9 @@ function BanditClanMain:onAvatarListChange()
         end
     end
 
-    if total < 24 then 
-        x = i * (avatarWidth + avatarSpacing) + avatarSpacing
-        y = topY + rowY + j * (avatarHeight + avatarSpacing)
+    if total < 18 then
+        x = leftX + (i * (avatarWidth + avatarSpacing)) + avatarSpacing
+        y = topY + j * (avatarHeight + avatarSpacing)
         local bid = BanditCustom.GetNextId()
 
         self.avatarPanel[bid] = BanditCreationAvatar:new(x, y, avatarWidth, avatarHeight, bid, self.cid)
@@ -216,21 +257,37 @@ function BanditClanMain:saveConfig()
     BanditCustom.Save()
 end
 
-function BanditClanMain:onClick(button)
-    if button.internal == "BACK" then
-        local modal = BanditClansMain:new(500, 80, 1220, 900)
-        modal:initialise()
-        modal:addToUIManager()
-        self:removeFromUIManager()
-        self:close()
-    elseif button.internal == "SAVE" then
-        self:saveConfig()
-        local modal = BanditClansMain:new(500, 80, 1220, 900)
-        modal:initialise()
-        modal:addToUIManager()
-        self:removeFromUIManager()
-        self:close()
+function BanditClanMain:onBoolOptionsChange(index, selected)
+    if not selected then return end
+    if index == 1 then
+        self.boolOptions.selected[3] = false
+        self.boolOptions.selected[5] = false
     end
+    if index == 3 or index == 5 then
+        self.boolOptions.selected[1] = false
+    end
+end
+
+function BanditClanMain:onClick(button)
+    if button.internal == "SAVE" then
+        self:saveConfig()
+    end
+
+    local toRem = {}
+    for bid, model in pairs(self.models) do
+        table.insert(toRev, bid)
+    end
+    for _, bid in pairs(toRem) do
+        self.avatarPanel[bid]:setCharacter(nil)
+        self.models[v] = nil
+    end
+
+    local modal = BanditClansMain:new(500, 80, 1220, 900)
+    modal:initialise()
+    modal:addToUIManager()
+    self:clearChildren()
+    self:removeFromUIManager()
+    self:close()
 end
 
 function BanditClanMain:update()

@@ -69,7 +69,7 @@ function BanditCreationMain:initialise()
     -- MODID
 
     local mods = BanditCustom.GetMods()
-    
+
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Save in mod", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
@@ -81,7 +81,7 @@ function BanditCreationMain:initialise()
     for i=1, #mods do
         self.modCombo:addOption(mods[i])
     end
-    
+
     self.modCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1};
     self:addChild(self.modCombo)
     rowY = rowY + BUTTON_HGT + 18
@@ -160,7 +160,7 @@ function BanditCreationMain:initialise()
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
-    
+
     self.hairTypeCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onHairTypeSelected)
     self.hairTypeCombo:initialise();
     self:addChild(self.hairTypeCombo)
@@ -172,7 +172,7 @@ function BanditCreationMain:initialise()
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
-    
+
     self.beardTypeCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onBeardTypeSelected)
     self.beardTypeCombo:initialise()
     self:addChild(self.beardTypeCombo)
@@ -214,7 +214,7 @@ function BanditCreationMain:initialise()
 
     -- WEAPONS & AMMO
 
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Weapons", 1, 1, 1, 1, UIFont.Medium, false)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Carriables", 1, 1, 1, 1, UIFont.Medium, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
@@ -231,7 +231,7 @@ function BanditCreationMain:initialise()
 	self.weapons.primary:initialise()
 	self.weapons.primary:setToolTip(true, "Primary Gun")
 	self.weapons.primary.internal = "primary"
-	self.weapons.primary.mode = "weapons"
+	self.weapons.primary.mode = "carriable"
 	self:addChild(self.weapons.primary)
 
     self.ammo = {}
@@ -245,7 +245,6 @@ function BanditCreationMain:initialise()
     self.ammo.primary:instantiate()
     self.ammo.primary:setVisible(false)
     self:addChild(self.ammo.primary)
-
 	rowY = rowY + iconSize + 4
 
 	lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Secondary Gun", 1, 1, 1, 1, UIFont.Small)
@@ -257,7 +256,7 @@ function BanditCreationMain:initialise()
 	self.weapons.secondary:initialise()
 	self.weapons.secondary:setToolTip(true, "Secondary Gun")
 	self.weapons.secondary.internal = "secondary"
-	self.weapons.secondary.mode = "weapons"
+	self.weapons.secondary.mode = "carriable"
 	self:addChild(self.weapons.secondary)
 
     self.ammo.secondary = BanditButtonCounter:new(leftX + iconSize + 20, topY + rowY, iconSize, iconSize, "1", self, self.onClick, self.onRightClick)
@@ -269,7 +268,6 @@ function BanditCreationMain:initialise()
     self.ammo.secondary:instantiate()
     self.ammo.secondary:setVisible(false)
     self:addChild(self.ammo.secondary)
-
     rowY = rowY + iconSize + 4
 
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Melee", 1, 1, 1, 1, UIFont.Small)
@@ -281,8 +279,21 @@ function BanditCreationMain:initialise()
 	self.weapons.melee:initialise()
 	self.weapons.melee:setToolTip(true, "Melee Weapon")
 	self.weapons.melee.internal = "melee"
-	self.weapons.melee.mode = "weapons"
+	self.weapons.melee.mode = "carriable"
 	self:addChild(self.weapons.melee)
+    rowY = rowY + iconSize + 4
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, iconSize, "Bag", 1, 1, 1, 1, UIFont.Small)
+	lbl:initialise()
+	lbl:instantiate()
+	self:addChild(lbl)
+
+	self.bag = BanditItemDropBox:new(leftX, topY + rowY, iconSize, iconSize, true, self, BanditCreationMain.addItem, BanditCreationMain.removeItem, BanditCreationMain.verifyItem, nil)
+	self.bag:initialise()
+	self.bag:setToolTip(true, "Bag")
+	self.bag.internal = "bag"
+	self.bag.mode = "carriable"
+	self:addChild(self.bag)
 	rowY = rowY + iconSize + 18
 
     -- CHARACTER
@@ -405,7 +416,7 @@ function BanditCreationMain:initialise()
                            Bags = {"FannyPackFront", "FannyPackBack", "Webbing"},
                            Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
                            Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
-                           BottomArmor = {"Thigh_Right", "Thigh_Left", "Calf_Right", "Calf_Left"},
+                           BottomArmor = {"Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left"},
                            Shoes = {"Shoes", "Socks"}
      }
 
@@ -456,6 +467,12 @@ function BanditCreationMain:onClothingChanged()
                 self.model:setAttachedItem(v, nil)
             end
         end
+    end
+
+    local bag = self.bag.storedItem
+    if bag then
+        local replacement = item:getAttachmentReplacement()
+        self.model:setAttachedItem("Rifle On Back with Bag", bag)
     end
 
     for _, slot in pairs({"primary", "secondary", "melee"}) do
@@ -756,6 +773,11 @@ function BanditCreationMain:loadConfig()
         end
         self:onClothingChanged()
 	end
+
+    if data.bag then
+        local item = BanditCompatibility.InstanceItem(data.bag)
+        self.bag:setStoredItem(item)
+    end
 end
 
 function BanditCreationMain:saveConfig()
@@ -802,6 +824,11 @@ function BanditCreationMain:saveConfig()
             end
         end
 	end
+
+    local item = self.bag:getStoredItem()
+    if bag then
+        data.bag = item:getFullType()
+    end
 
     BanditCustom.Save()
 end

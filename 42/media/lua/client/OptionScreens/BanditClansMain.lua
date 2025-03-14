@@ -41,7 +41,7 @@ function BanditClansMain:initialise()
         y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
 
         self.clanButton[cid] = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, data.general.name, self, self.onClick, self.onRightClick)
-        self.clanButton[cid].internal = "CLAN"
+        self.clanButton[cid].internal = "EDITCLAN"
 		self.clanButton[cid].cid = cid
 		self.clanButton[cid].borderColor = {r=0.4, g=0.4, b=0.4, a=1}
 		self.clanButton[cid]:initialise()
@@ -59,12 +59,9 @@ function BanditClansMain:initialise()
     if total < 48 then 
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
         y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
-        local cid = BanditCustom.GetNextId()
 
         self.clanButton[cid] = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, "New Clan", self, self.onClick, self.onRightClick)
-        self.clanButton[cid].internal = "CLAN"
-		self.clanButton[cid].cid = cid
-        self.clanButton[cid].add = true
+        self.clanButton[cid].internal = "NEWCLAN"
 		self.clanButton[cid].borderColor = {r=0.4, g=0.4, b=0.4, a=1}
 		self.clanButton[cid]:initialise()
 		self.clanButton[cid]:instantiate()
@@ -76,13 +73,16 @@ end
 function BanditClansMain:onClick(button)
     if button.internal == "CLOSE" then
         self:close()
-    elseif button.internal == "CLAN" then
-        if button.add then
-            --[[BanditCustom.Load()
-            BanditCustom.ClanCreate(button.cid)
-            BanditCustom.Save()]]
-        end
+    elseif button.internal == "EDITCLAN" then
         local modal = BanditClanMain:new(500, 80, 1220, 900, button.cid)
+        modal:initialise()
+        modal:addToUIManager()
+        self:removeFromUIManager()
+        self:close()
+    elseif button.internal == "NEWCLAN" then
+        local cid = BanditCustom.GetNextId()
+        local bid = BanditCustom.GetNextId()
+        local modal = BanditCreationMain:new(500, 80, 1220, 900, bid, cid)
         modal:initialise()
         modal:addToUIManager()
         self:removeFromUIManager()
