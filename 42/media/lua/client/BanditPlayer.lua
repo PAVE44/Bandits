@@ -47,7 +47,7 @@ BanditPlayer.GetMasterPlayer = function(bandit)
     if gamemode == "Multiplayer" then
         master = getPlayerByOnlineID(Bandit.GetMaster(bandit))
     else
-        master = getPlayer()
+        master = getSpecificPlayer(0)
     end
     return master
 end
@@ -68,7 +68,7 @@ end
 local UpdatePlayersOnline = function ()
     if isServer() then return end
 
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     if player then
         local playerData = {}
         playerData.id = BanditUtils.GetCharacterID(player)
@@ -140,7 +140,7 @@ end
 
 local UpdateVisitedBuildings = function()
     if isServer() then return end
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     local building = player:getBuilding()
     if building then
         local buildingDef = building:getDef()

@@ -209,7 +209,7 @@ function BanditUtils.IsController(zombie)
             bestPlayerId = BanditUtils.GetCharacterID(player)
         end
     end
-    return bestPlayerId == BanditUtils.GetCharacterID(getPlayer())
+    return bestPlayerId == BanditUtils.GetCharacterID(getSpecificPlayer(0))
 end
 
 function BanditUtils.IsInAngle(observer, targetX, targetY)

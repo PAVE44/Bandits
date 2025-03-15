@@ -295,16 +295,16 @@ function BanditScheduler.SpawnWave(player, wave)
                     arrivalSound = "ZSAttack_Small_" .. tostring(1 + ZombRand(21))
                 end
                 
-                if event.x < getPlayer():getX() then 
-                    arrivalSoundX = getPlayer():getX() - 30
+                if event.x < player:getX() then 
+                    arrivalSoundX = player:getX() - 30
                 else
-                    arrivalSoundX = getPlayer():getX() + 30
+                    arrivalSoundX = player:getX() + 30
                 end
             
-                if event.y < getPlayer():getY() then 
-                    arrivalSoundY = getPlayer():getY() - 30
+                if event.y < player:getY() then 
+                    arrivalSoundY = player:getY() - 30
                 else
-                    arrivalSoundY = getPlayer():getY() + 30
+                    arrivalSoundY = player:getY() + 30
                 end
 
                 local emitter = getWorld():getFreeEmitter(arrivalSoundX, arrivalSoundY, 0)
@@ -503,7 +503,7 @@ function BanditScheduler.RaiseDefences(x, y)
                                         if instanceof(object, "IsoWindow") then
                                             local args = {x=x, y=y, z=z, index=object:getObjectIndex(), isMetal=true, condition=5000}
                                             -- tempPlayer:setPerkLevelDebug(Perks.Woodwork, 10)
-                                            sendClientCommand(getPlayer(), 'Commands', 'Barricade', args)
+                                            sendClientCommand(getSpecificPlayer(0), 'Commands', 'Barricade', args)
                                         end
                                     end
 
@@ -907,7 +907,7 @@ function BanditScheduler.CheckEvent()
 
     local world = getWorld()
     local gamemode = world:getGameMode()
-    local currentPlayer = getPlayer()
+    local currentPlayer = getSpecificPlayer(0)
     local onlinePlayer 
 
     if gamemode == "Multiplayer" then
@@ -915,7 +915,7 @@ function BanditScheduler.CheckEvent()
         local pid = ZombRand(playerList:size())
         onlinePlayer = playerList:get(pid)
     else
-        onlinePlayer = getPlayer()
+        onlinePlayer = getSpecificPlayer(0)
     end
 
     if BanditUtils.GetCharacterID(currentPlayer) == BanditUtils.GetCharacterID(onlinePlayer) then

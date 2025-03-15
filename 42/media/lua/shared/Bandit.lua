@@ -54,7 +54,7 @@ end
                         
 
 function Bandit.ForceSyncPart(zombie, syncData)
-    sendClientCommand(getPlayer(), 'Commands', 'BanditUpdatePart', syncData)
+    sendClientCommand(getSpecificPlayer(0), 'Commands', 'BanditUpdatePart', syncData)
 end
 
 function Bandit.AddTask(zombie, task)
@@ -649,7 +649,7 @@ function Bandit.Say(zombie, phrase, force)
     if not force and brain.speech and brain.speech > 0 then return end
     if force then zombie:getEmitter():stopAll() end
     
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     local dist = BanditUtils.DistTo(player:getX(), player:getY(), zombie:getX(), zombie:getY())
     
     if dist <= 14 then
@@ -696,7 +696,7 @@ function Bandit.Say(zombie, phrase, force)
 
                 brain.speech = length
 
-                addSound(getPlayer(), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
+                addSound(getSpecificPlayer(0), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
             end
         end
     end

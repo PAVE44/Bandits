@@ -1,7 +1,3 @@
---***********************************************************
---**                    THE INDIE STONE                    **
---**				  Author: turbotutone				   **
---***********************************************************
 require "ISUI/ISPanel"
 
 BanditItemDropBox = ISPanel:derive("BanditItemDropBox");

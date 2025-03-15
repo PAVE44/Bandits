@@ -60,12 +60,12 @@ function BanditClansMain:initialise()
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
         y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
 
-        self.clanButton[cid] = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, "New Clan", self, self.onClick, self.onRightClick)
-        self.clanButton[cid].internal = "NEWCLAN"
-		self.clanButton[cid].borderColor = {r=0.4, g=0.4, b=0.4, a=1}
-		self.clanButton[cid]:initialise()
-		self.clanButton[cid]:instantiate()
-		self:addChild(self.clanButton[cid])
+        self.clanButtonNew = BanditButtonCounter:new(x, y, clanButtonWidth, clanButtonHeight, "New Clan", self, self.onClick, self.onRightClick)
+        self.clanButtonNew.internal = "NEWCLAN"
+		self.clanButtonNew.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+		self.clanButtonNew:initialise()
+		self.clanButtonNew:instantiate()
+		self:addChild(self.clanButtonNew)
     end
 end
 
@@ -88,6 +88,9 @@ function BanditClansMain:onClick(button)
         self:removeFromUIManager()
         self:close()
     end
+end
+
+function BanditClansMain:onRightClick(button)
 end
 
 function BanditClansMain:update()

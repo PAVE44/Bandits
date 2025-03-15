@@ -112,6 +112,7 @@ function BanditCreationAvatar:onClick(button)
 	local modal = BanditCreationMain:new(500, 80, 1220, 900, self.bid, self.cid)
     modal:initialise()
     modal:addToUIManager()
+	self.parent:cleanUp()
 	self.parent:removeFromUIManager()
 	self.parent:close()
 end

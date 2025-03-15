@@ -210,7 +210,7 @@ local function ManageLineOfFire (shooter, victim)
     end
 
     local function checkVehicle(square, shooter)
-        local player = getPlayer()
+        local player = getSpecificPlayer(0)
         local vp = vehicleParts
         local vehicle = square:getVehicleContainer()
         if vehicle then
@@ -284,7 +284,7 @@ end
 
 local function ManageLineOfFire2 (shooter, victim)
     local cell = getCell()
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     local vp = vehicleParts
     local x0 = math.floor(shooter:getX())
     local y0 = math.floor(shooter:getY())
@@ -441,7 +441,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     -- this adds world sound that attract zombies, it must be on cooldown
     -- otherwise too many sounds disorient zombies. 
     if not brainShooter.sound or brainShooter.sound == 0 then
-        addSound(getPlayer(), shooter:getX(), shooter:getY(), shooter:getZ(), 40, 100)
+        addSound(getSpecificPlayer(0), shooter:getX(), shooter:getY(), shooter:getZ(), 40, 100)
         brainShooter.sound = 1
         -- BanditBrain.Update(shooter, brainShooter)
     end

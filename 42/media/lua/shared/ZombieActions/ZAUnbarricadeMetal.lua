@@ -30,7 +30,7 @@ ZombieActions.UnbarricadeMetal.onComplete = function(zombie, task)
 
     if BanditUtils.IsController(zombie) then
         local args = {x=task.x, y=task.y, z=task.z, index=task.idx}
-        sendClientCommand(getPlayer(), 'Commands', 'Unbarricade', args)
+        sendClientCommand(getSpecificPlayer(0), 'Commands', 'Unbarricade', args)
     end
 
     if BanditUtils.IsController(zombie) then

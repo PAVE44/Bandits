@@ -1,9 +1,66 @@
 [c5c7f769-e5e8-44bb-ada6-cdf00ee2c234]
 	general: name = Test
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
 
 [d7ba1cc0-de47-4162-b5bd-6295c47b890d]
 	general: name = Criminals
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
 
 [eacda00e-6f8f-4afa-a813-f847d54720d8]
 	general: name = BLM
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[84d300b0-25a2-42ac-922d-5e8839a010fb]
+	general: name = FBI
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[b6c61446-ad6c-4529-9bac-751b9b64843f]
+	general: name = SWAT
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[f3ad89be-9368-4df7-a63b-0c315a96f23b]
+	general: name = Untitled
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
 

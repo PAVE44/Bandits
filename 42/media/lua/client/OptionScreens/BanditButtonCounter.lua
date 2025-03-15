@@ -2,27 +2,14 @@ require "ISUI/ISPanel"
 
 BanditButtonCounter = ISPanel:derive("BanditButtonCounter");
 
---************************************************************************--
---** ISPanel:initialise
---**
---************************************************************************--
-
 function BanditButtonCounter:initialise()
 	ISPanel.initialise(self);
 end
 
---************************************************************************--
---** BanditButtonCounter:onMouseMove
---**
---************************************************************************--
 function BanditButtonCounter:onMouseMove(dx, dy)
 	self.mouseOver = self:isMouseOver();
 end
 
---************************************************************************--
---** BanditButtonCounter:onMouseMoveOutside
---**
---************************************************************************--
 function BanditButtonCounter:onMouseMoveOutside(dx, dy)
 	self.mouseOver = false;
 	if self.onmouseoutfunction then
@@ -34,10 +21,6 @@ function BanditButtonCounter:setJoypadFocused(focused)
     self.joypadFocused = focused;
 end
 
---************************************************************************--
---** BanditButtonCounter:onMouseUp
---**
---************************************************************************--
 function BanditButtonCounter:onMouseUp(x, y)
 
     if not self:getIsVisible() then
@@ -477,10 +460,6 @@ function BanditButtonCounter:calculateLayout(_preferredWidth, _preferredHeight)
     self:setHeight(height);
 end
 
---************************************************************************--
---** BanditButtonCounter:new
---**
---************************************************************************--
 function BanditButtonCounter:new (x, y, width, height, title, clicktarget, onclick, onrclick, allowMouseUpProcessing)
 
 	local o = {}

@@ -231,6 +231,13 @@ local function ApplyVisuals(bandit, brain)
                 end
             end
         end
+
+        if brain.bag and brain.bag.name then
+            local item = BanditCompatibility.InstanceItem(brain.bag.name)
+            local clothingItem = item:getClothingItem()
+            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+            -- bandit:setWornItem(item:canBeEquipped(), item)
+        end
         
     else
         if brain.skinTexture then 
@@ -719,10 +726,10 @@ local function ManageCollisions(bandit)
                                             z = object:getSquare():getZ(),
                                             index = object:getObjectIndex()
                                         }
-                                        sendClientCommand(getPlayer(), 'Commands', 'OpenDoor', args)
+                                        sendClientCommand(getSpecificPlayer(0), 'Commands', 'OpenDoor', args)
 
                                         -- Get the square of the object
-                                        local square = getPlayer():getSquare()
+                                        local square = getSpecificPlayer(0):getSquare()
 
                                         -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
                                         local radius = 5
@@ -853,7 +860,7 @@ local function ManageCombat(bandit)
     end
 
     -- SWITCH WEAPON DISTANCES
-    local meleeDist = 4.5
+    local meleeDist = 3.5
     local rifleDist = 5
 
     -- COMBAT AGAIST PLAYERS 
@@ -1291,7 +1298,7 @@ local function UpdateZombies(zombie)
 
         -- Approach bandit if in range
         elseif enemy.dist >= 0.59 then
-            local player = getPlayer()
+            local player = getSpecificPlayer(0)
             if zombie:CanSee(bandit) and zombie:CanSee(player) then
                 if BanditCompatibility.GetGameVersion() >= 42 then
                     zombie:pathToCharacter(bandit)
@@ -1368,7 +1375,7 @@ local function ProcessTask(bandit, task)
         if task.sound then
             local play = true
             if task.soundDistMax then
-                local player = getPlayer()
+                local player = getSpecificPlayer(0)
                 local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), player:getX(), player:getY())
                 if dist > task.soundDistMax then
                     play = false
@@ -1569,6 +1576,7 @@ local function OnBanditUpdate(zombie)
     
     local bandit = zombie
 
+    bandit:setAnimatingBackwards(false)
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     if bandit:isTeleporting() then
         return
@@ -1665,7 +1673,7 @@ local function OnZombieDead(zombie)
     local attacker = bandit:getAttackedBy()
     CheckFriendlyFire(bandit, attacker)
 
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     local killer = bandit:getAttackedBy()
     if killer then
         if killer == player then

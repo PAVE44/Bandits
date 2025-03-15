@@ -207,6 +207,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             end
 
             brain.clothing = bandit.clothing
+            brain.bag = bandit.bag
 
             brain.loot = {}
             brain.inventory = {}

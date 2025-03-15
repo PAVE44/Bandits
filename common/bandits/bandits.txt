@@ -436,10 +436,8 @@
 	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
 	clothing: AmmoStrap = Base.AmmoStrap_Bullets
 	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Thigh_Right = Base.ThighBodyArmour_R_SWAT
-	clothing: Thigh_Left = Base.ThighBodyArmour_L_SWAT
-	clothing: Calf_Right = Base.GreaveBodyArmour_Right_SWAT
-	clothing: Calf_Left = Base.GreaveBodyArmour_Left_SWAT
+	clothing: Knee_Right = Base.Kneepad_Right_Tactical
+	clothing: Knee_Left = Base.Kneepad_Left_Tactical
 	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Heavy
 	weapons: primary = Base.VarmintRifle
@@ -471,8 +469,8 @@
 	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Thigh_Right = Base.ThighBodyArmour_R_SWAT
 	clothing: Thigh_Left = Base.ThighBodyArmour_L_SWAT
-	clothing: Calf_Right = Base.GreaveBodyArmour_Right_SWAT
-	clothing: Calf_Left = Base.GreaveBodyArmour_Left_SWAT
+	clothing: Knee_Right = Base.Kneepad_Right_Tactical
+	clothing: Knee_Left = Base.Kneepad_Left_Tactical
 	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Heavy
 	weapons: primary = Base.Shotgun
@@ -504,10 +502,8 @@
 	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
 	clothing: AmmoStrap = Base.AmmoStrap_Shells
 	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Thigh_Right = Base.ThighBodyArmour_R_SWAT
-	clothing: Thigh_Left = Base.ThighBodyArmour_L_SWAT
-	clothing: Calf_Right = Base.GreaveBodyArmour_Right_SWAT
-	clothing: Calf_Left = Base.GreaveBodyArmour_Left_SWAT
+	clothing: Knee_Right = Base.Kneepad_Right_Tactical
+	clothing: Knee_Left = Base.Kneepad_Left_Tactical
 	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Heavy
 	weapons: primary = Base.Shotgun
@@ -541,8 +537,8 @@
 	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Thigh_Right = Base.ThighBodyArmour_R_SWAT
 	clothing: Thigh_Left = Base.ThighBodyArmour_L_SWAT
-	clothing: Calf_Right = Base.GreaveBodyArmour_Right_SWAT
-	clothing: Calf_Left = Base.GreaveBodyArmour_Left_SWAT
+	clothing: Knee_Right = Base.Kneepad_Right_Tactical
+	clothing: Knee_Left = Base.Kneepad_Left_Tactical
 	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Heavy
 	weapons: primary = Base.Shotgun
@@ -550,4 +546,50 @@
 	weapons: melee = Base.Nightstick
 	ammo: primary = 3
 	ammo: secondary = 3
+
+[71d105f4-ba8f-4923-8417-c44b03d6ef3c]
+	general: modid = Bandits
+	general: cid = b6c61446-ad6c-4529-9bac-751b9b64843f
+	general: name = SWAT_Medic_1
+	general: female = false
+	general: skin = 5
+	general: hairType = 1
+	general: beardType = 1
+	general: hairColor = 12
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 6
+	clothing: Hat = Base.Hat_SWAT
+	clothing: Eyes = Base.Glasses_SafetyGoggles
+	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Tshirt = Base.Tshirt_Profession_PoliceWhite
+	clothing: TorsoExtraVestBullet = Base.Vest_BulletSWAT
+	clothing: ForeArm_Right = Base.Vambrace_BodyArmour_Right_SWAT
+	clothing: ForeArm_Left = Base.Vambrace_BodyArmour_Left_SWAT
+	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
+	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: Knee_Right = Base.Kneepad_Right_Tactical
+	clothing: Knee_Left = Base.Kneepad_Left_Tactical
+	clothing: Shoes = Base.Shoes_Black
+	clothing: Socks = Base.Socks_Heavy
+	weapons: secondary = Base.Pistol
+	weapons: melee = Base.Nightstick
+	ammo: secondary = 3
+	bag: name = Base.Bag_Satchel_Medical
+
+[8dbbd890-87e5-4306-9fdb-2bfff09237cd]
+	general: modid = Bandits
+	general: cid = f3ad89be-9368-4df7-a63b-0c315a96f23b
+	general: name = xxxx1
+	general: female = false
+	general: skin = 1
+	general: hairType = 1
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	bag: name = Base.Bag_ALICEpack
 

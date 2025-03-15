@@ -330,7 +330,7 @@ BanditPrograms.Idle = function(bandit)
     elseif action == 5 then
         local task = {action="Time", anim="Sneeze", time=200}
         table.insert(tasks, task)
-        addSound(getPlayer(), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
+        addSound(getSpecificPlayer(0), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
     elseif action == 6 then
         local task = {action="Time", anim="WipeBrow", time=200}
         table.insert(tasks, task)

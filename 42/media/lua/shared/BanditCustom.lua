@@ -184,6 +184,7 @@ BanditCustom.Create = function(bid)
     data.clothing = {}
     data.weapons = {}
     data.ammo = {}
+    data.bag = {}
 
     BanditCustom.banditData[bid] = data
     return BanditCustom.banditData[bid]

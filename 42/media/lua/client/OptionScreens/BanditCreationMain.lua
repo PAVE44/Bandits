@@ -53,10 +53,6 @@ function BanditCreationMain:initialise()
     self.model:getHumanVisual():setSkinTextureIndex(0)
     self.model:getHumanVisual():setHairModel(BanditCustom.GetHairStyle(false, 1))
     self.model:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
-    self.model:Kill(nil)
-    self.model:removeFromSquare()
-    self.model:removeFromWorld()
-    self.model:removeSaveFile()
 
     -- self.avatarPanel:setSurvivorDesc(self.desc)
 
@@ -451,6 +447,9 @@ function BanditCreationMain:initialise()
 end
 
 function BanditCreationMain:onClothingChanged()
+    self.model:reportEvent("EventWearClothing")
+	self.model:playSound("RummageInInventory")
+
     for bodyLocation, dropbox in pairs(self.clothing) do
         self.model:setWornItem(bodyLocation, nil)
     end
@@ -471,8 +470,8 @@ function BanditCreationMain:onClothingChanged()
 
     local bag = self.bag.storedItem
     if bag then
-        local replacement = item:getAttachmentReplacement()
-        self.model:setAttachedItem("Rifle On Back with Bag", bag)
+        local replacement = bag:getAttachmentReplacement()
+        self.model:setWornItem(bag:canBeEquipped(), bag)
     end
 
     for _, slot in pairs({"primary", "secondary", "melee"}) do
@@ -638,12 +637,22 @@ function BanditCreationMain:onClick(button)
 
     if button.internal == "SAVE" then
         self:saveConfig()
+        self.avatarPanel:setCharacter(nil)
+        self.model:removeFromSquare()
+        self.model:removeFromWorld()
+        self.model:removeSaveFile()
+        self.model = nil
         local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
         modal:initialise()
         modal:addToUIManager()
         self:removeFromUIManager()
         self:close()
     elseif button.internal == "CANCEL" then
+        self.avatarPanel:setCharacter(nil)
+        self.model:removeFromSquare()
+        self.model:removeFromWorld()
+        self.model:removeSaveFile()
+        self.model = nil
         local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
         modal:initialise()
         modal:addToUIManager()
@@ -756,7 +765,6 @@ function BanditCreationMain:loadConfig()
 				end
 			end
 		end
-        self:onClothingChanged()
 	end
 
 	if data.weapons then
@@ -771,13 +779,14 @@ function BanditCreationMain:loadConfig()
                 end
             end
         end
-        self:onClothingChanged()
 	end
 
     if data.bag then
-        local item = BanditCompatibility.InstanceItem(data.bag)
+        local item = BanditCompatibility.InstanceItem(data.bag.name)
         self.bag:setStoredItem(item)
     end
+    self:onClothingChanged()
+
 end
 
 function BanditCreationMain:saveConfig()
@@ -825,9 +834,10 @@ function BanditCreationMain:saveConfig()
         end
 	end
 
-    local item = self.bag:getStoredItem()
+    data.bag = {}
+    local bag = self.bag:getStoredItem()
     if bag then
-        data.bag = item:getFullType()
+        data.bag.name = bag:getFullType()
     end
 
     BanditCustom.Save()
