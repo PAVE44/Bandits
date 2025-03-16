@@ -97,7 +97,41 @@ ZombiePrograms.Companion.Follow = function(bandit)
         walkType = "Limp"
         endurance = 0
     end 
-   
+
+    if dist < 20 then
+        local enemy
+        local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+        local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+        local closestEnemy = closestZombie
+
+        if closestBandit.dist < closestZombie.dist then 
+            closestEnemy = closestBandit
+            enemy = BanditZombie.Cache[closestEnemy.id]
+        end
+
+        if closestEnemy.dist < 8 then
+            -- We are trying to save the player, so the friendly should act with high motivation
+            -- that translates to running pace (even despite limping) and minimal endurance loss.
+
+            local closeSlow = true
+            if enemy then
+                local weapon = enemy:getPrimaryHandItem()
+                if weapon and weapon:IsWeapon() then
+                    local weaponType = WeaponType.getWeaponType(weapon)
+                    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                        closeSlow = false
+                    end
+                end
+            end
+
+            walkType = "Run"
+            endurance = -0.01
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist, closeSlow))
+            return {status=true, next="Follow", tasks=tasks}
+        end
+    end
+    
+       --[[
     -- If the player is in the vehicle, the companion should join him.
     -- If the player exits the vehicle, so should the companion.
     if SandboxVars.Bandits.General_EnterVehicles then
@@ -138,38 +172,8 @@ ZombiePrograms.Companion.Follow = function(bandit)
     -- Companions intention is to generally stay with the player
     -- however, if the enemy is close, the companion should engage
     -- but only if player is not too far, kind of a proactive defense.
-    if dist < 20 then
-        local enemy
-        local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
-        local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-        local closestEnemy = closestZombie
 
-        if closestBandit.dist < closestZombie.dist then 
-            closestEnemy = closestBandit
-            enemy = BanditZombie.Cache[closestEnemy.id]
-        end
 
-        if closestEnemy.dist < 8 then
-            -- We are trying to save the player, so the friendly should act with high motivation
-            -- that translates to running pace (even despite limping) and minimal endurance loss.
-
-            local closeSlow = true
-            if enemy then
-                local weapon = enemy:getPrimaryHandItem()
-                if weapon and weapon:IsWeapon() then
-                    local weaponType = WeaponType.getWeaponType(weapon)
-                    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                        closeSlow = false
-                    end
-                end
-            end
-
-            walkType = "Run"
-            endurance = -0.01
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist, closeSlow))
-            return {status=true, next="Follow", tasks=tasks}
-        end
-    end
     
     -- look for guns
     if Bandit.IsOutOfAmmo(bandit) then
@@ -228,13 +232,13 @@ ZombiePrograms.Companion.Follow = function(bandit)
                                     return {status=true, next="Prepare", tasks=tasks}
                                 end
 
-                                --[[local subTasks = BanditPrograms.Container.Loot(bandit, object, container)
+                                local subTasks = BanditPrograms.Container.Loot(bandit, object, container)
                                 if #subTasks > 0 then
                                     for _, subTask in pairs(subTasks) do
                                         table.insert(tasks, subTask)
                                     end
                                     return {status=true, next="Prepare", tasks=tasks}
-                                end]]
+                                end
                             end
                         end
                     end
@@ -448,30 +452,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         end
         return {status=true, next="Follow", tasks=tasks}
     end
-
-    -- ideas: read book, 
-    --[[
-    ram database
-        - fridge locations
-        - contents of all containers in the base
-            - updated on each container item add/remove
-            - container existance verified periodically
-        - base coordinates
-            -- updated once on base creation - when items put to fridge
-        - lua objects [farms, barrels]
-            -- updated periodically in certain range from base
-        - generator locations
-            -- updated on player start / stop / connect / disconnect
-        - world items
-            -- updated when walking on square
-
-
-    , heal crops, fix car, chop tree, saw logs, 
-    
-    itemless:
-    move rotten to composter, sleep, use toilet, eat something, drink something]]
-
-    -- follow the player.
+--]]
     local minDist = 2
     if dist > minDist then
         local id = BanditUtils.GetCharacterID(bandit)
@@ -489,6 +470,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         return {status=true, next="Follow", tasks=tasks}
     end
 
+    --[[
     -- nothing to do, play idle anims
     local subTasks = BanditPrograms.Idle(bandit)
     if #subTasks > 0 then
@@ -496,7 +478,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
             table.insert(tasks, subTask)
         end
         return {status=true, next="Follow", tasks=tasks}
-    end
-
+    end]]
+    
     return {status=true, next="Follow", tasks=tasks}
 end

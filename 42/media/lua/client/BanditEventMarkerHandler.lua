@@ -37,11 +37,7 @@ end
 
 function BanditEventMarkerHandler.RemoveOldMarkers ()
     local markers = BanditEventMarkerHandler.markers
-    print (getGametimeTimestamp())
     for eventId, marker in pairs(markers) do
-        print  (marker.start)
-        print  (marker.duration)
-        print (marker.start + marker.duration)
         if marker.start + marker.duration < getGametimeTimestamp() then
 
             marker:setDuration(0)

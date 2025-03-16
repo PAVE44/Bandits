@@ -62,6 +62,10 @@ function BanditCreationMain:initialise()
     local lbl
     local rowY = 0
 
+    -- REQUIREMENTS
+
+    self.requirements = {}
+
     -- MODID
 
     local mods = BanditCustom.GetMods()
@@ -754,6 +758,18 @@ function BanditCreationMain:loadConfig()
         if data.general.sight then
             self.sightSlider:setCurrentValue(data.general.sight)
         end
+
+        if data.general.exp1 then
+            self.expertise[1].selected = data.general.exp1
+        end
+
+        if data.general.exp2 then
+            self.expertise[2].selected = data.general.exp2
+        end
+
+        if data.general.exp3 then
+            self.expertise[3].selected = data.general.exp3
+        end
 	end
 
 	if data.clothing then
@@ -813,6 +829,10 @@ function BanditCreationMain:saveConfig()
     data.general.strength = self.strengthSlider:getCurrentValue()
     data.general.endurance = self.enduranceSlider:getCurrentValue()
     data.general.sight = self.sightSlider:getCurrentValue()
+
+    data.general.exp1 = self.expertise[1].selected
+    data.general.exp2 = self.expertise[2].selected
+    data.general.exp3 = self.expertise[3].selected
 
     data.clothing = {}
     for _, dropbox in pairs(self.clothing) do

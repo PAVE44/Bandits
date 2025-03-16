@@ -64,10 +64,10 @@ local UpdateZombieCache = function(numberTicks)
 
             cache[id] = zombie
 
-            local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+            local zx, zy, zz, zd = zombie:getX(), zombie:getY(), zombie:getZ(), zombie:getDirectionAngle()
 
             if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-                local light = {id = id, x = zx, y = zy, z = zz}
+                local light = {id = id, x = zx, y = zy, z = zz, d = zd}
 
                 if zombie:getVariableBoolean("Bandit")  then
                     light.isBandit = true

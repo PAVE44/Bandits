@@ -426,6 +426,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
+	general: exp1 = 1
+	general: exp2 = 1
+	general: exp3 = 1
 	clothing: Hat = Base.Hat_BaseballCap_SWAT
 	clothing: Boilersuit = Base.Boilersuit_SWAT
 	clothing: Tshirt = Base.Tshirt_PoliceBlue
@@ -443,8 +446,8 @@
 	weapons: primary = Base.VarmintRifle
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.Nightstick
-	ammo: primary = 3
-	ammo: secondary = 3
+	ammo: primary = 5
+	ammo: secondary = 5
 
 [4b04b578-f9d0-4efd-b6d2-d9977921a3b0]
 	general: modid = Bandits
@@ -459,6 +462,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 6
+	general: exp1 = 3
+	general: exp2 = 4
+	general: exp3 = 1
 	clothing: Hat = Base.Hat_SWAT
 	clothing: Eyes = Base.Glasses_SafetyGoggles
 	clothing: Boilersuit = Base.Boilersuit_SWAT
@@ -476,8 +482,8 @@
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.Nightstick
-	ammo: primary = 3
-	ammo: secondary = 3
+	ammo: primary = 5
+	ammo: secondary = 5
 
 [850dc6d6-8733-40dd-b2cd-5043cde0db70]
 	general: modid = Bandits
@@ -492,6 +498,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 6
+	general: exp1 = 3
+	general: exp2 = 8
+	general: exp3 = 1
 	clothing: Hat = Base.Hat_SWAT
 	clothing: Eyes = Base.Glasses_SafetyGoggles
 	clothing: Boilersuit = Base.Boilersuit_SWAT
@@ -509,8 +518,8 @@
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.Nightstick
-	ammo: primary = 3
-	ammo: secondary = 3
+	ammo: primary = 5
+	ammo: secondary = 5
 
 [8b0230bf-be56-4394-afc2-3a59eb426fd3]
 	general: modid = Bandits
@@ -525,6 +534,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 6
+	general: exp1 = 3
+	general: exp2 = 5
+	general: exp3 = 1
 	clothing: Hat = Base.Hat_SWAT
 	clothing: Eyes = Base.Glasses_SafetyGoggles
 	clothing: Boilersuit = Base.Boilersuit_SWAT
@@ -544,8 +556,8 @@
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.Nightstick
-	ammo: primary = 3
-	ammo: secondary = 3
+	ammo: primary = 5
+	ammo: secondary = 5
 
 [71d105f4-ba8f-4923-8417-c44b03d6ef3c]
 	general: modid = Bandits
@@ -557,9 +569,12 @@
 	general: beardType = 1
 	general: hairColor = 12
 	general: health = 5
-	general: strength = 5
-	general: endurance = 5
+	general: strength = 4
+	general: endurance = 6
 	general: sight = 6
+	general: exp1 = 9
+	general: exp2 = 1
+	general: exp3 = 1
 	clothing: Hat = Base.Hat_SWAT
 	clothing: Eyes = Base.Glasses_SafetyGoggles
 	clothing: Boilersuit = Base.Boilersuit_SWAT
@@ -575,8 +590,8 @@
 	clothing: Socks = Base.Socks_Heavy
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.Nightstick
-	ammo: secondary = 3
-	bag: name = Base.Bag_Satchel_Medical
+	ammo: secondary = 5
+	bag: name = Base.Bag_SWAT
 
 [8dbbd890-87e5-4306-9fdb-2bfff09237cd]
 	general: modid = Bandits

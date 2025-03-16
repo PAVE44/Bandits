@@ -172,11 +172,12 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
         end
     end
 
-    local x, y, z, dir = enemyCharacter:getX(), enemyCharacter:getY(), enemyCharacter:getZ()
-    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=x, y=y, z=z}
+    local x, y, z = enemyCharacter:getX(), enemyCharacter:getY(), enemyCharacter:getZ()
+    local eid = BanditUtils.GetCharacterID(enemyCharacter)
+    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=x, y=y, z=z, eid=eid}
     table.insert(tasks, task)
     for i=2, bullets do
-        local task = {action="Shoot", anim=anim, time=3, slot=slot, x=x, y=y, z=z}
+        local task = {action="Shoot", anim=anim, time=3, slot=slot, x=x, y=y, z=z, eid=eid}
         table.insert(tasks, task)
     end
 

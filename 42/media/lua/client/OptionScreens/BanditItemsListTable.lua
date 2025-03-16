@@ -167,7 +167,6 @@ function BanditItemsListTable:drawDatas(y, item, alt)
 end
 
 function BanditItemsListTable:initList(module)
-    print ("ok")
 end
 
 

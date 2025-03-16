@@ -83,7 +83,7 @@ function BanditEventMarker:onMouseMoveOutside(dx, dy)
             self:bringToTop()
         end
 
-        local p = self:getSpecificPlayer(0)
+        local p = self:getPlayer()
         if p then
             p:getModData()["BanditEventMarkerPlacement"] = {self.x, self.y}
         end
@@ -104,7 +104,7 @@ function BanditEventMarker:onMouseMove(dx, dy)
             self:setY(self.y + dy)
             self:bringToTop()
         end
-        local p = self:getSpecificPlayer(0)
+        local p = self:getPlayer()
         if p then
             p:getModData()["BanditEventMarkerPlacement"] = {self.x, self.y}
         end

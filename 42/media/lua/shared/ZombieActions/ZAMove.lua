@@ -84,6 +84,12 @@ ZombieActions.Move.onWorking = function(zombie, task)
 
     zombie:setVariable("BanditWalkType", task.walkType)
 
+    if task.backwards then
+        zombie:setAnimatingBackwards(true)
+    else
+        zombie:setAnimatingBackwards(false)
+    end
+
     --[[
     if zombie:getSquare():isFree(false) then
         zombie:setCollidable(true)
