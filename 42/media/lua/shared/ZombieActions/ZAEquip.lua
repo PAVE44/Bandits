@@ -55,6 +55,8 @@ ZombieActions.Equip.onStart = function(zombie, task)
             end
         end
     end
+    task.anim1 = "AttachHolsterLeft"
+    task.anim2 = "AttachHolsterLeftOut"
     return true
 end
 

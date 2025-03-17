@@ -184,6 +184,13 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
 
                 local obstacle
 
+                -- manage wall obstacle
+                local isWall = square:getWallFull()
+                if isWall then
+                    square:playSound("BulletImpact")
+                    -- return false
+                end
+
                 -- manage window obstacle
                 local window = square:getWindow()
                 if window then
@@ -370,52 +377,6 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     if weaponItem:isRackAfterShoot() then
         weapon.racked = false
     end
-
-        --[[
-
-    local cell = shooter:getSquare():getCell()
-
-
-    for dx=-2, 2 do
-        for dy=-2, 2 do
-            local square = cell:getGridSquare(task.x + dx, task.y + dy, task.z)
-
-            if square then
-                local victim
-
-                if brainShooter.hostile then
-                    victim = square:getPlayer()
-                end
-
-                if not victim and math.abs(dx) <= 1 and math.abs(dy) <= 1 then
-                    local testVictim = square:getZombie()
-
-                    if testVictim then
-                        local brainVictim = BanditBrain.Get(testVictim)
-                        if not brainVictim or not brainVictim.clan or brainShooter.clan ~= brainVictim.clan or (brainShooter.hostile and not brainVictim.hostile) then 
-                            victim = testVictim
-                        end
-                    end
-                end
-
-                if victim then
-                    if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
-                        local res = ManageLineOfFire(shooter, victim)
-                        local finalCheck = BanditUtils.LineClear(shooter, victim)
-                        if res and finalCheck then
-                            Hit(shooter, weaponItem, victim)
-                        end
-                        zombie:setBumpDone(true)
-                        return true
-
-                    end
-                end
-            end
-        end
-    end
-
-    ]]
-
 
     return true
 end

@@ -172,6 +172,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.program.stage = "Prepare"
 
             -- properties taken from bandit custom profile
+            brain.clan = bandit.general.cid
             brain.cid = bandit.general.cid
             brain.female = bandit.general.female or false
             brain.skin = bandit.general.skin or 1

@@ -153,10 +153,12 @@ function BanditClanMain:onAvatarListChange()
 
             self.models[bid] = IsoPlayer.new(getCell(), desc, player:getX(), player:getY(), player:getZ())
             self.models[bid]:setSceneCulled(false)
+            self.models[bid]:setIsAiming(true)
             self.models[bid]:setNPC(true)
             self.models[bid]:setGodMod(true)
             self.models[bid]:setInvisible(true)
             self.models[bid]:setGhostMode(true)
+            
 
             if data.general then
                 if data.general.female then

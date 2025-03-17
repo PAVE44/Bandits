@@ -49,7 +49,7 @@ local updateProjectile = function()
         local b_y2 = b_y1 + math.floor(b_l * dy)
 
         -- Render projectile with slight variation at the endpoint
-        renderer:renderline(tex, b_x1, b_y1 - baseAlt, b_x2, b_y2 - (baseAlt + targetAltVariation), 1, 1, 0.78, 0.1)
+        renderer:renderline(tex, b_x1, b_y1 - baseAlt, b_x2, b_y2 - (baseAlt + targetAltVariation), 1, 1, 0.72, 0.14)
 
         -- Update projectile position
         projectile.x = projectile.x + math.floor(b_l * dx)

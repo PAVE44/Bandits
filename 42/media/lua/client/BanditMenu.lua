@@ -21,10 +21,10 @@ function BanditMenu.BanditCreator(player)
     modal:addToUIManager()
 end
 
-function BanditMenu.TestSpawn(player, square)
+function BanditMenu.NewSpawn(player, square, cid)
     local args = {--cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", --blm
                   -- cid = "84d300b0-25a2-42ac-922d-5e8839a010fb", -- fbi
-                  cid = "b6c61446-ad6c-4529-9bac-751b9b64843f",
+                  cid = cid,
                   size=1,
                   x=square:getX(),
                   y=square:getY(),
@@ -32,8 +32,10 @@ function BanditMenu.TestSpawn(player, square)
                   program="Companion",
                   hostile=false,
                   size = 4}
+
     BanditServer.Commands.SpawnCustom(player, args)
 end
+
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -319,7 +321,15 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
         context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
-        context:addOption("New Spawn Test", player, BanditMenu.TestSpawn, square)
+        BanditCustom.Load()
+        local clanData  = BanditCustom.ClanGetAll()
+
+        local newSpawnOption = context:addOption("New Spawn Bandits Here")
+        local newSpawnMenu = context:getNew(context)
+        context:addSubMenu(newSpawnOption, newSpawnMenu)
+        for cid, clan in pairs(clanData) do
+            newSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.NewSpawn, square, cid)
+        end
         
     end
     

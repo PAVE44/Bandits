@@ -21,7 +21,7 @@
 	spawn: roadblock = false
 
 [eacda00e-6f8f-4afa-a813-f847d54720d8]
-	general: name = BLM
+	general: name = Black
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true
@@ -54,7 +54,7 @@
 	spawn: roadblock = false
 
 [f3ad89be-9368-4df7-a63b-0c315a96f23b]
-	general: name = Untitled
+	general: name = Bikers
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true

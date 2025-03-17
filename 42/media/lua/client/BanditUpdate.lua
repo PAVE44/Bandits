@@ -117,11 +117,12 @@ local function IsShotClear (shooter, enemy)
                 for i=0, chrs:size()-1 do
                     local chr = chrs:get(i)
                     if instanceof(chr, "IsoPlayer") and not brainShooter.hostile then
-                        shooter:addLineChatElement("PLAYER IN LINE", 0.8, 0.8, 0.1)
+                        -- shooter:addLineChatElement("PLAYER IN LINE", 0.8, 0.8, 0.1)
                         return false
                     elseif instanceof(chr, "IsoZombie") then
                         local brainEnemy = BanditBrain.Get(chr)
-                        if brainVictim and brainVictim.clan and brainShooter.clan == brainVictim.clan and (not brainShooter.hostile or brainVictim.hostile) then
+                        if brainEnemy and brainEnemy.clan and brainShooter.clan == brainEnemy.clan and (not brainShooter.hostile or brainEnemy.hostile) then
+                            -- shooter:addLineChatElement("FRIENDLY IN LINE", 0.8, 0.8, 0.1)
                             return false
                         end
                     end
@@ -154,6 +155,7 @@ local function CheckFriendlyFire(bandit, attacker)
 
     -- hostility against civilians (clan=0) is handled by other mods
     local brain = BanditBrain.Get(bandit)
+    if not brain then return end
     if brain.clan == 0 then return end
 
     -- attacking hostiles is ok!
@@ -1022,6 +1024,7 @@ local function ManageCombat(bandit)
 
     -- SWITCH WEAPON DISTANCES
     local meleeDist = 4.5
+    local meleeDistPlayer = 1
     local rifleDist = 5
     local escapeDist = 5
 
@@ -1050,7 +1053,7 @@ local function ManageCombat(bandit)
                             end
                             local prone = potentialEnemy:isProne()
                             
-                            if dist <= meleeDist then 
+                            if dist <= meleeDistPlayer then 
                                 if bandit:isPrimaryEquipped(weapons.melee) then
                                     if dist <= maxRangeMelee then
                                         local asn = enemyCharacter:getActionStateName()
