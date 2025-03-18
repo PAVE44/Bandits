@@ -2,10 +2,6 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.UnbarricadeMetal = {}
 ZombieActions.UnbarricadeMetal.onStart = function(zombie, task)
-    if not Bandit.Has(zombie, "Base.BlowTorch") then
-        Bandit.AddLoot(zombie, "Base.BlowTorch")
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    end
     zombie:playSound("BlowTorch")
     return true
 end

@@ -46,6 +46,24 @@ Bandit.VisualDamage.Gun = {"ZedDmg_BulletBelly01", "ZedDmg_BulletBelly02", "ZedD
                            "ZedDmg_ShotgunFaceFull", "ZedDmg_ShotgunFaceLeft", "ZedDmg_ShotgunFaceRight", "ZedDmg_ShotgunLeft",
                            "ZedDmg_ShotgunRight"}
 
+Bandit.Expertise = {}
+Bandit.Expertise.Assasin = 1
+Bandit.Expertise.Breaker = 2
+Bandit.Expertise.Electrician = 3
+Bandit.Expertise.Cook = 4
+Bandit.Expertise.Goblin = 5
+Bandit.Expertise.Infected = 6
+Bandit.Expertise.Mechanic = 7
+Bandit.Expertise.Medic = 8
+Bandit.Expertise.Recon = 9
+Bandit.Expertise.Thief = 10
+Bandit.Expertise.Repairman = 11
+Bandit.Expertise.Tracker = 12
+Bandit.Expertise.Trapper = 13
+Bandit.Expertise.Traitor = 14
+Bandit.Expertise.Sacrificer = 15
+Bandit.Expertise.Zombiemaster = 16
+
 Bandit.Engine = true
 
 local function predicateAll(item)
@@ -315,30 +333,15 @@ function Bandit.IsMoving(zombie)
     end
 end
 
-function Bandit.SetCapabilities(zombie, capabilities)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        brain.capabilities = capabilities
-        -- BanditBrain.Update(zombie, brain)
-    end
-end
-
 function Bandit.Can(zombie, capability)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        local capabilities = ZombiePrograms[brain.program.name].GetCapabilities()
-        if capabilities then
-            if capabilities[capability] then return true end
-        end
-    end
-    return false
+    return true
 end
 
-function Bandit.IsDNA(zombie, feature)
+function Bandit.HasExpertise(zombie, exp)
     local brain = BanditBrain.Get(zombie)
-    if brain then
-        if brain.dna then
-            if brain.dna[feature] then return true end
+    if brain and brain.exp then
+        for _, v in pairs(brain.exp) do
+            if v == exp then return true end
         end
     end
     return false
@@ -460,49 +463,9 @@ function Bandit.SetWeapons(zombie, weapons)
     end
 end
 
--- Inventory
-function Bandit.SetInventory(zombie, inventory)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        brain.inventory = inventory
-        -- BanditBrain.Update(zombie, brain)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
-        -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
-    end
-end
-
-function Bandit.Has(zombie, item)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        for _, i in pairs(brain.inventory) do
-            if i == item then return true end
-        end
-    end
-    return false
-end
-
--- Bandit loot inventory
-function Bandit.SetLoot(zombie, loot)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        brain.loot = loot
-        -- BanditBrain.Update(zombie, brain)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    end
-    -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
-end
-
-function Bandit.AddLoot(zombie, item)
-    local brain = BanditBrain.Get(zombie)
-    if brain then
-        table.insert(brain.loot, item)
-    end
-end
-
 -- This translates weapons, loot, inventory to actual items to be
 -- spawned at bandit death
 function Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    if not BanditUtils.IsController(zombie) then return end
     
     local brain = BanditBrain.Get(zombie)
     local weapons = brain.weapons
@@ -521,12 +484,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     inventory:getAllEvalRecurse(predicateAll, items)
     for i=0, items:size()-1 do
         local item = items:get(i)
+        item:getModData().preserve = true
         zombie:addItemToSpawnAtDeath(item)
     end
 
     -- update weapons that the bandit has
     if weapons.melee and weapons.melee ~= "Base.BareHands" then 
         local item = BanditCompatibility.InstanceItem(weapons.melee)
+        item:getModData().preserve = true
         item:setCondition(1+ZombRand(10))
         zombie:addItemToSpawnAtDeath(item)
     end
@@ -538,6 +503,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if not attachedBack then
                 local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
                 if gun then
+                    gun:getModData().preserve = true
                     gun:setCondition(3+ZombRand(15))
                     zombie:addItemToSpawnAtDeath(gun)
                 end
@@ -546,6 +512,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if weapons.primary.type == "mag" and weapons.primary.magName then
                 local mag = BanditCompatibility.InstanceItem(weapons.primary.magName)
                 if mag then
+                    mag:getModData().preserve = true
                     mag:setCurrentAmmoCount(weapons.primary.bulletsLeft)
                     mag:setMaxAmmo(weapons.primary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
@@ -554,6 +521,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 for i=1, weapons.primary.magCount do
                     local mag = BanditCompatibility.InstanceItem(weapons.primary.magName)
                     if mag then
+                        mag:getModData().preserve = true
                         mag:setCurrentAmmoCount(weapons.primary.magSize)
                         mag:setMaxAmmo(weapons.primary.magSize)
                         zombie:addItemToSpawnAtDeath(mag)
@@ -563,6 +531,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 for i=1, weapons.primary.ammoCount do
                     local ammo = BanditCompatibility.InstanceItem(weapons.primary.ammoName)
                     if ammo then
+                        ammo:getModData().preserve = true
                         zombie:addItemToSpawnAtDeath(ammo)
                     end
                 end
@@ -577,7 +546,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if not attachedHolster then
                 local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
                 if gun then
-                    -- gun:setClip(nil)
+                    gun:getModData().preserve = true
                     gun:setCondition(3+ZombRand(22))
                     zombie:addItemToSpawnAtDeath(gun)
                 end
@@ -586,6 +555,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if weapons.secondary.type == "mag" and weapons.secondary.magName then
                 local mag = BanditCompatibility.InstanceItem(weapons.secondary.magName)
                 if mag then
+                    mag:getModData().preserve = true
                     mag:setCurrentAmmoCount(weapons.secondary.bulletsLeft)
                     mag:setMaxAmmo(weapons.secondary.magSize)
                     zombie:addItemToSpawnAtDeath(mag)
@@ -594,6 +564,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 for i=1, weapons.secondary.magCount do
                     local mag = BanditCompatibility.InstanceItem(weapons.secondary.magName)
                     if mag then
+                        mag:getModData().preserve = true
                         mag:setCurrentAmmoCount(weapons.secondary.magSize)
                         mag:setMaxAmmo(weapons.secondary.magSize)
                         zombie:addItemToSpawnAtDeath(mag)
@@ -603,6 +574,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 for i=1, weapons.secondary.ammoCount do
                     local ammo = BanditCompatibility.InstanceItem(weapons.secondary.ammoName)
                     if ammo then
+                        ammo:getModData().preserve = true
                         zombie:addItemToSpawnAtDeath(ammo)
                     end
                 end
@@ -611,6 +583,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     -- update loot items that the bandit has
+    --[[
     local loot = brain.loot
     if loot then
         for _, itemType in pairs(brain.loot) do
@@ -624,7 +597,191 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 zombie:addItemToSpawnAtDeath(item)
             end
         end
+    end]]
+
+    -- clothing
+    if brain.clothing then
+        for _, itemType in pairs(brain.clothing) do
+            local item = BanditCompatibility.InstanceItem(itemType)
+            item:getModData().preserve = true
+            zombie:addItemToSpawnAtDeath(item)
+        end
     end
+
+    local bag
+    if brain.bag and brain.bag.name then
+        bag = BanditCompatibility.InstanceItem(brain.bag.name)
+        bag:getModData().preserve = true
+        zombie:addItemToSpawnAtDeath(bag)
+    end
+
+    local loot = {}
+    local lootBag = {}
+    -- update loot
+
+    -- essential loot
+
+    -- experise loot
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Assasin) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Breaker) then
+        table.insert (loot, {itemType="Base.Crowbar", chance=100, n=1})
+        table.insert (loot, {itemType="Base.BlowTorch", chance=100, n=1})
+        table.insert (loot, {itemType="Base.WeldingMask", chance=100, n=1})
+        table.insert (lootBag, {itemType="Base.Sledgehammer", chance=1, n=1})
+        table.insert (lootBag, {itemType="Base.PropaneTank", chance=4, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Electrician) then
+        table.insert (loot, {itemType="Base.Screwdriver", chance=100, n=1})
+        table.insert (lootBag, {itemType="Base.LightBulbBox", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.ElectricWire", chance=20, n=3})
+        table.insert (lootBag, {itemType="Base.ElectronicsScrap", chance=30, n=5})
+        table.insert (lootBag, {itemType="Base.BookElectrician1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookElectrician2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookElectrician3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookElectrician4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookElectrician5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.ElectronicsMag1", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.ElectronicsMag2", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.ElectronicsMag3", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.ElectronicsMag4", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.ElectronicsMag5", chance=3, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Cook) then
+        table.insert (lootBag, {itemType="Base.BookCooking1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookCooking2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookCooking3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookCooking4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookCooking5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag1", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag2", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag3", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag4", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag5", chance=3, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Goblin) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Infected) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Mechanic) then
+        table.insert (loot, {itemType="Base.Wrench", chance=100, n=1})
+        table.insert (loot, {itemType="Base.LugWrench", chance=100, n=1})
+        table.insert (loot, {itemType="Base.Jack", chance=100, n=1})
+        table.insert (loot, {itemType="Base.PetrolCan", chance=100, n=1})
+        table.insert (lootBag, {itemType="Base.ScrewsBox", chance=7, n=1})
+        table.insert (lootBag, {itemType="Base.BookMechanic1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookMechanic2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookMechanic3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookMechanic4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookMechanic5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.MechanicMag1", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.MechanicMag2", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.MechanicMag3", chance=3, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Medic) then
+        table.insert (loot, {itemType="Base.Bandage", chance=100, n=2})
+        table.insert (lootBag, {itemType="Base.SutureNeedle", chance=50, n=1})
+        table.insert (lootBag, {itemType="Base.AlcoholBandage", chance=12, n=10})
+        table.insert (lootBag, {itemType="Base.BandageBox", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.SutureNeedle", chance=50, n=3})
+        table.insert (lootBag, {itemType="Base.SutureNeedleBox", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.SutureNeedleHolder", chance=50, n=1})
+        table.insert (lootBag, {itemType="Base.Tweezers", chance=50, n=1})
+        table.insert (lootBag, {itemType="Base.Stethoscope", chance=30, n=1})
+        table.insert (lootBag, {itemType="Base.Antibiotics", chance=10, n=3})
+        table.insert (lootBag, {itemType="Base.Disinfectant", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.Pills", chance=80, n=2})
+        table.insert (lootBag, {itemType="Base.AlcoholWipes", chance=50, n=2})
+        table.insert (lootBag, {itemType="Base.BookFirstAid1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookFirstAid2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookFirstAid3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookFirstAid4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookFirstAid5", chance=2, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Recon) then
+        table.insert (lootBag, {itemType="Base.BookForaging1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookForaging2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookForaging3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookForaging4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookForaging5", chance=2, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Thief) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Repairman) then
+        table.insert (lootBag, {itemType="Base.BookMaintenance1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookMaintenance2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookMaintenance3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookMaintenance4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookMaintenance5", chance=2, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Tracker) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Trapper) then
+        table.insert (lootBag, {itemType="Base.TrapCage", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.TrapSnare", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookTrapping1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookTrapping2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookTrapping3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookTrapping4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookTrapping5", chance=2, n=1})
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Traitor) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Sacrificer) then
+    end
+
+    if Bandit.HasExpertise(zombie, Bandit.Expertise.Zombiemaster) then
+    end
+
+    -- personal loot
+    local personality = brain.personality or {}
+    if personality.smoker then
+        table.insert(loot, {itemType="Base.CigaretteSingle", chance=50, n=20})
+        table.insert(loot, {itemType="Base.Lighter", chance=100, n=1})
+    end
+
+    -- save loot
+    for _, tab in pairs(loot) do
+        for i=1, tab.n do
+            local r = ZombRand(100)
+            if tab.chance > r then
+                local item = BanditCompatibility.InstanceItem(BanditCompatibility.GetLegacyItem(tab.itemType))
+                item:getModData().preserve = true
+                zombie:addItemToSpawnAtDeath(item)
+            end
+        end
+    end
+
+    -- save loot in bag
+    if bag then
+        for _, tab in pairs(lootBag) do
+            for i=1, tab.n do
+                local r = ZombRand(100)
+                if tab.chance > r then
+                    local item = BanditCompatibility.InstanceItem(BanditCompatibility.GetLegacyItem(tab.itemType))
+                    bag:getInventory():AddItem(item)
+                end
+            end
+        end
+    
+        zombie:addItemToSpawnAtDeath(bag)
+    end
+    
 end
 
 function Bandit.SurpressZombieSounds(bandit)
@@ -701,6 +858,35 @@ function Bandit.Say(zombie, phrase, force)
         end
     end
 
+end
+
+function Bandit.SayLocation(bandit, targetSquare)
+    local banditSquare = bandit:getSquare()
+    local targetBuilding = targetSquare:getBuilding()
+    local banditBuilding = banditSquare:getBuilding()
+
+    if targetBuilding and not banditBuilding then
+        Bandit.Say(bandit, "INSIDE")
+    end
+    if not targetBuilding and banditBuilding then
+        Bandit.Say(bandit, "OUTSIDE")
+    end
+    if targetBuilding and banditBuilding then
+        if bz < target.z then
+            Bandit.Say(bandit, "UPSTAIRS")
+        else
+            local room = targetSquare:getRoom()
+            if room then
+                local roomName = room:getName()
+                if roomName == "kitchen" then
+                    Bandit.Say(bandit, "ROOM_KITCHEN")
+                end
+                if roomName == "bathroom" then
+                    Bandit.Say(bandit, "ROOM_BATHROOM")
+                end
+            end
+        end
+    end
 end
 
 function Bandit.AddVisualDamage(bandit, handWeapon)

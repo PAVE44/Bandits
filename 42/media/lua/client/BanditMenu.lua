@@ -29,9 +29,9 @@ function BanditMenu.NewSpawn(player, square, cid)
                   x=square:getX(),
                   y=square:getY(),
                   z=square:getZ(),
-                  program="Companion",
-                  hostile=false,
-                  size = 4}
+                  program="Bandit",
+                  hostile=true,
+                  size = 1}
 
     BanditServer.Commands.SpawnCustom(player, args)
 end
@@ -143,14 +143,6 @@ end
 
 function BanditMenu.RaiseDefences (player, square)
     BanditScheduler.RaiseDefences(square:getX(), square:getY())
-end
-
-function BanditMenu.SpawnCivilian (player, square)
-    BanditScheduler.SpawnCivilian(player)
-end
-
-function BanditMenu.BaseballMatch (player, square)
-    BanditScheduler.BaseballMatch(player)
 end
 
 function BanditMenu.ClearSpace (player, square)

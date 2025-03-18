@@ -6,21 +6,6 @@ ZombiePrograms.Defend.Stages = {}
 ZombiePrograms.Defend.Init = function(bandit)
 end
 
-ZombiePrograms.Defend.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = false
-    capabilities.openDoor = true
-    capabilities.breakDoor = false
-    capabilities.breakObjects = false
-    capabilities.unbarricade = false
-    capabilities.disableGenerators = false
-    capabilities.sabotageCars = false
-    return capabilities
-end
-
 ZombiePrograms.Defend.Prepare = function(bandit)
     local tasks = {}
 

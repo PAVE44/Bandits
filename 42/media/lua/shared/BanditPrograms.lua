@@ -98,9 +98,6 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
         -- player handicap
         aimTimeSurp = aimTimeSurp + 10
     end
-    if Bandit.IsDNA(bandit, "slow") then
-        aimTimeSurp = aimTimeSurp + 11
-    end
 
     if aimTimeMin + aimTimeSurp > 0 then
 
@@ -139,9 +136,6 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1)
-    if Bandit.IsDNA(bandit, "slow") then
-        firingtime = firingtime + 3
-    end
 
     local bullets = 1
     local modes = weaponItem:getFireModePossibilities()

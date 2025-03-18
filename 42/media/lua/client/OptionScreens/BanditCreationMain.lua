@@ -761,15 +761,15 @@ function BanditCreationMain:loadConfig()
         end
 
         if data.general.exp1 then
-            self.expertise[1].selected = data.general.exp1
+            self.expertise[1].selected = data.general.exp1 + 1
         end
 
         if data.general.exp2 then
-            self.expertise[2].selected = data.general.exp2
+            self.expertise[2].selected = data.general.exp2 + 1
         end
 
         if data.general.exp3 then
-            self.expertise[3].selected = data.general.exp3
+            self.expertise[3].selected = data.general.exp3 + 1
         end
 	end
 
@@ -831,9 +831,9 @@ function BanditCreationMain:saveConfig()
     data.general.endurance = self.enduranceSlider:getCurrentValue()
     data.general.sight = self.sightSlider:getCurrentValue()
 
-    data.general.exp1 = self.expertise[1].selected
-    data.general.exp2 = self.expertise[2].selected
-    data.general.exp3 = self.expertise[3].selected
+    data.general.exp1 = self.expertise[1].selected - 1
+    data.general.exp2 = self.expertise[2].selected - 1
+    data.general.exp3 = self.expertise[3].selected - 1
 
     data.clothing = {}
     for _, dropbox in pairs(self.clothing) do

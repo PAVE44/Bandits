@@ -266,6 +266,7 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
                 result.x = player:getX()
                 result.y = player:getY()
                 result.z = player:getZ()
+                result.d = player:getDirectionAngle()
                 result.id = BanditUtils.GetCharacterID(player)
             end
         end
@@ -317,6 +318,7 @@ function BanditUtils.GetClosestZombieLocationFast(character)
                 result.x = zombie.x
                 result.y = zombie.y
                 result.z = zombie.z
+                result.d = zombie.d
                 result.id = zombie.id
             end
         end
@@ -345,6 +347,7 @@ function BanditUtils.GetClosestBanditLocation(character)
             result.x = zombie.x
             result.y = zombie.y
             result.z = zombie.z
+            result.d = zombie.d
             result.id = zombie.id
         end
     end
@@ -373,6 +376,7 @@ function BanditUtils.GetClosestBanditLocationFast(character)
                 result.x = zombie.x
                 result.y = zombie.y
                 result.z = zombie.z
+                result.d = zombie.d
                 result.id = zombie.id
             end
         end
@@ -425,12 +429,42 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     return result
 end
 
+function BanditUtils.GetTarget(character)
+    local closestZombie = BanditUtils.GetClosestZombieLocation(character)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(character)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, false)
+
+    local target = closestZombie
+    local enemy = BanditZombie.Cache[target.id]
+
+    if closestBandit.dist < closestZombie.dist then
+        target = closestBandit
+        enemy = BanditZombie.Cache[target.id]
+    end
+
+    local handicap = 5
+    if Bandit.IsHostile(character) and closestPlayer.dist + handicap < closestBandit.dist then
+        target = closestPlayer
+        enemy = BanditPlayer.GetPlayerById(target.id)
+        
+    end
+    
+    if target.x and target.y and target.d then
+        local i = target.dist
+        local theta = target.d * 0.0174533  -- Convert degrees to radians
+        target.fx = target.x + (i * math.cos(theta))
+        target.fy = target.y + (i * math.sin(theta))
+    end
+
+    return target, enemy
+end
+
 function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     -- Move and GoTo generally do the same thing with a different method
     -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
     -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
     if dist < 0.5 then
-        print ("SMALL DIST")
+        -- print ("SMALL DIST")
     end
     local gamemode = getWorld():getGameMode()
     local task

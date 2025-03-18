@@ -153,15 +153,6 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.sound = 0.00
             brain.infection = 0
 
-            -- random DNA
-            local dna = {}
-            dna.slow = BanditUtils.CoinFlip()
-            dna.sight = -2 + ZombRand(3)
-            dna.sneak = BanditUtils.CoinFlip()
-            dna.unfit = BanditUtils.CoinFlip()
-            dna.coward = BanditUtils.CoinFlip()
-            brain.dna = dna
-
             -- properties taken from args
             brain.hostile = args.hostile and true or false
             brain.permanent = args.permanent and true or false
@@ -172,27 +163,33 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.program.stage = "Prepare"
 
             -- properties taken from bandit custom profile
-            brain.clan = bandit.general.cid
-            brain.cid = bandit.general.cid
-            brain.female = bandit.general.female or false
-            brain.skin = bandit.general.skin or 1
-            brain.hairType = bandit.general.hairType or 1
-            brain.hairColor = bandit.general.hairColor or 1
-            brain.beardType = bandit.general.beardType or 1
+            local general = bandit.general
+            brain.clan = general.cid
+            brain.cid = general.cid
+            brain.female = general.female or false
+            brain.skin = general.skin or 1
+            brain.hairType = general.hairType or 1
+            brain.hairColor = general.hairColor or 1
+            brain.beardType = general.beardType or 1
             brain.eatBody = false
 
-            local health = bandit.general.health or 5
+            local health = general.health or 5
             brain.health = BanditUtils.Lerp(health, 1, 9, 1, 2.6)
 
-            local accuracyBoost = bandit.general.sight or 5
+            local accuracyBoost = general.sight or 5
             brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, -4, 4)
 
-            local enduranceBoost = bandit.general.endurance or 5
+            local enduranceBoost = general.endurance or 5
             brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.5, 1.5)
 
-            local strengthBoost = bandit.general.strength or 5
+            local strengthBoost = general.strength or 5
             brain.strengthBoost = BanditUtils.Lerp(strengthBoost, 1, 9, 0.5, 1.5)
             
+            brain.exp = {0, 0, 0}
+            if general.exp1 and general.exp2 and general.exp3 then
+                brain.exp = {general.exp1, general.exp2, general.exp3}
+            end
+
             brain.weapons = {}
             if bandit.weapons then
                 brain.weapons.melee = bandit.weapons.melee
@@ -207,12 +204,22 @@ BanditServer.Commands.SpawnCustom = function(player, args)
                 end
             end
 
-            brain.clothing = bandit.clothing
+            brain.clothing = bandit.clothing or {}
             brain.bag = bandit.bag
 
             brain.loot = {}
             brain.inventory = {}
             brain.tasks = {}
+
+            brain.personality = {}
+            brain.personality.smoker = (ZombRand(4) == 0)
+            brain.personality.hottieCollector = (ZombRand(100) == 0)
+            brain.personality.underwearCollector = (ZombRand(150) == 0)
+            brain.personality.toyCollector = (ZombRand(220) == 0)
+            brain.personality.gameFan = (ZombRand(220) == 0)
+            brain.personality.videoFan = (ZombRand(220) == 0)
+            brain.personality.fromPoland = (ZombRand(120) == 0)
+            brain.personality.compulsiveCleaner = (ZombRand(90) == 0)
 
             gmd.Queue[id] = brain
 
@@ -348,9 +355,6 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             dna.unfit = BanditUtils.CoinFlip()
             dna.coward = BanditUtils.CoinFlip()
             brain.dna = dna
-
-            -- program specific capabilities independent from clan
-            -- brain.capabilities = ZombiePrograms[event.program.name].GetCapabilities()
 
             -- action and state flags
             brain.stationary = false

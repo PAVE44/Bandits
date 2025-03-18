@@ -2,10 +2,6 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Unbarricade = {}
 ZombieActions.Unbarricade.onStart = function(zombie, task)
-    if not Bandit.Has(zombie, "Base.Crowbar") then
-        Bandit.AddLoot(zombie, "Base.Crowbar")
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    end
     zombie:playSound("BeginRemoveBarricadePlank")
     return true
 end

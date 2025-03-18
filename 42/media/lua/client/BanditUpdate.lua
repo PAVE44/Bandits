@@ -383,6 +383,8 @@ local function ApplyVisuals(bandit, brain)
     -- Reset model to apply changes
     bandit:resetModelNextFrame()
     bandit:resetModel()
+
+    Bandit.UpdateItemsToSpawnAtDeath(bandit)
 end
 
 -- updates bandit torches light
@@ -1024,7 +1026,7 @@ local function ManageCombat(bandit)
 
     -- SWITCH WEAPON DISTANCES
     local meleeDist = 4.5
-    local meleeDistPlayer = 1
+    local meleeDistPlayer = 5
     local rifleDist = 5
     local escapeDist = 5
 
@@ -1867,9 +1869,22 @@ end
 
 local function OnZombieDead(zombie)
 
+    local function predicateRemovable(item)
+        if not item:getModData().preserve then
+            return true 
+        end
+    end
+
     if not zombie:getVariableBoolean("Bandit") then return end
         
     local bandit = zombie
+    local inventory = bandit:getInventory()
+    local items = ArrayList.new()
+    inventory:getAllEvalRecurse(predicateRemovable, items)
+    for i=0, items:size()-1 do
+        local item = items:get(i)
+        inventory:Remove(item)
+    end
 
     -- hostility against civilians (clan=0) is handled by other mods
     local brain = BanditBrain.Get(bandit)

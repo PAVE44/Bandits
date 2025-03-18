@@ -6,21 +6,6 @@ ZombiePrograms.Looter.Stages = {}
 ZombiePrograms.Looter.Init = function(bandit)
 end
 
-ZombiePrograms.Looter.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = true
-    capabilities.openDoor = true
-    capabilities.breakDoor = true
-    capabilities.breakObjects = true
-    capabilities.unbarricade = true
-    capabilities.disableGenerators = false
-    capabilities.sabotageCars = false
-    return capabilities
-end
-
 ZombiePrograms.Looter.Prepare = function(bandit)
     local tasks = {}
     local world = getWorld()
@@ -78,10 +63,8 @@ ZombiePrograms.Looter.Operate = function(bandit)
         end
 
         if SandboxVars.Bandits.General_SneakAtNight then
-            if Bandit.IsDNA(bandit, "sneak") then
-                walkType = "SneakWalk"
-                endurance = 0
-            end
+            walkType = "SneakWalk"
+            endurance = 0
         end
     end
 

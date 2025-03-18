@@ -36,7 +36,7 @@
 [6566fe73-dd7f-48fd-8fec-797bb14d4e7d]
 	general: modid = Bandits
 	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
-	general: name = Criminal1
+	general: name = TEST
 	general: female = false
 	general: skin = 1
 	general: hairType = 1
@@ -46,6 +46,17 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 7
+	clothing: UnderwearBottom = Base.Boxers_RedStripes
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	weapons: primary = Base.Shotgun
+	weapons: secondary = Base.Pistol
+	weapons: melee = Base.Axe
+	ammo: primary = 2
+	ammo: secondary = 2
+	bag: name = Base.Bag_ALICEpack
 
 [af7a643f-b153-43f9-a394-b7a96ef49117]
 	general: modid = Bandits
