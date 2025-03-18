@@ -31,7 +31,7 @@ function BanditMenu.NewSpawn(player, square, cid)
                   z=square:getZ(),
                   program="Bandit",
                   hostile=true,
-                  size = 1}
+                  size = 3}
 
     BanditServer.Commands.SpawnCustom(player, args)
 end
@@ -313,22 +313,28 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
         context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
-        BanditCustom.Load()
-        local clanData  = BanditCustom.ClanGetAll()
+        
 
-        local newSpawnOption = context:addOption("New Spawn Bandits Here")
-        local newSpawnMenu = context:getNew(context)
-        context:addSubMenu(newSpawnOption, newSpawnMenu)
-        for cid, clan in pairs(clanData) do
-            newSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.NewSpawn, square, cid)
-        end
+        
         
     end
     
+    BanditCustom.Load()
+    local clanData  = BanditCustom.ClanGetAll()
+    local newSpawnOption = context:addOption("New Spawn Bandits Here")
+    local newSpawnMenu = context:getNew(context)
+    context:addSubMenu(newSpawnOption, newSpawnMenu)
+    for cid, clan in pairs(clanData) do
+        newSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.NewSpawn, square, cid)
+    end
+
+    context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
+
+
     -- Debug options
     if isDebugEnabled() then
 
-        context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
+        
 
         context:addOption("Init Projectile", player, BanditMenu.InitProjectile)
 

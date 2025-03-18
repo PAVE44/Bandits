@@ -36,16 +36,29 @@
 [6566fe73-dd7f-48fd-8fec-797bb14d4e7d]
 	general: modid = Bandits
 	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
-	general: name = Criminal1
+	general: name = Officer1
 	general: female = false
 	general: skin = 1
-	general: hairType = 1
-	general: beardType = 4
-	general: hairColor = 1
+	general: hairType = 2
+	general: beardType = 1
+	general: hairColor = 13
 	general: health = 5
-	general: strength = 5
+	general: strength = 9
 	general: endurance = 5
 	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 7
+	clothing: Hat = Base.Hat_BeretArmy
+	clothing: Tshirt = Base.Tshirt_ArmyGreen
+	clothing: Jacket = Base.Jacket_CoatArmy
+	clothing: UnderwearBottom = Base.Boxers_RedStripes
+	clothing: Pants = Base.Trousers_ArmyService
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: Socks = Base.Socks_Heavy
+	weapons: secondary = Base.Pistol
+	weapons: melee = Base.HuntingKnife
+	ammo: secondary = 2
 
 [af7a643f-b153-43f9-a394-b7a96ef49117]
 	general: modid = Bandits
@@ -731,4 +744,78 @@
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Wrench
 	ammo: secondary = 3
+
+[1d506491-4bba-4878-9476-014f5d4663a3]
+	general: modid = Bandits
+	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
+	general: name = Officer2
+	general: female = false
+	general: skin = 2
+	general: hairType = 8
+	general: beardType = 1
+	general: hairColor = 10
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: Hat = Base.Hat_PeakedCapArmy
+	clothing: Eyes = Base.Glasses_Aviators
+	clothing: Tshirt = Base.Tshirt_CamoGreen
+	clothing: Jacket = Base.Jacket_CoatArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: Pants = Base.Trousers_ArmyService
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: Socks = Base.Socks_Long_Black
+	weapons: secondary = Base.Pistol2
+	weapons: melee = Base.KnifeButterfly
+	ammo: secondary = 1
+
+[36817a9e-8567-428b-90cf-a4a919e5c264]
+	general: modid = Bandits
+	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
+	general: name = Officer3
+	general: female = true
+	general: skin = 3
+	general: hairType = 12
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: Hat = Base.Hat_PeakedCapArmy
+	clothing: Shirt = Base.Shirt_FormalWhite
+	clothing: Jacket = Base.Jacket_CoatArmy
+	clothing: Pants = Base.Trousers_ArmyService
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: Socks = Base.Socks_Long
+	weapons: secondary = Base.Pistol2
+	weapons: melee = Base.SmallKnife
+	ammo: secondary = 1
+
+[cabade47-8284-4afb-b979-31ec2189572e]
+	general: modid = Bandits
+	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
+	general: name = Hermit1
+	general: female = false
+	general: skin = 1
+	general: hairType = 38
+	general: beardType = 10
+	general: hairColor = 16
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrudeLong
 

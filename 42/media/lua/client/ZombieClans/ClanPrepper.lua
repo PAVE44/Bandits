@@ -77,7 +77,7 @@ table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandAxe", 17))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.HandShovel", 7))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Toothbrush", 77))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Toothpaste", 77))
-table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Soap", 66))
+table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.Soap2", 66))
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 99))
 
 table.insert(BanditClan.Prepper.Loot, BanditLoot.MakeItem("Base.BroccoliBagSeed2", 2))

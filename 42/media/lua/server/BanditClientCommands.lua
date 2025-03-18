@@ -362,7 +362,6 @@ BanditServer.Commands.SpawnGroup = function(player, event)
             dna.sneak = BanditUtils.CoinFlip()
             dna.unfit = BanditUtils.CoinFlip()
             dna.coward = BanditUtils.CoinFlip()
-            brain.dna = dna
 
             -- action and state flags
             brain.stationary = false

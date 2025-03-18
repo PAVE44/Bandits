@@ -62,7 +62,7 @@ table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Toothbrush", 33)
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Toothpaste", 33))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.ToiletPaper", 66))
 
-table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Soap", 66))
+table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Soap2", 66))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.WaterBottle", 99))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.Whiskey", 44))
 table.insert(BanditClan.Veteran.Loot, BanditLoot.MakeItem("Base.DehydratedMeatStick", 12))

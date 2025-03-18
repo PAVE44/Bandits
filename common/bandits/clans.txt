@@ -10,7 +10,7 @@
 	spawn: roadblock = false
 
 [d7ba1cc0-de47-4162-b5bd-6295c47b890d]
-	general: name = Criminals
+	general: name = Officers
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true
@@ -58,6 +58,17 @@
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[a5def10b-bab9-46b1-8e8c-d5152c86457e]
+	general: name = Hermits
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false

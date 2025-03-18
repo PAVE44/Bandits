@@ -10,7 +10,7 @@
 	spawn: roadblock = false
 
 [d7ba1cc0-de47-4162-b5bd-6295c47b890d]
-	general: name = Criminals
+	general: name = Officers
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true
@@ -63,4 +63,7 @@
 	spawn: assault = false
 	spawn: wanderer = false
 	spawn: roadblock = false
+
+[a5def10b-bab9-46b1-8e8c-d5152c86457e]
+	general: name = Untitled
 

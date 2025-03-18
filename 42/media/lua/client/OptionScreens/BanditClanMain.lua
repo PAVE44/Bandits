@@ -259,16 +259,18 @@ function BanditClanMain:loadConfig()
 
     self.clanNameEntry:setText(data.general.name)
 
-    self.waveCombo.selected = data.spawn.wave + 1
-    self.zoneCombo.selected = data.spawn.zone + 1
+    if data.spawn then
+        self.waveCombo.selected = (data.spawn.wave or 0) + 1
+        self.zoneCombo.selected = (data.spawn.zone or 0) + 1
 
-    if data.spawn.friendly then self.boolOptions:setSelected(1, true) end
-    if data.spawn.defenders then self.boolOptions:setSelected(2, true) end
-    if data.spawn.campers then self.boolOptions:setSelected(3, true) end
-    if data.spawn.assault then self.boolOptions:setSelected(4, true) end
-    if data.spawn.wanderer then self.boolOptions:setSelected(5, true) end
-    if data.spawn.roadblock then self.boolOptions:setSelected(6, true) end
-    self:onBoolOptionsChange()
+        if data.spawn.friendly then self.boolOptions:setSelected(1, true) end
+        if data.spawn.defenders then self.boolOptions:setSelected(2, true) end
+        if data.spawn.campers then self.boolOptions:setSelected(3, true) end
+        if data.spawn.assault then self.boolOptions:setSelected(4, true) end
+        if data.spawn.wanderer then self.boolOptions:setSelected(5, true) end
+        if data.spawn.roadblock then self.boolOptions:setSelected(6, true) end
+        self:onBoolOptionsChange()
+    end
 end
 
 function BanditClanMain:saveConfig()

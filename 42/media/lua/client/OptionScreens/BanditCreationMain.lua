@@ -643,10 +643,12 @@ function BanditCreationMain:onClick(button)
     if button.internal == "SAVE" then
         self:saveConfig()
         self.avatarPanel:setCharacter(nil)
-        self.model:removeFromSquare()
-        self.model:removeFromWorld()
-        self.model:removeSaveFile()
-        self.model = nil
+        if self.model then
+            self.model:removeFromSquare()
+            self.model:removeFromWorld()
+            self.model:removeSaveFile()
+            self.model = nil
+        end
         local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
         modal:initialise()
         modal:addToUIManager()
@@ -654,10 +656,12 @@ function BanditCreationMain:onClick(button)
         self:close()
     elseif button.internal == "CANCEL" then
         self.avatarPanel:setCharacter(nil)
-        self.model:removeFromSquare()
-        self.model:removeFromWorld()
-        self.model:removeSaveFile()
-        self.model = nil
+        if self.model then
+            self.model:removeFromSquare()
+            self.model:removeFromWorld()
+            self.model:removeSaveFile()
+            self.model = nil
+        end
         local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
         modal:initialise()
         modal:addToUIManager()

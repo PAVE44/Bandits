@@ -620,7 +620,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     -- essential loot
     table.insert(loot, {itemType="Base.WaterBottle", chance=100, n=1})
     table.insert(loot, {itemType="Base.HandTorch", chance=40, n=1})
-    table.insert(loot, {itemType="Base.Soap", chance=40, n=1})
+    table.insert(loot, {itemType="Base.Soap2", chance=40, n=1})
 
     table.insert(lootBag, {itemType="Base.TinnedBeans", chance=5, n=4})
     table.insert(lootBag, {itemType="Base.CannedCarrots2", chance=6, n=4})
@@ -821,7 +821,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     if personality.compulsiveCleaner then
-        table.insert(lootBag, {itemType="Base.Soap", chance=50, n=20})
+        table.insert(lootBag, {itemType="Base.Soap2", chance=50, n=20})
         table.insert(lootBag, {itemType="Base.ToiletPaper", chance=50, n=20})
     end
 
@@ -980,7 +980,7 @@ function Bandit.SayLocation(bandit, targetSquare)
         Bandit.Say(bandit, "OUTSIDE")
     end
     if targetBuilding and banditBuilding then
-        if bz < target.z then
+        if bandit:getZ() < targetSquare:getZ() then
             Bandit.Say(bandit, "UPSTAIRS")
         else
             local room = targetSquare:getRoom()

@@ -67,7 +67,7 @@ local function hit(shooter, item, victim)
     local sightCharacter = brainShooter.accuracyBoost or 0
 
     -- individual accuracy set after spawn
-    local sightIndividual = brainShooter.dna.sight or 0
+    local sightIndividual = 0
 
     local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightIndividual)
 
