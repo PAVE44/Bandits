@@ -685,3 +685,99 @@ function BanditUtils.BanditRand(n)
     seed = (a * seed + c) % m
     return seed % (n + 1)
 end
+
+BanditUtils.GetCity = function(character)
+    local zones = getZones(character:getX(), character:getY(), character:getZ())
+    if zones then
+        for i=0, zones:size()-1 do
+            local zone = zones:get(i)
+            if zone:getType() == "Region" then
+                return zone:getName()
+            end
+        end
+    end
+end
+
+BanditUtils.GetStashMap = function(city)
+    local ret = {}
+
+    local map = {
+        ["Louisville"] = function()
+            local tab = {}
+            for i=1, 16 do
+                table.insert(tab, "LouisvilleStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["March Ridge"] = function()
+            local tab = {}
+            for i=1, 10 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Muldraugh"] = function()
+            local tab = {}
+            for i=1, 18 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Riverside"] = function()
+            local tab = {}
+            for i=1, 10 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Rosewood"] = function()
+            local tab = {}
+            for i=1, 5 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["West Point"] = function()
+            local tab = {}
+            for i=1, 16 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Brandenburg"] = function()
+            local tab = {}
+            for i=1, 8 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Ekron"] = function()
+            local tab = {}
+            for i=1, 8 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Irvington"] = function()
+            local tab = {}
+            for i=1, 10 do
+                table.insert(tab, "MarchRidgeStashMap" .. i)
+            end
+            return tab
+        end
+    }
+
+    if map[city] then
+        ret = map[city]()
+    end
+
+    return ret
+end

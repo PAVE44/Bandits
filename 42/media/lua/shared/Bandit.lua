@@ -333,9 +333,6 @@ function Bandit.IsMoving(zombie)
     end
 end
 
-function Bandit.Can(zombie, capability)
-    return true
-end
 
 function Bandit.HasExpertise(zombie, exp)
     local brain = BanditBrain.Get(zombie)
@@ -600,13 +597,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end]]
 
     -- clothing
+    --[[
     if brain.clothing then
         for _, itemType in pairs(brain.clothing) do
             local item = BanditCompatibility.InstanceItem(itemType)
             item:getModData().preserve = true
             zombie:addItemToSpawnAtDeath(item)
         end
-    end
+    end]]
 
     local bag
     if brain.bag and brain.bag.name then
@@ -620,9 +618,30 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     -- update loot
 
     -- essential loot
+    table.insert(loot, {itemType="Base.WaterBottle", chance=100, n=1})
+    table.insert(loot, {itemType="Base.HandTorch", chance=40, n=1})
+    table.insert(loot, {itemType="Base.Soap", chance=40, n=1})
 
+    table.insert(lootBag, {itemType="Base.TinnedBeans", chance=5, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCarrots2", chance=6, n=4})
+    table.insert(lootBag, {itemType="Base.CannedChili", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCorn", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCornedBeef", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.CannedFruitCocktail", chance=5, n=4})
+    table.insert(lootBag, {itemType="Base.CannedMushroomSoup", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPeaches", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPeas", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPineapple", chance=2, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPotato2", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedSardines", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.TinnedSoup", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedBolognese", chance=7, n=4})
+    table.insert(lootBag, {itemType="Base.CannedTomato2", chance=5, n=4})
+    table.insert(lootBag, {itemType="Base.TinOpener", chance=85, n=1})
+    table.insert(lootBag, {itemType="Base.WaterBottle", chance=20, n=2})
+    table.insert(lootBag, {itemType="Base.Book", chance=10, n=2})
+    
     -- experise loot
-
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Assasin) then
     end
 
@@ -652,6 +671,17 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Cook) then
+        table.insert (lootBag, {itemType="Base.Pot", chance=30, n=1})
+        table.insert (lootBag, {itemType="Base.Pan", chance=30, n=1})
+        table.insert (lootBag, {itemType="Base.Salt", chance=30, n=1})
+        table.insert (lootBag, {itemType="Base.Pepper", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.Spoon", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.Spatula", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.Bowl", chance=20, n=2})
+        table.insert (lootBag, {itemType="Base.KitchenKnife", chance=50, n=1})
+        table.insert (lootBag, {itemType="Base.Charcoal", chance=20, n=2})
+        table.insert (lootBag, {itemType="Base.Matches", chance=50, n=1})
+        table.insert (lootBag, {itemType="camping.CampfireKit", chance=10, n=1})
         table.insert (lootBag, {itemType="Base.BookCooking1", chance=10, n=1})
         table.insert (lootBag, {itemType="Base.BookCooking2", chance=8, n=1})
         table.insert (lootBag, {itemType="Base.BookCooking3", chance=6, n=1})
@@ -713,12 +743,31 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         table.insert (lootBag, {itemType="Base.BookForaging3", chance=6, n=1})
         table.insert (lootBag, {itemType="Base.BookForaging4", chance=4, n=1})
         table.insert (lootBag, {itemType="Base.BookForaging5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap1", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap2", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap3", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap4", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap5", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap6", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap7", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap8", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.LouisvilleMap9", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.MarchRidgeMap", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.MuldraughMap", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.RiversideMap", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.RosewoodMap", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.WestpointMap", chance=20, n=1})
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Thief) then
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Repairman) then
+        table.insert (loot, {itemType="Base.Hammer", chance=100, n=1})
+        table.insert (lootBag, {itemType="Base.Woodglue", chance=20, n=3})
+        table.insert (lootBag, {itemType="Base.DuctTape", chance=20, n=3})
+        table.insert (lootBag, {itemType="Base.Epoxy", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.BatteryBox", chance=10, n=3})
         table.insert (lootBag, {itemType="Base.BookMaintenance1", chance=10, n=1})
         table.insert (lootBag, {itemType="Base.BookMaintenance2", chance=8, n=1})
         table.insert (lootBag, {itemType="Base.BookMaintenance3", chance=6, n=1})
@@ -727,6 +776,15 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Tracker) then
+        local city = BanditUtils.GetCity(zombie)
+        if city then
+            local maps = BanditUtils.GetStashMap(city)
+            for i=1, #maps do
+                table.insert (lootBag, {itemType=maps[i], chance=20, n=1})
+            end
+        end
+        table.insert (loot, {itemType="Base.Pencil", chance=100, n=1})
+        table.insert (loot, {itemType="Base.Eraser", chance=20, n=1})
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Trapper) then
@@ -749,10 +807,60 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
 
     -- personal loot
+    -- idea: add personal story letters
     local personality = brain.personality or {}
+    if personality.alcoholic then
+        table.insert(loot, {itemType="Base.Vodka", chance=50, n=5})
+        table.insert(loot, {itemType="Base.Whiskey", chance=40, n=4})
+        table.insert(loot, {itemType="Base.Gin", chance=30, n=3})
+    end
+
     if personality.smoker then
         table.insert(loot, {itemType="Base.CigaretteSingle", chance=50, n=20})
         table.insert(loot, {itemType="Base.Lighter", chance=100, n=1})
+    end
+
+    if personality.compulsiveCleaner then
+        table.insert(lootBag, {itemType="Base.Soap", chance=50, n=20})
+        table.insert(lootBag, {itemType="Base.ToiletPaper", chance=50, n=20})
+    end
+
+    if personality.comicsCollector then
+        table.insert(lootBag, {itemType="Base.ComicBook", chance=50, n=30})
+    end
+
+    if personality.gameCollector then
+        table.insert(lootBag, {itemType="Base.VideoGame", chance=50, n=20})
+    end
+
+    if personality.hottieCollector then
+        table.insert(lootBag, {itemType="Base.HottieZ", chance=50, n=30})
+    end
+
+    if personality.toyCollector then
+        table.insert(lootBag, {itemType="Base.Doll", chance=50, n=20})
+    end
+
+    if personality.underwearCollector then
+        local i = 1 + ZombRand(5)
+        if i == 1 then
+            table.insert(lootBag, {itemType="Base.Underpants_White", chance=50, n=30})
+        elseif i == 2 then
+            table.insert(lootBag, {itemType="Base.Underpants_Black", chance=50, n=30})
+        elseif i == 3 then
+            table.insert(lootBag, {itemType="Base.FrillyUnderpants_Black", chance=50, n=30})
+        elseif i == 4 then
+            table.insert(lootBag, {itemType="Base.FrillyUnderpants_Pink", chance=50, n=30})
+        elseif i == 5 then
+            table.insert(lootBag, {itemType="Base.FrillyUnderpants_Red", chance=50, n=30})
+        end
+    end
+
+    if personality.videoCollector then
+    end
+
+    if personality.fromPoland then
+        table.insert(loot, {itemType="Base.Perogies", chance=50, n=30})
     end
 
     -- save loot

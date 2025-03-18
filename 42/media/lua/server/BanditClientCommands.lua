@@ -184,7 +184,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
 
             local strengthBoost = general.strength or 5
             brain.strengthBoost = BanditUtils.Lerp(strengthBoost, 1, 9, 0.5, 1.5)
-            
+
             brain.exp = {0, 0, 0}
             if general.exp1 and general.exp2 and general.exp3 then
                 brain.exp = {general.exp1, general.exp2, general.exp3}
@@ -212,14 +212,22 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.tasks = {}
 
             brain.personality = {}
+
+            -- addiction and sickness
+            brain.personality.alcoholic = (ZombRand(50) == 0)
             brain.personality.smoker = (ZombRand(4) == 0)
-            brain.personality.hottieCollector = (ZombRand(100) == 0)
-            brain.personality.underwearCollector = (ZombRand(150) == 0)
-            brain.personality.toyCollector = (ZombRand(220) == 0)
-            brain.personality.gameFan = (ZombRand(220) == 0)
-            brain.personality.videoFan = (ZombRand(220) == 0)
-            brain.personality.fromPoland = (ZombRand(120) == 0)
             brain.personality.compulsiveCleaner = (ZombRand(90) == 0)
+
+            -- collectors
+            brain.personality.comicsCollector = (ZombRand(80) == 0)
+            brain.personality.gameCollector = (ZombRand(220) == 0)
+            brain.personality.hottieCollector = (ZombRand(100) == 0)
+            brain.personality.toyCollector = (ZombRand(220) == 0)
+            brain.personality.videoCollector = (ZombRand(220) == 0)
+            brain.personality.underwearCollector = (ZombRand(150) == 0)
+
+            -- heritage
+            brain.personality.fromPoland = (ZombRand(120) == 0) -- ku chwale ojczyzny!
 
             gmd.Queue[id] = brain
 
