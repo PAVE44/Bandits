@@ -103,17 +103,10 @@ function BanditScheduler.GetWaveDataAll()
         local wave = {}
 
         wave.enabled = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_WaveEnabled"]
-        wave.enemyBehaviour = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_EnemyBehaviour"]
         wave.firstDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FirstDay"]
         wave.lastDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_LastDay"]
-        wave.spawnDistance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnDistance"]
         wave.spawnHourlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnHourlyChance"]
         wave.groupSize = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupSize"]
-        wave.clanId = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupName"]
-        wave.hasPistolChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasPistolChance"]
-        wave.pistolMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_PistolMagCount"]
-        wave.hasRifleChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_HasRifleChance"]
-        wave.rifleMagCount = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_RifleMagCount"]
 
         table.insert(waveData, wave)
     end
@@ -155,7 +148,7 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
             local player = playerList:get(i)
             if player and not BanditPlayer.IsGhost(player) then
                 local dist = BanditUtils.DistTo(x, y, player:getX(), player:getY())
-                if dist < 30 then
+                if dist < 35 then
                     return true
                 end
             end
@@ -206,6 +199,7 @@ function BanditScheduler.GenerateSpawnPoint(player, d)
                 print("[INFO] Spawn is too close to one of the players, skipping.")
             else
                 sp.groundType = getGroundType(square)
+                sp.outside = square:isOutside()
                 table.insert(validSpawnPoints, sp)
             end
         end
@@ -267,11 +261,6 @@ function BanditScheduler.SpawnWave(player, wave)
     
     local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, wave.spawnDistance)
     if spawnPoint then
-
-        for i=1, wave.groupSize do
-            local bandit = BanditCreator.MakeFromWave(wave)
-            table.insert(event.bandits, bandit)
-        end
     
         if #event.bandits > 0 then
             print ("[INFO] Spawning a bandit group against player id: " .. BanditUtils.GetCharacterID(player))
@@ -754,33 +743,6 @@ function BanditScheduler.GetDensityScore(player, r)
     return 1 + (score / 10000)
 end
 
-function BanditScheduler.GetSpawnZoneBoost(player, clanId)
-    local zoneBoost = 1
-    local clan = BanditCreator.GroupMap[clanId]
-    local zone = getWorld():getMetaGrid():getZoneAt(player:getX(), player:getY(), 0)
-
-    if zone and clan then
-        local zoneType = zone:getType()
-        if clan.favoriteZones then
-            for _, zt in pairs(clan.favoriteZones) do
-                if zt == zoneType then
-                    zoneBoost = 1.4
-                    break
-                end
-            end
-        end
-        if clan.avoidZones then
-            for _, zt in pairs(clan.avoidZones) do
-                if zt == zoneType then
-                    zoneBoost = 0.6
-                    break
-                end
-            end
-        end
-    end
-    return zoneBoost
-end
-
 function BanditScheduler.SpawnDefenders(player, min, max)
     local event = {}
     event.hostile = true
@@ -855,46 +817,39 @@ function BanditScheduler.SpawnBase(player, sceneNo)
     end
 end
 
-function BanditScheduler.BroadcastTV(cx, cy)
-    local cell = getCell()
-
-    local tvs = {}
-    for z = 0, 7 do
-        for y = cy-20, cy+20 do
-            for x = cx-20, cx+20 do
-                local square = cell:getGridSquare(x, y, z)
-                if square then
-                    local objects = square:getObjects()
-                    for i=0, objects:size()-1 do
-                        local object = objects:get(i)
-                        if object then
-                            if instanceof(object, "IsoTelevision") then
-                                print ("FOUND TV")
-                                table.insert(tvs, object)
-                                -- tv:clearTvScreenSprites()
-                            end
-                        end
-                    end
-                end
+local function addIcon (x, y, friendly, program)
+    if SandboxVars.Bandits.General_ArrivalIcon then
+        local color
+        local icon
+        local desc
+        if program == "Bandit" then 
+            icon = "media/ui/raid.png"
+            color = {r=1, g=0.5, b=0.5} -- red
+            desc = "Hostile Raiders"
+        elseif program == "BaseGuard" then
+            icon = "media/ui/raid.png"
+            color = {r=1, g=0.5, b=0.5} -- red
+            desc = "Hostile Guards"
+        elseif program == "Thief" then
+            icon = "media/ui/thief.png"
+            color = {r=1, g=1, b=0.5} -- yellow
+            desc = "Hostile Thiefs"
+        elseif program == "Companion" then
+            icon = "media/ui/friend.png"
+            color = {r=0.5, g=1, b=0.5} -- green
+            desc = "Friendly Companions"
+        elseif program == "Looter" then
+            icon = "media/ui/loot.png"
+            if friendly then
+                color = {r=0.5, g=1, b=0.5} -- green
+                desc = "Friendly Wanderers"
+            else
+                color = {r=1, g=0, b=0} -- red
+                desc = "Hostile Wanderers"
             end
         end
-    end
 
-    if #tvs then
-        local lines = {}
-        table.insert(lines, {text="This is an automated emergency broadcast system. "})
-        table.insert(lines, {text="Authorities have identified a group..."})
-        table.insert(lines, {text="...of armed bandits operating within the region..."})
-        table.insert(lines, {text="...engaging in theft and violent activities."})
-        table.insert(lines, {text="Remain indoors and secure all entry points."})
-        table.insert(lines, {text="Do not travel alone or engage with suspicious individuals."})
-        table.insert(lines, {text="This message will repeat. "})
-        table.insert(lines, {text="END"})
-
-        for _, line in pairs(lines) do
-            local message = {tvs=tvs, text=line.text, sound=line.sound}
-            BanditBroadcaster.AddBroadcast(message)
-        end
+        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, x, y, color, desc)
     end
 end
 
@@ -902,14 +857,14 @@ end
 -- Main function
 -------------------------------------------------------------------------------
 
-function BanditScheduler.CheckEvent()
+local function checkEvent()
     if isServer() then return end
 
     local world = getWorld()
     local gamemode = world:getGameMode()
     local currentPlayer = getSpecificPlayer(0)
     local onlinePlayer 
-
+    
     if gamemode == "Multiplayer" then
         local playerList = getOnlinePlayers()
         local pid = ZombRand(playerList:size())
@@ -918,41 +873,62 @@ function BanditScheduler.CheckEvent()
         onlinePlayer = getSpecificPlayer(0)
     end
 
-    if BanditUtils.GetCharacterID(currentPlayer) == BanditUtils.GetCharacterID(onlinePlayer) then
+    if BanditUtils.GetCharacterID(currentPlayer) ~= BanditUtils.GetCharacterID(onlinePlayer) then return end
 
-        -- SPAWN ATTACKING FORCE
-        local daysPassed = currentPlayer:getHoursSurvived() / 24
-        local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
+    local waveData = BanditScheduler.GetWaveDataAll()
+    local clanData = BanditCustom.ClanGetAll()
+    local day = currentPlayer:getHoursSurvived() / 24
 
-        local densityScore = 1
-        if SandboxVars.Bandits.General_DensityScore then
-           densityScore = BanditScheduler.GetDensityScore(currentPlayer, 120)
-        end
+    local densityScore = 1
+    if SandboxVars.Bandits.General_DensityScore then
+        densityScore = BanditScheduler.GetDensityScore(currentPlayer, 120)
+    end
 
-        for _, wave in pairs(waveData) do
-            local spawnZoneBoost = BanditScheduler.GetSpawnZoneBoost(currentPlayer, wave.clanId)
-            local spawnChance = wave.spawnHourlyChance * spawnZoneBoost * densityScore / 6
-            local spawnRandom = ZombRandFloat(0, 101)
+    for wid, wave in pairs(waveData) do
+        if wave.enabled and day >= wave.firstDay and day <= wave.lastDay then
+            local spawnChance = wave.spawnHourlyChance * densityScore / 6
+            local spawnRandom = ZombRandFloat(0, 100)
+
             if spawnRandom < spawnChance then
-                BanditScheduler.SpawnWave(currentPlayer, wave)
+                local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, 10)
+
+                if spawnPoint then
+                    local cidChoices = {}
+                    for cid, clan in pairs(clanData) do
+                        if clan.spawn.wave == wid then
+                            table.insert(cidChoices, cid)
+                        end
+                    end
+
+                    local cid = cidChoices[1 + ZombRand(#clanChoices)]
+                    local clan = clanData[cid]
+                     
+                    local friendly = clan.spawn.friendly
+
+                    local program
+                    if friendly then
+                        program = "Looter"
+                    else
+                        program = "Bandit"
+                    end
+                    
+                    local args = {
+                        cid = cid,
+                        x = spawnPoint.x,
+                        y = spawnPoint.y,
+                        z = spawnPoint.z,
+                        program = program,
+                        hostile = not friendly,
+                        size = wave.groupSize
+                    }
+            
+                    BanditServer.Commands.SpawnCustom(player, args)
+
+                    addIcon (spawnPoint.x, spawnPoint.y, friendly, program)
+                end
             end
-        end
-
-        -- SPAWN DEFENDERS
-        local spawnRandom = ZombRandFloat(0, 101)
-        local spawnChance = SandboxVars.Bandits.General_DefenderSpawnHourlyChanced or 8
-        if spawnRandom < spawnChance / 6 then
-            BanditScheduler.SpawnDefenders(currentPlayer, 55, 100)
-        end
-
-        -- SPAWN BASES
-        local spawnRandom = ZombRandFloat(0, 101)
-        local spawnChance = SandboxVars.Bandits.General_BaseSpawnHourlyChance or 0.3
-        if spawnRandom < spawnChance / 6 then
-            local sceneNo = 1 + ZombRand(#BanditBaseScenes)
-            BanditScheduler.SpawnBase(currentPlayer, sceneNo)
         end
     end
 end
 
-Events.EveryTenMinutes.Add(BanditScheduler.CheckEvent)
+Events.EveryTenMinutes.Add(checkEvent)

@@ -180,11 +180,6 @@ option Bandits.Clan_1_WaveEnabled = {
     page = Bandits_Clan_1, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
 }
 
-option Bandits.Clan_1_EnemyBehaviour = {
-    type = enum, numValues=10, default = 7,
-    page = Bandits_Clan_1, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
-}
-
 option Bandits.Clan_1_FirstDay = {
     type = integer, min = 0, max = 10000, default = 1,
     page = Bandits_Clan_1, translation = Bandits.FirstDay, _tooltip=Bandits.FirstDayTooltip,
@@ -193,11 +188,6 @@ option Bandits.Clan_1_FirstDay = {
 option Bandits.Clan_1_LastDay = {
     type = integer, min = 0, max = 10000, default = 30,
     page = Bandits_Clan_1, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
-}
-
-option Bandits.Clan_1_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 55,
-    page = Bandits_Clan_1, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
 }
 
 option Bandits.Clan_1_SpawnHourlyChance = {
@@ -210,41 +200,11 @@ option Bandits.Clan_1_GroupSize = {
     page = Bandits_Clan_1, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_1_GroupName = {
-    type = enum, numValues=16, default = 1,
-    page = Bandits_Clan_1, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_1_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_1, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_1_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_1, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_1_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_1, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_1_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_1, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 2 *****/
 
 option Bandits.Clan_2_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_2, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_2_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_2, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_2_FirstDay = {
@@ -257,11 +217,6 @@ option Bandits.Clan_2_LastDay = {
     page = Bandits_Clan_2, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_2_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 62,
-    page = Bandits_Clan_2, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_2_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 3.2,
     page = Bandits_Clan_2, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -272,41 +227,11 @@ option Bandits.Clan_2_GroupSize = {
     page = Bandits_Clan_2, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_2_GroupName = {
-    type = enum, numValues=16, default = 2,
-    page = Bandits_Clan_2, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_2_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_2, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_2_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_2, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_2_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_2, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_2_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_2, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 3 *****/
 
 option Bandits.Clan_3_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_3, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_3_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_3, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_3_FirstDay = {
@@ -319,11 +244,6 @@ option Bandits.Clan_3_LastDay = {
     page = Bandits_Clan_3, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_3_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 65,
-    page = Bandits_Clan_3, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_3_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1.9,
     page = Bandits_Clan_3, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -334,41 +254,11 @@ option Bandits.Clan_3_GroupSize = {
     page = Bandits_Clan_3, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_3_GroupName = {
-    type = enum, numValues=16, default = 3,
-    page = Bandits_Clan_3, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_3_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_3, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_3_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_3, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_3_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_3, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_3_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_3, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 4 *****/
 
 option Bandits.Clan_4_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_4, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_4_EnemyBehaviour = {
-    type = enum, numValues=10, default = 5,
-    page = Bandits_Clan_4, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_4_FirstDay = {
@@ -381,11 +271,6 @@ option Bandits.Clan_4_LastDay = {
     page = Bandits_Clan_4, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_4_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_4, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_4_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 2.1,
     page = Bandits_Clan_4, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -396,41 +281,11 @@ option Bandits.Clan_4_GroupSize = {
     page = Bandits_Clan_4, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_4_GroupName = {
-    type = enum, numValues=16, default = 4,
-    page = Bandits_Clan_4, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_4_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 30,
-    page = Bandits_Clan_4, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_4_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 2,
-    page = Bandits_Clan_4, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_4_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_4, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_4_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_4, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 5 *****/
 
 option Bandits.Clan_5_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_5, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_5_EnemyBehaviour = {
-    type = enum, numValues=10, default = 3,
-    page = Bandits_Clan_5, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_5_FirstDay = {
@@ -443,11 +298,6 @@ option Bandits.Clan_5_LastDay = {
     page = Bandits_Clan_5, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_5_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_5, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_5_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1.1,
     page = Bandits_Clan_5, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -458,41 +308,11 @@ option Bandits.Clan_5_GroupSize = {
     page = Bandits_Clan_5, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_5_GroupName = {
-    type = enum, numValues=16, default = 5,
-    page = Bandits_Clan_5, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_5_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 40,
-    page = Bandits_Clan_5, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_5_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_5, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_5_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 5,
-    page = Bandits_Clan_5, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_5_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 1,
-    page = Bandits_Clan_5, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 6 *****/
 
 option Bandits.Clan_6_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_6, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_6_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_6, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_6_FirstDay = {
@@ -505,11 +325,6 @@ option Bandits.Clan_6_LastDay = {
     page = Bandits_Clan_6, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_6_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_6, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_6_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1.2,
     page = Bandits_Clan_6, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -520,41 +335,11 @@ option Bandits.Clan_6_GroupSize = {
     page = Bandits_Clan_6, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_6_GroupName = {
-    type = enum, numValues=16, default = 6,
-    page = Bandits_Clan_6, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_6_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_6, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_6_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_6, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_6_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_6, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_6_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_6, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 7 *****/
 
 option Bandits.Clan_7_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_7, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_7_EnemyBehaviour = {
-    type = enum, numValues=10, default = 3,
-    page = Bandits_Clan_7, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_7_FirstDay = {
@@ -567,11 +352,6 @@ option Bandits.Clan_7_LastDay = {
     page = Bandits_Clan_7, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_7_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_7, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_7_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1,
     page = Bandits_Clan_7, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -582,41 +362,11 @@ option Bandits.Clan_7_GroupSize = {
     page = Bandits_Clan_7, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_7_GroupName = {
-    type = enum, numValues=16, default = 7,
-    page = Bandits_Clan_7, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_7_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_7, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_7_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 4,
-    page = Bandits_Clan_7, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_7_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 20,
-    page = Bandits_Clan_7, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_7_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_7, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 8 *****/
 
 option Bandits.Clan_8_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_8, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_8_EnemyBehaviour = {
-    type = enum, numValues=10, default = 9,
-    page = Bandits_Clan_8, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_8_FirstDay = {
@@ -629,11 +379,6 @@ option Bandits.Clan_8_LastDay = {
     page = Bandits_Clan_8, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_8_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 60,
-    page = Bandits_Clan_8, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_8_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1,
     page = Bandits_Clan_8, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -644,41 +389,11 @@ option Bandits.Clan_8_GroupSize = {
     page = Bandits_Clan_8, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_8_GroupName = {
-    type = enum, numValues=16, default = 8,
-    page = Bandits_Clan_8, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_8_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_8, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_8_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 4,
-    page = Bandits_Clan_8, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_8_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_8, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_8_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 7,
-    page = Bandits_Clan_8, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 9 *****/
 
 option Bandits.Clan_9_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_9, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_9_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_9, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_9_FirstDay = {
@@ -691,11 +406,6 @@ option Bandits.Clan_9_LastDay = {
     page = Bandits_Clan_9, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_9_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_9, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_9_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 0.8,
     page = Bandits_Clan_9, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -706,41 +416,11 @@ option Bandits.Clan_9_GroupSize = {
     page = Bandits_Clan_9, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_9_GroupName = {
-    type = enum, numValues=16, default = 9,
-    page = Bandits_Clan_9, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_9_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 90,
-    page = Bandits_Clan_9, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_9_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 2,
-    page = Bandits_Clan_9, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_9_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 40,
-    page = Bandits_Clan_9, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_9_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_9, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 10 *****/
 
 option Bandits.Clan_10_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_10, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_10_EnemyBehaviour = {
-    type = enum, numValues=10, default = 2,
-    page = Bandits_Clan_10, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_10_FirstDay = {
@@ -753,11 +433,6 @@ option Bandits.Clan_10_LastDay = {
     page = Bandits_Clan_10, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_10_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_10, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_10_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 0.3,
     page = Bandits_Clan_10, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -768,41 +443,11 @@ option Bandits.Clan_10_GroupSize = {
     page = Bandits_Clan_10, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_10_GroupName = {
-    type = enum, numValues=16, default = 10,
-    page = Bandits_Clan_10, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_10_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_10, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_10_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_10, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_10_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_10, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_10_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 5,
-    page = Bandits_Clan_10, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 11 *****/
 
 option Bandits.Clan_11_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_11, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_11_EnemyBehaviour = {
-    type = enum, numValues=10, default = 3,
-    page = Bandits_Clan_11, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_11_FirstDay = {
@@ -815,11 +460,6 @@ option Bandits.Clan_11_LastDay = {
     page = Bandits_Clan_11, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_11_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_11, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_11_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 2,
     page = Bandits_Clan_11, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -830,41 +470,11 @@ option Bandits.Clan_11_GroupSize = {
     page = Bandits_Clan_11, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_11_GroupName = {
-    type = enum, numValues=16, default = 11,
-    page = Bandits_Clan_11, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_11_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_11, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_11_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_11, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_11_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 0,
-    page = Bandits_Clan_11, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_11_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 0,
-    page = Bandits_Clan_11, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 12 *****/
 
 option Bandits.Clan_12_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_12, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_12_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_12, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_12_FirstDay = {
@@ -877,11 +487,6 @@ option Bandits.Clan_12_LastDay = {
     page = Bandits_Clan_12, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_12_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_12, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_12_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 0.9,
     page = Bandits_Clan_12, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -892,41 +497,11 @@ option Bandits.Clan_12_GroupSize = {
     page = Bandits_Clan_12, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_12_GroupName = {
-    type = enum, numValues=16, default = 12,
-    page = Bandits_Clan_12, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_12_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_12, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_12_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 3,
-    page = Bandits_Clan_12, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_12_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 40,
-    page = Bandits_Clan_12, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_12_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 5,
-    page = Bandits_Clan_12, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 13 *****/
 
 option Bandits.Clan_13_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_13, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_13_EnemyBehaviour = {
-    type = enum, numValues=10, default = 3,
-    page = Bandits_Clan_13, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_13_FirstDay = {
@@ -939,11 +514,6 @@ option Bandits.Clan_13_LastDay = {
     page = Bandits_Clan_13, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_13_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_13, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_13_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 1.3,
     page = Bandits_Clan_13, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -954,41 +524,11 @@ option Bandits.Clan_13_GroupSize = {
     page = Bandits_Clan_13, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_13_GroupName = {
-    type = enum, numValues=16, default = 13,
-    page = Bandits_Clan_13, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_13_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_13, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_13_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 5,
-    page = Bandits_Clan_13, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_13_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_13, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_13_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 6,
-    page = Bandits_Clan_13, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 14 *****/
 
 option Bandits.Clan_14_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_14, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_14_EnemyBehaviour = {
-    type = enum, numValues=10, default = 6,
-    page = Bandits_Clan_14, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_14_FirstDay = {
@@ -1001,11 +541,6 @@ option Bandits.Clan_14_LastDay = {
     page = Bandits_Clan_14, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_14_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_14, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_14_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 2,
     page = Bandits_Clan_14, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -1016,41 +551,11 @@ option Bandits.Clan_14_GroupSize = {
     page = Bandits_Clan_14, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_14_GroupName = {
-    type = enum, numValues=16, default = 14,
-    page = Bandits_Clan_14, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_14_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_14, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_14_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 6,
-    page = Bandits_Clan_14, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_14_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_14, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_14_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 8,
-    page = Bandits_Clan_14, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 15 *****/
 
 option Bandits.Clan_15_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_15, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_15_EnemyBehaviour = {
-    type = enum, numValues=10, default = 3,
-    page = Bandits_Clan_15, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_15_FirstDay = {
@@ -1063,11 +568,6 @@ option Bandits.Clan_15_LastDay = {
     page = Bandits_Clan_15, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_15_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 70,
-    page = Bandits_Clan_15, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_15_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 3,
     page = Bandits_Clan_15, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -1078,41 +578,11 @@ option Bandits.Clan_15_GroupSize = {
     page = Bandits_Clan_15, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
 
-option Bandits.Clan_15_GroupName = {
-    type = enum, numValues=16, default = 15,
-    page = Bandits_Clan_15, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_15_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_15, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_15_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 5,
-    page = Bandits_Clan_15, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_15_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_15, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_15_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 11,
-    page = Bandits_Clan_15, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
 /***** WAVE 16 *****/
 
 option Bandits.Clan_16_WaveEnabled = {
     type = boolean, default = true,
     page = Bandits_Clan_16, translation = Bandits.WaveEnabled, _tooltip=Bandits.WaveEnabledTooltip,
-}
-
-option Bandits.Clan_16_EnemyBehaviour = {
-    type = enum, numValues=10, default = 8,
-    page = Bandits_Clan_16, translation = Bandits.EnemyBehaviour, _tooltip=Bandits.EnemyBehaviourTooltip, valueTranslation=Bandits.EnemyBehaviour,
 }
 
 option Bandits.Clan_16_FirstDay = {
@@ -1125,11 +595,6 @@ option Bandits.Clan_16_LastDay = {
     page = Bandits_Clan_16, translation = Bandits.LastDay, _tooltip=Bandits.LastDayTooltip,
 }
 
-option Bandits.Clan_16_SpawnDistance = {
-    type = integer, min = 30, max = 100, default = 58,
-    page = Bandits_Clan_16, translation = Bandits.SpawnDistance, _tooltip=Bandits.SpawnDistanceTooltip,
-}
-
 option Bandits.Clan_16_SpawnHourlyChance = {
     type = double, min = 0, max = 100, default = 4,
     page = Bandits_Clan_16, translation = Bandits.SpawnHourlyChance, _tooltip=Bandits.SpawnHourlyChanceTooltip,
@@ -1139,32 +604,3 @@ option Bandits.Clan_16_GroupSize = {
     type = integer, min = 0, max = 25, default = 14,
     page = Bandits_Clan_16, translation = Bandits.GroupSize, _tooltip=Bandits.GroupSizeTooltip,
 }
-
-option Bandits.Clan_16_GroupName = {
-    type = enum, numValues=16, default = 16,
-    page = Bandits_Clan_16, translation = Bandits.GroupName, _tooltip=Bandits.GroupNameTooltip, valueTranslation=Bandits.GroupNames
-}
-
-option Bandits.Clan_16_HasPistolChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_16, translation = Bandits.HasPistolChance, _tooltip=Bandits.HasPistolChanceTooltip,
-}
-
-option Bandits.Clan_16_PistolMagCount = {
-    type = integer, min = 0, max = 25, default = 5,
-    page = Bandits_Clan_16, translation = Bandits.PistolMagCount, _tooltip=Bandits.PistolMagCountTooltip,
-}
-
-option Bandits.Clan_16_HasRifleChance = {
-    type = double, min = 0, max = 100, default = 100,
-    page = Bandits_Clan_16, translation = Bandits.HasRifleChance, _tooltip=Bandits.HasRifleChanceTooltip,
-}
-
-option Bandits.Clan_16_RifleMagCount = {
-    type = integer, min = 0, max = 25, default = 11,
-    page = Bandits_Clan_16, translation = Bandits.RifleMagCount, _tooltip=Bandits.RifleMagCountTooltip,
-}
-
-
-
-
