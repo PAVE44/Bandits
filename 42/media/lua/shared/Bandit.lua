@@ -443,7 +443,9 @@ function Bandit.IsOutOfAmmo(zombie)
         if weapons.primary.bulletsLeft <= 0 and 
             ((weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
              (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0))
-            and weapons.secondary.bulletsLeft <= 0 and (weapons.secondary.magCount <= 0 or weapons.secondary.ammoCount <= 0) then
+            and weapons.secondary.bulletsLeft <= 0 and 
+            ((weapons.secondary.type == "mag" and weapons.secondary.magCount <= 0) or 
+             (weapons.secondary.type == "nomag" and weapons.secondary.ammoCount <= 0)) then
             return true
         end
     end
@@ -882,7 +884,11 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 local r = ZombRand(100)
                 if tab.chance > r then
                     local item = BanditCompatibility.InstanceItem(BanditCompatibility.GetLegacyItem(tab.itemType))
-                    bag:getInventory():AddItem(item)
+                    if item then
+                        bag:getInventory():AddItem(item)
+                    else
+                        print ("[WARN] Unknown item: " .. tab.itemType)
+                    end
                 end
             end
         end
@@ -898,7 +904,7 @@ end
 
 function Bandit.PickVoice(zombie)
     local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
-    local femaleOptions = {"3"}
+    local femaleOptions = {"1"}
 
     if zombie:isFemale() then
         return BanditUtils.Choice(femaleOptions)

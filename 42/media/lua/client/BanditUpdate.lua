@@ -389,25 +389,44 @@ end
 
 -- updates bandit torches light
 local function ManageTorch(bandit)
-    if BanditCompatibility.GetGameVersion() >= 42 or not SandboxVars.Bandits.General_CarryTorches then return end
+    if not SandboxVars.Bandits.General_CarryTorches then return end
 
     local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
-    local hasTorch = bandit:getVariableBoolean("BanditTorch")
     local vehicle = bandit:getVehicle()
+    local cell = getCell()
 
-    if not hasTorch or vehicle then return end
+    if vehicle then return end
+    
+    local colors = {r = 1, g = 1, b = 0.8}
 
-    local colors = {r = 0.8, g = 0.8, b = 0.8}
+    local md = bandit:getModData()
+    if not md.torch then md.torch = {} end
 
     if bandit:isProne() then
-        getCell():addLamppost(IsoLightSource.new(zx, zy, zz, colors.r, colors.g, colors.b, 2, 20))
+        --[[
+        local lightSource = IsoLightSource.new(zx, zy, zz, colors.r, colors.g, colors.b, 2, 2)
+        if lightSource then
+            getCell():addLamppost(lightSource)
+        end]]
     else
         local theta = bandit:getDirectionAngle() * 0.0174533  -- Convert degrees to radians
-        for i = 0, 15 do
+        for i = 2, 14 do
             local fadeFactor = i * 0.05
-            local lx = zx + math.floor(i * math.cos(theta) + 0.5)
-            local ly = zy + math.floor(i * math.sin(theta) + 0.5)
-            getCell():addLamppost(IsoLightSource.new(lx, ly, zz, colors.r - fadeFactor, colors.g - fadeFactor, colors.b - fadeFactor, i * 0.5, 20))
+            local lx = math.floor(zx + (i * math.cos(theta)))
+            local ly = math.floor(zy + (i * math.sin(theta)))
+            local lz = zz + 32
+
+            if md.torch[i] then
+                md.torch[i]:setActive(false)
+                -- print ("REM: x: ".. md.torch[i]:getX() .. " y:" .. md.torch[i]:getY() .. " z:" .. md.torch[i]:getZ() .. " i:" .. i)
+                cell:removeLamppost(md.torch[i])
+            end
+
+            -- print ("ADD x: ".. lx .. " y:" .. ly .. " z:" .. lz .. " i:" .. i)
+            ls = IsoLightSource.new(lx, ly, zz, colors.r, colors.g, colors.b, i * 0.5, 20)
+            md.torch[i] = ls
+            cell:addLamppost(md.torch[i])
+            
         end
     end
 end
@@ -575,7 +594,7 @@ local function ManageHealth(bandit)
         end
 
         if healing then
-            local task = {action="Bandage", time=800}
+            local task = {action="Bandage", time=800, lock=true}
             table.insert(tasks, task)
         end
     end
@@ -1749,7 +1768,6 @@ local function OnBanditUpdate(zombie)
     if not Bandit.Engine then return end
 
     if uTick == 16 then uTick = 0 end
-    uTick = uTick + 1
 
     if BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then return end
 
@@ -1832,7 +1850,10 @@ local function OnBanditUpdate(zombie)
     ApplyVisuals(bandit, brain)
 
     -- MANAGE BANDIT TORCH
-    ManageTorch(bandit)
+    --[[
+    if uTick == 1 then
+        ManageTorch(bandit)
+    end]]
 
     -- MANAGE BANDIT CHAINSAW
     ManageChainsaw(bandit)
@@ -1866,6 +1887,8 @@ local function OnBanditUpdate(zombie)
     if task then
         ProcessTask(bandit, task)
     end
+
+    uTick = uTick + 1
 
     local elapsed = getTimestampMs() - ts
 end

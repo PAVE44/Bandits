@@ -63,7 +63,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     local vehicle = master:getVehicle()
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), master:getX(), master:getY())
 
-    if master:isRunning() or master:isSprinting() or vehicle or dist > 10 then
+    if master:isSprinting() or dist > 10 then
         walkType = "Run"
         endurance = -0.07
     elseif master:isSneaking() and dist < 12 then
@@ -109,7 +109,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 end
             end
 
-            walkType = "Run"
+            walkType = "WalkAim"
             endurance = -0.01
             table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist, closeSlow))
             return {status=true, next="Follow", tasks=tasks}
@@ -438,32 +438,32 @@ ZombiePrograms.Companion.Follow = function(bandit)
         return {status=true, next="Follow", tasks=tasks}
     end
 --]]
-    local minDist = 2
-    if dist > minDist then
-        local id = BanditUtils.GetCharacterID(bandit)
 
-        local theta = master:getDirectionAngle() * math.pi / 180
-        local lx = 3 * math.cos(theta)
-        local ly = 3 * math.sin(theta)
+    local id = BanditUtils.GetCharacterID(bandit)
 
-        local dx = master:getX() - lx
-        local dy = master:getY() - ly
-        local dz = master:getZ()
-        local dxf = ((math.abs(id) % 10) - 5) / 10
-        local dyf = ((math.abs(id) % 11) - 5) / 10
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx+dxf, dy+dyf, dz, walkType, dist, false))
+    local theta = master:getDirectionAngle() * 0.0174533
+    local lx = 5 * math.cos(theta)
+    local ly = 5 * math.sin(theta)
+
+    local dx = master:getX() + lx + ((math.abs(id) % 12) - 6) / 2
+    local dy = master:getY() + ly + ((math.abs(id) % 12) - 6) / 2
+    local dz = master:getZ()
+
+    local distTarget = BanditUtils.DistTo(bandit:getX(), bandit:getY(), dx, dy)
+
+    if distTarget > 1 then
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx, dy, dz, walkType, distTarget, false))
         return {status=true, next="Follow", tasks=tasks}
-    end
+    else
 
-    --[[
-    -- nothing to do, play idle anims
-    local subTasks = BanditPrograms.Idle(bandit)
-    if #subTasks > 0 then
-        for _, subTask in pairs(subTasks) do
-            table.insert(tasks, subTask)
+        local subTasks = BanditPrograms.Idle(bandit)
+        if #subTasks > 0 then
+            for _, subTask in pairs(subTasks) do
+                table.insert(tasks, subTask)
+            end
+            return {status=true, next="Follow", tasks=tasks}
         end
-        return {status=true, next="Follow", tasks=tasks}
-    end]]
+    end
     
     return {status=true, next="Follow", tasks=tasks}
 end

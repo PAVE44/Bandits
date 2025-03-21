@@ -1,3 +1,58 @@
+[c4e24888-70f9-43ea-80f8-1bb2f6b9bd88]
+	general: name = PoliceBlue
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[c4878ebb-c8e5-4932-8850-370ee9c77d61]
+	general: name = Veterans
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[f3ad89be-9368-4df7-a63b-0c315a96f23b]
+	general: name = Bikers
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[c15cc316-41f9-4c2c-b71a-3a3fb58c247d]
+	general: name = Inmates
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[a2dec2f0-c76d-4640-8a71-733a547a1ebc]
+	general: name = Rangers2
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
 [c5c7f769-e5e8-44bb-ada6-cdf00ee2c234]
 	general: name = Test
 	spawn: wave = 0
@@ -53,8 +108,8 @@
 	spawn: wanderer = false
 	spawn: roadblock = false
 
-[f3ad89be-9368-4df7-a63b-0c315a96f23b]
-	general: name = Bikers
+[a5def10b-bab9-46b1-8e8c-d5152c86457e]
+	general: name = Hermits
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = true
@@ -64,11 +119,33 @@
 	spawn: wanderer = false
 	spawn: roadblock = false
 
-[a5def10b-bab9-46b1-8e8c-d5152c86457e]
-	general: name = Hermits
+[d2860ee6-7e18-4132-ad42-8fb3a34ea499]
+	general: name = Rangers
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[2681ecf5-d0d9-481d-b769-7c4fb626eb81]
+	general: name = Heretics
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[33894253-b965-4eb3-94e1-4d642cadac88]
+	general: name = PoliceGray
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false

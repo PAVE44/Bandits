@@ -154,13 +154,8 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.infection = 0
 
             -- properties taken from args
-            brain.hostile = args.hostile and true or false
             brain.permanent = args.permanent and true or false
             brain.key = args.key
-
-            brain.program = {}
-            brain.program.name = args.program or "Bandit"
-            brain.program.stage = "Prepare"
 
             -- properties taken from bandit custom profile
             local general = bandit.general
@@ -192,7 +187,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
 
             brain.weapons = {}
             if bandit.weapons then
-                brain.weapons.melee = bandit.weapons.melee
+                brain.weapons.melee = bandit.weapons.melee or "Base.BareHands"
 
                 for _, slot in pairs({"primary", "secondary"}) do
                     brain.weapons[slot] = {}
@@ -228,6 +223,21 @@ BanditServer.Commands.SpawnCustom = function(player, args)
 
             -- heritage
             brain.personality.fromPoland = (ZombRand(120) == 0) -- ku chwale ojczyzny!
+
+            -- properties from clan
+            local clan = BanditCustom.ClanGet(bandit.general.cid)
+            local spawn = clan.spawn
+
+            brain.program = {}
+            if spawn.friendly then
+                brain.hostile = false
+                brain.program.name = "Companion"
+                brain.program.stage = "Prepare"
+            else
+                brain.hostile = true
+                brain.program.name = "Bandit"
+                brain.program.stage = "Prepare"
+            end
 
             gmd.Queue[id] = brain
 

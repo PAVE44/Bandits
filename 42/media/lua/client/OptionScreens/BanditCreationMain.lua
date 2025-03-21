@@ -407,7 +407,7 @@ function BanditCreationMain:initialise()
     local bodyLocations = {Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
                            Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
                            Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
-                           Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress"},
+                           Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe"},
                            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
                            TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit"},
                            TopVest = {"TorsoExtraVest", "TorsoExtraVestBullet", "VestTexture", "Sweater", "SweaterHat"},

@@ -31,7 +31,7 @@ function BanditMenu.NewSpawn(player, square, cid)
                   z=square:getZ(),
                   program="Bandit",
                   hostile=true,
-                  size = 3}
+                  size = 20}
 
     BanditServer.Commands.SpawnCustom(player, args)
 end

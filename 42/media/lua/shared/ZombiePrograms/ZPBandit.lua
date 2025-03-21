@@ -102,16 +102,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
 
     local target, enemy = BanditUtils.GetTarget(bandit)
 
-    local closeSlow = true
-    if enemy then
-        local weapon = enemy:getPrimaryHandItem()
-        if weapon and weapon:IsWeapon() then
-            local weaponType = WeaponType.getWeaponType(weapon)
-            if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                closeSlow = false
-            end
-        end
-    end
+    
     
     -- engage with target
     if target.x and target.y and target.z then
@@ -122,7 +113,23 @@ ZombiePrograms.Bandit.Main = function(bandit)
 
         local tx, ty, tz = target.x, target.y, target.z
         
-        if target.dist > 4 and target.fx and target.fy then
+        local closeSlow = true
+        local engageUpfront = false
+        if enemy then
+            local weapon = enemy:getPrimaryHandItem()
+            if weapon and weapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(weapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    closeSlow = false
+                end
+            end
+
+            if target.fx and target.fy and (enemy:isRunning()  or enemy:isSprinting()) then
+                engageUpfront = true
+            end
+        end
+        
+        if engageUpfront then
             tx, ty = target.fx, target.fy
         end
 
