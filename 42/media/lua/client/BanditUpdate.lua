@@ -573,7 +573,7 @@ local function ManageHealth(bandit)
     if SandboxVars.Bandits.General_BleedOut then
         local healing = false
         local health = bandit:getHealth()
-        if health < 0.6 then
+        if health < 0.7 then
             local zx, zy = bandit:getX(), bandit:getY()
 
             -- purely visual so random allowed
@@ -582,20 +582,7 @@ local function ManageHealth(bandit)
                 local by = zy - 0.5 + ZombRandFloat(0.1, 0.9)
                 bandit:getChunk():addBloodSplat(bx, by, 0, ZombRand(20))
             end
-
-            if BanditUtils.IsController(bandit) then
-                bandit:setHealth(health - 0.00005)
-            end
-
-            if health < 0.4 and not Bandit.HasActionTask(bandit) then
-                Bandit.ClearTasks(bandit)
-                healing = true
-            end
-        end
-
-        if healing then
-            local task = {action="Bandage", time=800, lock=true}
-            table.insert(tasks, task)
+            bandit:setHealth(health - 0.00005)
         end
     end
 
@@ -1044,17 +1031,24 @@ local function ManageCombat(bandit)
 
     local tasks = {}
     local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local health = bandit:getHealth()
     local brain = BanditBrain.Get(bandit)
     local weapons = brain.weapons
 
     local bestDist = 40
     local enemyCharacter, switchTo
-    local combat, reload, switch, firing, shove, escape = false, false, false, false, false, false
+    local healing, reload = false, false
+    local combat, switch, firing, shove, escape = false, false, false, false, false
     local maxRangeMelee, maxRangePistol, maxRangeRifle
     local friendlies, enemies = 0, 0
     local sx, sy = 0, 0
 
-    -- RELOAD TASKS (WHEN NOT IN COMBAT)
+    -- HEALING FLAG 
+    if not Bandit.HasActionTask(bandit) and health < 0.4 then
+        healing = true
+    end
+
+    -- RELOAD FLAG (WHEN NOT IN COMBAT)
     if not Bandit.HasActionTask(bandit) then
         for _, slot in pairs({"primary", "secondary"}) do
             if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
@@ -1329,6 +1323,12 @@ local function ManageCombat(bandit)
             local task = {action="Time", anim="Smoke", time=250}
             table.insert(tasks, task)
             Bandit.Say(bandit, "DEATH")
+        end
+
+    elseif healing then
+        if not Bandit.HasTaskType(bandit, "Bandage")
+            local task = {action="Bandage"}
+            table.insert(tasks, task)
         end
 
     elseif firing then

@@ -73,7 +73,8 @@ local function hit(shooter, item, victim)
 
     -- Warning, this is not perfect, local player mand remote players will not generate the same 
     -- random number.
-    if ZombRand(10000) < accuracyThreshold then
+    -- if ZombRand(10000) < accuracyThreshold then
+    if BanditRandom.Get() < accuracyThreshold then
         if instanceof(victim, "IsoPlayer") then
             BanditPlayer.WakeEveryone()
 
