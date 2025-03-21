@@ -83,20 +83,21 @@ end
 ZombieActions.Hit = {}
 ZombieActions.Hit.onStart = function(bandit, task)
     local anim 
-    local sound
+    local soundSwing, soundVoice
 
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
     
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" 
+    local female = bandit:isFemale()
     local meleeItem = BanditCompatibility.InstanceItem(task.weapon)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
-    local sound = meleeItem:getSwingSound()
+    local soundSwing = meleeItem:getSwingSound()
     if bandit:isPrimaryEquipped("AuthenticZClothing.Chainsaw") then
         local emitter = bandit:getEmitter()
         emitter:stopSoundByName("ChainsawIdle")
-        sound = "ChainsawAttack1"
+        soundSwing = "ChainsawAttack1"
     end
 
     if prone then
@@ -104,11 +105,13 @@ ZombieActions.Hit.onStart = function(bandit, task)
             anim = "Attack2HFloor"
         else
             anim = "Attack2HStamp"
-            sound = "AttackStomp"
+            soundSwing = "AttackStomp"
+            soundVoice = female and "VoiceFemaleMeleeStomp" or "VoiceMaleMeleeStomp"
         end
     else
 
         local attacks
+        soundVoice = female and "VoiceFemaleMeleeAttack" or "VoiceMaleMeleeAttack"
         if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.barehand then
             attacks = {"AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
         elseif meleeItemType == WeaponType.twohanded then
@@ -122,6 +125,7 @@ ZombieActions.Hit.onStart = function(bandit, task)
         elseif meleeItemType == WeaponType.chainsaw then
             attacks = {"AttackChainsaw1", "AttackChainsaw2"}
         elseif meleeItemType == WeaponType.knife then
+            soundVoice = female and "VoiceFemaleMeleeStab" or "VoiceMaleMeleeStab"
             attacks = {"AttackKnife"} -- , "AttackKnifeMiss"
         else -- two handed / knife ?
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
@@ -129,12 +133,14 @@ ZombieActions.Hit.onStart = function(bandit, task)
 
         if attacks then 
             anim = attacks[1+ZombRand(#attacks)]
-
         end
     end
 
-    if sound then
-        bandit:playSound(sound)
+    if soundSwing then
+        bandit:playSound(soundSwing)
+    end
+    if soundVoice then
+        bandit:playSound(soundVoice)
     end
 
     if anim then

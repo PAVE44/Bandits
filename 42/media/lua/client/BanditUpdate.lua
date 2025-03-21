@@ -1326,7 +1326,7 @@ local function ManageCombat(bandit)
         end
 
     elseif healing then
-        if not Bandit.HasTaskType(bandit, "Bandage")
+        if not Bandit.HasTaskType(bandit, "Bandage") then
             local task = {action="Bandage"}
             table.insert(tasks, task)
         end

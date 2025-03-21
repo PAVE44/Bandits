@@ -1,6 +1,6 @@
 [c4e24888-70f9-43ea-80f8-1bb2f6b9bd88]
 	general: name = PoliceBlue
-	spawn: wave = 0
+	spawn: wave = 6
 	spawn: zone = 0
 	spawn: friendly = true
 	spawn: defenders = false
@@ -143,7 +143,7 @@
 
 [33894253-b965-4eb3-94e1-4d642cadac88]
 	general: name = PoliceGray
-	spawn: wave = 0
+	spawn: wave = 6
 	spawn: zone = 0
 	spawn: friendly = true
 	spawn: defenders = false

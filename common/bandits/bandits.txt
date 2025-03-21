@@ -1145,7 +1145,7 @@
 	general: modid = Bandits
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = test2
-	general: female = false
+	general: female = true
 	general: skin = 1
 	general: hairType = 11
 	general: beardType = 7
@@ -1154,27 +1154,16 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
 	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
 	clothing: Shoes = Base.Shoes_Sandals
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: secondary = Base.Pistol2
-	weapons: melee = Base.Axe
+	weapons: melee = Base.ButterKnife
 	ammo: primary = 1
 	ammo: secondary = 4
-
-[dc5a199b-e410-4e38-8080-c782b5699045]
-	general: modid = Bandits
-	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
-	general: name = test2
-	general: female = false
-	general: skin = 1
-	general: hairType = 1
-	general: beardType = 1
-	general: hairColor = 1
-	general: health = 5
-	general: strength = 5
-	general: endurance = 5
-	general: sight = 5
 
 [6566fe73-dd7f-48fd-8fec-797bb14d4e7d]
 	general: modid = Bandits
@@ -2672,8 +2661,10 @@
 	clothing: Pants = Base.Trousers_PoliceGrey
 	clothing: Shoes = Base.Shoes_Brown
 	clothing: Socks = Base.Socks_Long_White
+	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver
 	weapons: melee = Base.BareHands
+	ammo: primary = 1
 	ammo: secondary = 3
 
 [111f432d-701d-4a79-ab9f-84afcc52bd03]
@@ -2699,8 +2690,10 @@
 	clothing: Pants = Base.Trousers_PoliceGrey
 	clothing: Shoes = Base.Shoes_Brown
 	clothing: Socks = Base.Socks_Long_White
+	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver
 	weapons: melee = Base.BareHands
+	ammo: primary = 1
 	ammo: secondary = 3
 
 [941e50f0-8662-4247-83b7-5bf72d6ec109]
@@ -2756,8 +2749,10 @@
 	clothing: Pants = Base.Trousers_PoliceGrey
 	clothing: Shoes = Base.Shoes_Brown
 	clothing: Socks = Base.Socks_Long_White
+	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver
 	weapons: melee = Base.BareHands
+	ammo: primary = 1
 	ammo: secondary = 3
 
 [7591c91f-29e2-42cb-8a37-a45f9f1f9293]

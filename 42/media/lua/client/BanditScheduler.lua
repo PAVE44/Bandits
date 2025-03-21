@@ -817,42 +817,6 @@ function BanditScheduler.SpawnBase(player, sceneNo)
     end
 end
 
-local function addIcon (x, y, friendly, program)
-    if SandboxVars.Bandits.General_ArrivalIcon then
-        local color
-        local icon
-        local desc
-        if program == "Bandit" then 
-            icon = "media/ui/raid.png"
-            color = {r=1, g=0.5, b=0.5} -- red
-            desc = "Hostile Raiders"
-        elseif program == "BaseGuard" then
-            icon = "media/ui/raid.png"
-            color = {r=1, g=0.5, b=0.5} -- red
-            desc = "Hostile Guards"
-        elseif program == "Thief" then
-            icon = "media/ui/thief.png"
-            color = {r=1, g=1, b=0.5} -- yellow
-            desc = "Hostile Thiefs"
-        elseif program == "Companion" then
-            icon = "media/ui/friend.png"
-            color = {r=0.5, g=1, b=0.5} -- green
-            desc = "Friendly Companions"
-        elseif program == "Looter" then
-            icon = "media/ui/loot.png"
-            if friendly then
-                color = {r=0.5, g=1, b=0.5} -- green
-                desc = "Friendly Wanderers"
-            else
-                color = {r=1, g=0, b=0} -- red
-                desc = "Hostile Wanderers"
-            end
-        end
-
-        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, x, y, color, desc)
-    end
-end
-
 -------------------------------------------------------------------------------
 -- Main function
 -------------------------------------------------------------------------------
@@ -890,7 +854,7 @@ local function checkEvent()
             local spawnRandom = ZombRandFloat(0, 100)
 
             if spawnRandom < spawnChance then
-                local spawnPoint = BanditScheduler.GenerateSpawnPoint(player, 10)
+                local spawnPoint = BanditScheduler.GenerateSpawnPoint(currentPlayer, 10)
 
                 if spawnPoint then
                     local cidChoices = {}
@@ -900,31 +864,65 @@ local function checkEvent()
                         end
                     end
 
-                    local cid = cidChoices[1 + ZombRand(#clanChoices)]
-                    local clan = clanData[cid]
-                     
-                    local friendly = clan.spawn.friendly
+                    local cid = BanditUtils.Choice(cidChoices)
+                    if cid then
+                        local clan = clanData[cid]
+                        
+                        local friendly = clan.spawn.friendly
 
-                    local program
-                    if friendly then
-                        program = "Looter"
-                    else
-                        program = "Bandit"
-                    end
+                        local program
+                        if friendly then
+                            program = "Looter"
+                        else
+                            program = "Bandit"
+                        end
+                        
+                        local args = {
+                            cid = cid,
+                            x = spawnPoint.x,
+                            y = spawnPoint.y,
+                            z = 0,
+                            program = program,
+                            hostile = not friendly,
+                            size = wave.groupSize
+                        }
+                
+                        sendClientCommand(currentPlayer, 'Commands', 'SpawnCustom', args)
+
+                        if SandboxVars.Bandits.General_ArrivalIcon then
+                            local color
+                            local icon
+                            local desc
+                            if program == "Bandit" then 
+                                icon = "media/ui/raid.png"
+                                color = {r=1, g=0.5, b=0.5} -- red
+                                desc = "Hostile Raiders"
+                            elseif program == "BaseGuard" then
+                                icon = "media/ui/raid.png"
+                                color = {r=1, g=0.5, b=0.5} -- red
+                                desc = "Hostile Guards"
+                            elseif program == "Thief" then
+                                icon = "media/ui/thief.png"
+                                color = {r=1, g=1, b=0.5} -- yellow
+                                desc = "Hostile Thiefs"
+                            elseif program == "Companion" then
+                                icon = "media/ui/friend.png"
+                                color = {r=0.5, g=1, b=0.5} -- green
+                                desc = "Friendly Companions"
+                            elseif program == "Looter" then
+                                icon = "media/ui/loot.png"
+                                if friendly then
+                                    color = {r=0.5, g=1, b=0.5} -- green
+                                    desc = "Friendly Wanderers"
+                                else
+                                    color = {r=1, g=0, b=0} -- red
+                                    desc = "Hostile Wanderers"
+                                end
+                            end
                     
-                    local args = {
-                        cid = cid,
-                        x = spawnPoint.x,
-                        y = spawnPoint.y,
-                        z = spawnPoint.z,
-                        program = program,
-                        hostile = not friendly,
-                        size = wave.groupSize
-                    }
-            
-                    BanditServer.Commands.SpawnCustom(player, args)
-
-                    addIcon (spawnPoint.x, spawnPoint.y, friendly, program)
+                            BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, spawnPoint.x, spawnPoint.y, color, desc)
+                        end
+                    end
                 end
             end
         end
