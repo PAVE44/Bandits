@@ -66,6 +66,7 @@ ZombieActions.Equip.onWorking = function(zombie, task)
     end
 
     if task.tick == 15 then
+        local brain = BanditBrain.Get(zombie)
         if task.slot then
             zombie:setAttachedItem(task.slot, nil)
         end
@@ -74,7 +75,7 @@ ZombieActions.Equip.onWorking = function(zombie, task)
 
         if task.itemPrimary then
             local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
-
+            primaryItem = BanditWeapons.Modify(primaryItem, brain)
             zombie:setPrimaryHandItem(primaryItem)
             zombie:setVariable("BanditPrimary", task.itemPrimary)
 

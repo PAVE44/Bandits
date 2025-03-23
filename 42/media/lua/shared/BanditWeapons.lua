@@ -79,6 +79,29 @@ BanditWeapons.Make = function(itemType, boxCount)
     return ret
 end
 
+BanditWeapons.Modify = function(weapon, brain)
+    local sight = brain.accuracyBoost
+    local scopeItem
+    if sight >= 1 and sight <= 2 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x2Scope")
+    elseif sight > 2 and sight <= 3 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x4Scope")
+    elseif sight > 3 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x8Scope")
+    end
+
+    if scopeItem then
+        local mountList = scopeItem:getMountOn()
+        for i=1, mountList:size() do
+            local mount = mountList:get(i-1)
+            if mount == weapon:getFullType() then
+                weapon:attachWeaponPart(scopeItem)
+            end
+        end
+    end
+    return weapon
+end
+
 BanditWeapons.GetPrimary = function()
     return BanditWeapons.Primary
 end

@@ -452,6 +452,17 @@ function Bandit.IsOutOfAmmo(zombie)
     return false
 end
 
+function Bandit.IsBareHands(zombie)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        local weapons = brain.weapons
+        if weapons.melee == "Base.BareHands" then
+            return true
+        end
+    end
+    return false
+end
+
 function Bandit.SetWeapons(zombie, weapons)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -491,7 +502,8 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if weapons.melee and weapons.melee ~= "Base.BareHands" then 
         local item = BanditCompatibility.InstanceItem(weapons.melee)
         item:getModData().preserve = true
-        item:setCondition(1+ZombRand(10))
+        item = BanditCompatibility.SetRandomCondition(item, 0.8)
+
         zombie:addItemToSpawnAtDeath(item)
     end
 
@@ -502,8 +514,9 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if not attachedBack then
                 local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
                 if gun then
+                    gun = BanditWeapons.Modify(gun, brain)
                     gun:getModData().preserve = true
-                    gun:setCondition(3+ZombRand(15))
+                    gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
                     zombie:addItemToSpawnAtDeath(gun)
                 end
             end
@@ -545,8 +558,9 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             if not attachedHolster then
                 local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
                 if gun then
+                    gun = BanditWeapons.Modify(gun, brain)
                     gun:getModData().preserve = true
-                    gun:setCondition(3+ZombRand(22))
+                    gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
                     zombie:addItemToSpawnAtDeath(gun)
                 end
             end

@@ -285,6 +285,17 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
     end
 
+    if zombie then
+        local x = 0
+        local items = zombie:getAttachedItems()
+        for i=0, items:size()-1 do
+            local item = items:get(i)
+            local location = item:getLocation()
+            local itm = item:getItem()
+        end
+
+    end
+
     -- Admin spawn options
     if isDebugEnabled() or isAdmin() then
         local spawnOption = context:addOption("Spawn Bandits Here")
@@ -311,11 +322,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
 
         context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
-
-        
-
-        
-        
     end
     
     BanditCustom.Load()

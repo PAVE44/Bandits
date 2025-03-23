@@ -17,6 +17,16 @@ local function predicateSpoilableFood(item)
     return false
 end
 
+local function predicateMelee(item)
+    if item:IsWeapon() then
+        local weaponType = WeaponType.getWeaponType(item)
+        if weaponType ~= WeaponType.firearm and weaponType ~= WeaponType.handgun then
+            return true
+        end
+    end
+    return false
+end
+
 local function getItem(bandit, itemTypeTab, cnt)
     local task
     local obj
@@ -291,6 +301,62 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         return tasks
     end
 
+    return tasks
+end
+
+BanditPrograms.Weapon.Resupply = function(bandit, slot)
+    local tasks = {}
+
+    local cell = getCell()
+    local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local isBareHands = Bandit.IsBareHands(bandit)
+    local bestDist = 100
+    local body
+    local lx, ly, lz
+    for y=-5, 5 do
+        for x=-5, 5 do
+            local square = cell:getGridSquare(zx + x, zy + y, zz)
+            if square then
+
+                -- loot bodies
+                if square:isFree(false) then
+                    local objects = square:getStaticMovingObjects()
+                    for i=0, objects:size()-1 do
+                        local object = objects:get(i)
+                        if instanceof (object, "IsoDeadBody") then
+                            local container = object:getContainer()
+                            if container and not container:isEmpty() then
+                                local dist = math.abs(x) + math.abs(y)
+                                if isBareHands then
+                                    local items = ArrayList.new()
+                                    container:getAllEvalRecurse(predicateMelee, items)
+                                    if items:size() > 0 and dist < bestDist then
+                                        bestDist = dist
+                                        body = object
+                                        lx, ly, lz = square:getX(), square:getY(), square:getZ()
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+
+                -- loot shelfs
+            end
+        end
+    end
+
+    if body then
+        if bestDist > 0.6 then
+            local task = BanditUtils.GetMoveTask(0.01, lx + 0.5, ly + 0.5, lz, "Run", bestDist, false)
+            table.insert(tasks, task)
+            return tasks
+        else
+            local task = {action="LootWeapons", anim="LootLow", time=250, x=lx, y=ly, z=lz}
+            table.insert(tasks, task)
+            return tasks
+        end
+    end
     return tasks
 end
 

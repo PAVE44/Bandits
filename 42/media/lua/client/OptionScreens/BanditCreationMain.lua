@@ -391,11 +391,9 @@ function BanditCreationMain:initialise()
     lbl:instantiate()
     self:addChild(lbl)
 
-    self.sightSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
+    self.sightSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
 	self.sightSlider:initialise()
 	self.sightSlider:instantiate()
-	self.sightSlider:setValues(1.0, 9.0, 1, 2)
-	self.sightSlider:setCurrentValue(5, true)
 	self:addChild(self.sightSlider)
     rowY = rowY + BUTTON_HGT + 8
     
@@ -409,7 +407,7 @@ function BanditCreationMain:initialise()
                            Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
                            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe"},
                            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
-                           TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit"},
+                           TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
                            TopVest = {"TorsoExtraVest", "TorsoExtraVestBullet", "VestTexture", "Sweater", "SweaterHat"},
                            Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
                            TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left"},
@@ -448,16 +446,21 @@ function BanditCreationMain:initialise()
         end
     end
 
+    self.sightSlider:setValues(1.0, 9.0, 1, 2)
+    self.sightSlider:setCurrentValue(5, true)
+
     self:loadConfig()
 end
 
 function BanditCreationMain:onClothingChanged()
     self.model:reportEvent("EventWearClothing")
-	self.model:playSound("RummageInInventory")
 
     for bodyLocation, dropbox in pairs(self.clothing) do
         self.model:setWornItem(bodyLocation, nil)
     end
+    self.model:setWornItem("Back", nil)
+    self.model:clearAttachedItems()
+
     for bodyLocation, dropbox in pairs(self.clothing) do
         local item = dropbox.storedItem
         if item then
@@ -485,6 +488,33 @@ function BanditCreationMain:onClothingChanged()
         end
         local weapon = self.weapons[slot].storedItem
         if weapon then
+
+            local partList = weapon:getAllWeaponParts()
+            for i=1, partList:size() do
+                local part = partList:get(i-1)
+                weapon:detachWeaponPart(part)
+            end
+
+            local sight = self.sightSlider:getCurrentValue()
+            local scopeItem
+            if sight == 6 or sight == 7 then
+                scopeItem = BanditCompatibility.InstanceItem("Base.x2Scope")
+            elseif sight == 8 then
+                scopeItem = BanditCompatibility.InstanceItem("Base.x4Scope")
+            elseif sight == 9 then
+                scopeItem = BanditCompatibility.InstanceItem("Base.x8Scope")
+            end
+
+            if scopeItem then
+                local mountList = scopeItem:getMountOn()
+                for i=1, mountList:size() do
+                    local mount = mountList:get(i-1)
+                    if mount == weapon:getFullType() then
+                        weapon:attachWeaponPart(scopeItem)
+                    end
+                end
+            end
+
             local attachmentType = weapon:getAttachmentType()
             -- local magazineType = weapon:getMagazineType()
             local ammoType = weapon:getAmmoType()
@@ -523,7 +553,7 @@ end
 function BanditCreationMain:updateHairCombo()
     self.hairTypeCombo.options = {}
     local hairStyles = getAllHairStyles(self.model:isFemale())
-    for i=1,hairStyles:size() do
+    for i=1, hairStyles:size() do
         local styleId = hairStyles:get(i-1)
         local hairStyle = self.model:isFemale() and getHairStylesInstance():FindFemaleStyle(styleId) or getHairStylesInstance():FindMaleStyle(styleId)
         local label = styleId

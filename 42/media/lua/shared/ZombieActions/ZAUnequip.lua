@@ -42,8 +42,10 @@ ZombieActions.Unequip.onWorking = function(zombie, task)
         zombie:setBumpType(task.anim1)
     end
     if task.tick == 15 then
+        local brain = BanditBrain.Get(zombie)
         if task.itemPrimary then
             local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
+            primaryItem = BanditWeapons.Modify(primaryItem, brain)
             if task.slot then
                 zombie:setAttachedItem(task.slot, primaryItem)
             end

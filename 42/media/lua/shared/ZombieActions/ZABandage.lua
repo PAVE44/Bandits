@@ -1,6 +1,6 @@
 ZombieActions = ZombieActions or {}
 
-local function GetBodyParts()
+local function getBodyParts()
     local bodyParts = {}
     table.insert(bodyParts, {name=BodyPartType.Foot_R, anim="BandageRightLeg"})
     table.insert(bodyParts, {name=BodyPartType.Foot_L, anim="BandageLeftLeg"})
@@ -22,23 +22,14 @@ local function GetBodyParts()
     return bodyParts
 end
 
-local function Heal(zombie)
-    local gameTime = getGameTime()
-    local minutes = gameTime:getMinutes()
-    local bpi = 1 + math.abs(BanditUtils.GetCharacterID(zombie) + minutes) % 17
-    local bodyParts = GetBodyParts()
-    local bodyPart = bodyParts[bpi]
-
-    zombie:setHealth(1.6)
-    zombie:addVisualBandage(bodyPart.name, true)
-end
-
 ZombieActions.Bandage = {}
 ZombieActions.Bandage.onStart = function(zombie, task)
-    local bpi = 1 + math.abs(BanditUtils.GetCharacterID(zombie)) % 17
-    local bodyParts = GetBodyParts()
+    local bpi = 1 + BanditRandom.Get() % 17
+    local bodyParts = getBodyParts()
     local bodyPart = bodyParts[bpi]
 
+    task.bpi = bpi
+    task.anim = bodyPart.anim
     -- print ("BANDAGING: " .. tostring(bodyPart.name) .. " WITH ANIM: " .. bodyPart.anim)
     zombie:setBumpType(bodyPart.anim)
     zombie:playSound("FirstAidApplyBandage")
@@ -52,6 +43,11 @@ ZombieActions.Bandage.onWorking = function(zombie, task)
 end
 
 ZombieActions.Bandage.onComplete = function(zombie, task)
-    Heal(zombie)
+    local bpi = task.bpi
+    local bodyParts = getBodyParts()
+    local bodyPart = bodyParts[bpi]
+
+    zombie:setHealth(1.6)
+    zombie:addVisualBandage(bodyPart.name, true)
     return true
 end

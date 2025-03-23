@@ -37,6 +37,88 @@ local function getProjectileCount(reloadType)
     return projectiles
 end
 
+local function getBloodBodyParts()
+    local bodyParts = {}
+    table.insert(bodyParts, {name=BloodBodyPartType.Foot_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.Foot_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.LowerLeg_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.LowerLeg_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperLeg_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperLeg_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.Groin})
+    table.insert(bodyParts, {name=BloodBodyPartType.Neck})
+    table.insert(bodyParts, {name=BloodBodyPartType.Head})
+    table.insert(bodyParts, {name=BloodBodyPartType.Torso_Lower})
+    table.insert(bodyParts, {name=BloodBodyPartType.Torso_Upper})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperArm_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperArm_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.ForeArm_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.ForeArm_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.Hand_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.Hand_L})
+    return bodyParts
+end
+
+local function addHole (character)
+    local bpi = 1 + BanditRandom.Get() % 17
+    local bodyParts = getBloodBodyParts()
+    local bodyPart = bodyParts[bpi]
+
+    print (bodyPart.name)
+    local visuals = character:getHumanVisual()
+    visuals:setBlood(bodyPart.name, 1)
+
+    local itemVisuals = character:getItemVisuals()
+    for i = 0, itemVisuals:size() - 1 do
+        local item = itemVisuals:get(i)
+        if item then
+            item:setBlood(bodyPart.name, 1)
+            local clothing = item:getInventoryItem()
+            if instanceof(clothing, "Clothing") then
+                local coveredPartList = clothing:getCoveredParts()
+                for i=0, coveredPartList:size()-1 do
+                    local coveredPart = coveredPartList:get(i)
+                    if coveredPart == bodyPart.name then
+                        item:setHole(bodyPart.name)
+                    end
+                end
+            end
+        end
+    end
+    character:resetModelNextFrame()
+    character:resetModel()
+end
+
+local function addHolePlayer (player)
+    local bpi = 1 + BanditRandom.Get() % 17
+    local bodyParts = getBloodBodyParts()
+    local bodyPart = bodyParts[bpi]
+
+    print (bodyPart.name)
+    local visuals = player:getHumanVisual()
+    visuals:setBlood(bodyPart.name, 1)
+
+    local wornItems = player:getWornItems()
+    for i = 0, wornItems:size() - 1 do
+        local wornItem = wornItems:get(i)
+        local item = wornItem:getItem()
+        if item then
+            item:setBlood(bodyPart.name, 1)
+            if instanceof(item, "Clothing") then
+                local coveredPartList = item:getCoveredParts()
+                for i=0, coveredPartList:size()-1 do
+                    local coveredPart = coveredPartList:get(i)
+                    if coveredPart == bodyPart.name then
+                        -- item:getVisual():setHole(bodyPart.name)
+                    end
+                end
+            end
+        end
+    end
+    player:resetModelNextFrame()
+    player:resetModel()
+end
+
 local function hit(shooter, item, victim)
 
     -- Clone the shooter to create a temporary IsoPlayer
@@ -83,8 +165,9 @@ local function hit(shooter, item, victim)
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
+            victim:Hit(item, tempShooter, 6, false, 1, false)
 
-            victim:addBlood(0.6)
+            -- addHolePlayer(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
             
             local bodyDamage = victim:getBodyDamage()
@@ -108,7 +191,7 @@ local function hit(shooter, item, victim)
             victim:setPlayerAttackPosition(victim:testDotSide(shooter))
             victim:Hit(item, tempShooter, 6, false, 1, false)
             victim:setAttackedBy(shooter)
-            victim:addBlood(0.6)
+            addHole(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
         end
        

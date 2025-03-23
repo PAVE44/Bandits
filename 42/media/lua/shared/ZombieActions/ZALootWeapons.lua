@@ -6,9 +6,34 @@ local function predicateAll(item)
 end
 
 local function lootContainer(zombie, container, task)
+    local isOutOfAmmo = Bandit.IsOutOfAmmo(zombie)
+    local isBareHands = Bandit.IsBareHands(zombie)
+    local weapons = Bandit.GetWeapons(zombie)
+
     local items = ArrayList.new()
     container:getAllEvalRecurse(predicateAll, items)
-    
+
+    for i=0, items:size()-1 do
+        local item = items:get(i)
+        if item:IsWeapon() then
+            local weaponType = WeaponType.getWeaponType(item)
+            if weaponType == WeaponType.firearm then
+            elseif weaponType == WeaponType.handgun then
+            else
+                if isBareHands then
+                    weapons.melee = item:getFullType()
+                end
+            end
+        end
+    end
+
+    local brain = BanditBrain.Get(zombie)
+    local syncData = {}
+    syncData.id = brain.id
+    syncData.weapons = weapons
+    Bandit.ForceSyncPart(zombie, syncData)
+
+    --[[
     local success = false
     for _, v in pairs(task.toRemove) do
         for i=0, items:size()-1 do
@@ -36,11 +61,13 @@ local function lootContainer(zombie, container, task)
         syncData.weapons = weapons
         Bandit.ForceSyncPart(zombie, syncData)
     end
+    ]]
     return success
 end
 
 ZombieActions.LootWeapons = {}
 ZombieActions.LootWeapons.onStart = function(zombie, task)
+    zombie:playSound("RummageInInventory")
     return true
 end
 
@@ -52,10 +79,19 @@ ZombieActions.LootWeapons.onWorking = function(zombie, task)
         zombie:setBumpType(task.anim)
     end
 
+    local emitter = zombie:getEmitter()
+    if not emitter:isPlaying("RummageInInventory") then
+        emitter:playSound("RummageInInventory")
+    end
     return false
 end
 
 ZombieActions.LootWeapons.onComplete = function(zombie, task)
+    local emitter = zombie:getEmitter()
+    if emitter:isPlaying("RummageInInventory") then
+        emitter:stopSoundByName("ChainsawIdle")
+    end
+    
     local cell = getCell()
     local square = cell:getGridSquare(task.x, task.y, task.z)
     if square then
@@ -66,7 +102,7 @@ ZombieActions.LootWeapons.onComplete = function(zombie, task)
                 local container = object:getContainer()
                 if container and not container:isEmpty() then
                     local success = lootContainer(zombie, container, task)
-                    if success then return end
+                    if success then return true end
                 end
             end
         end
@@ -77,7 +113,7 @@ ZombieActions.LootWeapons.onComplete = function(zombie, task)
             local container = object:getContainer()
             if container and not container:isEmpty() then
                 local success = lootContainer(zombie, container, task)
-                if success then return end
+                if success then return true end
             end
         end
     end

@@ -1,3 +1,47 @@
+[8f4af04f-8f12-4155-8800-7d6c09f7af2e]
+	general: name = Professions
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[bbe0c8c9-1135-4ced-abd2-73807e166a1e]
+	general: name = PrivateMilitia
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[2681ecf5-d0d9-481d-b769-7c4fb626eb81]
+	general: name = Heretics
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[c4e24888-70f9-43ea-80f8-1bb2f6b9bd88]
+	general: name = PoliceBlue
+	spawn: wave = 6
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
 [c4878ebb-c8e5-4932-8850-370ee9c77d61]
 	general: name = Veterans
 	spawn: wave = 0
@@ -46,7 +90,7 @@
 	general: name = Test
 	spawn: wave = 0
 	spawn: zone = 0
-	spawn: friendly = true
+	spawn: friendly = false
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false
@@ -119,8 +163,52 @@
 	spawn: wanderer = false
 	spawn: roadblock = false
 
-[2681ecf5-d0d9-481d-b769-7c4fb626eb81]
-	general: name = Heretics
+[33894253-b965-4eb3-94e1-4d642cadac88]
+	general: name = PoliceGray
+	spawn: wave = 6
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[a2fc481f-39ac-4baf-aabe-29971e4e92a1]
+	general: name = Lumberjacks
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[d6c3c644-42e7-466a-8ce4-c002ad29dd50]
+	general: name = Mafia
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[bf5985eb-7cb0-44ba-8392-f656ffe421f4]
+	general: name = Medieval
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = true
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[6e319aac-4480-4367-aa9a-5d4bf2ced9d1]
+	general: name = Hikers
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false

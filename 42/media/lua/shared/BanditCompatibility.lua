@@ -64,6 +64,15 @@ BanditCompatibility.GetLegacyItem = function(itemFullType)
     return itemFullType
 end
 
+BanditCompatibility.SetRandomCondition = function(item, m)
+    item:setCondition(ZombRand(item:getConditionMax() * m) + 1)
+
+    if getGameVersion() >= 42 and item:hasHeadCondition() then
+        item:setHeadCondition(ZombRand(item:getHeadConditionMax() * 0.8) + 1)
+    end
+    return item
+end
+
 BanditCompatibility.GetClickedSquare = function()
     if getGameVersion() >= 42 then
         local fetch = ISWorldObjectContextMenu.fetchVars

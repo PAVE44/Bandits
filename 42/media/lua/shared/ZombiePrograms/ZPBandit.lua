@@ -16,17 +16,15 @@ end
 
 ZombiePrograms.Bandit.Main = function(bandit)
     local tasks = {}
-
-    -- update walk type
     local world = getWorld()
     local cell = getCell()
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
-
+    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local walkType = "Run"
     local endurance = -0.06
-    local secondary
+
     if dls < 0.3 then
         if SandboxVars.Bandits.General_SneakAtNight then
             walkType = "SneakWalk"
@@ -101,8 +99,6 @@ ZombiePrograms.Bandit.Main = function(bandit)
     local enemy
 
     local target, enemy = BanditUtils.GetTarget(bandit)
-
-    
     
     -- engage with target
     if target.x and target.y and target.z then
