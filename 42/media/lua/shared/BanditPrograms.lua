@@ -304,51 +304,115 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
     return tasks
 end
 
-BanditPrograms.Weapon.Resupply = function(bandit, slot)
+BanditPrograms.Weapon.Resupply = function(bandit)
     local tasks = {}
 
     local cell = getCell()
     local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
     local isBareHands = Bandit.IsBareHands(bandit)
+    local needPrimary = Bandit.NeedResupplySlot(bandit, "primary")
+    local needSecondary = Bandit.NeedResupplySlot(bandit, "secondary")
+    local objectList = {}
     local bestDist = 100
-    local body
-    local lx, ly, lz
+    local destObject
     for y=-5, 5 do
         for x=-5, 5 do
             local square = cell:getGridSquare(zx + x, zy + y, zz)
             if square then
 
                 -- loot bodies
-                if square:isFree(false) then
-                    local objects = square:getStaticMovingObjects()
-                    for i=0, objects:size()-1 do
-                        local object = objects:get(i)
-                        if instanceof (object, "IsoDeadBody") then
-                            local container = object:getContainer()
-                            if container and not container:isEmpty() then
-                                local dist = math.abs(x) + math.abs(y)
-                                if isBareHands then
-                                    local items = ArrayList.new()
-                                    container:getAllEvalRecurse(predicateMelee, items)
-                                    if items:size() > 0 and dist < bestDist then
-                                        bestDist = dist
-                                        body = object
-                                        lx, ly, lz = square:getX(), square:getY(), square:getZ()
+                local objects = square:getStaticMovingObjects()
+                for i=0, objects:size()-1 do
+                    local object = objects:get(i)
+                    if instanceof (object, "IsoDeadBody") then
+                        local container = object:getContainer()
+                        if container and not container:isEmpty() then
+                            table.insert(objectList, object)
+                        end
+                    end
+                end
+                
+                -- loot shelfs
+                local objects = square:getObjects()
+                for i=0, objects:size()-1 do
+                    local object = objects:get(i)
+                    local container = object:getContainer()
+                    if container and not container:isEmpty() then
+                        table.insert(objectList, object)
+                    end
+                end
+
+                for i=1, #objectList do
+                    local object = objectList[i]
+                    local container = object:getContainer()
+                    local dist = math.abs(x) + math.abs(y)
+
+                    -- find melee
+                    if isBareHands then
+                        local items = ArrayList.new()
+                        container:getAllEvalRecurse(predicateMelee, items)
+                        if items:size() > 0 and dist < bestDist then
+                            bestDist = dist
+                            destObject = object
+                        end
+                    end
+
+                    -- find primary or secondary
+                    if needPrimary or needSecondary then
+                        local items = ArrayList.new()
+                        container:getAllEvalRecurse(predicateAll, items)
+                        for i=0, items:size()-1 do
+                            local item = items:get(i)
+                            if item:IsWeapon() then
+                                local weaponItem = item
+                                local weaponType = WeaponType.getWeaponType(weaponItem)
+
+                                if (needPrimary and weaponType == WeaponType.firearm) or
+                                    (needSecondary and weaponType == WeaponType.handgun) then
+                                    
+                                    if weaponItem:usesExternalMagazine() then
+                                        local magazineType = weaponItem:getMagazineType()
+                                        for j=0, items:size()-1 do
+                                            local item = items:get(j)
+                                            if item:getFullType() == magazineType and item:getCurrentAmmoCount() > 0 then
+                                                bestDist = dist
+                                                destObject = object
+                                            end
+                                        end
+                                    else
+                                        local ammoType = weaponItem:getAmmoType()
+                                        for j=0, items:size()-1 do
+                                            local item = items:get(j)
+                                            if item:getFullType() == ammoType then
+                                                bestDist = dist
+                                                destObject = object
+                                            end
+                                        end
                                     end
                                 end
                             end
                         end
                     end
                 end
-
-                -- loot shelfs
             end
         end
     end
 
-    if body then
-        if bestDist > 0.6 then
-            local task = BanditUtils.GetMoveTask(0.01, lx + 0.5, ly + 0.5, lz, "Run", bestDist, false)
+    if destObject then
+        local square = destObject:getSquare()
+        local lx, ly, lz = square:getX(), square:getY(), square:getZ() 
+        local ax, ay, az = lx, ly, lz
+        
+        if not square:isFree(false) then
+            local asquare = AdjacentFreeTileFinder.Find(square, bandit)
+            if asquare then
+                ax, ay, az = asquare:getX(), asquare:getY(), asquare:getZ()
+            end
+        end
+        local dist = BanditUtils.DistTo(zx, zy, ax, ay)
+
+        if dist > 0.9 then
+            local task = BanditUtils.GetMoveTask(0.01, ax + 0.5, ay + 0.5, az, "Run", dist, false)
             table.insert(tasks, task)
             return tasks
         else
@@ -407,112 +471,6 @@ end
 
 BanditPrograms.Container = BanditPrograms.Container or {}
 
-BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
-    local tasks = {}
-    local weapons = Bandit.GetWeapons(bandit)
-
-    local items = ArrayList.new()
-    container:getAllEvalRecurse(predicateAll, items)
-
-    -- analyze container contents
-    for i=0, items:size()-1 do
-        local item = items:get(i)
-        if item:IsWeapon() then
-            local weaponItem = item
-            local weaponName = weaponItem:getFullType() 
-            local weaponType = WeaponType.getWeaponType(weaponItem)
-
-            local slots = {"primary", "secondary"}
-            for _, slot in pairs(slots) do
-
-                local wTab = BanditWeapons.GetPrimary()
-                local wType = WeaponType.firearm
-                if slot == "secondary" then
-                    wTab = BanditWeapons.GetSecondary()
-                    wType = WeaponType.handgun
-                end
-
-                -- no primary weapon or empty, check if we can grab weapon
-                if not weapons[slot] or (weapons[slot].magCount == 0 and weapons[slot].bulletsLeft <= 0) then
-                    
-                    -- it must be correct type, and it must in in bandit weapon registry
-                    if weaponType == wType then
-                        for k, v in pairs(wTab) do
-                            if weaponName == v.name then
-
-                                local toRemove = {}
-                                local toAdd = {}
-
-                                -- found gun
-                                local weaponMagName = v.magName
-                                local weaponMagSize = v.magSize
-
-                                -- now find mags in the same container
-                                local weaponBullets = 0
-                                for j=0, items:size()-1 do
-                                    local magItem = items:get(j)
-                                    local magName = magItem:getFullType()
-                                    local magBulletsLeft = magItem:getCurrentAmmoCount()
-                                    if magName == weaponMagName and magBulletsLeft > 0 then
-                                        table.insert(toRemove, magName)
-                                        weaponBullets = weaponBullets + magBulletsLeft
-                                    end
-                                end
-
-                                -- got gun and bullets, lets go take it
-                                if weaponBullets > 0 then
-
-                                    table.insert(toRemove, weaponName)
-
-                                    local bx, by, bz
-                                    local lootDist
-                                    local lootAnim
-                                    local square = object:getSquare()
-                                    if square:isFree(false) then
-                                        bx = object:getX() + 0.5
-                                        by = object:getY() + 0.5
-                                        bz = object:getZ()
-                                        lootDist = 1.3
-                                        lootAnim = "LootLow"
-                                    else
-                                        local asquare = AdjacentFreeTileFinder.Find(square, bandit)
-                                        if asquare then
-                                            bx = asquare:getX() + 0.5
-                                            by = asquare:getY() + 0.5
-                                            bz = asquare:getZ()
-                                            lootDist = 2.1
-                                            lootAnim = "Loot"
-                                        end
-                                    end
-
-                                    local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), bx, by)
-
-                                    -- we are here, take it
-                                    if dist < lootDist then
-
-                                        toAdd[slot] = {}
-                                        toAdd[slot].name = weaponName
-                                        toAdd[slot].magSize = weaponMagSize
-                                        toAdd[slot].magName = weaponMagName
-                                        toAdd[slot].magCount = math.floor(weaponBullets / weaponMagSize)
-                                        toAdd[slot].bulletsLeft = weaponBullets % weaponMagSize
-
-                                        local task = {action="LootWeapons", anim=lootAnim, time=#toRemove * 50, x=object:getX(), y=object:getY(), z=object:getZ(), toAdd=toAdd, toRemove=toRemove}
-                                        table.insert(tasks, task)
-                                    -- go to location
-                                    else
-                                        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist, false))
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-    return tasks
-end
 
 BanditPrograms.Container.Loot = function(bandit, object, container)
     local tasks = {}

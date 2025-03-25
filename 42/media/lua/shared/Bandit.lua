@@ -463,6 +463,26 @@ function Bandit.IsBareHands(zombie)
     return false
 end
 
+function Bandit.NeedResupplySlot(zombie, slot)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        local weapons = brain.weapons
+        if not weapons[slot].name or 
+            (
+                weapons.primary.bulletsLeft <= 0 and 
+                (
+                    (weapons[slot].type == "mag" and weapons[slot].magCount <= 0) or
+                    (weapons[slot].type == "nomag" and weapons[slot].ammoCount <= 0)
+                )
+            ) then
+
+            return true
+
+        end
+    end
+    return false
+end
+
 function Bandit.SetWeapons(zombie, weapons)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -510,15 +530,12 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if weapons.primary then
         if weapons.primary.name then
 
-            local attachedBack = zombie:getAttachedItem("Rifle On Back")
-            if not attachedBack then
-                local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
-                if gun then
-                    gun = BanditWeapons.Modify(gun, brain)
-                    gun:getModData().preserve = true
-                    gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
-                    zombie:addItemToSpawnAtDeath(gun)
-                end
+            local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
+            if gun then
+                gun = BanditWeapons.Modify(gun, brain)
+                gun:getModData().preserve = true
+                gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
+                zombie:addItemToSpawnAtDeath(gun)
             end
 
             if weapons.primary.type == "mag" and weapons.primary.magName then
@@ -554,15 +571,12 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if weapons.secondary then
         if weapons.secondary.name then
 
-            local attachedHolster = zombie:getAttachedItem("Holster Right")
-            if not attachedHolster then
-                local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
-                if gun then
-                    gun = BanditWeapons.Modify(gun, brain)
-                    gun:getModData().preserve = true
-                    gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
-                    zombie:addItemToSpawnAtDeath(gun)
-                end
+            local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
+            if gun then
+                gun = BanditWeapons.Modify(gun, brain)
+                gun:getModData().preserve = true
+                gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
+                zombie:addItemToSpawnAtDeath(gun)
             end
 
             if weapons.secondary.type == "mag" and weapons.secondary.magName then

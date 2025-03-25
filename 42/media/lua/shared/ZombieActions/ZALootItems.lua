@@ -42,7 +42,6 @@ ZombieActions.LootItems.onComplete = function(zombie, task)
                     container:Remove(item)
                     container:removeItemOnServer(item)
                     zinventory:AddItem(item)
-                    Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 end
             end
         end

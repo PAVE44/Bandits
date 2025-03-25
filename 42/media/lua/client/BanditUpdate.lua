@@ -1043,6 +1043,8 @@ local function ManageCombat(bandit)
     local brain = BanditBrain.Get(bandit)
     local weapons = brain.weapons
     local isOutOfAmmo = Bandit.IsOutOfAmmo(bandit)
+    local isNeedPrimary = Bandit.NeedResupplySlot(bandit, "primary")
+    local isNeedSecondary = Bandit.NeedResupplySlot(bandit, "secondary")
     local isBareHands = Bandit.IsBareHands(bandit)
 
     local bestDist = 40
@@ -1063,18 +1065,20 @@ local function ManageCombat(bandit)
 
         -- PEACFUL RELOAD FLAG
         for _, slot in pairs({"primary", "secondary"}) do
-            if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
+            if weapons[slot].name then
                 if (weapons[slot].type == "mag" and weapons[slot].bulletsLeft <= 0 and weapons[slot].magCount > 0) or
                    (weapons[slot].type == "nomag" and weapons[slot].bulletsLeft < weapons[slot].ammoSize and weapons[slot].ammoCount > 0) or 
                     weapons[slot].racked == false then 
                     
-                    reload = true
+                    if bandit:isPrimaryEquipped(weapons[slot].name) then
+                        reload = true
+                    end
                 end
             end
         end
 
         -- RESUPPLY FLAG
-        if isBareHands or isOutOfAmmo then
+        if isBareHands or isNeedPrimary or isNeedSecondary then
             resupply = true
         end
     end
@@ -1325,7 +1329,7 @@ local function ManageCombat(bandit)
         end
 
     elseif switch then
-        if not Bandit.HasActionTask(bandit) and enemyCharacter:isAlive() then
+        if not Bandit.HasActionTask(bandit) then
             Bandit.ClearTasks(bandit)
             local stasks = BanditPrograms.Weapon.Switch(bandit, switchTo)
             for _, t in pairs(stasks) do table.insert(tasks, t) end
@@ -1429,7 +1433,7 @@ local function ManageCombat(bandit)
         end
     elseif resupply then
         if not Bandit.HasTask(bandit) then
-            local stasks = BanditPrograms.Weapon.Resupply(bandit, slot)
+            local stasks = BanditPrograms.Weapon.Resupply(bandit)
             for _, t in pairs(stasks) do table.insert(tasks, t) end
         end
     end
@@ -1954,8 +1958,11 @@ end
 local function OnZombieDead(zombie)
 
     if not zombie:getVariableBoolean("Bandit") then return end
-        
+
+    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+
     local bandit = zombie
+
     local inventory = bandit:getInventory()
     local items = ArrayList.new()
     inventory:getAllEvalRecurse(predicateRemovable, items)
