@@ -87,7 +87,6 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     local sitting = false
 
     local size = args.size
-    local cid = args.cid
     local gx = args.x or player:getX()
     local gy = args.y or player:getY()
     local gz = args.z or player:getZ()
@@ -96,6 +95,23 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     local pid = BanditUtils.GetCharacterID(player)
 
     BanditCustom.Load()
+
+    local cid
+    if args.cid then 
+        cid = args.cid
+    elseif args.waveId then
+        local clanData = BanditCustom.ClanGetAll()
+        local cidChoices = {}
+        for cid, clan in pairs(clanData) do
+            if clan.spawn.wave == args.waveId then
+                table.insert(cidChoices, cid)
+            end
+        end
+
+        cid = BanditUtils.Choice(cidChoices)
+    else
+        return 
+    end
 
     local banditOptions = BanditCustom.GetFromClan(cid)
 
@@ -154,6 +170,10 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             brain.infection = 0
 
             -- properties taken from args
+            brain.program = {}
+            brain.program.name = args.program
+            brain.program.stage = "Prepare"
+
             brain.permanent = args.permanent and true or false
             brain.key = args.key
 
@@ -227,17 +247,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
             -- properties from clan
             local clan = BanditCustom.ClanGet(bandit.general.cid)
             local spawn = clan.spawn
-
-            brain.program = {}
-            if spawn.friendly then
-                brain.hostile = false
-                brain.program.name = "Companion"
-                brain.program.stage = "Prepare"
-            else
-                brain.hostile = true
-                brain.program.name = "Bandit"
-                brain.program.stage = "Prepare"
-            end
+            brain.hostile = not spawn.friendly
 
             gmd.Queue[id] = brain
 

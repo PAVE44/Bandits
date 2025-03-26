@@ -339,7 +339,8 @@ local function Hit(attacker, item, victim)
             if item:getFullType() == "Base.BareHands" and instanceof(victim, "IsoPlayer") then
                 PlayerDamageModel.BareHandHit(attacker, victim)
             else
-                victim:Hit(item, tempAttacker, 0.5, false, 1, false)
+                victim:setBumpDone(true)
+                victim:Hit(item, tempAttacker, 0.8, false, 1, false)
             end
             
             if BanditRandom.Get() % 4 == 0 then
@@ -359,7 +360,7 @@ local function Hit(attacker, item, victim)
 
             if victim:getHealth() <= 0 then 
                 -- victim:setKnifeDeath(true)
-                victim:Kill(getCell():getFakeZombieForHit(), true) 
+                -- :Kill(getCell():getFakeZombieForHit(), true) 
             end
         end
         

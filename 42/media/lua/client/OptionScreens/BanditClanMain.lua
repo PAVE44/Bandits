@@ -131,6 +131,20 @@ function BanditClanMain:onAvatarListChange()
     leftX = 300
     local allData = BanditCustom.GetAll()
 
+    local keys = {}
+    for key in pairs(allData) do
+        table.insert(keys, key)
+    end
+
+    table.sort(keys, function(k1, k2)
+        return allData[k1].general.name < allData[k2].general.name
+    end)
+
+    local allDataSorted = {}
+    for _, key in ipairs(keys) do
+        allDataSorted[key] = allData[key]
+    end
+
     self.models = {}
     self.avatarPanel = {}
     local total = 0
@@ -138,7 +152,7 @@ function BanditClanMain:onAvatarListChange()
     local j = 0
     local x
     local y
-    for bid, data in pairs(allData) do
+    for bid, data in pairs(allDataSorted) do
         if data.general.cid == self.cid then
             x = leftX + (i * (avatarWidth + avatarSpacing)) + avatarSpacing
             y = topY + j * (avatarHeight + avatarSpacing)
@@ -168,13 +182,13 @@ function BanditClanMain:onAvatarListChange()
                 end
 
                 self.models[bid]:getHumanVisual():setSkinTextureIndex(data.general.skin - 1)
-                self.models[bid]:getHumanVisual():setHairModel(BanditCustom.GetHairStyle(data.general.female, data.general.hairType))
+                self.models[bid]:getHumanVisual():setHairModel(Bandit.GetHairStyle(data.general.female, data.general.hairType))
 
                 if not data.general.female then
-                    self.models[bid]:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(data.general.female, data.general.beardType))
+                    self.models[bid]:getHumanVisual():setBeardModel(Bandit.GetBeardStyle(data.general.female, data.general.beardType))
                 end
 
-                local color = BanditCustom.GetHairColor(data.general.hairColor)
+                local color = Bandit.GetHairColor(data.general.hairColor)
                 local immutableColor = ImmutableColor.new(color.r, color.g, color.b, 1)
                 self.models[bid]:getHumanVisual():setHairColor(immutableColor)
                 self.models[bid]:getHumanVisual():setBeardColor(immutableColor)
@@ -248,8 +262,8 @@ function BanditClanMain:onAvatarListChange()
         self.models[bid]:setGhostMode(true)
         self.models[bid]:setFemale(false)
         self.models[bid]:getHumanVisual():setSkinTextureIndex(0)
-        self.models[bid]:getHumanVisual():setHairModel(BanditCustom.GetHairStyle(false, 1))
-        self.models[bid]:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
+        self.models[bid]:getHumanVisual():setHairModel(Bandit.GetHairStyle(false, 1))
+        self.models[bid]:getHumanVisual():setBeardModel(Bandit.GetBeardStyle(false, 1))
         self.avatarPanel[bid]:setCharacter(self.models[bid])
     end
 end
@@ -277,7 +291,7 @@ function BanditClanMain:saveConfig()
     BanditCustom.Load()
     local data = BanditCustom.ClanGet(self.cid)
     data.general = {}
-    data.general.name = self.clanNameEntry:getText()
+    data.general.name = BanditUtils.SanitizeString(self.clanNameEntry:getText())
     data.spawn = {}
     data.spawn.wave = self.waveCombo.selected - 1
     data.spawn.zone = self.zoneCombo.selected - 1

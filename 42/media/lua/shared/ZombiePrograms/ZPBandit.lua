@@ -24,6 +24,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local walkType = "Run"
     local endurance = -0.06
+    local health = bandit:getHealth()
 
     if dls < 0.3 then
         if SandboxVars.Bandits.General_SneakAtNight then
@@ -32,20 +33,6 @@ ZombiePrograms.Bandit.Main = function(bandit)
         end
     end
 
-    if bandit:isInARoom() then
-        if outOfAmmo then
-            walkType = "Run"
-        else
-            walkType = "WalkAim"
-        end
-    end
-
-    local health = bandit:getHealth()
-    if health < 0.8 then
-        walkType = "Limp"
-        endurance = 0
-    end 
- 
     local healthMin = 0.7
 
     if SandboxVars.Bandits.General_RunAway and health < healthMin then
@@ -98,7 +85,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
     local target = {}
     local enemy
 
-    local target, enemy = BanditUtils.GetTarget(bandit)
+    local target, enemy = BanditUtils.GetTarget(bandit, false)
     
     -- engage with target
     if target.x and target.y and target.z then
@@ -128,6 +115,27 @@ ZombiePrograms.Bandit.Main = function(bandit)
         if engageUpfront then
             tx, ty = target.fx, target.fy
         end
+
+        if bandit:isInARoom() then
+            if outOfAmmo then
+                walkType = "Run"
+            else
+                walkType = "WalkAim"
+            end
+        else
+            if target.dist > 50 then
+                walkType = "Run"
+            elseif target.dist > 35 then
+                walkType = "Walk"
+            else
+                walkType = "WalkAim"
+            end
+        end
+
+        if health < 0.8 then
+            walkType = "Limp"
+            endurance = 0
+        end 
 
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist, closeSlow))
         return {status=true, next="Main", tasks=tasks}

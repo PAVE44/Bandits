@@ -165,7 +165,7 @@ local function hit(shooter, item, victim)
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:Hit(item, tempShooter, 6, false, 1, false)
+            victim:Hit(item, tempShooter, 1, false, 1, false)
 
             -- addHolePlayer(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
@@ -186,10 +186,11 @@ local function hit(shooter, item, victim)
             end
             
         elseif instanceof(victim, "IsoZombie") then
+            victim:setBumpDone(true)
             victim:setHitFromBehind(shooter:isBehind(victim))
             victim:setHitAngle(shooter:getForwardDirection())
             victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-            victim:Hit(item, tempShooter, 6, false, 1, false)
+            victim:Hit(item, tempShooter, 1, false, 1, false)
             victim:setAttackedBy(shooter)
             addHole(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
@@ -210,7 +211,7 @@ end
 
 local function thump (object, thumper)
     local health = object:getHealth()
-    print ("thumpable health: " .. object:getHealth())
+    -- print ("thumpable health: " .. object:getHealth())
     health = health - 20
     if health < 0 then health = 0 end
     if health == 0 then
@@ -403,9 +404,13 @@ ZombieActions.Shoot.onStart = function(zombie, task)
 end
 
 ZombieActions.Shoot.onWorking = function(zombie, task)
-    zombie:faceLocationF(task.x, task.y)
+    local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
+    if not enemy then return true end
+    zombie:faceLocationF(enemy:getX(), enemy:getY())
 
-    if task.time <= 0 then return true end
+    if task.time <= 0 then
+        return true
+    end
 
     if zombie:getBumpType() ~= task.anim then 
         zombie:setBumpType(task.anim)
@@ -428,10 +433,13 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
 
+    if not BanditUtils.IsFacing(sx, sy, sd, enemy:getX(), enemy:getY(), 5) then 
+        return true
+    end
+
     -- deplete round
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
-
 
     -- handle flash and projectile
     BanditCompatibility.StartMuzzleFlash(shooter)

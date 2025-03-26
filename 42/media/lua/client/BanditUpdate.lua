@@ -270,17 +270,27 @@ local function ApplyVisuals(bandit, brain)
 
         bandit:setHealth(brain.health)
 
-        banditVisuals:setSkinTextureName(BanditCustom.GetSkinTexture(brain.female, brain.skin))
-        banditVisuals:setHairModel(BanditCustom.GetHairStyle(brain.female, brain.hairType)) 
-
-        if not bandit:isFemale() then
-            banditVisuals:setBeardModel(BanditCustom.GetBeardStyle(brain.female, brain.beardType)) 
+        if brain.skin then
+            banditVisuals:setSkinTextureName(Bandit.GetSkinTexture(brain.female, brain.skin))
         end
 
-        local hairColor = BanditCustom.GetHairColor(brain.hairColor)
-        local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
-        banditVisuals:setHairColor(icolor) 
-        banditVisuals:setBeardColor(icolor) 
+        if brain.hairType then
+            banditVisuals:setHairModel(Bandit.GetHairStyle(brain.female, brain.hairType)) 
+        end
+
+        if not bandit:isFemale() and brain.beardType then
+            local beardModel = Bandit.GetBeardStyle(brain.female, brain.beardType)
+            if beardModel then
+                banditVisuals:setBeardModel(beardModel) 
+            end
+        end
+
+        if brain.hairColor then
+            local hairColor = Bandit.GetHairColor(brain.hairColor)
+            local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
+            banditVisuals:setHairColor(icolor) 
+            banditVisuals:setBeardColor(icolor) 
+        end
 
         for bodyLocation, itemType in pairs(brain.clothing) do
             local item = BanditCompatibility.InstanceItem(itemType)
@@ -1083,6 +1093,7 @@ local function ManageCombat(bandit)
         end
     end
 
+
     -- SWITCH WEAPON DISTANCES
     local meleeDist = 4.5
     local meleeDistPlayer = 5
@@ -1118,7 +1129,7 @@ local function ManageCombat(bandit)
                                 if bandit:isPrimaryEquipped(weapons.melee) then
                                     if dist <= maxRangeMelee then
                                         local asn = enemyCharacter:getActionStateName()
-                                        shove = dist < 0.6 and not prone and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
+                                        shove = dist < 0.5 and not prone and asn ~= "onground" and asn ~= "sitonground" and asn ~= "climbfence" and asn ~= "bumped"
                                         combat = not shove
                                     end
                                 else
@@ -1129,7 +1140,7 @@ local function ManageCombat(bandit)
                         end
 
                         --determine if bandit will be in shooting mode
-                        if not isOutOfAmmo and dist > meleeDist + 1 then
+                        if not isOutOfAmmo and dist > meleeDist + 2 and not combat and not shove then
                             if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                 if not maxRangeRifle then
                                     local item = BanditCompatibility.InstanceItem(weapons.primary.name)
@@ -1172,7 +1183,7 @@ local function ManageCombat(bandit)
             end
         end
     end
-
+    
     -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
     local cache, potentialEnemyList = BanditZombie.Cache, BanditZombie.CacheLight
     for id, potentialEnemy in pairs(potentialEnemyList) do
@@ -1218,18 +1229,19 @@ local function ManageCombat(bandit)
 
                                             if dist <= maxRangeMelee + fix then
                                                 local asn = enemyCharacter:getActionStateName()
-                                                shove = dist < 0.8 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
+                                                shove = dist < 0.5 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
                                                 combat = not shove
                                             end
                                         else
                                             switch = true
                                             switchTo = weapons.melee
+                                            -- bandit:addLineChatElement("Melee" .. dist, 0.8, 0.8, 0.1)
                                         end
                                     end
                                 end
 
                                 --determine if bandit will be in shooting mode
-                                if not isOutOfAmmo and dist > meleeDist + 1 then
+                                if not isOutOfAmmo and dist > meleeDist + 2 and not combat and not shove then
                                     if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                         if not maxRangeRifle then
                                             maxRangeRifle = BanditCompatibility.InstanceItem(weapons.primary.name):getMaxRange()
@@ -1243,6 +1255,7 @@ local function ManageCombat(bandit)
                                                 Bandit.Say(bandit, "SPOTTED")
                                                 switch = true
                                                 switchTo = weapons.primary.name
+                                                -- bandit:addLineChatElement("Primary" .. dist, 0.8, 0.8, 0.1)
                                             end
                                         end
                                     elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
@@ -1258,6 +1271,7 @@ local function ManageCombat(bandit)
                                                 Bandit.Say(bandit, "SPOTTED")
                                                 switch = true
                                                 switchTo = weapons.secondary.name
+                                                -- bandit:addLineChatElement("Secondary" .. dist, 0.8, 0.8, 0.1)
                                             end
                                         end
                                     end
@@ -1274,7 +1288,7 @@ local function ManageCombat(bandit)
             end
         end
     end
-
+    
     if enemies > friendlies + 2 then
         if not Bandit.HasMoveTask(bandit) then
             -- bandit:addLineChatElement("Escape", 0.8, 0.8, 0.1)
@@ -1486,11 +1500,10 @@ local function UpdateZombies(zombie)
 
     zombie:setVariable("NoLungeAttack", true)
     if zombie:getVariableBoolean("Bandit") then return end
-    if zombie:isProne() then return end
 
     local toRemove = {}    
     for id, tab in pairs(biteTab) do
-        if tab.tick >= 60 then
+        if tab.tick >= 100 then
             local attackId = zombie:getModData().attackId
             if attackId and tab.attackId == attackId and zombie:getBumpType() == "Bite" and zombie:getActionStateName() == "bumped" then 
 
@@ -1514,8 +1527,8 @@ local function UpdateZombies(zombie)
                 bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                 Bandit.UpdateInfection(bandit, 0.001)
                 if bandit:getHealth() <= 0 then
-                    bandit:setHealth(0)
-                    bandit:clearAttachedItems()
+                    -- bandit:setHealth(0)
+                    -- bandit:clearAttachedItems()
                     bandit:setAttackedBy(zombie)
                 end
                 table.insert(toRemove, id)
@@ -1529,6 +1542,7 @@ local function UpdateZombies(zombie)
         zombie:getModData().attackId = nil
     end
 
+    if zombie:isProne() then return end
     local asn = zombie:getActionStateName()
     if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
         return
@@ -1557,7 +1571,7 @@ local function UpdateZombies(zombie)
 
     -- Clear invalid target
     if target and (not target:isAlive() or not zombie:CanSee(target)) then
-        zombie:setTarget(nil)
+        -- zombie:setTarget(nil)
     end
 
     -- Stop sound if playing
@@ -1572,15 +1586,15 @@ local function UpdateZombies(zombie)
 
     -- If bandit is in range, proceed
     if enemy.dist < 30 then
-        local player = BanditUtils.GetClosestPlayerLocation(zombie, true)
+        --local player = BanditUtils.GetClosestPlayerLocation(zombie, true)
         
         -- Skip if player is closer than the bandit
-        if player.dist < enemy.dist then return end
+        --if player.dist < enemy.dist then return end
 
         local bandit = BanditZombie.Cache[enemy.id]
 
         -- Standard movement if bandit is far
-        if enemy.dist > 6 then
+        if enemy.dist > 3 then
             -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " far", 0.6, 0.6, 1)
             if zombie:CanSee(bandit) then
                 zombie:pathToCharacter(bandit)
@@ -1588,20 +1602,26 @@ local function UpdateZombies(zombie)
 
         -- Approach bandit if in range
         else
-            -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " mid", 0.6, 0.6, 1)
-            local player = getSpecificPlayer(0)
-            if zombie:CanSee(bandit) and zombie:CanSee(player) then
-                if BanditCompatibility.GetGameVersion() >= 42 then
-                    zombie:pathToCharacter(bandit)
-                end
-                zombie:spotted(player, true)
-                zombie:setTarget(bandit)
-                zombie:setAttackedBy(bandit)
-            end
+            -- zombie:addLineChatElement(string.format("mid %.2f", enemy.dist), 0.6, 0.6, 1)
+            -- local player = getSpecificPlayer(0)
+            -- if zombie:CanSee(bandit) and zombie:CanSee(player) then
+                -- if BanditCompatibility.GetGameVersion() >= 42 then
+                    -- zombie:pathToCharacter(bandit)
+                -- end
+                -- if not zombie:getTarget() then
+                    zombie:addLineChatElement(string.format("SPOTTED %.2f", enemy.dist), 0.6, 0.6, 1)
+                    -- zombie:changeState(LungeState.instance())
+                    -- zombie:getPathFindBehavior2():cancel()
+                    -- zombie:setPath2(nil)
+                    zombie:spotted(bandit, true)
+                    zombie:setTarget(bandit)
+                    zombie:setAttackedBy(bandit)
+                -- end
+            -- end
 
             -- Bite range attack
-            if enemy.dist < 0.55 and enemy.z == zz then
-                -- :addLineChatElement(tostring(ZombRand(100)) .. " close", 0.6, 0.6, 1)
+            if enemy.dist < 0.65 and enemy.z == zz then
+                -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " close", 0.6, 0.6, 1)
                 local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
                 if not isWallTo then
                     if zombie:isFacingObject(bandit, 0.3) then
@@ -1621,10 +1641,9 @@ local function UpdateZombies(zombie)
 
                         -- If more than 2 zombies attacking, initiate death task
                         if attackingZombiesNumber > 2 then
-                            local sound = bandit:isFemale() and "FemaleBeingEatenDeath" or nil
                             if not Bandit.HasTaskType(bandit, "Die") then
                                 Bandit.ClearTasks(bandit)
-                                local task = {action="Die", lock=true, anim="Die", sound=sound, time=300}
+                                local task = {action="Die", lock=true, anim="Die", time=300}
                                 Bandit.AddTask(bandit, task)
                             end
                             return
@@ -1958,8 +1977,6 @@ end
 local function OnZombieDead(zombie)
 
     if not zombie:getVariableBoolean("Bandit") then return end
-
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     local bandit = zombie
 

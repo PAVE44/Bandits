@@ -83,6 +83,7 @@ local function lootContainer(zombie, container, task)
                         container:Remove(toRemove[i])
                         container:removeItemOnServer(toRemove[i])
                     end
+                    break
                 end
 
             else
@@ -90,6 +91,7 @@ local function lootContainer(zombie, container, task)
                     weapons.melee = item:getFullType()
                     container:Remove(item)
                     container:removeItemOnServer(item)
+                    break
                 end
             end
         end

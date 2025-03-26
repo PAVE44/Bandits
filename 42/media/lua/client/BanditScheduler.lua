@@ -840,7 +840,6 @@ local function checkEvent()
     if BanditUtils.GetCharacterID(currentPlayer) ~= BanditUtils.GetCharacterID(onlinePlayer) then return end
 
     local waveData = BanditScheduler.GetWaveDataAll()
-    local clanData = BanditCustom.ClanGetAll()
     local day = currentPlayer:getHoursSurvived() / 24
 
     local densityScore = 1
@@ -849,81 +848,64 @@ local function checkEvent()
     end
 
     for wid, wave in pairs(waveData) do
-        if wave.enabled and day >= wave.firstDay and day <= wave.lastDay then
+        if true or (wave.enabled and day >= wave.firstDay and day <= wave.lastDay) then
             local spawnChance = wave.spawnHourlyChance * densityScore / 6
             local spawnRandom = ZombRandFloat(0, 100)
 
             if spawnRandom < spawnChance then
+
+                local program = "Looter"
                 local spawnPoint = BanditScheduler.GenerateSpawnPoint(currentPlayer, 10)
 
                 if spawnPoint then
-                    local cidChoices = {}
-                    for cid, clan in pairs(clanData) do
-                        if clan.spawn.wave == wid then
-                            table.insert(cidChoices, cid)
-                        end
-                    end
+                    local args = {
+                        waveId = wid,
+                        x = spawnPoint.x,
+                        y = spawnPoint.y,
+                        z = 0,
+                        program = program,
+                        size = wave.groupSize
+                    }
+            
+                    sendClientCommand(currentPlayer, 'Commands', 'SpawnCustom', args)
 
-                    local cid = BanditUtils.Choice(cidChoices)
-                    if cid then
-                        local clan = clanData[cid]
-                        
-                        local friendly = clan.spawn.friendly
-
-                        local program
-                        if friendly then
-                            program = "Looter"
-                        else
-                            program = "Bandit"
-                        end
-                        
-                        local args = {
-                            cid = cid,
-                            x = spawnPoint.x,
-                            y = spawnPoint.y,
-                            z = 0,
-                            program = program,
-                            hostile = not friendly,
-                            size = wave.groupSize
-                        }
-                
-                        sendClientCommand(currentPlayer, 'Commands', 'SpawnCustom', args)
-
-                        if SandboxVars.Bandits.General_ArrivalIcon then
-                            local color
-                            local icon
-                            local desc
-                            if program == "Bandit" then 
-                                icon = "media/ui/raid.png"
-                                color = {r=1, g=0.5, b=0.5} -- red
-                                desc = "Hostile Raiders"
-                            elseif program == "BaseGuard" then
-                                icon = "media/ui/raid.png"
-                                color = {r=1, g=0.5, b=0.5} -- red
-                                desc = "Hostile Guards"
-                            elseif program == "Thief" then
-                                icon = "media/ui/thief.png"
-                                color = {r=1, g=1, b=0.5} -- yellow
-                                desc = "Hostile Thiefs"
-                            elseif program == "Companion" then
-                                icon = "media/ui/friend.png"
+                    --[[
+                    if SandboxVars.Bandits.General_ArrivalIcon then
+                        local color
+                        local icon
+                        local desc
+                        if program == "Bandit" then 
+                            icon = "media/ui/raid.png"
+                            color = {r=1, g=0.5, b=0.5} -- red
+                            desc = "Hostile Raiders"
+                        elseif program == "BaseGuard" then
+                            icon = "media/ui/raid.png"
+                            color = {r=1, g=0.5, b=0.5} -- red
+                            desc = "Hostile Guards"
+                        elseif program == "Thief" then
+                            icon = "media/ui/thief.png"
+                            color = {r=1, g=1, b=0.5} -- yellow
+                            desc = "Hostile Thiefs"
+                        elseif program == "Companion" then
+                            icon = "media/ui/friend.png"
+                            color = {r=0.5, g=1, b=0.5} -- green
+                            desc = "Friendly Companions"
+                        elseif program == "Looter" then
+                            icon = "media/ui/loot.png"
+                            if friendly then
                                 color = {r=0.5, g=1, b=0.5} -- green
-                                desc = "Friendly Companions"
-                            elseif program == "Looter" then
-                                icon = "media/ui/loot.png"
-                                if friendly then
-                                    color = {r=0.5, g=1, b=0.5} -- green
-                                    desc = "Friendly Wanderers"
-                                else
-                                    color = {r=1, g=0, b=0} -- red
-                                    desc = "Hostile Wanderers"
-                                end
+                                desc = "Friendly Wanderers"
+                            else
+                                color = {r=1, g=0, b=0} -- red
+                                desc = "Hostile Wanderers"
                             end
-                    
-                            BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, spawnPoint.x, spawnPoint.y, color, desc)
                         end
-                    end
+                
+                        BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, spawnPoint.x, spawnPoint.y, color, desc)
+                        ]]
                 end
+
+                break
             end
         end
     end

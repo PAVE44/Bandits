@@ -182,3 +182,20 @@ BanditCompatibility.HaveRoofFull = function(square)
         return true
     end
 end
+
+BanditCompatibility.GetMovementSpeed = function(object)
+    if getGameVersion() >= 42 then
+        local tempo = IsoGameCharacter.getTempo()
+        tempo:setX(object:getX() - object:getLastX())
+        tempo:setY(object:getY() - object:getLastY())
+        return tempo:getLength()
+
+        -- return object:getMovementSpeed()
+    else
+        local tempo = IsoGameCharacter.getTempo()
+        tempo:setX(object:getX() - object:getLx())
+        tempo:setY(object:getY() - object:getLy())
+        return tempo:getLength()
+    end
+end
+

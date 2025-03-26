@@ -7,7 +7,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_1.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -19,7 +19,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_2.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -31,7 +31,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_3.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -43,7 +43,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_4.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -55,7 +55,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_5.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -67,7 +67,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/spotted_female_2_6.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -79,7 +79,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_1.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -91,7 +91,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_2.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -103,7 +103,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_3.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -115,7 +115,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_4.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -127,7 +127,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_5.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -139,7 +139,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/reloading_female_2_6.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -291,7 +291,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_1.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -303,7 +303,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_2.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -315,7 +315,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_3.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -327,7 +327,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_4.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -339,7 +339,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_5.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -351,7 +351,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/breach_female_2_6.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -363,7 +363,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_1.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -375,7 +375,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_2.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -387,7 +387,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_3.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -399,7 +399,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_4.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -411,7 +411,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_5.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -423,7 +423,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/car_female_2_6.ogg, 
             distanceMin = 1, 
             distanceMax = 30, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -435,7 +435,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -447,7 +447,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_2.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -459,7 +459,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_3.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -471,7 +471,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_4.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -483,7 +483,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_5.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -495,7 +495,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_6.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -507,7 +507,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_7.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -519,7 +519,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/death_female_2_8.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -651,7 +651,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/inside_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -663,7 +663,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/inside_female_2_2.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -675,7 +675,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/inside_female_2_3.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -687,7 +687,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/upstairs_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -699,7 +699,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/outside_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -711,7 +711,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/outside_female_2_2.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -723,7 +723,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/outside_female_2_3.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -735,7 +735,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/room_kitchen_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -747,7 +747,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/room_bathroom_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -759,7 +759,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/defender_spot_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -771,7 +771,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/defender_spot_female_2_2.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -783,7 +783,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/defender_spot_female_2_3.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -795,7 +795,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/defender_spot_female_2_4.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -807,7 +807,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_1.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -819,7 +819,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_2.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -831,7 +831,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_3.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -843,7 +843,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_4.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -855,7 +855,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_5.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 
@@ -867,7 +867,7 @@ module BanditsVoiceFemale2 {
             file = media/sound/female_2/thief_spot_female_2_6.ogg, 
             distanceMin = 4,
             distanceMax = 80, 
-            reverbFactor = 0.1, volume = 0.3, 
+            reverbFactor = 0.1, volume = 0.2, 
         } 
     }
 }

@@ -126,8 +126,14 @@ end
 function Bandit.HasTaskType(zombie, taskType)
     local brain = BanditBrain.Get(zombie)
     if brain then
+        --[[
         if #brain.tasks > 0 and brain.tasks[1].action == taskType then
             return true
+        end]]
+        for _, task in pairs(brain.tasks) do
+            if task.action == taskType then
+                return true
+            end
         end
     end
     return false
@@ -1044,4 +1050,50 @@ function Bandit.AddVisualDamage(bandit, handWeapon)
 
         bandit:addVisualDamage(itemVisual)
     end
+end
+
+function Bandit.GetSkinTexture(female, idx)
+    if female then
+        return "FemaleBody0" .. tostring(idx)
+    else
+        return "MaleBody0" .. tostring(idx) .. "a"
+        --return "MaleBody0" .. tostring(idx)
+    end
+end
+
+function Bandit.GetHairColor(idx)
+    local desc = SurvivorFactory.CreateSurvivor(SurvivorType.Neutral, false)
+    local hairColors = desc:getCommonHairColor()
+    local tab = {}
+    local info = ColorInfo.new()
+    for i=1, hairColors:size() do
+        local color = hairColors:get(i-1)
+        info:set(color:getRedFloat(), color:getGreenFloat(), color:getBlueFloat(), 1)
+        table.insert(tab, { r=info:getR(), g=info:getG(), b=info:getB() })
+    end
+    return tab[idx]
+end
+
+function Bandit.GetHairStyle(female, idx)
+    local hairStyles = getAllHairStyles(female)
+    local tab = {}
+    for i=1, hairStyles:size() do
+        local styleId = hairStyles:get(i-1)
+        local hairStyle = female and getHairStylesInstance():FindFemaleStyle(styleId) or getHairStylesInstance():FindMaleStyle(styleId)
+        if not hairStyle:isNoChoose() then
+            table.insert(tab, styleId)
+        end
+    end
+    return tab[idx]
+end
+
+function Bandit.GetBeardStyle(female, idx)
+    if female then return end
+    local tab = {}
+    local beardStyles = getAllBeardStyles()
+    for i=1, beardStyles:size() do
+        local styleId = beardStyles:get(i-1)
+        table.insert(tab, styleId)
+    end
+    return tab[idx]
 end

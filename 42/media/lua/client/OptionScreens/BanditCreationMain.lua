@@ -52,8 +52,8 @@ function BanditCreationMain:initialise()
     self.model:setGhostMode(true)
     self.model:setFemale(false)
     self.model:getHumanVisual():setSkinTextureIndex(0)
-    self.model:getHumanVisual():setHairModel(BanditCustom.GetHairStyle(false, 1))
-    self.model:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
+    self.model:getHumanVisual():setHairModel(Bandit.GetHairStyle(false, 1))
+    self.model:getHumanVisual():setBeardModel(Bandit.GetBeardStyle(false, 1))
 
     -- self.avatarPanel:setSurvivorDesc(self.desc)
 
@@ -71,17 +71,24 @@ function BanditCreationMain:initialise()
 
     local mods = BanditCustom.GetMods()
 
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Save in mod", 1, 1, 1, 1, UIFont.Small, false)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Save to", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
 
+    local tooltip = "Creation saved to \"LOCAL\" will be stored locally and NOT get overwritten by future mod updates.\nSaving to mods puts creation inside a corresponding mod folder making it susceptible to future mod updates."
+    local tooltipMap = {}
     self.modCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, nil)
     self.modCombo:initialise()
+    self.modCombo:addOption("LOCAL")
+    tooltipMap["LOCAL"] = tooltip
 
     for i=1, #mods do
         self.modCombo:addOption(mods[i])
+        tooltipMap[mods[i]] = tooltip
     end
+
+    self.modCombo:setToolTipMap(tooltipMap)
 
     self.modCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1};
     self:addChild(self.modCombo)
@@ -594,7 +601,7 @@ function BanditCreationMain:onGenderSelected(combo)
         -- self.avatar:setFemale(false)
         self.model:setFemale(false)
         self.model:getHumanVisual():removeBodyVisualFromItemType("Base.F_Hair_Stubble")
-        self.model:getHumanVisual():setBeardModel(BanditCustom.GetBeardStyle(false, 1))
+        self.model:getHumanVisual():setBeardModel(Bandit.GetBeardStyle(false, 1))
     end
     self.avatarPanel:setCharacter(self.model)
     self:updateHairCombo()
@@ -847,7 +854,7 @@ function BanditCreationMain:saveConfig()
 
     data.general.modid = self.modCombo:getSelectedText()
     data.general.cid = self.cid
-    data.general.name = self.nameEntry:getText()
+    data.general.name = BanditUtils.SanitizeString(self.nameEntry:getText())
 
     if self.genderCombo.selected == 1 then
         data.general.female = true

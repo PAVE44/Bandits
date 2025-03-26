@@ -28,7 +28,7 @@ function BanditMenu.NewSpawn(player, square, cid)
                   x=square:getX(),
                   y=square:getY(),
                   z=square:getZ(),
-                  program="Bandit",
+                  program="Looter",
                   hostile=true,
                   size = 20}
 

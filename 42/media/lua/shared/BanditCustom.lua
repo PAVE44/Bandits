@@ -10,13 +10,26 @@ BanditCustom.banditFile = "bandits.txt"
 
 local saveFile = function()
     local mods = BanditCustom.GetMods()
-    
+    table.insert(mods, "LOCAL")
+
     for i=1, #mods do
         local modid = mods[i]
-        local banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
-        local banditFile = getModFileWriter("\\" .. modid, banditFileName, true, false)
-        local clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
-        local clanFile = getModFileWriter("\\" .. modid, clanFileName, true, false)
+        local banditFileName
+        local banditFile
+        local clanFileName
+        local clanFile
+        if modid == "LOCAL" then
+            banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
+            banditFile = getFileWriter(banditFileName, true, false)
+            clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
+            clanFile = getFileWriter(clanFileName, true, false)
+        else
+            banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
+            banditFile = getModFileWriter("\\" .. modid, banditFileName, true, false)
+            clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
+            clanFile = getModFileWriter("\\" .. modid, clanFileName, true, false)
+        end
+
         if banditFile and clanFile then
             local data = BanditCustom.banditData
             local banditOutput = ""
@@ -70,13 +83,25 @@ local loadFile = function(dataKey, fileName)
 
     local types = {} -- {clothing="array", hairstyles="array"}
 
+    local modList = {}
     local mods = getActivatedMods()
     for i=0, mods:size()-1 do
         local modid = mods:get(i):gsub("^\\", "")
+        table.insert(modList, modid)
+    end
+    table.insert(modList, "LOCAL")
 
-        local file = getModFileReader("\\" .. modid, fileName, false)
+    for i=1, #modList do
+        local modid = modList[i]
+
+        local file
+        if modid == "LOCAL" then
+            file  = getFileReader(fileName, false)
+        else
+            file  = getModFileReader("\\" .. modid, fileName, false)
+        end
+
         if file then 
-
             local line
             local id
             while true do
@@ -225,48 +250,4 @@ BanditCustom.Get = function(bid)
     return BanditCustom.banditData[bid]
 end
 
-BanditCustom.GetSkinTexture = function(female, idx)
-    if female then
-        return "FemaleBody0" .. tostring(idx)
-    else
-        return "MaleBody0" .. tostring(idx) .. "a"
-        --return "MaleBody0" .. tostring(idx)
-    end
-end
 
-BanditCustom.GetHairColor = function(idx)
-    local desc = SurvivorFactory.CreateSurvivor(SurvivorType.Neutral, false)
-    local hairColors = desc:getCommonHairColor()
-    local tab = {}
-    local info = ColorInfo.new()
-    for i=1, hairColors:size() do
-        local color = hairColors:get(i-1)
-        info:set(color:getRedFloat(), color:getGreenFloat(), color:getBlueFloat(), 1)
-        table.insert(tab, { r=info:getR(), g=info:getG(), b=info:getB() })
-    end
-    return tab[idx]
-end
-
-BanditCustom.GetHairStyle = function(female, idx)
-    local hairStyles = getAllHairStyles(female)
-    local tab = {}
-    for i=1, hairStyles:size() do
-        local styleId = hairStyles:get(i-1)
-        local hairStyle = female and getHairStylesInstance():FindFemaleStyle(styleId) or getHairStylesInstance():FindMaleStyle(styleId)
-        if not hairStyle:isNoChoose() then
-            table.insert(tab, styleId)
-        end
-    end
-    return tab[idx]
-end
-
-BanditCustom.GetBeardStyle = function(female, idx)
-    if female then return end
-    local tab = {}
-    local beardStyles = getAllBeardStyles()
-    for i=1, beardStyles:size() do
-        local styleId = beardStyles:get(i-1)
-        table.insert(tab, styleId)
-    end
-    return tab[idx]
-end

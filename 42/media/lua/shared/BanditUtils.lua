@@ -127,6 +127,12 @@ local function toDec(bits)
     return decimal
 end
 
+function BanditUtils.SanitizeString(str)
+    str = str:match("^%s*(.-)%s*$")
+    str = str:gsub("%s+", "_")
+    return str
+end
+
 function BanditUtils.GetZombieID (character)
     local dec = character:getPersistentOutfitID()
     local id = idcache[dec]
@@ -212,6 +218,15 @@ function BanditUtils.IsController(zombie)
     return bestPlayerId == BanditUtils.GetCharacterID(getSpecificPlayer(0))
 end
 
+function BanditUtils.IsFacing(sx, sy, sa, tx, ty, tolerance)
+    local dx = tx - sx
+    local dy = ty - sy
+    local angleToTarget = math.deg(math.atan2(dy, dx))
+    local angleDiff = (angleToTarget - sa + 180) % 360 - 180
+    -- print ("angle: " .. angleDiff)
+    return math.abs(angleDiff) < tolerance
+end
+
 function BanditUtils.IsInAngle(observer, targetX, targetY)
     local omega = observer:getDirectionAngle()
     local targer_delta_x = targetX - observer:getX()
@@ -261,7 +276,7 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py = player:getX(), player:getY()
             local dist = BanditUtils.DistTo(cx, cy, px, py)
-            if dist < result.dist and (not mustSee or (character:CanSee(player) and dist < SandboxVars.Bandits.General_RifleRange)) then
+            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < 5)) then
                 result.dist = dist
                 result.x = player:getX()
                 result.y = player:getY()
@@ -429,10 +444,10 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     return result
 end
 
-function BanditUtils.GetTarget(character)
+function BanditUtils.GetTarget(character, mustSee)
     local closestZombie = BanditUtils.GetClosestZombieLocation(character)
     local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(character)
-    local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, false)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, mustSee)
 
     local target = closestZombie
     local enemy = BanditZombie.Cache[target.id]

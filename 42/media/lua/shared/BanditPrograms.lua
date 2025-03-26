@@ -176,12 +176,15 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
         end
     end
 
-    local x, y, z = enemyCharacter:getX(), enemyCharacter:getY(), enemyCharacter:getZ()
+    local fd = enemyCharacter:getForwardDirection()
+    fd:setLength(2)
+
+    local x, y, z = enemyCharacter:getX() + fd:getX(), enemyCharacter:getY() + fd:getY(), enemyCharacter:getZ()
     local eid = BanditUtils.GetCharacterID(enemyCharacter)
     local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=x, y=y, z=z, eid=eid}
     table.insert(tasks, task)
     for i=2, bullets do
-        local task = {action="Shoot", anim=anim, time=3, slot=slot, x=x, y=y, z=z, eid=eid}
+        local task = {action="Shoot", anim=anim, time=6, slot=slot, x=x, y=y, z=z, eid=eid}
         table.insert(tasks, task)
     end
 
@@ -315,19 +318,21 @@ BanditPrograms.Weapon.Resupply = function(bandit)
     local objectList = {}
     local bestDist = 100
     local destObject
-    for y=-5, 5 do
-        for x=-5, 5 do
+    for y=-3, 3 do
+        for x=-3, 3 do
             local square = cell:getGridSquare(zx + x, zy + y, zz)
             if square then
 
                 -- loot bodies
-                local objects = square:getStaticMovingObjects()
-                for i=0, objects:size()-1 do
-                    local object = objects:get(i)
-                    if instanceof (object, "IsoDeadBody") then
-                        local container = object:getContainer()
-                        if container and not container:isEmpty() then
-                            table.insert(objectList, object)
+                if square:getDeadBody() then
+                    local objects = square:getStaticMovingObjects()
+                    for i=0, objects:size()-1 do
+                        local object = objects:get(i)
+                        if instanceof (object, "IsoDeadBody") then
+                            local container = object:getContainer()
+                            if container and not container:isEmpty() then
+                                table.insert(objectList, object)
+                            end
                         end
                     end
                 end
