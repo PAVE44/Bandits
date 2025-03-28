@@ -66,7 +66,7 @@
 
 [f3ad89be-9368-4df7-a63b-0c315a96f23b]
 	general: name = Bikers
-	spawn: wave = 0
+	spawn: wave = 3
 	spawn: zone = 0
 	spawn: friendly = false
 	spawn: defenders = false
@@ -110,7 +110,7 @@
 
 [eacda00e-6f8f-4afa-a813-f847d54720d8]
 	general: name = Black
-	spawn: wave = 0
+	spawn: wave = 4
 	spawn: zone = 0
 	spawn: friendly = false
 	spawn: defenders = false
@@ -187,7 +187,7 @@
 
 [d6c3c644-42e7-466a-8ce4-c002ad29dd50]
 	general: name = Classy
-	spawn: wave = 0
+	spawn: wave = 3
 	spawn: zone = 0
 	spawn: friendly = false
 	spawn: defenders = false
@@ -253,6 +253,50 @@
 
 [dff575b5-db84-4648-90e4-77dd7c0b825c]
 	general: name = Cowboys
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[f06e063f-551c-4fd5-aa19-bc15185c2371]
+	general: name = Sport
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[02489820-f67f-416f-8f9c-d7d6e5a8f4c2]
+	general: name = Punks
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11]
+	general: name = Rednecks
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[0dfc13d3-4ce6-4af8-aac6-326eb7514c36]
+	general: name = Karate
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false

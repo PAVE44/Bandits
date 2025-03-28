@@ -88,7 +88,7 @@
 
 [a2dec2f0-c76d-4640-8a71-733a547a1ebc]
 	general: name = ArmyDesert
-	spawn: wave = 0
+	spawn: wave = 1
 	spawn: zone = 0
 	spawn: friendly = true
 	spawn: defenders = false
@@ -200,7 +200,7 @@
 	general: name = Medieval
 	spawn: wave = 0
 	spawn: zone = 0
-	spawn: friendly = false
+	spawn: friendly = true
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false
@@ -253,6 +253,28 @@
 
 [dff575b5-db84-4648-90e4-77dd7c0b825c]
 	general: name = Cowboys
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[f06e063f-551c-4fd5-aa19-bc15185c2371]
+	general: name = Sport
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[02489820-f67f-416f-8f9c-d7d6e5a8f4c2]
+	general: name = Punks
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false

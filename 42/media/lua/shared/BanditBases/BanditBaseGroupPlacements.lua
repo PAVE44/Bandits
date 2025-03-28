@@ -32,7 +32,7 @@ function BanditBaseGroupPlacements.CheckSpace (x, y, w, h)
                                 else
                                     local sn = sprite:getName()
                                     local test = props:Val("CustomName")
-                                    print ("bad")
+                                    -- print ("bad")
                                 end
                             end
                         end

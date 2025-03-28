@@ -64,7 +64,6 @@ local function addHole (character)
     local bodyParts = getBloodBodyParts()
     local bodyPart = bodyParts[bpi]
 
-    print (bodyPart.name)
     local visuals = character:getHumanVisual()
     visuals:setBlood(bodyPart.name, 1)
 
@@ -94,7 +93,6 @@ local function addHolePlayer (player)
     local bodyParts = getBloodBodyParts()
     local bodyPart = bodyParts[bpi]
 
-    print (bodyPart.name)
     local visuals = player:getHumanVisual()
     visuals:setBlood(bodyPart.name, 1)
 

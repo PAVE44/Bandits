@@ -24,7 +24,7 @@ BanditActionInterceptor.Main = function(data)
         local containerType = container:getType()
         
         if containerType == "fridge" or containerType == "freezer" then
-            print ("base created")
+            -- print ("base created")
             local object = container:getParent()
             local square = object:getSquare()
             local building = square:getBuilding()

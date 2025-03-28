@@ -1292,7 +1292,7 @@ local function ManageCombat(bandit)
     if enemies > friendlies + 2 then
         if not Bandit.HasMoveTask(bandit) then
             -- bandit:addLineChatElement("Escape", 0.8, 0.8, 0.1)
-            print ("E: " .. enemies .. " F: " .. friendlies)
+            -- print ("E: " .. enemies .. " F: " .. friendlies)
             Bandit.ClearTasks(bandit)
             local mrad = math.atan2(sy, sx)
             local mdeg = math.deg(mrad)
@@ -1609,7 +1609,7 @@ local function UpdateZombies(zombie)
                     -- zombie:pathToCharacter(bandit)
                 -- end
                 -- if not zombie:getTarget() then
-                    zombie:addLineChatElement(string.format("SPOTTED %.2f", enemy.dist), 0.6, 0.6, 1)
+                    -- zombie:addLineChatElement(string.format("SPOTTED %.2f", enemy.dist), 0.6, 0.6, 1)
                     -- zombie:changeState(LungeState.instance())
                     -- zombie:getPathFindBehavior2():cancel()
                     -- zombie:setPath2(nil)

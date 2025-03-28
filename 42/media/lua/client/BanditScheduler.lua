@@ -854,6 +854,14 @@ local function checkEvent()
 
             if spawnRandom < spawnChance then
 
+                -- defender spawn
+                -- BanditScheduler.GenerateSpawnPointsInRandomBuilding(character, min, max)
+
+                -- camp spawn
+
+                -- roadblock spawn
+
+                -- normal spawn
                 local program = "Looter"
                 local spawnPoint = BanditScheduler.GenerateSpawnPoint(currentPlayer, 10)
 
@@ -868,6 +876,7 @@ local function checkEvent()
                     }
             
                     sendClientCommand(currentPlayer, 'Commands', 'SpawnCustom', args)
+                end
 
                     --[[
                     if SandboxVars.Bandits.General_ArrivalIcon then
@@ -903,7 +912,7 @@ local function checkEvent()
                 
                         BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 3600, spawnPoint.x, spawnPoint.y, color, desc)
                         ]]
-                end
+                
 
                 break
             end

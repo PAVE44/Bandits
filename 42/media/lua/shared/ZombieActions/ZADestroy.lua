@@ -56,7 +56,7 @@ ZombieActions.Destroy.onWorking = function(zombie, task)
             local boost = brain.strengthBoost or 1
             
             health = health - (40 * boost)
-            print ("thumpable health: " .. thumpable:getHealth())
+            -- print ("thumpable health: " .. thumpable:getHealth())
             if health < 0 then health = 0 end
             if health == 0 then
                 if instanceof(thumpable, "IsoBarricade") then
