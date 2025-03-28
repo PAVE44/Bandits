@@ -93,14 +93,20 @@ end
 BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     local tasks = {}
 
+    local walkType = bandit:getVariableString("BanditWalkType")
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
-
     local sound = weaponItem:getBringToBearSound()
+
+    -- aim time calc
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
     local aimTimeSurp = math.floor(dist * 5)
+    if walkType == "WalkAim" then
+        aimTimeMin = 1
+        -- aimTimeSurp = aimTimeSurp
+    end
 
     if instanceof(enemyCharacter, "IsoZombie") then
         aimTimeSurp = math.floor(aimTimeSurp / 2)
@@ -109,6 +115,7 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
         aimTimeSurp = aimTimeSurp + 10
     end
 
+    -- choose anim
     if aimTimeMin + aimTimeSurp > 0 then
 
         local anim
@@ -118,13 +125,21 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
             if dist < 2.5 and down then
                 anim = "AimRifleLow"
             else
-                anim = "IdleToAimRifle"
+                if walkType == "WalkAim" then
+                    anim = "AimRifle"
+                else
+                    anim = "IdleToAimRifle"
+                end
             end
         else
             if dist < 2.5 and down then
                 anim = "AimPistolLow"
             else
-                anim = "IdleToAimPistol"
+                if walkType == "WalkAim" then
+                    anim = "AimPistol"
+                else
+                    anim = "IdleToAimPistol"
+                end
             end
         end
 

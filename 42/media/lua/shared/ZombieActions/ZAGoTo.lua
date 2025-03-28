@@ -5,7 +5,7 @@ ZombieActions.GoTo.onStart = function(zombie, task)
 
     local dx = math.abs(zombie:getX() - task.x)
     local dy = math.abs(zombie:getY() - task.y)
-    
+
     if task.closeSlow then
         if dx <= 2 and dy <= 2 and zombie:getZ() == task.z then
             task.walkType = "WalkAim"
