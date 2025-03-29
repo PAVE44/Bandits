@@ -28,29 +28,14 @@ function BanditClansMain:initialise()
     local rowY = 0
 
     BanditCustom.Load()
-    local allData = BanditCustom.ClanGetAll()
-
-    local keys = {}
-    for key in pairs(allData) do
-        table.insert(keys, key)
-    end
-
-    table.sort(keys, function(k1, k2)
-        return allData[k1].general.name < allData[k2].general.name
-    end)
-
-    local allDataSorted = {}
-    for _, key in ipairs(keys) do
-        allDataSorted[key] = allData[key]
-    end
-
+    local allData = BanditCustom.ClanGetAllSorted()
     self.clanButton = {}
     local total = 0
     local i = 0
     local j = 0
     local x
     local y
-    for cid, data in pairs(allDataSorted) do
+    for cid, data in pairs(allData) do
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
         y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
 

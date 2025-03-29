@@ -38,7 +38,7 @@ local function lootContainer(zombie, container, task)
 
                 if weaponItem:usesExternalMagazine() then
                     local magazineType = weaponItem:getMagazineType()
-                    local magSize
+                    local magSize = 30
 
                     local bullets = 0
                     for j=0, items:size()-1 do

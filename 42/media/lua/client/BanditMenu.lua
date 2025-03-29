@@ -21,20 +21,6 @@ function BanditMenu.BanditCreator(player)
     modal:addToUIManager()
 end
 
-function BanditMenu.NewSpawn(player, square, cid)
-    local args = {--cid = "eacda00e-6f8f-4afa-a813-f847d54720d8", --blm
-                  -- cid = "84d300b0-25a2-42ac-922d-5e8839a010fb", -- fbi
-                  cid = cid,
-                  x=square:getX(),
-                  y=square:getY(),
-                  z=square:getZ(),
-                  program="Looter",
-                  hostile=true,
-                  size = 20}
-
-    BanditServer.Commands.SpawnCustom(player, args)
-end
-
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -122,18 +108,21 @@ function BanditMenu.MakeProcedure (player, square)
                             
 end
 
-function BanditMenu.SpawnGroup (player, waveId)
-    local waveData = BanditScheduler.GetWaveDataAll()
-    local wave = waveData[waveId]
-    wave.spawnDistance = 3
-    BanditScheduler.SpawnWave(player, wave)
+function BanditMenu.SpawnWave (player, wid)
+    local args = {}
+    args.wid = wid
+    args.dist = 10
+    sendClientCommand(player, 'Spawner', 'Wave', args)
 end
 
-function BanditMenu.SpawnGroupFar (player, waveId)
-    local waveData = BanditScheduler.GetWaveDataAll()
-    local wave = waveData[waveId]
-    wave.spawnDistance = 50
-    BanditScheduler.SpawnWave(player, wave)
+function BanditMenu.SpawnClan(player, square, cid)
+    local args = {}
+    args.cid = cid
+    args.size = 24
+    args.x = square:getX()
+    args.y = square:getY()
+    args.z = square:getZ()
+    sendClientCommand(player, 'Spawner', 'Clan', args)
 end
 
 function BanditMenu.SpawnDefenders (player, square)
@@ -207,7 +196,6 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local animator = zombie:getAdvancedAnimator()
     local inventory = zombie:getInventory()
     -- local astate = zombie:getAnimationDebug()
-    local waveData = BanditScheduler.GetWaveDataForDay(daysPassed)
     local baseData = BanditPlayerBase.data
 
 end
@@ -297,39 +285,23 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
     -- Admin spawn options
     if isDebugEnabled() or isAdmin() then
-        local spawnOption = context:addOption("Spawn Bandits Here")
+        local spawnOption = context:addOption("Spawn Bandit Wave")
         local spawnMenu = context:getNew(context)
         context:addSubMenu(spawnOption, spawnMenu)
         for i=1, 16 do
-            spawnMenu:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroup, i)
-        end
-
-        local spawnOptionFar = context:addOption("Spawn Bandits Far")
-        local spawnMenuFar = context:getNew(context)
-        context:addSubMenu(spawnOptionFar, spawnMenuFar)
-        for i=1, 16 do
-            spawnMenuFar:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnGroupFar, i)
-        end
-
-        context:addOption("Spawn Bandit Defenders", player, BanditMenu.SpawnDefenders, square)
-
-        local spawnBaseOption = context:addOption("Spawn Bandit Base Far")
-        local spawnBaseMenu = context:getNew(context)
-        context:addSubMenu(spawnBaseOption, spawnBaseMenu)
-        for i=1, 2 do
-            spawnBaseMenu:addOption("Base " .. tostring(i), player, BanditMenu.SpawnBase, square, i)
+            spawnMenu:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnWave, i)
         end
 
         context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
     end
     
     BanditCustom.Load()
-    local clanData  = BanditCustom.ClanGetAll()
-    local newSpawnOption = context:addOption("New Spawn Bandits Here")
-    local newSpawnMenu = context:getNew(context)
-    context:addSubMenu(newSpawnOption, newSpawnMenu)
+    local clanData  = BanditCustom.ClanGetAllSorted()
+    local clanSpawnOption = context:addOption("Spawn Bandit Clan")
+    local clanSpawnMenu = context:getNew(context)
+    context:addSubMenu(clanSpawnOption, clanSpawnMenu)
     for cid, clan in pairs(clanData) do
-        newSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.NewSpawn, square, cid)
+        clanSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.SpawnClan, square, cid)
     end
 
     context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
@@ -344,7 +316,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
         print (BanditUtils.GetCharacterID(player))
         print (player:getHoursSurvived() / 24)
-        print ("SPAWN BOOST: " .. BanditScheduler.GetDensityScore(player, 120) .. "%")
         context:addOption("[DGB] Make Prcedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Place Plane", player, BanditMenu.PlacePlane, square)
 

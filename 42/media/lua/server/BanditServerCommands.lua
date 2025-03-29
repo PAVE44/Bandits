@@ -1,13 +1,16 @@
-BanditServer = {}
-BanditServer.Commands = {}
-BanditServer.Players = {}
-
-BanditServer.Players.PlayerUpdate = function(player, args)
-    local gmd = GetBanditModDataPlayers()
-    local id = args.id
-    gmd.OnlinePlayers[id] = args
+local getBarricadeAble = function(x, y, z, index)
+    local sq = getCell():getGridSquare(x, y, z)
+    if sq and index >= 0 and index < sq:getObjects():size() then
+        local o = sq:getObjects():get(index)
+        if instanceof(o, 'BarricadeAble') then
+            return o
+        end
+    end
+    return nil
 end
 
+BanditServer = BanditServer or {}
+BanditServer.Commands = {}
 
 BanditServer.Commands.PostToggle = function(player, args)
     local gmd = GetBanditModData()
@@ -86,7 +89,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     local invulnerable = false
     local sitting = false
 
-    local size = args.size
+    local groupSize = args.size
     local gx = args.x or player:getX()
     local gy = args.y or player:getY()
     local gz = args.z or player:getZ()
@@ -114,7 +117,6 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     end
 
     local banditOptions = BanditCustom.GetFromClan(cid)
-
     if not banditOptions then return end
 
     local keys = {}
@@ -128,7 +130,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     end
 
     local banditSelected = {}
-    for i = 1, math.min(size, #keys) do
+    for i = 1, math.min(groupSize, #keys) do
         local key = keys[i]
         banditSelected[key] = banditOptions[key]
     end
@@ -261,6 +263,7 @@ BanditServer.Commands.SpawnCustom = function(player, args)
     end
 end
 
+-- to be depracated
 BanditServer.Commands.SpawnGroup = function(player, event)
 
     local getSkinTexture = function(female, id)
@@ -459,19 +462,8 @@ BanditServer.Commands.SpawnRestore = function(player, brain)
     end
 end
 
-local _getBarricadeAble = function(x, y, z, index)
-    local sq = getCell():getGridSquare(x, y, z)
-    if sq and index >= 0 and index < sq:getObjects():size() then
-        local o = sq:getObjects():get(index)
-        if instanceof(o, 'BarricadeAble') then
-            return o
-        end
-    end
-    return nil
-end
-
 BanditServer.Commands.Unbarricade = function(player, args)
-    local object = _getBarricadeAble(args.x, args.y, args.z, args.index)
+    local object = getBarricadeAble(args.x, args.y, args.z, args.index)
     if object then
         local barricade = object:getBarricadeOnSameSquare()
         if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
@@ -491,7 +483,7 @@ BanditServer.Commands.Unbarricade = function(player, args)
 end
 
 BanditServer.Commands.Barricade = function(player, args)
-    local object = _getBarricadeAble(args.x, args.y, args.z, args.index)
+    local object = getBarricadeAble(args.x, args.y, args.z, args.index)
     if object then
         local barricade = IsoBarricade.AddBarricadeToObject(object, player)
         if barricade then
@@ -569,45 +561,6 @@ BanditServer.Commands.UnlockDoor = function(player, args)
     end
 end
 
-BanditServer.Commands.VehicleSpawn = function(player, args)
-    local square = getCell():getGridSquare(args.x, args.y, 0)
-    if square then
-        local vehicle = addVehicleDebug(args.type, IsoDirections.S, nil, square)
-        if vehicle then
-            for i = 0, vehicle:getPartCount() - 1 do
-                local container = vehicle:getPartByIndex(i):getItemContainer()
-                if container then
-                    container:removeAllItems()
-                end
-            end
-            vehicle:repair()
-            vehicle:setColor(0, 0, 0)
-
-            if ZombRand(3) == 1 then
-                vehicle:setAlarmed(true)
-            end
-
-            local cond = (2 + ZombRand(8)) / 10
-            vehicle:setGeneralPartCondition(cond, 80)
-            if args.engine then
-                vehicle:setHotwired(true)
-                vehicle:tryStartEngine(true)
-                vehicle:engineDoStartingSuccess()
-                vehicle:engineDoRunning()
-            end
-
-            if args.lights then
-                vehicle:setHeadlightsOn(true)
-            end
-
-            if args.lightbar or args.siren or args.alarm then
-                local newargs = {id=vehicle:getId(), lightbar=args.lightbar, siren=args.siren, alarm=args.alarm}
-                sendServerCommand('Commands', 'UpdateVehicle', newargs)
-            end
-        end
-    end
-end
-
 BanditServer.Commands.VehiclePartRemove = function(player, args)
     local sq = getCell():getGridSquare(args.x, args.y, 0)
     if sq then
@@ -667,9 +620,8 @@ BanditServer.Commands.UpdateVisitedBuilding = function(player, args)
     gmd.VisitedBuildings[args.bid] = args.wah 
 end
 
--- main
 local onClientCommand = function(module, command, player, args)
-    if BanditServer[module] and BanditServer[module][command] then
+    if module == "Commands" and BanditServer[module] and BanditServer[module][command] then
         local argStr = ""
         for k, v in pairs(args) do
             argStr = argStr .. " " .. k .. "=" .. tostring(v)
@@ -677,11 +629,7 @@ local onClientCommand = function(module, command, player, args)
         -- print ("received " .. module .. "." .. command .. " "  .. argStr)
         BanditServer[module][command](player, args)
 
-        if module == "Commands" then
-            TransmitBanditModData()
-        elseif module == "Players" then
-            TransmitBanditModDataPlayers()
-        end
+        TransmitBanditModData()
     end
 end
 

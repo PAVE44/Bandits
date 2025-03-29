@@ -703,6 +703,7 @@ local function ManageCollisions(bandit)
                     if instanceof(object, "IsoWindow") then
                         if bandit:isFacingObject(object, 0.5) then
                             if object:isBarricaded() then
+                                Bandit.Say(bandit, "BREACH")
                                 local barricade = object:getBarricadeOnSameSquare()
                                 if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
                                 local fx, fy
@@ -761,6 +762,7 @@ local function ManageCollisions(bandit)
 
                             elseif not object:IsOpen() and not object:isSmashed() then
                                 if true then
+                                    Bandit.Say(bandit, "BREACH")
                                     local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                     table.insert(tasks, task)
                                 elseif not object:isPermaLocked() then
@@ -1501,49 +1503,49 @@ local function UpdateZombies(zombie)
     zombie:setVariable("NoLungeAttack", true)
     if zombie:getVariableBoolean("Bandit") then return end
 
-    local toRemove = {}    
-    for id, tab in pairs(biteTab) do
-        if tab.tick >= 100 then
-            local attackId = zombie:getModData().attackId
-            if attackId and tab.attackId == attackId and zombie:getBumpType() == "Bite" and zombie:getActionStateName() == "bumped" then 
+    local asn = zombie:getActionStateName()
+    local zid = zombie:getModData().zid
+    if zid and zombie:getBumpType() == "Bite" and asn == "bumped" then
+        for id, tab in pairs(biteTab) do
+            if id == zid then 
+                if tab.tick >= 12 then
+                    local bandit = tab.bandit
+                    if ZombRand(4) == 1 then
+                        zombie:playSound("ZombieBite")
+                    else
+                        zombie:playSound("ZombieScratch")
+                    end
 
-                local asn = zombie:getActionStateName()
-                local bandit = tab.bandit
-                if ZombRand(4) == 1 then
-                    zombie:playSound("ZombieBite")
+                    local teeth = BanditCompatibility.InstanceItem("Base.RollingPin")
+                    BanditCompatibility.Splash(bandit, teeth, zombie)
+                    bandit:setHitFromBehind(zombie:isBehind(bandit))
+            
+                    if instanceof(bandit, "IsoZombie") then
+                        bandit:setHitAngle(zombie:getForwardDirection())
+                        bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
+                    end
+            
+                    Bandit.ClearTasks(bandit)
+                    bandit:setBumpDone(true)
+                    bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                    Bandit.UpdateInfection(bandit, 0.001)
+                    if bandit:getHealth() <= 0 then
+                        -- bandit:setHealth(0)
+                        -- bandit:clearAttachedItems()
+                        bandit:setAttackedBy(zombie)
+                    end
+                    biteTab[v] = nil
+                    zombie:getModData().zid = nil
                 else
-                    zombie:playSound("ZombieScratch")
+                    tab.tick = tab.tick + 1
                 end
-
-                local teeth = BanditCompatibility.InstanceItem("Base.RollingPin")
-                BanditCompatibility.Splash(bandit, teeth, zombie)
-                bandit:setHitFromBehind(zombie:isBehind(bandit))
-        
-                if instanceof(bandit, "IsoZombie") then
-                    bandit:setHitAngle(zombie:getForwardDirection())
-                    bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
-                end
-        
-                bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                Bandit.UpdateInfection(bandit, 0.001)
-                if bandit:getHealth() <= 0 then
-                    -- bandit:setHealth(0)
-                    -- bandit:clearAttachedItems()
-                    bandit:setAttackedBy(zombie)
-                end
-                table.insert(toRemove, id)
+                return
             end
         end
-        tab.tick = tab.tick + 1
-    end
-
-    for _, v in pairs(toRemove) do
-        biteTab[v] = nil
-        zombie:getModData().attackId = nil
     end
 
     if zombie:isProne() then return end
-    local asn = zombie:getActionStateName()
+    
     if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
         return
     end
@@ -1652,9 +1654,9 @@ local function UpdateZombies(zombie)
                         if zombie:getBumpType() ~= "Bite" then
                             -- print ("BITE: " .. asn .. " " .. zombie:getBumpType())
                             zombie:setBumpType("Bite")
-                            local attackId = ZombRand(1000000)
-                            zombie:getModData().attackId = attackId 
-                            biteTab[enemy.id] = {attackId=attackId, bandit=bandit, tick=0}
+                            local zid = BanditUtils.GetCharacterID(zombie)
+                            zombie:getModData().zid = zid 
+                            biteTab[zid] = {bandit=bandit, tick=0}
                         end
                     else
                         zombie:faceThisObject(bandit)

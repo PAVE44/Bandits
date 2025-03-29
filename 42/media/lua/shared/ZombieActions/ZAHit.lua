@@ -334,6 +334,9 @@ local function Hit(attacker, item, victim)
             if instanceof(victim, "IsoZombie") then
                 victim:setHitAngle(attacker:getForwardDirection())
                 victim:setPlayerAttackPosition(victim:testDotSide(attacker))
+                if BanditRandom.Get() % 4 == 0 then
+                    addStuckItem(attacker, victim, behind, item)
+                end
             end
 
             if item:getFullType() == "Base.BareHands" and instanceof(victim, "IsoPlayer") then
@@ -343,11 +346,7 @@ local function Hit(attacker, item, victim)
                 victim:Hit(item, tempAttacker, 0.8, false, 1, false)
             end
             
-            if BanditRandom.Get() % 4 == 0 then
-                addStuckItem(attacker, victim, behind, item)
-            else
-                victim:playSound(item:getZombieHitSound())
-            end
+            victim:playSound(item:getZombieHitSound())
 
             -- addBlood(victim, 100)
             -- addBlood(attacker, 30)

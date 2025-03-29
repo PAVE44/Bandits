@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="slow.xml">
-	<m_Name>Bob_WalkAim1Hand</m_Name>
-	<m_AnimName>Bob_WalkAim1Hand</m_AnimName>
+	<m_Name>ZSWalkInTrees</m_Name>
+	<m_AnimName>Bob_WalkTrees</m_AnimName>
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
 		<m_Type>STRING</m_Type>
 		<m_StringValue>WalkAim</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>intrees</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>Footstep</m_EventName>

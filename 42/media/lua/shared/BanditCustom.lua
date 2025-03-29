@@ -193,6 +193,24 @@ BanditCustom.ClanGetAll = function()
     return BanditCustom.clanData
 end
 
+BanditCustom.ClanGetAllSorted = function()
+    local allData = BanditCustom.clanData
+    local keys = {}
+    for key in pairs(allData) do
+        table.insert(keys, key)
+    end
+
+    table.sort(keys, function(k1, k2)
+        return allData[k1].general.name < allData[k2].general.name
+    end)
+
+    local allDataSorted = {}
+    for _, key in ipairs(keys) do
+        allDataSorted[key] = allData[key]
+    end
+    return allDataSorted
+end
+
 BanditCustom.ClanGet = function(cid)
     return BanditCustom.clanData[cid]
 end

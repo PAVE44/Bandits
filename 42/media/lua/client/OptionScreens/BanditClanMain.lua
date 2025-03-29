@@ -116,9 +116,11 @@ function BanditClanMain:onAvatarListChange()
     self:addChild(lbl)
 
     self.boolOptions = ISTickBox:new(leftX, topY + rowY, 200, BUTTON_HGT, "", self, BanditClanMain.onBoolOptionsChange)
+    -- self.boolOptions.tooltip = "test"
     self.boolOptions:initialise()
     self:addChild(self.boolOptions)
     self.boolOptions:addOption("Friendly")
+    self.boolOptions:addOption("Companions")
     self.boolOptions:addOption("Defenders")
     self.boolOptions:addOption("Campers")
     self.boolOptions:addOption("Assault")
@@ -278,11 +280,12 @@ function BanditClanMain:loadConfig()
         self.zoneCombo.selected = (data.spawn.zone or 0) + 1
 
         if data.spawn.friendly then self.boolOptions:setSelected(1, true) end
-        if data.spawn.defenders then self.boolOptions:setSelected(2, true) end
-        if data.spawn.campers then self.boolOptions:setSelected(3, true) end
-        if data.spawn.assault then self.boolOptions:setSelected(4, true) end
-        if data.spawn.wanderer then self.boolOptions:setSelected(5, true) end
-        if data.spawn.roadblock then self.boolOptions:setSelected(6, true) end
+        if data.spawn.companion then self.boolOptions:setSelected(2, true) end
+        if data.spawn.defenders then self.boolOptions:setSelected(3, true) end
+        if data.spawn.campers then self.boolOptions:setSelected(4, true) end
+        if data.spawn.assault then self.boolOptions:setSelected(5, true) end
+        if data.spawn.wanderer then self.boolOptions:setSelected(6, true) end
+        if data.spawn.roadblock then self.boolOptions:setSelected(7, true) end
         self:onBoolOptionsChange()
     end
 end
@@ -296,11 +299,12 @@ function BanditClanMain:saveConfig()
     data.spawn.wave = self.waveCombo.selected - 1
     data.spawn.zone = self.zoneCombo.selected - 1
     data.spawn.friendly = self.boolOptions:isSelected(1)
-    data.spawn.defenders = self.boolOptions:isSelected(2)
-    data.spawn.campers = self.boolOptions:isSelected(3)
-    data.spawn.assault = self.boolOptions:isSelected(4)
-    data.spawn.wanderer = self.boolOptions:isSelected(5)
-    data.spawn.roadblock = self.boolOptions:isSelected(6)
+    data.spawn.companion = self.boolOptions:isSelected(2)
+    data.spawn.defenders = self.boolOptions:isSelected(3)
+    data.spawn.campers = self.boolOptions:isSelected(4)
+    data.spawn.assault = self.boolOptions:isSelected(5)
+    data.spawn.wanderer = self.boolOptions:isSelected(6)
+    data.spawn.roadblock = self.boolOptions:isSelected(7)
     
 
     BanditCustom.Save()
@@ -308,14 +312,14 @@ end
 
 function BanditClanMain:onBoolOptionsChange(index, selected)
     if self.boolOptions.selected[1] == true then
-        self.boolOptions.selected[3] = false
         self.boolOptions.selected[5] = false
+    else
+        self.boolOptions.selected[2] = false
     end
-    if self.boolOptions.selected[3] == true then
-        self.boolOptions.selected[1] = false
-    end
+
     if self.boolOptions.selected[5] == true then
         self.boolOptions.selected[1] = false
+        self.boolOptions.selected[2] = false
     end
 end
 

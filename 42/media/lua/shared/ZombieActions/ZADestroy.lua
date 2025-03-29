@@ -2,7 +2,6 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Destroy = {}
 ZombieActions.Destroy.onStart = function(zombie, task)
-    Bandit.Say(zombie, "BREACH")
     task.tick = 1
     return true
 end

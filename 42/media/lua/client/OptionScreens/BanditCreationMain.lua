@@ -10,6 +10,7 @@ function BanditCreationMain:initialise()
 
     local btnCancelWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Cancel") + 64
     local btnSaveWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Save") + 64
+    local btnCloneWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Clone") + 64
     local btnCancelX = math.floor(self:getWidth() / 2) - ((btnCancelWidth + btnSaveWidth) / 2) - 4
     local btnCancelY = math.floor(self:getWidth() / 2) - ((btnCancelWidth + btnSaveWidth) / 2) + btnCancelWidth + 4
 
@@ -40,6 +41,14 @@ function BanditCreationMain:initialise()
     self.avatarPanel.clickable = false
     self.avatarPanel:noBackground()
     self:addChild(self.avatarPanel)
+
+    self.clone = ISButton:new(380 + (avatarWidth / 2) - (btnCloneWidth / 2), topY + avatarHeight + UI_BORDER_SPACING + 4, btnCloneWidth, BUTTON_HGT, "Clone", self, BanditCreationMain.onClick)
+    self.clone.internal = "CLONE"
+    self.clone.anchorTop = false
+    self.clone.anchorBottom = true
+    self.clone:initialise()
+    self.clone:instantiate()
+    self:addChild(self.clone)
 
     local player = getSpecificPlayer(0)
     self.desc = SurvivorFactory.CreateSurvivor(SurvivorType.Neutral, false)
@@ -704,6 +713,21 @@ function BanditCreationMain:onClick(button)
         modal:addToUIManager()
         self:removeFromUIManager()
         self:close()
+    elseif button.internal == "CLONE" then
+        self:saveConfig()
+        self:cloneConfig()
+        self.avatarPanel:setCharacter(nil)
+        if self.model then
+            self.model:removeFromSquare()
+            self.model:removeFromWorld()
+            self.model:removeSaveFile()
+            self.model = nil
+        end
+        local modal = BanditClanMain:new(500, 80, 1220, 900, self.cid)
+        modal:initialise()
+        modal:addToUIManager()
+        self:removeFromUIManager()
+        self:close()
     elseif button.internal == "AMMO" then
         button.value = button.value + 1
         button:setTitle(tostring(button.value))
@@ -847,7 +871,21 @@ function BanditCreationMain:loadConfig()
 
 end
 
-function BanditCreationMain:saveConfig()
+function BanditCreationMain:saveConfig(clone)
+    
+    local function incrementSuffix(str)
+        local base, num = str:match("^(.-)_(%d+)$")
+        if base and num then
+            return base .. "_" .. string.format("%02d", tonumber(num) + 1)
+        else
+            return str .. "_01"
+        end
+    end
+
+    if clone then
+        self.bid = BanditCustom.GetNextId()
+    end
+    
     local data = BanditCustom.Create(self.bid)
 
 	data.general = {}
@@ -855,6 +893,10 @@ function BanditCreationMain:saveConfig()
     data.general.modid = self.modCombo:getSelectedText()
     data.general.cid = self.cid
     data.general.name = BanditUtils.SanitizeString(self.nameEntry:getText())
+
+    if clone then
+        data.general.name = incrementSuffix(data.general.name)
+    end
 
     if self.genderCombo.selected == 1 then
         data.general.female = true
@@ -903,6 +945,10 @@ function BanditCreationMain:saveConfig()
     end
 
     BanditCustom.Save()
+end
+
+function BanditCreationMain:cloneConfig()
+    self:saveConfig(true)
 end
 
 function BanditCreationMain:new(x, y, width, height, bid, cid)

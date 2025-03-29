@@ -9,15 +9,8 @@ end
 ZombiePrograms.Defend.Prepare = function(bandit)
     local tasks = {}
 
-    Bandit.ForceStationary(bandit, true)
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    -- weapons are spawn, not program decided
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
-    table.insert(tasks, task)
-
+    Bandit.ForceStationary(bandit, false)
+  
     return {status=true, next="Wait", tasks={}}
 end
 
