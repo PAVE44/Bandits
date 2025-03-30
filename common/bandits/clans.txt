@@ -307,7 +307,7 @@
 
 [f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11]
 	general: name = Rednecks
-	spawn: wave = 0
+	spawn: wave = 10
 	spawn: zone = 0
 	spawn: friendly = false
 	spawn: companion = false

@@ -376,8 +376,6 @@ local function spawnGroup(spawnPoints, args)
     local sitting = false
     local groupSize = #spawnPoints
 
-    BanditCustom.Load()
-
     local cid = args.cid
     if not cid then return end
 
@@ -419,6 +417,7 @@ local function spawnGroup(spawnPoints, args)
 
         i = i + 1
     end
+    return i - 1
 end
 
 local function spawnVehicle (player, x, y, vtype, args)
@@ -772,13 +771,42 @@ local function getRandomClanIdForWave(wid)
     return BanditUtils.Choice(clanChoices)
 end
 
+local function getIconDataByProgram(program, friendly)
+
+    local icon, color, desc
+
+    if friendly then
+        desc = "Friendly"
+        color = {r=0.5, g=1, b=0.5} -- green
+    else
+        desc = "Hostile"
+        color = {r=1, g=0.5, b=0.5} -- red
+    end
+
+    if program == "Bandit" then 
+        icon = "media/ui/raid.png"
+        desc = desc .. " " .. "Assault"
+    elseif program == "Companion" then
+        icon = "media/ui/friend.png"
+        desc = desc .. " " .. "Companions"
+    elseif program == "Looter" then
+        icon = "media/ui/loot.png"
+        desc = desc .. " " .. "Wanderers"
+    end
+    return icon, color, desc
+end
+
 local function spawnType(player, args)
+
+    BanditCustom.Load()
 
     local pid = BanditUtils.GetCharacterID(player)
     local wid = args.wid
     local dist = args.dist
     local wave = getWaveData()[wid]
     local cid = getRandomClanIdForWave(wid)
+    if not cid then return end
+
     local clan = BanditCustom.ClanGet(cid)
     local groupSize = wave.groupSize
     local spawnPoints = {}
@@ -825,7 +853,19 @@ local function spawnType(player, args)
     end
 
     if #spawnPoints > 0 then
-        spawnGroup(spawnPoints, args)
+        local cnt = spawnGroup(spawnPoints, args)
+        if cnt > 0 then
+            local icon, color, desc = getIconDataByProgram(args.program, clan.spawn.friendly)
+            if icon and color and desc then
+                local x, y = spawnPoints[1].x, spawnPoints[1].y
+                if isServer() then
+                    local args = {icon=icon, time=1800, x=x, y=y, color=color, desc=desc}
+                    sendServerCommand('Commands', 'SetMarker', args)
+                else
+                    BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 1800, x, y, color, desc)
+                end
+            end
+        end
     end
 
 end
@@ -858,7 +898,7 @@ local function checkEvent()
             local spawnChance = wave.spawnHourlyChance * densityScore / 6
             local spawnRandom = ZombRandFloat(0, 100)
 
-            if spawnRandom < spawnChance then
+            if true or spawnRandom < spawnChance then
                 local args = {}
                 args.wid = wid
                 args.dist = 50 + ZombRand(20)
@@ -906,6 +946,8 @@ BanditServer.Spawner.Clan = function(player, args)
     if not args.z then args.z = player:getZ() end
     if not args.program then args.program = "Looter" end
     
+    BanditCustom.Load()
+
     local spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, args.size)
     if #spawnPoints > 0 then
         spawnGroup(spawnPoints, args)
