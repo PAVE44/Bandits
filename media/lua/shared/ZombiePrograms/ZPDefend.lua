@@ -6,33 +6,11 @@ ZombiePrograms.Defend.Stages = {}
 ZombiePrograms.Defend.Init = function(bandit)
 end
 
-ZombiePrograms.Defend.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = false
-    capabilities.openDoor = true
-    capabilities.breakDoor = false
-    capabilities.breakObjects = false
-    capabilities.unbarricade = false
-    capabilities.disableGenerators = false
-    capabilities.sabotageCars = false
-    return capabilities
-end
-
 ZombiePrograms.Defend.Prepare = function(bandit)
     local tasks = {}
 
-    Bandit.ForceStationary(bandit, true)
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    -- weapons are spawn, not program decided
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
-    table.insert(tasks, task)
-
+    Bandit.ForceStationary(bandit, false)
+  
     return {status=true, next="Wait", tasks={}}
 end
 

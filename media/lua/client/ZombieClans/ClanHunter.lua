@@ -64,7 +64,7 @@ table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Pot", 21))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Scissors", 17))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Toothbrush", 77))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Toothpaste", 77))
-table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Soap", 66))
+table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.Soap2", 66))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.TrapStick", 52))
 table.insert(BanditClan.Hunter.Loot, BanditLoot.MakeItem("Base.TrapSnare", 62))
 

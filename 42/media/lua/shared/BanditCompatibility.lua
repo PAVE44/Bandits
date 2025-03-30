@@ -14,6 +14,7 @@ legacyItemMap["Base.BaseballBat_Nails"]         = "Base.BaseballBatNails"
 legacyItemMap["Base.BaseballBat_RailSpike"]     = "Base.BaseballBatNails"
 legacyItemMap["Base.BaseballBat_Sawblade"]      = "Base.BaseballBatNails"
 legacyItemMap["Base.BaseballBat_Spiked"]        = "Base.BaseballBatNails"
+legacyItemMap["Base.BaseballBat_Metal"]         = "Base.BaseballBatNails"
 legacyItemMap["Base.WaterBottle"]               = "Base.WaterBottleFull"
 legacyItemMap["Base.Whiskey"]                   = "Base.WhiskeyFull"
 legacyItemMap["Base.Plank_Nails"]               = "Base.PlankNail"
@@ -41,7 +42,9 @@ legacyItemMap["Base.CakeCarrot"]                = "Base.PieApple"
 legacyItemMap["Base.EggOmlette"]                = "Base.Pancakes"
 legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
 legacyItemMap["Base.PiePumpkin"]                = "Base.PieApple"
-
+legacyItemMap["Base.FightingKnife"]             = "Base.HuntingKnife"
+legacyItemMap["Base.LargeKnife"]                = "Base.HuntingKnife"
+legacyItemMap["Base.BoltCutters"]               = "Base.Crowbar"
 
 
 BanditCompatibility.LegacyItemMap = legacyItemMap
@@ -51,6 +54,14 @@ BanditCompatibility.GetConfigPath = function()
         return "media" .. getFileSeparator() .. "bandits" .. getFileSeparator() -- that'll be /media/bandits/
     else
         return "bandits" .. getFileSeparator() -- that'll be common/bandits/
+    end
+end
+
+BanditCompatibility.GetModPrefix = function()
+    if getGameVersion() < 42 then
+        return ""
+    else
+        return "\\"
     end
 end
 
@@ -92,11 +103,18 @@ BanditCompatibility.GetGuardpostKey = function()
 end
 
 BanditCompatibility.InstanceItem = function(itemFullType)
+    local item
     if getGameVersion() >= 42 then
-        return instanceItem(itemFullType)
+        item = instanceItem(itemFullType)
     else
         local itemFullTypeLegacy = BanditCompatibility.GetLegacyItem(itemFullType)
-        return InventoryItemFactory.CreateItem(itemFullTypeLegacy)
+        item = InventoryItemFactory.CreateItem(itemFullTypeLegacy)
+    end
+
+    if item then
+        return item
+    else
+        print ("[WARN] Item " .. itemFullType .. " not found!")
     end
 end
 
@@ -199,3 +217,52 @@ BanditCompatibility.GetMovementSpeed = function(object)
     end
 end
 
+BanditCompatibility.UsesExternalMagazine = function(weapon)
+    if getGameVersion() >= 42 then
+        return weapon:usesExternalMagazine()
+    else
+        local magazineType = weapon:getMagazineType()
+        if magazineType then return true end
+    end
+    return false
+end
+
+BanditCompatibility.GetBodyLocations = function(weapon)
+    local bodyLocations = {}
+    if getGameVersion() >= 42 then
+        bodyLocations = {
+            Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
+            Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
+            Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
+            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe"},
+            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
+            TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
+            TopExtra = {"TorsoExtra", "TorsoExtraVest", "TorsoExtraVestBullet", "VestTexture", "Sweater", "SweaterHat"},
+            Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
+            TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left"},
+            Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
+            Bags = {"FannyPackFront", "FannyPackBack", "Webbing"},
+            Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
+            Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
+            BottomArmor = {"Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left"},
+            Shoes = {"Shoes", "Socks"}
+        }
+    else
+        bodyLocations = {
+            Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
+            Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
+            Neck = {"Neck", "Necklace", "Scarf"},
+            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "BathRobe"},
+            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
+            TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
+            TopExtra = {"TorsoExtra", "TorsoExtraVest", "Sweater", "SweaterHat"},
+            Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
+            Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
+            Bags = {"FannyPackFront", "FannyPackBack"},
+            Holsters = {"AmmoStrap", "BeltExtra"},
+            Bottom = {"Pants", "Legs1", "Skirt"},
+            Shoes = {"Shoes", "Socks"}
+        }
+    end
+    return bodyLocations
+end

@@ -1,4 +1,4 @@
 UI_RU = {
-    UI_optionscreen_binding_Bandits = "Бандиты",
-    UI_optionscreen_binding_POSTS = "Настройка зоны постов охраны",
+    UI_optionscreen_binding_Bandits = "Р‘Р°РЅРґРёС‚С‹",
+    UI_optionscreen_binding_POSTS = "РќР°СЃС‚СЂРѕР№РєР° Р·РѕРЅС‹ РїРѕСЃС‚РѕРІ РѕС…СЂР°РЅС‹",
 }

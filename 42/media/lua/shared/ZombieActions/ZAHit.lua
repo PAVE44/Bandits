@@ -198,6 +198,15 @@ local stuckItemLocations = {
     }
 }
 
+local passengerToWindow = {
+    "WindowFrontLeft",
+    "WindowFrontRight",
+    "WindowMiddleLeft",
+    "WindowMiddleRight",
+    "WindowRearLeft",
+    "WindowRearRight"
+}
+
 local locationBlood = {
     ["MeatCleaver in Back"] = {"Back"},
     ["Axe Back"] = {"Back"},
@@ -269,6 +278,8 @@ local function addStuckItem(attacker, victim, behind, item)
 
         local meleeItem = BanditCompatibility.InstanceItem(hands)
         attacker:setPrimaryHandItem(meleeItem)
+
+        victim:resetModel()
     end
 end
 
@@ -314,19 +325,45 @@ local function Hit(attacker, item, victim)
             BanditPlayer.WakeEveryone()
         end
 
-        local veh = victim:getVehicle()
-        
-        if veh then
-            victim:playSound(HitVehicleWindowWithWeapon)
-        else
+        local vehicle = victim:getVehicle()
+        local protected = false
+        if vehicle then
+            local square = vehicle:getSquare()
+            victim:playSound("HitVehicleWindowWithWeapon")
+            local seat = vehicle:getSeat(victim) + 1
+            local windowName = passengerToWindow[seat]
+            local vehiclePart = vehicle:getPartById(windowName)
+            if vehiclePart and vehiclePart:getInventoryItem() then
+                protected = false
+                local window = vehiclePart:getWindow()
+                if window and not window:isOpen() then
+                    local vehiclePartId = vehiclePart:getId()
+                    vehiclePart:damage(20)
+            
+                    if vehiclePart:getCondition() <= 0 then
+                        vehiclePart:setInventoryItem(nil)
+                        square:playSound("SmashWindow")
+                    else
+                        protected = true
+                        square:playSound("BreakGlassItem")
+                    end
 
+                    vehicle:updatePartStats()
+
+                    local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                    sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+                end
+            end
+        else
             if victim:isSprinting() or victim:isRunning() and ZombRand(6) == 1 then
                 victim:clearVariable("BumpFallType")
                 victim:setBumpType("stagger")
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             end
+        end
 
+        if not protected then
             local behind = attacker:isBehind(victim)
             victim:setHitFromBehind(behind)
             victim:setAttackedBy(attacker)
@@ -344,6 +381,11 @@ local function Hit(attacker, item, victim)
             else
                 victim:setBumpDone(true)
                 victim:Hit(item, tempAttacker, 0.8, false, 1, false)
+
+                local h = victim:getHealth()
+                local id = BanditUtils.GetCharacterID(victim)
+                local args={id=id, h=h}
+                sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
             end
             
             victim:playSound(item:getZombieHitSound())

@@ -42,7 +42,7 @@ ZombieActions.VehicleAction.onComplete = function(zombie, task)
                     vehicle:updatePartStats()
 
                     local args = {x=task.vx, y=task.vy, id=task.id}
-                    sendClientCommand(getPlayer(), 'Commands', 'VehiclePartRemove', args)
+                    sendClientCommand(getSpecificPlayer(0), 'Commands', 'VehiclePartRemove', args)
                 end
             end
         end

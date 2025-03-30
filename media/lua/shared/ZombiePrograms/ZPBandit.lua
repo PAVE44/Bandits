@@ -6,91 +6,34 @@ ZombiePrograms.Bandit.Stages = {}
 ZombiePrograms.Bandit.Init = function(bandit)
 end
 
-ZombiePrograms.Bandit.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = true
-    capabilities.openDoor = true
-    capabilities.breakDoor = true
-    capabilities.breakObjects = true
-    capabilities.unbarricade = true
-    capabilities.disableGenerators = true
-    capabilities.sabotageCars = true
-    return capabilities
-end
-
 ZombiePrograms.Bandit.Prepare = function(bandit)
     local tasks = {}
-    local world = getWorld()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
 
     Bandit.ForceStationary(bandit, false)
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    -- weapons are spawn, not program decided
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local secondary
-    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
-        secondary = "Base.HandTorch"
-    end
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task)
-
-    return {status=true, next="Follow", tasks=tasks}
+  
+    return {status=true, next="Main", tasks=tasks}
 end
 
-ZombiePrograms.Bandit.Follow = function(bandit)
+ZombiePrograms.Bandit.Main = function(bandit)
     local tasks = {}
-    local weapons = Bandit.GetWeapons(bandit)
-
-    -- update walk type
     local world = getWorld()
     local cell = getCell()
     local cm = world:getClimateManager()
     local dls = cm:getDayLightStrength()
-    local weapons = Bandit.GetWeapons(bandit)
-    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
-    local hands = bandit:getVariableString("BanditPrimaryType")
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
-
+    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local walkType = "Run"
     local endurance = -0.06
-    local secondary
+    local health = bandit:getHealth()
+
     if dls < 0.3 then
         if SandboxVars.Bandits.General_SneakAtNight then
-            if Bandit.IsDNA(bandit, "sneak") then
-                walkType = "SneakWalk"
-                endurance = 0
-            end
+            walkType = "SneakWalk"
+            endurance = 0
         end
     end
 
-    if bandit:isInARoom() then
-        if outOfAmmo then
-            walkType = "Run"
-        else
-            walkType = "WalkAim"
-        end
-    end
-
-    local health = bandit:getHealth()
-    if health < 0.8 then
-        walkType = "Limp"
-        endurance = 0
-    end 
- 
-    local handweapon = bandit:getVariableString("BanditWeapon") 
-    
     local healthMin = 0.7
-    if Bandit.IsDNA(bandit, "coward") then
-        healthMin = 1.7
-    end
 
     if SandboxVars.Bandits.General_RunAway and health < healthMin then
         return {status=true, next="Escape", tasks=tasks}
@@ -100,19 +43,26 @@ ZombiePrograms.Bandit.Follow = function(bandit)
         for z=0, 1 do
             for y=-10, 10 do
                 for x=-10, 10 do
-                    local square = cell:getGridSquare(bx + x, by + y, z)
+                    local tx, ty, tz = bx + x, by + y, z
+                    local square = cell:getGridSquare(tx, ty, tz)
                     if square then
 
                         -- only if outside to prevent defenders shuting down their own genny
-                        if SandboxVars.Bandits.General_GeneratorCutoff and bandit:isOutside() then
+                        if SandboxVars.Bandits.General_GeneratorCutoff and Bandit.HasExpertise(bandit, Bandit.Expertise.Electrician) and bandit:isOutside() then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx + x, by + y, z, walkType, 12, false))
-                                return {status=true, next="TurnOffGenerator", tasks=tasks}
+                                local dist = BanditUtils.DistTo(bx, by, tx, ty)
+                                if dist < 1 then
+                                    local task = {action="GeneratorToggle", anim="LootLow", x=tx, y=ty, z=tz, status=false}
+                                    table.insert(tasks, task)
+                                else
+                                    table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, dist, false))
+                                    return {status=true, next="Main", tasks=tasks}
+                                end
                             end
                         end
 
-                        if SandboxVars.Bandits.General_SabotageVehicles then
+                        if SandboxVars.Bandits.General_SabotageVehicles and Bandit.HasExpertise(bandit, Bandit.Expertise.Mechanic) then
                             local vehicle = square:getVehicleContainer()
                             if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
                                 local vx, vy, vz = square:getX(), square:getY(), square:getZ()
@@ -123,7 +73,7 @@ ZombiePrograms.Bandit.Follow = function(bandit)
                                 -- local vpx, vpy, vpz = vehiclePartSquare:getX(), vehiclePartSquare:getY(), vehiclePartSquare:getZ()
 
                                 table.insert(tasks, BanditUtils.GetMoveTask(endurance, vx, vy, vz, walkType, 12, false))
-                                return {status=true, next="SabotageVehicle", tasks=tasks}
+                                return {status=true, next="Main", tasks=tasks}
                             end
                         end
                     end
@@ -135,120 +85,60 @@ ZombiePrograms.Bandit.Follow = function(bandit)
     local target = {}
     local enemy
 
-    local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
-    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
-    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit, false)
-
-    target = closestZombie
-    if closestBandit.dist < closestZombie.dist then
-        target = closestBandit
-        enemy = BanditZombie.Cache[target.id]
-    end
-
-    local handicap = 6
-    if Bandit.IsHostile(bandit) and closestPlayer.dist + handicap < closestBandit.dist then
-        target = closestPlayer
-        enemy = BanditPlayer.GetPlayerById(target.id)
-    end
-
-    local closeSlow = true
-    if enemy then
-        local weapon = enemy:getPrimaryHandItem()
-        if weapon and weapon:IsWeapon() then
-            local weaponType = WeaponType.getWeaponType(weapon)
-            if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                closeSlow = false
-            end
-        end
-    end
-
+    local target, enemy = BanditUtils.GetTarget(bandit, false)
+    
+    -- engage with target
     if target.x and target.y and target.z then
-
         local targetSquare = cell:getGridSquare(target.x, target.y, target.z)
-        local banditSquare = bandit:getSquare()
-        if targetSquare and banditSquare then
-            local targetBuilding = targetSquare:getBuilding()
-            local banditBuilding = banditSquare:getBuilding()
-            local x = 100
+        if targetSquare then
+            Bandit.SayLocation(bandit, targetSquare)
+        end
 
-            if targetBuilding and not banditBuilding then
-                Bandit.Say(bandit, "INSIDE")
+        if bandit:isInARoom() then
+            if outOfAmmo then
+                walkType = "Run"
+            else
+                walkType = "WalkAim"
             end
-            if not targetBuilding and banditBuilding then
-                Bandit.Say(bandit, "OUTSIDE")
-            end
-            if targetBuilding and banditBuilding then
-                if bz < target.z then
-                    Bandit.Say(bandit, "UPSTAIRS")
-                else
-                    local room = targetSquare:getRoom()
-                    if room then
-                        local roomName = room:getName()
-                        if roomName == "kitchen" then
-                            Bandit.Say(bandit, "ROOM_KITCHEN")
-                        end
-                        if roomName == "bathroom" then
-                            Bandit.Say(bandit, "ROOM_BATHROOM")
-                        end
-                    end
-                end
+        else
+            if target.dist > 50 then
+                walkType = "Run"
+            elseif target.dist > 35 then
+                walkType = "Walk"
+            else
+                walkType = "WalkAim"
             end
         end
 
-        -- out of ammo, get close
-        local minDist = 2
-        if outOfAmmo then
-            minDist = 0.5
-        end
-
-        if target.dist > minDist then
-
-            -- detect water to build a bridge
-            if SandboxVars.Bandits.General_BuildBridge then 
-                local path = BanditUtils.Bresenham(math.floor(bandit:getX() + 0.5), math.floor(bandit:getY() + 0.5), math.floor(target.x + 0.5), math.floor(target.y + 0.5))
-                local last = {}
-                for _, coords in pairs(path) do
-                    local square = cell:getGridSquare(coords.x, coords.y, 0)
-                    if square then
-                        if BanditUtils.IsWater(square) then
-                            -- local as = AdjacentFreeTileFinder.Find(square, bandit)
-                            if last.x and last.y then
-                                -- print ("go build bridge from x: " .. last.x .. " y: " .. last.y .. " to x:" .. coords.x .. " y:" .. coords.y)
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, last.x, last.y, 0, walkType, target.dist, false))
-
-                                if math.floor(bandit:getX()) == last.x and math.floor(bandit:getY()) == last.y then
-                                    -- in position
-                                    return {status=true, next="BuildBridge", tasks=tasks}
-                                else
-                                    --not there yet
-                                    return {status=true, next="Follow", tasks=tasks}
-                                end
-                            end
-                        else
-                            last = coords
-                        end
-                        
-                    end
+        local tx, ty, tz = target.x, target.y, target.z
+    
+        if enemy then
+            local weapon = enemy:getPrimaryHandItem()
+            if weapon and weapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(weapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    walkType = "Run"
                 end
             end
 
-            -- must be deterministic, not random (same for all clients)
-            local id = BanditUtils.GetCharacterID(bandit)
-
-            local dx = 0
-            local dy = 0
-            local dxf = ((math.abs(id) % 10) - 5) / 10
-            local dyf = ((math.abs(id) % 11) - 5) / 10
-
-
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, target.x+dx+dxf, target.y+dy+dyf, target.z, walkType, target.dist, closeSlow))
+            if target.fx and target.fy and (enemy:isRunning()  or enemy:isSprinting()) then
+                tx, ty = target.fx, target.fy
+            end
         end
-    else
-        local task = {action="Time", anim="Shrug", time=200}
-        table.insert(tasks, task)
+
+        if health < 0.8 then
+            walkType = "Limp"
+            endurance = 0
+        end 
+
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist))
+        return {status=true, next="Main", tasks=tasks}
     end
 
-    return {status=true, next="Follow", tasks=tasks}
+    local task = {action="Time", anim="Shrug", time=200}
+    table.insert(tasks, task)
+
+    return {status=true, next="Main", tasks=tasks}
 end
 
 ZombiePrograms.Bandit.Escape = function(bandit)
@@ -257,41 +147,12 @@ ZombiePrograms.Bandit.Escape = function(bandit)
 
     local health = bandit:getHealth()
 
-    if SandboxVars.Bandits.General_Surrender and health < 0.16 then
-        bandit:setPrimaryHandItem(nil)
-        if weapons.melee then
-            local item = BanditCompatibility.InstanceItem(weapons.melee)
-            if item then
-                bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                weapons.melee = nil
-            end
-        end
-        if weapons.primary and weapons.primary.name then
-            local item = BanditCompatibility.InstanceItem(weapons.primary.name)
-            if item then
-                bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                weapons.primary = nil
-            end
-        end
-        if weapons.secondary and weapons.secondary.name then
-            local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
-            if item then
-                bandit:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                weapons.secondary = nil
-            end
-        end
-        Bandit.SetWeapons(bandit, weapons)
-        return {status=true, next="Surrender", tasks=tasks}
-    end
-
     local endurance = -0.06
     local walkType = "Run"
     if health < 0.8 then
         walkType = "Limp"
         endurance = 0
     end
-
-    local handweapon = bandit:getVariableString("BanditWeapon")
 
     local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit)
 
@@ -323,23 +184,6 @@ ZombiePrograms.Bandit.Surrender = function(bandit)
     end
 
     return {status=true, next="Surrender", tasks=tasks}
-end
-
-ZombiePrograms.Bandit.TurnOffGenerator = function(bandit)
-    local tasks = {}
-
-    local gen = bandit:getSquare():getGenerator()
-    if gen and gen:isActivated() then
-        local task = {action="Time", anim="LootLow", time=40}
-        table.insert(tasks, task)
-        local task = {action="Time", anim="LootLow", time=40}
-        table.insert(tasks, task)
-        
-        gen:setActivated(false)
-        bandit:getSquare():playSound("WorldEventElectricityShutdown")
-    end
-
-    return {status=true, next="Follow", tasks=tasks}
 end
 
 ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
@@ -399,27 +243,7 @@ ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
     if carfound then
         return {status=true, next="SabotageVehicle", tasks=tasks}
     else
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 end
 
-ZombiePrograms.Bandit.BuildBridge = function(bandit)
-    local tasks = {}
-
-    for dx = -1, 1 do
-        for dy = -1, 1 do
-            local square = getCell():getGridSquare(bandit:getX() + dx, bandit:getY() + dy, bandit:getZ())
-            if square then
-                if BanditUtils.IsWater(square) then
-                    local task = {action="Equip", itemPrimary="Base.Hammer", itemSecondary=nil}
-                    table.insert(tasks, task)
-                
-                    local task = {action="BuildFloor", anim="HammerLow", sound="Hammering", x=square:getX(), y=square:getY(), time=500}
-                    table.insert(tasks, task)
-                    return {status=true, next="BuildBridge", tasks=tasks}
-                end
-            end
-        end
-    end
-    return {status=true, next="Follow", tasks=tasks}
-end

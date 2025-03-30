@@ -6,21 +6,6 @@ ZombiePrograms.CompanionGuard.Stages = {}
 ZombiePrograms.CompanionGuard.Init = function(bandit)
 end
 
-ZombiePrograms.CompanionGuard.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = true
-    capabilities.openDoor = true
-    capabilities.breakDoor = true
-    capabilities.breakObjects = true
-    capabilities.unbarricade = false
-    capabilities.disableGenerators = false
-    capabilities.sabotageCars = false
-    return capabilities
-end
-
 ZombiePrograms.CompanionGuard.Prepare = function(bandit)
     local tasks = {}
     local world = getWorld()

@@ -527,10 +527,11 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     -- update weapons that the bandit has
     if weapons.melee and weapons.melee ~= "Base.BareHands" then 
         local item = BanditCompatibility.InstanceItem(weapons.melee)
-        item:getModData().preserve = true
-        item = BanditCompatibility.SetRandomCondition(item, 0.8)
-
-        zombie:addItemToSpawnAtDeath(item)
+        if item then
+            item:getModData().preserve = true
+            item = BanditCompatibility.SetRandomCondition(item, 0.8)
+            zombie:addItemToSpawnAtDeath(item)
+        end
     end
 
     if weapons.primary then
@@ -645,8 +646,10 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     local bag
     if brain.bag and brain.bag.name then
         bag = BanditCompatibility.InstanceItem(brain.bag.name)
-        bag:getModData().preserve = true
-        zombie:addItemToSpawnAtDeath(bag)
+        if bag then
+            bag:getModData().preserve = true
+            zombie:addItemToSpawnAtDeath(bag)
+        end
     end
 
     local loot = {}
@@ -905,8 +908,10 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
             local r = ZombRand(100)
             if tab.chance > r then
                 local item = BanditCompatibility.InstanceItem(BanditCompatibility.GetLegacyItem(tab.itemType))
-                item:getModData().preserve = true
-                zombie:addItemToSpawnAtDeath(item)
+                if item then
+                    item:getModData().preserve = true
+                    zombie:addItemToSpawnAtDeath(item)
+                end
             end
         end
     end

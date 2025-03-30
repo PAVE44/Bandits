@@ -13,7 +13,7 @@ function ZSPosts:isValid(square)
 end
 
 function ZSPosts:render(x, y, z, square)
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
 
     if not ZSPosts.floorSprite then
         ZSPosts.floorSprite = IsoSprite.new()

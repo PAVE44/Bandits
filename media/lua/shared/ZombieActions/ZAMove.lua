@@ -16,14 +16,6 @@ ZombieActions.Move.onStart = function(zombie, task)
     local dx = math.abs(zombie:getX() - task.x)
     local dy = math.abs(zombie:getY() - task.y)
     
-    if task.closeSlow then
-        if dx <= 2 and dy <= 2 and zombie:getZ() == task.z then
-            task.walkType = "WalkAim"
-        elseif dx <= 3 and dy <= 3 and zombie:getZ() == task.z then
-            task.walkType = "Walk"
-        end
-    end
-
     zombie:setVariable("BanditWalkType", task.walkType)
 
     if not Bandit.IsMoving(zombie) then
@@ -83,6 +75,14 @@ end
 ZombieActions.Move.onWorking = function(zombie, task)
 
     zombie:setVariable("BanditWalkType", task.walkType)
+
+    if BanditCompatibility.GetGameVersion() >= 42 then
+        if task.backwards then
+            zombie:setAnimatingBackwards(true)
+        else
+            zombie:setAnimatingBackwards(false)
+        end
+    end
 
     --[[
     if zombie:getSquare():isFree(false) then

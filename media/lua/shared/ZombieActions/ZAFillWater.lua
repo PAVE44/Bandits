@@ -53,7 +53,7 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         local idx = source:getObjectIndex()
         local args = {x=task.x, y=task.y, z=task.z, index=idx, amount=waterLeft}
-        sendClientCommand(getPlayer(), 'object', 'setWaterAmount', args)
+        sendClientCommand(getSpecificPlayer(0), 'object', 'setWaterAmount', args)
     end
 
     local newWater = (item:getUsedDelta() + waterToTake * item:getUseDelta())

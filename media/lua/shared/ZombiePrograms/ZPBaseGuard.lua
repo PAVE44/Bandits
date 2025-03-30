@@ -6,37 +6,15 @@ ZombiePrograms.BaseGuard.Stages = {}
 ZombiePrograms.BaseGuard.Init = function(bandit)
 end
 
-ZombiePrograms.BaseGuard.GetCapabilities = function()
-    -- capabilities are program decided
-    local capabilities = {}
-    capabilities.melee = true
-    capabilities.shoot = true
-    capabilities.smashWindow = true
-    capabilities.openDoor = true
-    capabilities.breakDoor = true
-    capabilities.breakObjects = true
-    capabilities.unbarricade = true
-    capabilities.disableGenerators = false
-    capabilities.sabotageCars = false
-    return capabilities
-end
-
 ZombiePrograms.BaseGuard.Prepare = function(bandit)
     local tasks = {}
 
     Bandit.ForceStationary(bandit, true)
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    -- weapons are spawn, not program decided
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=nil}
-    table.insert(tasks, task)
-
-    return {status=true, next="Wait", tasks={}}
+  
+    return {status=true, next="Main", tasks=tasks}
 end
 
-ZombiePrograms.BaseGuard.Wait = function(bandit)
+ZombiePrograms.BaseGuard.Main = function(bandit)
     local tasks = {}
 
     -- manage sleep
@@ -111,6 +89,6 @@ ZombiePrograms.BaseGuard.Wait = function(bandit)
         end
     end
 
-    return {status=true, next="Wait", tasks=tasks}
+    return {status=true, next="Main", tasks=tasks}
 end
 

@@ -294,8 +294,18 @@ local function ApplyVisuals(bandit, brain)
 
         for bodyLocation, itemType in pairs(brain.clothing) do
             local item = BanditCompatibility.InstanceItem(itemType)
-            local clothingItem = item:getClothingItem()
-            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+            if item then
+                --[[
+                local clothingItem = item:getClothingItem()
+                if clothingItem then
+                    local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+                end]]
+
+                local itemVisual = ItemVisual.new()
+                itemVisual:setItemType(itemType)
+                itemVisual:setClothingItemName(itemType)
+                itemVisuals:add(itemVisual)
+            end
         end
 
         for _, slot in pairs({"primary", "secondary", "melee"}) do
@@ -1217,6 +1227,15 @@ local function ManageCombat(bandit)
                                 --reset action flags, only one can be true
                                 combat, switch, firing, shove, escape = false, false, false, false, false
                                 
+                                local asn = enemyCharacter:getActionStateName()
+                                if asn == "onground" then
+                                    local h = enemyCharacter:getHealth()
+                                    if h <=0 then
+                                        enemyCharacter:setAttackedBy(getCell():getFakeZombieForHit())
+                                        enemyCharacter:becomeCorpse()
+                                    end
+                                end
+
                                 --determine if bandit will be in combat mode
                                 if weapons.melee and zz == pz then
                                     if dist <= meleeDist then
@@ -1230,7 +1249,6 @@ local function ManageCombat(bandit)
                                             if prone then fix = -0.2 end
 
                                             if dist <= maxRangeMelee + fix then
-                                                local asn = enemyCharacter:getActionStateName()
                                                 shove = dist < 0.5 and not enemyCharacter:isProne() and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
                                                 combat = not shove
                                             end
@@ -1529,11 +1547,12 @@ local function UpdateZombies(zombie)
                     bandit:setBumpDone(true)
                     bandit:Hit(teeth, zombie, 1.01, false, 1, false)
                     Bandit.UpdateInfection(bandit, 0.001)
-                    if bandit:getHealth() <= 0 then
-                        -- bandit:setHealth(0)
-                        -- bandit:clearAttachedItems()
-                        bandit:setAttackedBy(zombie)
-                    end
+
+                    local h = bandit:getHealth()
+                    local id = BanditUtils.GetCharacterID(bandit)
+                    local args = {id=id, h=h}
+                    sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+
                     biteTab[v] = nil
                     zombie:getModData().zid = nil
                 else
@@ -1889,7 +1908,10 @@ local function OnBanditUpdate(zombie)
     
     local bandit = zombie
 
-    bandit:setAnimatingBackwards(false)
+    if BanditCompatibility.GetGameVersion() >= 42 then
+        bandit:setAnimatingBackwards(false)
+    end
+
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     if bandit:isTeleporting() then
         return

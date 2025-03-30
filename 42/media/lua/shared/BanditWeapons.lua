@@ -43,7 +43,7 @@ BanditWeapons.Make = function(itemType, boxCount)
     if not ammoBoxType then return end
 
     local ret = {}
-    ret.name = itemType
+    ret.name = BanditCompatibility.GetLegacyItem(itemType)
     ret.racked = false
 
     -- getAmmoBox returns type, not fullType
@@ -52,7 +52,7 @@ BanditWeapons.Make = function(itemType, boxCount)
     local mod = ammoType:match("([^%.]+)")
     ammoBoxType = mod .. "." .. ammoBoxType
 
-    if weapon:usesExternalMagazine() then
+    if BanditCompatibility.UsesExternalMagazine(weapon) then
         local magazineType = weapon:getMagazineType()
         if magazineType then
             local magazine = BanditCompatibility.InstanceItem(magazineType)

@@ -5,7 +5,6 @@
 	<m_SpeedScale>0.85</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-	<m_BlendOutTime>0.45</m_BlendOutTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>

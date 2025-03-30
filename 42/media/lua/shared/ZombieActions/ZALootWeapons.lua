@@ -36,7 +36,7 @@ local function lootContainer(zombie, container, task)
                 newWeapon.name = weaponItem:getFullType()
                 newWeapon.racked = false
 
-                if weaponItem:usesExternalMagazine() then
+                if BanditCompatibility.UsesExternalMagazine(weaponItem) then
                     local magazineType = weaponItem:getMagazineType()
                     local magSize = 30
 

@@ -1,88 +1,5 @@
 ZombieActions = ZombieActions or {}
 
-local function Hit(shooter, item, victim)
-
-    -- Clone the shooter to create a temporary IsoPlayer
-    local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
-
-    -- Calculate the distance between the shooter and the victim
-    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempShooter:getX(), tempShooter:getY())
-
-    -- Determine accuracy based on SandboxVars and shooter clan
-    local brainShooter = BanditBrain.Get(shooter)
-    local accuracyBoost = brainShooter.accuracyBoost or 1
-    local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
-    local accuracyCoeff = 0.11
-    if accuracyLevel == 1 then
-        accuracyCoeff = 0.5
-    elseif accuracyLevel == 2 then
-        accuracyCoeff = 0.22
-    elseif accuracyLevel == 3 then
-        accuracyCoeff = 0.11
-    elseif accuracyLevel == 4 then
-        accuracyCoeff = 0.06
-    elseif accuracyLevel == 5 then
-        accuracyCoeff = 0.028
-    end
-
-    local accuracyThreshold = 100 / (1 + accuracyCoeff * (dist - 1) / accuracyBoost)
-
-    -- Warning, this is not perfect, local player mand remote players will not generate the same 
-    -- random number.
-    if ZombRand(100) < accuracyThreshold then
-        local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
-        victim:playSound(hitSound)
-        BanditPlayer.WakeEveryone()
-        
-        if instanceof(victim, 'IsoPlayer') and SandboxVars.Bandits.General_HitModel == 2 then
-            PlayerDamageModel.BulletHit(tempShooter, victim)
-        else
-            if instanceof(victim, "IsoPlayer") and victim:isSprinting() or (victim:isRunning() and ZombRand(12) == 1) then
-                victim:clearVariable("BumpFallType")
-                victim:setBumpType("stagger")
-                victim:setBumpFall(true)
-                victim:setBumpFallType("pushedBehind")
-            else
-                victim:setHitFromBehind(shooter:isBehind(victim))
-
-                if instanceof(victim, "IsoZombie") then
-                    victim:setHitAngle(shooter:getForwardDirection())
-                    victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-                end
-
-                victim:Hit(item, tempShooter, 6, false, 1, false)
-                victim:setAttackedBy(shooter)
-                local bodyDamage = victim:getBodyDamage()
-                if bodyDamage then
-                    local health = bodyDamage:getOverallBodyHealth()
-                    health = health + 8
-                    if health > 100 then health = 100 end
-                    bodyDamage:setOverallBodyHealth(health)
-                end
-            end
-
-            victim:addBlood(0.6)
-
-            BanditCompatibility.Splash(victim, item, tempShooter)
-            
-            if instanceof(victim, "IsoPlayer") then
-                BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
-            end
-
-            if victim:getHealth() <= 0 then victim:Kill(getCell():getFakeZombieForHit(), true) end
-        end
-    else
-        local missSound = "ZSMiss".. tostring(1 + ZombRand(8))
-        victim:getSquare():playSound(missSound)
-    end
-
-    -- Clean up the temporary player after use
-    tempShooter:removeFromWorld()
-    tempShooter = nil
-
-    return true
-end
-
 local vehicleParts = {
     [1] = {name="HeadlightLeft", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
     [2] = {name="HeadlightRight", dmg=18, sndHit="BreakGlassItem", sndDest="SmashWindow"},
@@ -111,11 +28,196 @@ local sounds = {
     ["WoodDoor"] = "HitBarricadePlank",
     ["MetalDoor"] = "HitBarricadeMetal",
 }
--- Bresenham's line of fire to detect what needs to destroyed between shooter and target
+
+local function getProjectileCount(reloadType)
+    local projectiles = 1
+    if reloadType == "shotgun" or reloadType == "doublebarrelshotgun" or reloadType == "doublebarrelshotgunsawn" then
+        projectiles = 5
+    end
+    return projectiles
+end
+
+local function getBloodBodyParts()
+    local bodyParts = {}
+    table.insert(bodyParts, {name=BloodBodyPartType.Foot_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.Foot_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.LowerLeg_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.LowerLeg_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperLeg_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperLeg_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.Groin})
+    table.insert(bodyParts, {name=BloodBodyPartType.Neck})
+    table.insert(bodyParts, {name=BloodBodyPartType.Head})
+    table.insert(bodyParts, {name=BloodBodyPartType.Torso_Lower})
+    table.insert(bodyParts, {name=BloodBodyPartType.Torso_Upper})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperArm_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.UpperArm_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.ForeArm_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.ForeArm_L})
+    table.insert(bodyParts, {name=BloodBodyPartType.Hand_R})
+    table.insert(bodyParts, {name=BloodBodyPartType.Hand_L})
+    return bodyParts
+end
+
+local function addHole (character)
+    local bpi = 1 + BanditRandom.Get() % 17
+    local bodyParts = getBloodBodyParts()
+    local bodyPart = bodyParts[bpi]
+
+    local visuals = character:getHumanVisual()
+    visuals:setBlood(bodyPart.name, 1)
+
+    local itemVisuals = character:getItemVisuals()
+    for i = 0, itemVisuals:size() - 1 do
+        local item = itemVisuals:get(i)
+        if item then
+            item:setBlood(bodyPart.name, 1)
+            local clothing = item:getInventoryItem()
+            if instanceof(clothing, "Clothing") then
+                local coveredPartList = clothing:getCoveredParts()
+                for i=0, coveredPartList:size()-1 do
+                    local coveredPart = coveredPartList:get(i)
+                    if coveredPart == bodyPart.name then
+                        item:setHole(bodyPart.name)
+                    end
+                end
+            end
+        end
+    end
+    character:resetModelNextFrame()
+    character:resetModel()
+end
+
+local function addHolePlayer (player)
+    local bpi = 1 + BanditRandom.Get() % 17
+    local bodyParts = getBloodBodyParts()
+    local bodyPart = bodyParts[bpi]
+
+    local visuals = player:getHumanVisual()
+    visuals:setBlood(bodyPart.name, 1)
+
+    local wornItems = player:getWornItems()
+    for i = 0, wornItems:size() - 1 do
+        local wornItem = wornItems:get(i)
+        local item = wornItem:getItem()
+        if item then
+            item:setBlood(bodyPart.name, 1)
+            if instanceof(item, "Clothing") then
+                local coveredPartList = item:getCoveredParts()
+                for i=0, coveredPartList:size()-1 do
+                    local coveredPart = coveredPartList:get(i)
+                    if coveredPart == bodyPart.name then
+                        -- item:getVisual():setHole(bodyPart.name)
+                    end
+                end
+            end
+        end
+    end
+    player:resetModelNextFrame()
+    player:resetModel()
+end
+
+local function hit(shooter, item, victim)
+
+    -- Clone the shooter to create a temporary IsoPlayer
+    local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
+
+    -- Calculate the distance between the shooter and the victim
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempShooter:getX(), tempShooter:getY())
+
+    -- Determine accuracy based on SandboxVars and shooter clan
+    local brainShooter = BanditBrain.Get(shooter)
+    local accuracyBoost = brainShooter.accuracyBoost or 1
+
+    -- Logistic curve
+    local function calculateHitChance(distance, accuracy)
+        local baseChance = 9000  -- 90% hit chance at point blank
+        local d50 = 16 + accuracy -- Distance where hit chance is 50%
+        local k = 0.2   -- Steepness of falloff
+        return baseChance / (1 + math.exp(k * (distance - d50)))
+    end
+
+    local accuracyLevelMap = {-5, -2, 0, 2, 5}
+    local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
+
+    -- general sandbox setting for accuracy 
+    local sightGeneral = accuracyLevelMap[accuracyLevel] or 0
+
+    -- accuracy set in bandit creator
+    local sightCharacter = brainShooter.accuracyBoost or 0
+
+    -- individual accuracy set after spawn
+    local sightIndividual = 0
+
+    local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightIndividual)
+
+    -- Warning, this is not perfect, local player mand remote players will not generate the same 
+    -- random number.
+    -- if ZombRand(10000) < accuracyThreshold then
+    local n = BanditRandom.Get()
+    if n < accuracyThreshold then
+        print ("HIT N: " .. n)
+        if instanceof(victim, "IsoPlayer") then
+            BanditPlayer.WakeEveryone()
+
+            local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
+            victim:playSound(hitSound)
+
+            BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
+            victim:setHitFromBehind(shooter:isBehind(victim))
+            victim:Hit(item, tempShooter, 1, false, 1, false)
+
+            -- addHolePlayer(victim)
+            BanditCompatibility.Splash(victim, item, tempShooter)
+            
+            local bodyDamage = victim:getBodyDamage()
+            if bodyDamage then
+                local health = bodyDamage:getOverallBodyHealth()
+                health = health + 8
+                if health > 100 then health = 100 end
+                bodyDamage:setOverallBodyHealth(health)
+            end
+            
+            if (victim:isSprinting() or victim:isRunning()) and ZombRand(12) == 1 then
+                victim:clearVariable("BumpFallType")
+                victim:setBumpType("stagger")
+                victim:setBumpFall(true)
+                victim:setBumpFallType("pushedBehind")
+            end
+            
+        elseif instanceof(victim, "IsoZombie") then
+            victim:setBumpDone(true)
+            victim:setHitFromBehind(shooter:isBehind(victim))
+            victim:setHitAngle(shooter:getForwardDirection())
+            victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+            victim:setHitReaction("ShotBelly")
+            victim:Hit(item, tempShooter, 1, false, 1, false)
+            victim:setAttackedBy(shooter)
+            addHole(victim)
+            BanditCompatibility.Splash(victim, item, tempShooter)
+
+            local h = victim:getHealth()
+            local id = BanditUtils.GetCharacterID(bandit)
+            local args = {id=id, h=h}
+            sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+        end
+       
+
+    else
+        local missSound = "ZSMiss".. tostring(1 + ZombRand(8))
+        victim:getSquare():playSound(missSound)
+    end
+
+    -- Clean up the temporary player after use
+    tempShooter:removeFromWorld()
+    tempShooter = nil
+
+    return true
+end
 
 local function thump (object, thumper)
     local health = object:getHealth()
-    print ("thumpable health: " .. object:getHealth())
+    -- print ("thumpable health: " .. object:getHealth())
     health = health - 20
     if health < 0 then health = 0 end
     if health == 0 then
@@ -126,14 +228,16 @@ local function thump (object, thumper)
     end
 end
 
-local function ManageLineOfFire (shooter, victim)
+
+local function manageLineOfFire (shooter, enemy, weaponItem)
+
     local cell = getCell()
 
     local x0 = math.floor(shooter:getX())
     local y0 = math.floor(shooter:getY())
-    local x1 = math.floor(victim:getX())
-    local y1 = math.floor(victim:getY())
-    local z = victim:getZ()
+    local x1 = math.floor(enemy:getX())
+    local y1 = math.floor(enemy:getY())
+    local z = enemy:getZ()
 
     local dx = math.abs(x1 - x0)
     local dy = math.abs(y1 - y0)
@@ -143,119 +247,142 @@ local function ManageLineOfFire (shooter, victim)
 
     local cx, cy, cz = x0, y0, z
 
-    local function checkWindow(square, shooter)
-        local window = square:getWindow()
-        if window then
-            if (window:getNorth() and (y0 < cy or y1 < cy)) or 
-               (not window:getNorth() and (x0 < cx or x1 < cx)) then
-                local barricade = window:getBarricadeOnSameSquare()
-                if not barricade then
-                    barricade = window:getBarricadeOnOppositeSquare()
-                end
-                local smash = false
-                if barricade then
-                    if barricade:isMetal() then
-                        barricade:Thump(shooter)
-                        square:playSound("HitBarricadeMetal")
-                        return true
-                    else -- wood
-                        barricade:Thump(shooter)
-                        local p = barricade:getNumPlanks()
-                        if p >= 2 then
-                            square:playSound("HitBarricadePlank")
-                            return true
-                        end
-                    end
-                end
-                if not window:isSmashed() then
-                    square:playSound("SmashWindow")
-                    window:smashWindow()
-                end
-            end
-        end
-        return false
-    end
+    local vp = vehicleParts
+    local snds = sounds
+    local player = getSpecificPlayer(0)
+    local piercing = weaponItem:isPiercingBullets()
+    local projectiles = getProjectileCount(weaponItem:getWeaponReloadType())
 
-    local function checkDoor(square, shooter)
-        local snds = sounds
-        local door = square:getIsoDoor()
-        if door and not door:IsOpen() then
-            if (door:getNorth() and (y0 < cy or y1 < cy)) or 
-               (not door:getNorth() and (x0 < cx or x1 < cx)) then
-                -- small chance to shoot through a small window in door
-                if ZombRand(10) > 1 then 
-                    local sprite = door:getSprite()
-                    local props = sprite:getProperties()
-                    if props:Is("DoorSound") then
-                        doorSound = props:Val("DoorSound")
-                        if snds[doorSound] then
-                            square:playSound(snds[doorSound])
-                        end
-                    end
-
-                    thump(door, shooter)
-                    
-                    return true
-                end
-            end
-        end
-        return false
-    end
-
-    local function checkVehicle(square, shooter)
-        local player = getPlayer()
-        local vp = vehicleParts
-        local vehicle = square:getVehicleContainer()
-        if vehicle then
-            local partRandom = ZombRand(30)
-            local vehiclePart
-            local dmg
-            if vp[partRandom] then
-                vehiclePart = vehicle:getPartById(vp[partRandom].name)
-                if vehiclePart and vehiclePart:getInventoryItem() then
-                    
-                    local vehiclePartId = vehiclePart:getId()
-
-                    local dmg = vp[partRandom].dmg
-                    vehiclePart:damage(dmg)
-
-                    if vehiclePart:getCondition() <= 0 then
-                        vehiclePart:setInventoryItem(nil)
-                        square:playSound(vp[partRandom].sndDest)
-                    else
-                        square:playSound(vp[partRandom].sndHit)
-                        return true
-                    end
-
-                    vehicle:updatePartStats()
-                    
-                    local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                    sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-                    
-                end
-            end
-        end
-        return false
-    end
-
+    -- Bresenham's line of fire to detect what needs to destroyed between shooter and target
+    local i = 0
     while true do
+
+        -- last iterations
+        local list = {}
+        if cx == x1 and cy == y1 then
+            for x = -2, 2 do
+                for y = -2, 2 do
+                    table.insert(list, {x = cx + x, y = cy + y, z=cz})
+                end
+            end
+        else
+            table.insert(list, {x=cx, y=cy, z=cz})
+        end
+
+        for _, c in pairs(list) do
+            local square = cell:getGridSquare(c.x, c.y, c.z)
+            if i > 1 and square then
+
+                local obstacle
+
+                -- manage wall obstacle
+                local isWall = square:getWallFull()
+                if isWall then
+                    square:playSound("BulletImpact")
+                    -- return false
+                end
+
+                -- manage window obstacle
+                local window = square:getWindow()
+                if window then
+                    if (window:getNorth() and (y0 < cy or y1 < cy)) or 
+                    (not window:getNorth() and (x0 < cx or x1 < cx)) then
+                        local barricade = window:getBarricadeOnSameSquare()
+                        if not barricade then
+                            barricade = window:getBarricadeOnOppositeSquare()
+                        end
+                        local smash = false
+                        if barricade then
+                            if barricade:isMetal() then
+                                barricade:Thump(shooter)
+                                square:playSound("HitBarricadeMetal")
+                                return false
+                            else -- wood
+                                barricade:Thump(shooter)
+                                local p = barricade:getNumPlanks()
+                                if p >= 2 then
+                                    square:playSound("HitBarricadePlank")
+                                    return false
+                                end
+                            end
+                        end
+                        if not window:isSmashed() then
+                            square:playSound("SmashWindow")
+                            window:smashWindow()
+                        end
+                    end
+                end
+
+                -- manage for door obstacle
+                local door = square:getIsoDoor()
+                if door and not door:IsOpen() then
+                    if (door:getNorth() and (y0 < cy or y1 < cy)) or 
+                       (not door:getNorth() and (x0 < cx or x1 < cx)) then
+                        -- small chance to shoot through a small window in door
+                        if ZombRand(10) > 1 then 
+                            local sprite = door:getSprite()
+                            local props = sprite:getProperties()
+                            if props:Is("DoorSound") then
+                                doorSound = props:Val("DoorSound")
+                                if snds[doorSound] then
+                                    square:playSound(snds[doorSound])
+                                end
+                            end
         
-        local square = cell:getGridSquare(cx, cy, cz)
-        if square then
+                            thump(door, shooter)
+        
+                            return false
+                        end
+                    end
+                end
 
-            local obstacle
-            -- manage window obstacle
-            obstacle = checkWindow(square, shooter)
-            if obstacle then return false end
+                -- manage vehicle obstacle
+                local vehicle = square:getVehicleContainer()
+                if vehicle then
+                    local partRandom = ZombRand(30)
+                    local vehiclePart
+                    local dmg
+                    if vp[partRandom] then
+                        vehiclePart = vehicle:getPartById(vp[partRandom].name)
+                        if vehiclePart and vehiclePart:getInventoryItem() then
+        
+                            local vehiclePartId = vehiclePart:getId()
+        
+                            local dmg = vp[partRandom].dmg
+                            vehiclePart:damage(dmg)
+        
+                            if vehiclePart:getCondition() <= 0 then
+                                vehiclePart:setInventoryItem(nil)
+                                square:playSound(vp[partRandom].sndDest)
+                            else
+                                square:playSound(vp[partRandom].sndHit)
+                                return false
+                            end
+        
+                            vehicle:updatePartStats()
+        
+                            local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                            sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+        
+                        end
+                    end
+                end
 
-            -- manage for door obstacle
-            obstacle = checkDoor(square, shooter)
-            if obstacle then return false end
+                -- manage character "obstacles"
+                local chrs = square:getMovingObjects()
+                local wasHit = false
+                for i=0, math.min(chrs:size()-1, projectiles) do
+                    local chr = chrs:get(i)
+                    if instanceof(chr, "IsoZombie") or instanceof(chr, "IsoPlayer") then
+                        if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(chr) then 
+                            hit(shooter, weaponItem, chr)
+                            wasHit = true
+                        end
+                    end
+                end
+                if not piercing and wasHit then return false end
 
-            -- manage vehicle obstacle
-            obstacle = checkVehicle(square, shooter)
-            if obstacle then return false end
-            
+            end
         end
 
         if cx == x1 and cy == y1 then break end
@@ -268,104 +395,13 @@ local function ManageLineOfFire (shooter, victim)
             err = err + dx
             cy = cy + sy
         end
+        i = i + 1
     end
-    
+
     -- no bullet stop
     return true
 end
 
-
-local function ManageLineOfFire2 (shooter, victim)
-    local cell = getCell()
-    local player = getPlayer()
-    local vp = vehicleParts
-    local x0 = math.floor(shooter:getX())
-    local y0 = math.floor(shooter:getY())
-    local x1 = math.floor(victim:getX())
-    local y1 = math.floor(victim:getY())
-
-    if x0 > x1 then x0, x1 = x1, x0 end
-    if y0 > y1 then y0, y1 = y1, y0 end
-
-    local dx = x1 - x0
-    local dy = y1 - y0
-    local D = 2 * dy - dx
-    local y = y0
-    
-    for x = x0, x1 do
-        -- for sx = -1, 1 do
-            -- for sy = -1, 1 do
-
-                local square = cell:getGridSquare(x, y, 0)
-
-                if square then
-
-                    local sx = square:getX()
-                    local sy = square:getY()
-                    -- smash windows
-                    local window = square:getWindow()
-                    if window and not window:isSmashed() then
-                        square:playSound("SmashWindow")
-                        window:smashWindow()
-                    end
-
-                    local vehicle = square:getVehicleContainer()
-                    if vehicle then
-                        local partRandom = ZombRand(30)
-                        local vehiclePart
-                        local dmg
-                        if vp[partRandom] then
-                            vehiclePart = vehicle:getPartById(vp[partRandom].name)
-                            if vehiclePart and vehiclePart:getInventoryItem() then
-                                
-                                local vehiclePartId = vehiclePart:getId()
-
-                                local dmg = vp[partRandom].dmg
-                                vehiclePart:damage(dmg)
-
-                                local gothrough = true
-                                if vehiclePart:getCondition() <= 0 then
-                                    vehiclePart:setInventoryItem(nil)
-                                    square:playSound(vp[partRandom].sndDest)
-                                else
-                                    square:playSound(vp[partRandom].sndHit)
-                                    gothrough = false
-                                end
-
-                                vehicle:updatePartStats()
-                                
-                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-                                
-                                if not gothrough then return end
-                            end
-                        end
-                    end
-
-                    -- cant shoot through the closed door (although bandits can see through them)
-                    local door = square:getIsoDoor()
-                    if door and not door:IsOpen() then
-                        if door:getNorth() then
-                            if y0 < sy or y1 < sy then
-                                return false
-                            end
-                        end
-                    end
-                end
-            -- end
-        -- end
-
-        if D > 0 then
-            y = y + 1
-            D = D - 2 * dx
-        end
-        D = D + 2 * dy
-    end
-
-
-
-    return true
-end
 
 ZombieActions.Shoot = {}
 ZombieActions.Shoot.onStart = function(zombie, task)
@@ -374,9 +410,13 @@ ZombieActions.Shoot.onStart = function(zombie, task)
 end
 
 ZombieActions.Shoot.onWorking = function(zombie, task)
-    zombie:faceLocationF(task.x, task.y)
+    local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
+    if not enemy then return true end
+    zombie:faceLocationF(enemy:getX(), enemy:getY())
 
-    if task.time <= 0 then return true end
+    if task.time <= 0 then
+        return true
+    end
 
     if zombie:getBumpType() ~= task.anim then 
         zombie:setBumpType(task.anim)
@@ -391,73 +431,50 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     if bumpType ~= task.anim then return true end
 
     local shooter = zombie
-    local cell = shooter:getSquare():getCell()
-
-    -- local item = InventoryItemFactory.CreateItem("Base.AssaultRifle2")
-    -- ATROShoot(shooter, item)
-
+    local sx, sy, sz, sd = shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle()
     local brainShooter = BanditBrain.Get(shooter)
     local weapon = brainShooter.weapons[task.slot]
+    local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+
+    local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
+    if not enemy then return true end
+
+    if not BanditUtils.IsFacing(sx, sy, sd, enemy:getX(), enemy:getY(), 5) then 
+        return true
+    end
+
+    -- deplete round
     weapon.bulletsLeft = weapon.bulletsLeft - 1
     Bandit.UpdateItemsToSpawnAtDeath(shooter)
-    
+
+    -- handle flash and projectile
     BanditCompatibility.StartMuzzleFlash(shooter)
-    
-    shooter:playSound(weapon.shotSound)
+    local reloadType = weaponItem:getWeaponReloadType()
+    local projectiles = getProjectileCount(reloadType)
+    BanditProjectile.Add(sx, sy, sz, sd, projectiles)
 
-    --[[local te = FBORenderTracerEffects.getInstance()
-    te:addEffect(shooter, 24)
+    -- handle real and "world" sound 
+    local emitter = getWorld():getFreeEmitter(sx, sy, sz)
+    emitter:playSound(weaponItem:getSwingSound())
 
-    local test = shooter:getAnimationPlayer()
-    local test2 = test:isReady()]]
-    
-    -- this adds world sound that attract zombies, it must be on cooldown
-    -- otherwise too many sounds disorient zombies. 
     if not brainShooter.sound or brainShooter.sound == 0 then
-        addSound(getPlayer(), shooter:getX(), shooter:getY(), shooter:getZ(), 40, 100)
+        addSound(getSpecificPlayer(0), sx, sy, sz, 40, 100)
         brainShooter.sound = 1
-        -- BanditBrain.Update(shooter, brainShooter)
     end
 
-    for dx=-2, 2 do
-        for dy=-2, 2 do
-            local square = cell:getGridSquare(task.x + dx, task.y + dy, task.z)
-
-            if square then
-                local victim
-
-                if brainShooter.hostile then
-                    victim = square:getPlayer()
-                end
-
-                if not victim and math.abs(dx) <= 1 and math.abs(dy) <= 1 then
-                    local testVictim = square:getZombie()
-
-                    if testVictim then
-                        local brainVictim = BanditBrain.Get(testVictim)
-                        if not brainVictim or not brainVictim.clan or brainShooter.clan ~= brainVictim.clan or (brainShooter.hostile and not brainVictim.hostile) then 
-                            victim = testVictim
-                        end
-                    end
-                end
-                
-                if victim then
-                    if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(victim) then 
-                        local res = ManageLineOfFire(shooter, victim)
-                        local finalCheck = BanditUtils.LineClear(shooter, victim)
-                        if res and finalCheck then
-                            local item = BanditCompatibility.InstanceItem(weapon.name)
-                            Hit(shooter, item, victim)
-                        end
-                        zombie:setBumpDone(true)
-                        return true
-                        
-                    end
-                end
-            end
-        end
+    -- manage line of fire damage to characters and objects
+    if BanditUtils.LineClear(shooter, enemy) then
+        manageLineOfFire(shooter, enemy, weaponItem)
     end
 
+    -- handle post-shot things
+    if not weaponItem:isManuallyRemoveSpentRounds() then
+        shooter:playSound(weaponItem:getShellFallSound())
+    end
+
+    if weaponItem:isRackAfterShoot() then
+        weapon.racked = false
+    end
 
     return true
 end

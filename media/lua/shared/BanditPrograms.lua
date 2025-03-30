@@ -17,6 +17,16 @@ local function predicateSpoilableFood(item)
     return false
 end
 
+local function predicateMelee(item)
+    if item:IsWeapon() then
+        local weaponType = WeaponType.getWeaponType(item)
+        if weaponType ~= WeaponType.firearm and weaponType ~= WeaponType.handgun then
+            return true
+        end
+    end
+    return false
+end
+
 local function getItem(bandit, itemTypeTab, cnt)
     local task
     local obj
@@ -61,19 +71,20 @@ BanditPrograms.Weapon = BanditPrograms.Weapon or {}
 BanditPrograms.Weapon.Switch = function(bandit, itemName)
 
     local tasks = {}
-    bandit:clearAttachedItems()
 
-    -- check what is equippped that needs to be deattached
+    -- check what is equipped that needs to be deattached
     local old = bandit:getPrimaryHandItem()
     if old then
-        local task = {action="Unequip", time=100, itemPrimary=old:getFullType()}
+        local sound = old:getUnequipSound()
+        local task = {action="Unequip", sound=sound, time=100, itemPrimary=old:getFullType()}
         table.insert(tasks, task)
     end
 
     -- grab new weapon
     local new = BanditCompatibility.InstanceItem(itemName)
     if new then
-        local task = {action="Equip", itemPrimary=itemName}
+        local sound = new:getEquipSound()
+        local task = {action="Equip", sound=sound, itemPrimary=itemName}
         table.insert(tasks, task)
     end
     return tasks
@@ -82,9 +93,20 @@ end
 BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     local tasks = {}
 
+    local walkType = bandit:getVariableString("BanditWalkType")
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+    local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+    local sound = weaponItem:getBringToBearSound()
+
+    -- aim time calc
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
     local aimTimeMin = SandboxVars.Bandits.General_GunReflexMin or 18
     local aimTimeSurp = math.floor(dist * 5)
+    if walkType == "WalkAim" then
+        aimTimeMin = 1
+        -- aimTimeSurp = aimTimeSurp
+    end
 
     if instanceof(enemyCharacter, "IsoZombie") then
         aimTimeSurp = math.floor(aimTimeSurp / 2)
@@ -92,33 +114,39 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
         -- player handicap
         aimTimeSurp = aimTimeSurp + 10
     end
-    if Bandit.IsDNA(bandit, "slow") then
-        aimTimeSurp = aimTimeSurp + 11
-    end
 
+    -- choose anim
     if aimTimeMin + aimTimeSurp > 0 then
 
         local anim
-        local sound
         local asn = enemyCharacter:getActionStateName()
         local down = enemyCharacter:isProne() or enemyCharacter:isBumpFall() or asn == "onground" or asn == "getup"
         if slot == "primary" then
-            sound = "M14BringToBear"
             if dist < 2.5 and down then
                 anim = "AimRifleLow"
             else
-                anim = "IdleToAimRifle"
+                if walkType == "WalkAim" then
+                    anim = "AimRifle"
+                else
+                    anim = "IdleToAimRifle"
+                end
             end
         else
-            sound = "M9BringToBear"
             if dist < 2.5 and down then
                 anim = "AimPistolLow"
             else
-                anim = "IdleToAimPistol"
+                if walkType == "WalkAim" then
+                    anim = "AimPistol"
+                else
+                    anim = "IdleToAimPistol"
+                end
             end
         end
 
-        local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=aimTimeMin + aimTimeSurp}
+        local time = aimTimeMin + aimTimeSurp
+        if time > 60 then time = 60 end
+
+        local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=time}
         table.insert(tasks, task)
     end
     return tasks
@@ -132,15 +160,18 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
-    local firingtime = weapon.shotDelay + math.floor(dist ^ 1.1)
-    if Bandit.IsDNA(bandit, "slow") then
-        firingtime = firingtime + 3
-    end
+    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1)
 
     local bullets = 1
-    local mode = weaponItem:getFireMode()
-    if dist < 6 and mode == "Auto" then
-        bullets = 2 + ZombRand(4)
+    local modes = weaponItem:getFireModePossibilities()
+    if modes then
+        for i=0, modes:size()-1 do
+            local mode = modes:get(i)
+            if dist < 12 and mode == "Auto" then
+                bullets = 2 + ZombRand(6)
+                break
+            end
+        end
     end
 
     local anim
@@ -160,14 +191,53 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
         end
     end
 
-    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+    local fd = enemyCharacter:getForwardDirection()
+    fd:setLength(2)
+
+    local x, y, z = enemyCharacter:getX() + fd:getX(), enemyCharacter:getY() + fd:getY(), enemyCharacter:getZ()
+    local eid = BanditUtils.GetCharacterID(enemyCharacter)
+    local task = {action="Shoot", anim=anim, time=firingtime, slot=slot, x=x, y=y, z=z, eid=eid}
     table.insert(tasks, task)
     for i=2, bullets do
-        local task = {action="Shoot", anim=anim, time=4, slot=slot, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+        local task = {action="Shoot", anim=anim, time=6, slot=slot, x=x, y=y, z=z, eid=eid}
         table.insert(tasks, task)
     end
 
     return tasks
+end
+BanditPrograms.Weapon.Rack = function(bandit, slot)
+    local tasks = {}
+
+    local brain = BanditBrain.Get(bandit)
+    local weapon = brain.weapons[slot]
+
+    local primaryItem = BanditCompatibility.InstanceItem(weapon.name)
+    local reloadType = primaryItem:getWeaponReloadType()
+    local magazineType = primaryItem:getMagazineType()
+
+    local rackSound = primaryItem:getRackSound()
+    local rackAnim
+    if reloadType == "boltaction" then
+        rackAnim = "RackRifle"
+    elseif reloadType == "boltactionnomag" then
+        rackAnim = "RackRifleAim" -- this is different than in Reload
+    elseif reloadType == "shotgun" then
+        rackAnim = "RackShotgunAim" -- this is different than in Reload
+    elseif reloadType == "doublebarrelshotgun" then
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "doublebarrelshotgunsawn" then
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "handgun" then
+        rackAnim = "RackPistol"
+    elseif reloadType == "revolver" then
+        rackAnim = "RackRevolver"
+    end
+
+    if not weapon.racked then
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        table.insert(tasks, task)
+        return tasks
+    end
 end
 
 BanditPrograms.Weapon.Reload = function(bandit, slot)
@@ -176,22 +246,201 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
 
-    local soundEject
-    local soundInsert
-    if slot == "primary" then
-        soundEject = "M14EjectAmmo"
-        soundInsert = "M14InsertAmmo"
-    else
-        soundEject = "M9EjectAmmo"
-        soundInsert = "M9InsertAmmo"
+    local primaryItem = BanditCompatibility.InstanceItem(weapon.name)
+    local reloadType = primaryItem:getWeaponReloadType()
+    local magazineType = primaryItem:getMagazineType()
+    local unloadSound = primaryItem:getEjectAmmoSound()
+    local loadSound = primaryItem:getInsertAmmoSound()
+    local rackSound = primaryItem:getRackSound()
+
+    local clipMode
+    local unloadAnim
+    local loadAnim
+    local rackAnim
+
+    if reloadType == "boltaction" then
+        clipMode = true
+        unloadAnim = "UnloadRifle"
+        loadAnim = "LoadRifle"
+        rackAnim = "RackRifle"
+    elseif reloadType == "boltactionnomag" then
+        clipMode = false
+        unloadAnim = "UnloadShotgun"
+        loadAnim = "LoadShotgun"
+        rackAnim = "RackRifle"
+    elseif reloadType == "shotgun" then
+        clipMode = false
+        unloadAnim = "UnloadShotgun"
+        loadAnim = "LoadShotgun"
+        rackAnim = "RackShotgun"
+    elseif reloadType == "doublebarrelshotgun" then
+        clipMode = false
+        unloadAnim = "UnloadDBShotgun"
+        loadAnim = "LoadDBShotgun"
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "doublebarrelshotgunsawn" then
+        clipMode = false
+        unloadAnim = "UnloadDBShotgun"
+        loadAnim = "LoadDBShotgun"
+        rackAnim = "RackDBShotgun"
+    elseif reloadType == "handgun" then
+        clipMode = true
+        unloadAnim = "UnLoadPistol"
+        loadAnim = "LoadPistol"
+        rackAnim = "RackPistol"
+    elseif reloadType == "revolver" then
+        clipMode = false
+        unloadAnim = "UnloadRevolver"
+        loadAnim = "LoadRevolver"
+        rackAnim = "RackRevolver"
     end
 
-    local task = {action="Drop", itemType=weapon.magName, anim="UnloadRifle", sound=soundEject, time=90}
-    table.insert(tasks, task)
+    if (weapon.type == "mag" and weapon.bulletsLeft <= 0 and weapon.magCount > 0) or
+       (weapon.type == "nomag" and weapon.bulletsLeft < weapon.ammoSize and weapon.ammoCount > 0) then
+        
+        if clipMode then 
+            if weapon.clipIn then
+                local task = {action="Unload", slot=slot, drop=magazineType, anim=unloadAnim, sound=unloadSound, time=90}
+                table.insert(tasks, task)
+                return tasks
+            else
+                local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+                table.insert(tasks, task)
+                return tasks
+            end
+        else
+            local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+            table.insert(tasks, task)
+            return tasks
+        end
+    elseif not weapon.racked then
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        table.insert(tasks, task)
+        return tasks
+    end
 
-    local task = {action="Reload", anim="ReloadRifle", slot=slot, sound=soundInsert, time=90}
-    table.insert(tasks, task)
+    return tasks
+end
 
+BanditPrograms.Weapon.Resupply = function(bandit)
+    local tasks = {}
+
+    local cell = getCell()
+    local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local isBareHands = Bandit.IsBareHands(bandit)
+    local needPrimary = Bandit.NeedResupplySlot(bandit, "primary")
+    local needSecondary = Bandit.NeedResupplySlot(bandit, "secondary")
+    local objectList = {}
+    local bestDist = 100
+    local destObject
+    for y=-3, 3 do
+        for x=-3, 3 do
+            local square = cell:getGridSquare(zx + x, zy + y, zz)
+            if square then
+
+                -- loot bodies
+                if square:getDeadBody() then
+                    local objects = square:getStaticMovingObjects()
+                    for i=0, objects:size()-1 do
+                        local object = objects:get(i)
+                        if instanceof (object, "IsoDeadBody") then
+                            local container = object:getContainer()
+                            if container and not container:isEmpty() then
+                                table.insert(objectList, object)
+                            end
+                        end
+                    end
+                end
+                
+                -- loot shelfs
+                local objects = square:getObjects()
+                for i=0, objects:size()-1 do
+                    local object = objects:get(i)
+                    local container = object:getContainer()
+                    if container and not container:isEmpty() then
+                        table.insert(objectList, object)
+                    end
+                end
+
+                for i=1, #objectList do
+                    local object = objectList[i]
+                    local container = object:getContainer()
+                    local dist = math.abs(x) + math.abs(y)
+
+                    -- find melee
+                    if isBareHands then
+                        local items = ArrayList.new()
+                        container:getAllEvalRecurse(predicateMelee, items)
+                        if items:size() > 0 and dist < bestDist then
+                            bestDist = dist
+                            destObject = object
+                        end
+                    end
+
+                    -- find primary or secondary
+                    if needPrimary or needSecondary then
+                        local items = ArrayList.new()
+                        container:getAllEvalRecurse(predicateAll, items)
+                        for i=0, items:size()-1 do
+                            local item = items:get(i)
+                            if item:IsWeapon() then
+                                local weaponItem = item
+                                local weaponType = WeaponType.getWeaponType(weaponItem)
+
+                                if (needPrimary and weaponType == WeaponType.firearm) or
+                                    (needSecondary and weaponType == WeaponType.handgun) then
+                                    
+                                    if BanditCompatibility.UsesExternalMagazine(weaponItem) then
+                                        local magazineType = weaponItem:getMagazineType()
+                                        for j=0, items:size()-1 do
+                                            local item = items:get(j)
+                                            if item:getFullType() == magazineType and item:getCurrentAmmoCount() > 0 then
+                                                bestDist = dist
+                                                destObject = object
+                                            end
+                                        end
+                                    else
+                                        local ammoType = weaponItem:getAmmoType()
+                                        for j=0, items:size()-1 do
+                                            local item = items:get(j)
+                                            if item:getFullType() == ammoType then
+                                                bestDist = dist
+                                                destObject = object
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if destObject then
+        local square = destObject:getSquare()
+        local lx, ly, lz = square:getX(), square:getY(), square:getZ() 
+        local ax, ay, az = lx, ly, lz
+        
+        if not square:isFree(false) then
+            local asquare = AdjacentFreeTileFinder.Find(square, bandit)
+            if asquare then
+                ax, ay, az = asquare:getX(), asquare:getY(), asquare:getZ()
+            end
+        end
+        local dist = BanditUtils.DistTo(zx, zy, ax, ay)
+
+        if dist > 0.9 then
+            local task = BanditUtils.GetMoveTask(0.01, ax + 0.5, ay + 0.5, az, "Run", dist, false)
+            table.insert(tasks, task)
+            return tasks
+        else
+            local task = {action="LootWeapons", anim="LootLow", time=250, x=lx, y=ly, z=lz}
+            table.insert(tasks, task)
+            return tasks
+        end
+    end
     return tasks
 end
 
@@ -226,37 +475,13 @@ BanditPrograms.Idle = function(bandit)
     elseif action == 5 then
         local task = {action="Time", anim="Sneeze", time=200}
         table.insert(tasks, task)
-        addSound(getPlayer(), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
+        addSound(getSpecificPlayer(0), bandit:getX(), bandit:getY(), bandit:getZ(), 7, 60)
     elseif action == 6 then
         local task = {action="Time", anim="WipeBrow", time=200}
         table.insert(tasks, task)
     elseif action == 7 then
         local task = {action="Time", anim="WipeHead", time=200}
         table.insert(tasks, task)
-
-    elseif not outOfAmmo then
-        local anim
-        local sound
-        local weaponType = bandit:getVariableString("BanditPrimaryType")
-        if weaponType == "rifle" then
-            sound = "M14BringToBear"
-            anim1 = "IdleToAimRifle"
-            anim2 = "AimRifle"
-        end
-        if weaponType == "handgun" then 
-            sound = "M9BringToBear"
-            anim1 = "IdleToAimPistol"
-            anim2 = "AimPistol"
-        end
-
-        local task1 = {action="Aim", sound=sound, anim=anim1, x=x1, y=y1, time=30}
-        table.insert(tasks, task1)
-
-        local task2 = {action="Aim", anim=anim2, x=x1, y=y1, time=100}
-        table.insert(tasks, task2)
-
-        local task3 = {action="Aim", anim=anim2, x=x1, y=y1, time=100}
-        table.insert(tasks, task3)
     else
         local task = {action="Time", anim="ShiftWeight", time=200}
         table.insert(tasks, task)
@@ -266,116 +491,6 @@ end
 
 BanditPrograms.Container = BanditPrograms.Container or {}
 
-BanditPrograms.Container.WeaponLoot = function(bandit, object, container)
-    local tasks = {}
-    local weapons = Bandit.GetWeapons(bandit)
-
-    local items = ArrayList.new()
-    container:getAllEvalRecurse(predicateAll, items)
-
-    -- analyze container contents
-    for i=0, items:size()-1 do
-        local item = items:get(i)
-        if item:IsWeapon() then
-            local weaponItem = item
-            local weaponName = weaponItem:getFullType() 
-            local weaponType = WeaponType.getWeaponType(weaponItem)
-
-            local slots = {"primary", "secondary"}
-            for _, slot in pairs(slots) do
-
-                local wTab = BanditWeapons.GetPrimary()
-                local wType = WeaponType.firearm
-                if slot == "secondary" then
-                    wTab = BanditWeapons.GetSecondary()
-                    wType = WeaponType.handgun
-                end
-
-                -- no primary weapon or empty, check if we can grab weapon
-                if not weapons[slot] or (weapons[slot].magCount == 0 and weapons[slot].bulletsLeft == 0) then
-                    
-                    -- it must be correct type, and it must in in bandit weapon registry
-                    if weaponType == wType then
-                        for k, v in pairs(wTab) do
-                            if weaponName == v.name then
-
-                                local toRemove = {}
-                                local toAdd = {}
-
-                                -- found gun
-                                local weaponMagName = v.magName
-                                local weaponMagSize = v.magSize
-                                local weaponShotSound = v.shotSound
-                                local weaponShotDelay = v.shotDelay
-
-                                -- now find mags in the same container
-                                local weaponBullets = 0
-                                for j=0, items:size()-1 do
-                                    local magItem = items:get(j)
-                                    local magName = magItem:getFullType()
-                                    local magBulletsLeft = magItem:getCurrentAmmoCount()
-                                    if magName == weaponMagName and magBulletsLeft > 0 then
-                                        table.insert(toRemove, magName)
-                                        weaponBullets = weaponBullets + magBulletsLeft
-                                    end
-                                end
-
-                                -- got gun and bullets, lets go take it
-                                if weaponBullets > 0 then
-
-                                    table.insert(toRemove, weaponName)
-
-                                    local bx, by, bz
-                                    local lootDist
-                                    local lootAnim
-                                    local square = object:getSquare()
-                                    if square:isFree(false) then
-                                        bx = object:getX() + 0.5
-                                        by = object:getY() + 0.5
-                                        bz = object:getZ()
-                                        lootDist = 1.3
-                                        lootAnim = "LootLow"
-                                    else
-                                        local asquare = AdjacentFreeTileFinder.Find(square, bandit)
-                                        if asquare then
-                                            bx = asquare:getX() + 0.5
-                                            by = asquare:getY() + 0.5
-                                            bz = asquare:getZ()
-                                            lootDist = 2.1
-                                            lootAnim = "Loot"
-                                        end
-                                    end
-
-                                    local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), bx, by)
-
-                                    -- we are here, take it
-                                    if dist < lootDist then
-
-                                        toAdd[slot] = {}
-                                        toAdd[slot].name = weaponName
-                                        toAdd[slot].magSize = weaponMagSize
-                                        toAdd[slot].magName = weaponMagName
-                                        toAdd[slot].shotSound = weaponShotSound
-                                        toAdd[slot].shotDelay = weaponShotDelay
-                                        toAdd[slot].magCount = math.floor(weaponBullets / weaponMagSize)
-                                        toAdd[slot].bulletsLeft = weaponBullets % weaponMagSize
-
-                                        local task = {action="LootWeapons", anim=lootAnim, time=#toRemove * 50, x=object:getX(), y=object:getY(), z=object:getZ(), toAdd=toAdd, toRemove=toRemove}
-                                        table.insert(tasks, task)
-                                    -- go to location
-                                    else
-                                        table.insert(tasks, BanditUtils.GetMoveTask(endurance, bx, by, bz, "Run", dist, false))
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-    return tasks
-end
 
 BanditPrograms.Container.Loot = function(bandit, object, container)
     local tasks = {}

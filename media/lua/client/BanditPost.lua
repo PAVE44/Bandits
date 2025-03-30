@@ -73,7 +73,7 @@ function BanditPost.Get(x, y, z, ptype)
 end
 
 function BanditPost.Render()
-    local playerObj = getPlayer()
+    local playerObj = getSpecificPlayer(0)
 	local bo = ZSPosts:new("", "", playerObj)
 	getCell():setDrag(bo, playerObj:getPlayerNum())
 end

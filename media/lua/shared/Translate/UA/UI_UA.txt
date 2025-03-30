@@ -1,4 +1,4 @@
 UI_UA = {
-    UI_optionscreen_binding_Bandits = "Бандити",
-	UI_optionscreen_binding_POSTS = "Керування охоронними постами",
+    UI_optionscreen_binding_Bandits = "Р‘Р°РЅРґРёС‚Рё",
+	UI_optionscreen_binding_POSTS = "РљРµСЂСѓРІР°РЅРЅСЏ РѕС…РѕСЂРѕРЅРЅРёРјРё РїРѕСЃС‚Р°РјРё",
 }

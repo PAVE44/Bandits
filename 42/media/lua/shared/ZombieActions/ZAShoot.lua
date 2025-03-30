@@ -154,7 +154,9 @@ local function hit(shooter, item, victim)
     -- Warning, this is not perfect, local player mand remote players will not generate the same 
     -- random number.
     -- if ZombRand(10000) < accuracyThreshold then
-    if BanditRandom.Get() < accuracyThreshold then
+    local n = BanditRandom.Get()
+    if n < accuracyThreshold then
+        print ("HIT N: " .. n)
         if instanceof(victim, "IsoPlayer") then
             BanditPlayer.WakeEveryone()
 
@@ -188,11 +190,16 @@ local function hit(shooter, item, victim)
             victim:setHitFromBehind(shooter:isBehind(victim))
             victim:setHitAngle(shooter:getForwardDirection())
             victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+            victim:setHitReaction("ShotBelly")
             victim:Hit(item, tempShooter, 1, false, 1, false)
-            -- victim:Kill(shooter)
             victim:setAttackedBy(shooter)
             addHole(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
+
+            local h = victim:getHealth()
+            local id = BanditUtils.GetCharacterID(bandit)
+            local args = {id=id, h=h}
+            sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
         end
        
 

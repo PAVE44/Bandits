@@ -53,7 +53,7 @@ ZombieActions.WaterFarm.onComplete = function(zombie, task)
 
     if BanditUtils.IsController(zombie) then
         local args = {x=task.x, y=task.y, z=task.z, uses=waterToPour}
-        CFarmingSystem.instance:sendCommand(getPlayer(), 'water', args)
+        CFarmingSystem.instance:sendCommand(getSpecificPlayer(0), 'water', args)
     end
 
     local newWater = (waterLeft * item:getUseDelta() / 4)

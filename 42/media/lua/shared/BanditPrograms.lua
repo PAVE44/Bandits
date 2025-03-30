@@ -390,7 +390,7 @@ BanditPrograms.Weapon.Resupply = function(bandit)
                                 if (needPrimary and weaponType == WeaponType.firearm) or
                                     (needSecondary and weaponType == WeaponType.handgun) then
                                     
-                                    if weaponItem:usesExternalMagazine() then
+                                    if BanditCompatibility.UsesExternalMagazine(weaponItem) then
                                         local magazineType = weaponItem:getMagazineType()
                                         for j=0, items:size()-1 do
                                             local item = items:get(j)

@@ -2,10 +2,6 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.UnbarricadeMetal = {}
 ZombieActions.UnbarricadeMetal.onStart = function(zombie, task)
-    if not Bandit.Has(zombie, "Base.BlowTorch") then
-        Bandit.AddLoot(zombie, "Base.BlowTorch")
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    end
     zombie:playSound("BlowTorch")
     return true
 end
@@ -30,7 +26,7 @@ ZombieActions.UnbarricadeMetal.onComplete = function(zombie, task)
 
     if BanditUtils.IsController(zombie) then
         local args = {x=task.x, y=task.y, z=task.z, index=task.idx}
-        sendClientCommand(getPlayer(), 'Commands', 'Unbarricade', args)
+        sendClientCommand(getSpecificPlayer(0), 'Commands', 'Unbarricade', args)
     end
 
     if BanditUtils.IsController(zombie) then

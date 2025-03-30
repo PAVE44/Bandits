@@ -2,7 +2,7 @@ require "ISUI/ISCharacterScreen"
 
 local function getBanditKillCount()
     local gmd = GetBanditModData()
-    local id = BanditUtils.GetCharacterID(getPlayer())
+    local id = BanditUtils.GetCharacterID(getSpecificPlayer(0))
     if gmd.Kills[id] then
         return gmd.Kills[id]
     else

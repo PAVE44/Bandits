@@ -94,28 +94,6 @@ ZombiePrograms.Bandit.Main = function(bandit)
             Bandit.SayLocation(bandit, targetSquare)
         end
 
-        local tx, ty, tz = target.x, target.y, target.z
-        
-        local closeSlow = true
-        local engageUpfront = false
-        if enemy then
-            local weapon = enemy:getPrimaryHandItem()
-            if weapon and weapon:IsWeapon() then
-                local weaponType = WeaponType.getWeaponType(weapon)
-                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                    closeSlow = false
-                end
-            end
-
-            if target.fx and target.fy and (enemy:isRunning()  or enemy:isSprinting()) then
-                engageUpfront = true
-            end
-        end
-        
-        if engageUpfront then
-            tx, ty = target.fx, target.fy
-        end
-
         if bandit:isInARoom() then
             if outOfAmmo then
                 walkType = "Run"
@@ -132,12 +110,28 @@ ZombiePrograms.Bandit.Main = function(bandit)
             end
         end
 
+        local tx, ty, tz = target.x, target.y, target.z
+    
+        if enemy then
+            local weapon = enemy:getPrimaryHandItem()
+            if weapon and weapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(weapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    walkType = "Run"
+                end
+            end
+
+            if target.fx and target.fy and (enemy:isRunning()  or enemy:isSprinting()) then
+                tx, ty = target.fx, target.fy
+            end
+        end
+
         if health < 0.8 then
             walkType = "Limp"
             endurance = 0
         end 
 
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist, closeSlow))
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist))
         return {status=true, next="Main", tasks=tasks}
     end
 

@@ -39,7 +39,9 @@ function BanditEventMarkerHandler.RemoveOldMarkers ()
     local markers = BanditEventMarkerHandler.markers
     for eventId, marker in pairs(markers) do
         if marker.start + marker.duration < getGametimeTimestamp() then
-            marker:setVisible(false)
+
+            marker:setDuration(0)
+            BanditEventMarkerHandler.markers[eventId] = nil
         end
     end
 end

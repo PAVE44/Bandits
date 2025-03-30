@@ -35,7 +35,7 @@ function PlayerDamageModel.BulletHit(shooter, player)
 
     local sbp = bodyParts[bpi]
     local shotBodyPart = player:getBodyDamage():getBodyPart(sbp.name)
-    print ("-- PLAYER SHOT IN: " .. tostring(sbp.name))
+    -- print ("-- PLAYER SHOT IN: " .. tostring(sbp.name))
 
     -- CHECK PROTECTIVE CLOTHES
     local vest = player:getWornItem("TorsoExtraVest")
@@ -66,11 +66,11 @@ function PlayerDamageModel.BulletHit(shooter, player)
         BanditCompatibility.Splash(player, item, shooter)
     else
         if sbp.name == BodyPartType.Head then
-            print ("HEADSHOT")
+            -- print ("HEADSHOT")
             if hat and hatDef == 100 and hatHoles == 0 and ZombRand(100) < 10 then
-                print ("HELMET PROTECTED")
+                -- print ("HELMET PROTECTED")
             else
-                print ("PLAYER DEAD")
+                -- print ("PLAYER DEAD")
                 player:addBlood(0.6)
                 BanditCompatibility.Splash(player, item, shooter)
 
@@ -162,7 +162,7 @@ function PlayerDamageModel.BareHandHit(shooter, player)
 
     local sbp = bodyParts[bpi]
     local hitBodyPart = player:getBodyDamage():getBodyPart(sbp.name)
-    print ("-- PLAYER HIT IN: " .. tostring(sbp.name))
+    -- print ("-- PLAYER HIT IN: " .. tostring(sbp.name))
 
     if ZombRand(4) == 1 then
         hitBodyPart:setScratched(true, true)

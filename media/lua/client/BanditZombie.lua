@@ -44,7 +44,7 @@ local UpdateZombieCache = function(numberTicks)
     local mr = math.ceil(100 - (zombieListSize / 4))
     if mr < 60 then mr = 60 end
     -- print ("MR: " .. mr)
-    local player = getPlayer()
+    local player = getSpecificPlayer(0)
     local px = player:getX()
     local py = player:getY()
 
@@ -64,10 +64,10 @@ local UpdateZombieCache = function(numberTicks)
 
             cache[id] = zombie
 
-            local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+            local zx, zy, zz, zd = zombie:getX(), zombie:getY(), zombie:getZ(), zombie:getDirectionAngle()
 
             if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-                local light = {id = id, x = zx, y = zy, z = zz}
+                local light = {id = id, x = zx, y = zy, z = zz, d = zd}
 
                 if zombie:getVariableBoolean("Bandit")  then
                     light.isBandit = true
