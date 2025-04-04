@@ -356,7 +356,8 @@ function BanditUtils.GetClosestBanditLocation(character)
 
     local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
-        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+        local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
+        -- local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist and cid ~= id then
             result.dist = dist
             result.x = zombie.x

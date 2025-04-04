@@ -116,51 +116,29 @@ end
 function Bandit.HasTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        if #brain.tasks > 0 then
-            return true
-        end
+        return BanditBrain.HasTask(brain)
     end
-    return false
 end
 
 function Bandit.HasTaskType(zombie, taskType)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        --[[
-        if #brain.tasks > 0 and brain.tasks[1].action == taskType then
-            return true
-        end]]
-        for _, task in pairs(brain.tasks) do
-            if task.action == taskType then
-                return true
-            end
-        end
+        return BanditBrain.HasTaskType(brain, taskType)
     end
-    return false
 end
 
 function Bandit.HasMoveTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        for _, task in pairs(brain.tasks) do
-            if task.action == "Move" or task.action == "GoTo" then
-                return true
-            end
-        end
+        return BanditBrain.HasMoveTask(brain)
     end
-    return false
 end
 
 function Bandit.HasActionTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        for _, task in pairs(brain.tasks) do
-            if task.action ~= "Move" and task.action ~= "GoTo" then
-                return true
-            end
-        end
+        return BanditBrain.HasActionTask(brain)
     end
-    return false
 end
 
 function Bandit.UpdateTask(zombie, task)
@@ -445,48 +423,22 @@ end
 function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if weapons.primary.bulletsLeft <= 0 and 
-            ((weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
-             (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0))
-            and weapons.secondary.bulletsLeft <= 0 and 
-            ((weapons.secondary.type == "mag" and weapons.secondary.magCount <= 0) or 
-             (weapons.secondary.type == "nomag" and weapons.secondary.ammoCount <= 0)) then
-            return true
-        end
+        return BanditBrain.IsOutOfAmmo(brain)
     end
-    return false
 end
 
 function Bandit.IsBareHands(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if weapons.melee == "Base.BareHands" then
-            return true
-        end
+        return BanditBrain.IsBareHands(brain)
     end
-    return false
 end
 
 function Bandit.NeedResupplySlot(zombie, slot)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if not weapons[slot].name or 
-            (
-                weapons.primary.bulletsLeft <= 0 and 
-                (
-                    (weapons[slot].type == "mag" and weapons[slot].magCount <= 0) or
-                    (weapons[slot].type == "nomag" and weapons[slot].ammoCount <= 0)
-                )
-            ) then
-
-            return true
-
-        end
+        return BanditBrain.NeedResupplySlot(brain, slot)
     end
-    return false
 end
 
 function Bandit.SetWeapons(zombie, weapons)

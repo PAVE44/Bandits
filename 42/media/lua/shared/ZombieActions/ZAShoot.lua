@@ -157,7 +157,7 @@ local function hit(shooter, item, victim)
     local n = BanditRandom.Get()
     if n < accuracyThreshold then
         print ("HIT N: " .. n)
-        if instanceof(victim, "IsoPlayer") then
+        if instanceof(victim, "IsoPlayer") and brainShooter.hostile then
             BanditPlayer.WakeEveryone()
 
             local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
@@ -186,20 +186,23 @@ local function hit(shooter, item, victim)
             end
             
         elseif instanceof(victim, "IsoZombie") then
-            victim:setBumpDone(true)
-            victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:setHitAngle(shooter:getForwardDirection())
-            victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-            victim:setHitReaction("ShotBelly")
-            victim:Hit(item, tempShooter, 1, false, 1, false)
-            victim:setAttackedBy(shooter)
-            addHole(victim)
-            BanditCompatibility.Splash(victim, item, tempShooter)
+            local brainVictim = BanditBrain.Get(victim)
+            if not brainVictim.brain or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
+                victim:setBumpDone(true)
+                victim:setHitFromBehind(shooter:isBehind(victim))
+                victim:setHitAngle(shooter:getForwardDirection())
+                victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+                victim:setHitReaction("ShotBelly")
+                victim:Hit(item, tempShooter, 1, false, 1, false)
+                victim:setAttackedBy(shooter)
+                addHole(victim)
+                BanditCompatibility.Splash(victim, item, tempShooter)
 
-            local h = victim:getHealth()
-            local id = BanditUtils.GetCharacterID(bandit)
-            local args = {id=id, h=h}
-            sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+                local h = victim:getHealth()
+                local id = BanditUtils.GetCharacterID(bandit)
+                local args = {id=id, h=h}
+                sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+            end
         end
        
 
