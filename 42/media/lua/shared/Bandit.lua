@@ -1057,6 +1057,60 @@ function Bandit.AddVisualDamage(bandit, handWeapon)
     end
 end
 
+function Bandit.GetCombatWalktype(bandit, enemy, dist)
+    local world = getWorld()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
+
+    local walkType = "Walk"
+
+    if dls < 0.3 then
+        if SandboxVars.Bandits.General_SneakAtNight then
+            walkType = "SneakWalk"
+        end
+    end
+
+    if bandit and dist then
+        if dist > 5 then
+            walkType = "Run"
+        else
+            walkType = "WalkAim"
+        end
+
+        if enemy then
+            local banditWeapon = enemy:getPrimaryHandItem()
+            if banditWeapon and banditWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(banditWeapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    walkType = "Run"
+                end
+            end
+            
+            local enemyWeapon = bandit:getPrimaryHandItem()
+            if enemyWeapon and enemyWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(enemyWeapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    local wrange = enemyWeapon:getMaxRange()
+
+                    if dist > wrange + 10 then
+                        walkType = "Run"
+                    elseif dist > wrange + 4 then
+                        walkType = "Walk"
+                    else
+                        walkType = "WalkAim"
+                    end
+                end
+            end
+
+        end
+
+        if bandit:getHealth() < 0.8 then
+            walkType = "Limp"
+        end 
+    end
+    return walkType
+end
+
 function Bandit.GetSkinTexture(female, idx)
     if female then
         return "FemaleBody0" .. tostring(idx)

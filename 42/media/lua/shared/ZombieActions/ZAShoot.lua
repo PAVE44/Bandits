@@ -165,7 +165,7 @@ local function hit(shooter, item, victim)
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:Hit(item, tempShooter, 1, false, 1, false)
+            victim:Hit(item, tempShooter, 1.4, false, 1, false)
 
             -- addHolePlayer(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)

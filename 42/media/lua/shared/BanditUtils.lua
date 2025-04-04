@@ -276,7 +276,7 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py = player:getX(), player:getY()
             local dist = BanditUtils.DistTo(cx, cy, px, py)
-            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < 5)) then
+            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < 7)) then
                 result.dist = dist
                 result.x = player:getX()
                 result.y = player:getY()

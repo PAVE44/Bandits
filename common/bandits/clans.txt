@@ -312,10 +312,10 @@
 	spawn: friendly = false
 	spawn: companion = false
 	spawn: defenders = true
-	spawn: campers = false
+	spawn: campers = true
 	spawn: assault = true
 	spawn: wanderer = true
-	spawn: roadblock = false
+	spawn: roadblock = true
 
 [0dfc13d3-4ce6-4af8-aac6-326eb7514c36]
 	general: name = Karate
@@ -330,6 +330,18 @@
 
 [fe1a8e07-7c73-466d-9ade-2e3e565dcb21]
 	general: name = Trash
+	spawn: wave = 0
+	spawn: zone = 0
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+
+[72fbcd15-a81b-476a-8c25-1b2caea694de]
+	general: name = Bandits
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false

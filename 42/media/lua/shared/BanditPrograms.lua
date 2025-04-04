@@ -143,7 +143,7 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
             end
         end
 
-        local time = aimTimeMin + aimTimeSurp
+        local time = aimTimeMin + aimTimeSurp + brain.rnd[2]
         if time > 60 then time = 60 end
 
         local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=time}
@@ -160,7 +160,7 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
-    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1)
+    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1) + brain.rnd[2]
 
     local bullets = 1
     local modes = weaponItem:getFireModePossibilities()

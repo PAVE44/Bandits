@@ -61,7 +61,7 @@ BanditCompatibility.GetModPrefix = function()
     if getGameVersion() < 42 then
         return ""
     else
-        return "//"
+        return "\\"
     end
 end
 

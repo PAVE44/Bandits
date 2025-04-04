@@ -55,7 +55,7 @@ ZombieActions.Destroy.onWorking = function(zombie, task)
             local boost = brain.strengthBoost or 1
             
             health = health - (40 * boost)
-            -- print ("thumpable health: " .. thumpable:getHealth())
+            print ("thumpable health: " .. thumpable:getHealth())
             if health < 0 then health = 0 end
             if health == 0 then
                 if instanceof(thumpable, "IsoBarricade") then
@@ -64,7 +64,15 @@ ZombieActions.Destroy.onWorking = function(zombie, task)
                         sendClientCommand(getSpecificPlayer(0), 'Commands', 'Unbarricade', args)
                     end
                 else
-                    thumpable:destroy()
+                    if IsoDoor.getDoubleDoorIndex(thumpable) > -1 then
+                        IsoDoor.destroyDoubleDoor(thumpable)
+                    elseif IsoDoor.getGarageDoorIndex(thumpable) > -1 then
+                        IsoDoor.destroyGarageDoor(thumpable)
+                        local emitter = getWorld():getFreeEmitter(task.x, task.y, task.z)
+                        emitter:playSound("GarageDoorBreak")
+                    else
+                        thumpable:destroy()
+                    end
                 end
                 local emitter = getWorld():getFreeEmitter(task.x, task.y, task.z)
                 emitter:playSound(soundBreak)

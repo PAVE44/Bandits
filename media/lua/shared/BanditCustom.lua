@@ -25,9 +25,9 @@ local saveFile = function()
             clanFile = getFileWriter(clanFileName, true, false)
         else
             banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
-            banditFile = getModFileWriter(modid, banditFileName, true, false)
+            banditFile = getModFileWriter(BanditCompatibility.GetModPrefix() .. modid, banditFileName, true, false)
             clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
-            clanFile = getModFileWriter(modid, clanFileName, true, false)
+            clanFile = getModFileWriter(BanditCompatibility.GetModPrefix() .. modid, clanFileName, true, false)
         end
 
         if banditFile and clanFile then
@@ -98,7 +98,7 @@ local loadFile = function(dataKey, fileName)
         if modid == "LOCAL" then
             file  = getFileReader(fileName, false)
         else
-            file  = getModFileReader(modid, fileName, false)
+            file  = getModFileReader(BanditCompatibility.GetModPrefix() .. modid, fileName, false)
         end
 
         if file then 

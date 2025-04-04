@@ -332,6 +332,9 @@ local function banditize(zombie, bandit, clan, args)
     brain.inventory = {}
     brain.tasks = {}
 
+    -- bandit differentiators
+    brain.rnd = {ZombRand(2), ZombRand(10), ZombRand(100), ZombRand(1000), ZombRand(10000)}
+
     brain.personality = {}
 
     -- addiction and sickness
@@ -592,7 +595,7 @@ local function spawnCamp(player, spawnPoint)
 
     if spawnPoint.groundType ~= "natural" then return end
 
-    if spawnPoint.zone ~= "Forest" and spawnPoint.zone ~= "PRForest" then return end
+    if spawnPoint.zone ~= "Forest" and spawnPoint.zone ~= "PRForest" and spawnPoint.zone ~= "PHForest" then return end
 
     local res = checkSpace(player, sx, sy, 8, 8)
     if not res then return end
@@ -608,6 +611,7 @@ local function spawnCamp(player, spawnPoint)
     spawnObject(player, "trash_01_11", sx + 6, sy + 6, sz + 0)
     spawnObject(player, "camping_01_28", sx + 6, sy + 8, sz + 0)
     spawnObject(player, "camping_01_29", sx + 7, sy + 8, sz + 0)
+    return true
 end
 
 local function spawnHouse(player, spawnPoint)
@@ -792,6 +796,15 @@ local function getIconDataByProgram(program, friendly)
     elseif program == "Looter" then
         icon = "media/ui/loot.png"
         desc = desc .. " " .. "Wanderers"
+    elseif program == "Defend" then
+        icon = "media/ui/defend.png"
+        desc = desc .. " " .. "Defenders"
+    elseif program == "Camper" then
+        icon = "media/ui/tent.png"
+        desc = desc .. " " .. "Camp"
+    elseif program == "Roadblock" then
+        icon = "media/ui/roadblock.png"
+        desc = desc .. " " .. "Roadblock"
     end
     return icon, color, desc
 end
@@ -833,14 +846,14 @@ local function spawnType(player, args)
     if clan.spawn.roadblock then
         local res = spawnRoadblock(player, spawnPoints[1])
         if res then
-            args.program = "BaseGuard"
+            args.program = "Roadblock"
         end
     end
     
     if clan.spawn.campers then
         local res = spawnCamp(player, spawnPoints[1])
         if res then
-            args.program = "BaseGuard"
+            args.program = "Camper"
         end
     end
 
@@ -898,7 +911,7 @@ local function checkEvent()
             local spawnChance = wave.spawnHourlyChance * densityScore / 6
             local spawnRandom = ZombRandFloat(0, 100)
 
-            if true or spawnRandom < spawnChance then
+            if spawnRandom < spawnChance then
                 local args = {}
                 args.wid = wid
                 args.dist = 50 + ZombRand(20)

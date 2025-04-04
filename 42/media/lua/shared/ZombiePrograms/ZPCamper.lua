@@ -1,12 +1,12 @@
 ZombiePrograms = ZombiePrograms or {}
 
-ZombiePrograms.BaseGuard = {}
-ZombiePrograms.BaseGuard.Stages = {}
+ZombiePrograms.Camper = {}
+ZombiePrograms.Camper.Stages = {}
 
-ZombiePrograms.BaseGuard.Init = function(bandit)
+ZombiePrograms.Camper.Init = function(bandit)
 end
 
-ZombiePrograms.BaseGuard.Prepare = function(bandit)
+ZombiePrograms.Camper.Prepare = function(bandit)
     local tasks = {}
 
     Bandit.ForceStationary(bandit, true)
@@ -14,7 +14,7 @@ ZombiePrograms.BaseGuard.Prepare = function(bandit)
     return {status=true, next="Main", tasks=tasks}
 end
 
-ZombiePrograms.BaseGuard.Main = function(bandit)
+ZombiePrograms.Camper.Main = function(bandit)
     local tasks = {}
 
     -- manage sleep

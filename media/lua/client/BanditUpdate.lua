@@ -336,8 +336,16 @@ local function ApplyVisuals(bandit, brain)
 
         if brain.bag and brain.bag.name then
             local item = BanditCompatibility.InstanceItem(brain.bag.name)
-            local clothingItem = item:getClothingItem()
-            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+            if item then
+                --[[
+                local clothingItem = item:getClothingItem()
+                local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)]]
+
+                local itemVisual = ItemVisual.new()
+                itemVisual:setItemType(brain.bag.name)
+                itemVisual:setClothingItemName(brain.bag.name)
+                itemVisuals:add(itemVisual)
+            end
             -- bandit:setWornItem(item:canBeEquipped(), item)
         end
         
@@ -847,59 +855,108 @@ local function ManageCollisions(bandit)
                                     return tasks
                                 end
 
-                            elseif (object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior)) or object:getProperties():Is("forceLocked") then
-                                if bandit:isPrimaryEquipped(weapons.melee) then
-                                    local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task)
-                                else
-                                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                    return tasks
-                                end
-
                             elseif not object:IsOpen() then
                                 if IsoDoor.getDoubleDoorIndex(object) > -1 then
-                                    IsoDoor.toggleDoubleDoor(object, true)
-                                elseif IsoDoor.getGarageDoorIndex(object) > -1 then
-                                    IsoDoor.toggleGarageDoor(object, true)
-                                else
-                                    object:ToggleDoorSilent()
 
-                                    local args = {
-                                        x = object:getSquare():getX(),
-                                        y = object:getSquare():getY(),
-                                        z = object:getSquare():getZ(),
-                                        index = object:getObjectIndex()
-                                    }
-                                    sendClientCommand(getSpecificPlayer(0), 'Commands', 'OpenDoor', args)
-
-                                    -- Get the square of the object
-                                    local square = getSpecificPlayer(0):getSquare()
-
-                                    -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
-                                    local radius = 5
-                                    for dx = -radius, radius do
-                                        for dy = -radius, radius do
-                                            -- if dx ~= 0 and dy ~= 0 then
-                                                local surroundingSquare = cell:getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
-                                                --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
-                                                if surroundingSquare then
-                                                    --[[
-                                                    square:ReCalculateCollide(surroundingSquare)
-                                                    square:ReCalculatePathFind(surroundingSquare)
-                                                    square:ReCalculateVisionBlocked(surroundingSquare)
-                                                    surroundingSquare:ReCalculateCollide(square)
-                                                    surroundingSquare:ReCalculatePathFind(square)
-                                                    surroundingSquare:ReCalculateVisionBlocked(square)
-                                                    ]]
-                                                    surroundingSquare:InvalidateSpecialObjectPaths()
-                                                    surroundingSquare:RecalcProperties()
-                                                    surroundingSquare:RecalcAllWithNeighbours(true)
-                                                end
-                                            -- end
+                                    if object:isLocked() or object:isLockedByKey() or object:isObstructed() then
+                                        if bandit:isPrimaryEquipped(weapons.melee) then
+                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                            table.insert(tasks, task)
+                                        else
+                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                            return tasks
                                         end
+                                    else
+                                        IsoDoor.toggleDoubleDoor(object, true)
+                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        doorSound = doorSound .. "Open"
+                                        bandit:playSound(doorSound)
                                     end
-                                    bandit:playSound("WoodDoorOpen")
+
+                                elseif IsoDoor.getGarageDoorIndex(object) > -1 then
+                                
+                                    local exterior = bandit:getCurrentSquare():Is(IsoFlagType.exterior)
+                                    if exterior and (object:isLocked() or object:isLockedByKey()) then
+                                        if bandit:isPrimaryEquipped(weapons.melee) then
+                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                            table.insert(tasks, task)
+                                        else
+                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                            return tasks
+                                        end
+                                    else
+                                        IsoDoor.toggleGarageDoor(object, true)
+                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        doorSound = doorSound .. "Open"
+                                        bandit:playSound(doorSound)
+                                    end
+                                else
+
+                                    if (object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior)) or object:getProperties():Is("forceLocked") or object:isObstructed() then
+                                        if bandit:isPrimaryEquipped(weapons.melee) then
+                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                            table.insert(tasks, task)
+                                        else
+                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                            return tasks
+                                        end
+                                    else
+                                        object:DirtySlice()
+                                        IsoGridSquare.RecalcLightTime = -1.0
+                                        square:InvalidateSpecialObjectPaths()
+                                        object:ToggleDoorSilent()
+                                        square:RecalcProperties()
+                                        object:syncIsoObject(false, 1, nil, nil)
+                                        LuaEventManager.triggerEvent("OnContainerUpdate")
+                                        if BanditCompatibility.GetGameVersion() >= 42 then
+                                            object:invalidateRenderChunkLevel(FBORenderChunk.DIRTY_OBJECT_MODIFY)
+                                        end
+
+                                        --[[
+                                        local args = {
+                                            x = object:getSquare():getX(),
+                                            y = object:getSquare():getY(),
+                                            z = object:getSquare():getZ(),
+                                            index = object:getObjectIndex()
+                                        }
+                                        sendClientCommand(getSpecificPlayer(0), 'Commands', 'OpenDoor', args)
+
+                                        -- Get the square of the object
+                                        local square = getSpecificPlayer(0):getSquare()
+
+                                        -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
+                                        local radius = 5
+                                        for dx = -radius, radius do
+                                            for dy = -radius, radius do
+                                                -- if dx ~= 0 and dy ~= 0 then
+                                                    local surroundingSquare = cell:getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
+                                                    --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
+                                                    if surroundingSquare then
+                                                        
+                                                        --
+                                                        square:ReCalculateCollide(surroundingSquare)
+                                                        square:ReCalculatePathFind(surroundingSquare)
+                                                        square:ReCalculateVisionBlocked(surroundingSquare)
+                                                        surroundingSquare:ReCalculateCollide(square)
+                                                        surroundingSquare:ReCalculatePathFind(square)
+                                                        surroundingSquare:ReCalculateVisionBlocked(square)
+                                                        --
+                                                        
+                                                        surroundingSquare:InvalidateSpecialObjectPaths()
+                                                        surroundingSquare:RecalcProperties()
+                                                        surroundingSquare:RecalcAllWithNeighbours(true)
+                                                    end
+                                                -- end
+                                            end
+                                        end
+                                        ]]
+                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        doorSound = doorSound .. "Open"
+                                        bandit:playSound(doorSound)
+                                    end
                                 end
                             end
                         else

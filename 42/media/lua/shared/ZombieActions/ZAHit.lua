@@ -380,7 +380,7 @@ local function Hit(attacker, item, victim)
                 PlayerDamageModel.BareHandHit(attacker, victim)
             else
                 victim:setBumpDone(true)
-                victim:Hit(item, tempAttacker, 0.8, false, 1, false)
+                victim:Hit(item, tempAttacker, 1.4, false, 1, false)
 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)

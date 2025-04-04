@@ -64,6 +64,10 @@ ZSClient.Commands.UpdateHealth  = function(args)
     end
 end
 
+ZSClient.Commands.SetMarker  = function(args)
+    BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), args.icon, args.time, args.x, args.y, args.color, args.desc)
+end
+
 local onServerCommand = function(module, command, args)
     if ZSClient[module] and ZSClient[module][command] then
         local argStr = ""
