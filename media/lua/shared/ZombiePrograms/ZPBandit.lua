@@ -16,23 +16,10 @@ end
 
 ZombiePrograms.Bandit.Main = function(bandit)
     local tasks = {}
-    local world = getWorld()
     local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
-    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
-    local walkType = "Run"
-    local endurance = -0.06
+    local endurance = 0.00
     local health = bandit:getHealth()
-
-    if dls < 0.3 then
-        if SandboxVars.Bandits.General_SneakAtNight then
-            walkType = "SneakWalk"
-            endurance = 0
-        end
-    end
-
     local healthMin = 0.7
 
     if SandboxVars.Bandits.General_RunAway and health < healthMin then
@@ -55,6 +42,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
                                 if dist < 1 then
                                     local task = {action="GeneratorToggle", anim="LootLow", x=tx, y=ty, z=tz, status=false}
                                     table.insert(tasks, task)
+                                    return {status=true, next="Main", tasks=tasks}
                                 else
                                     table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, dist, false))
                                     return {status=true, next="Main", tasks=tasks}
@@ -62,18 +50,34 @@ ZombiePrograms.Bandit.Main = function(bandit)
                             end
                         end
 
-                        if SandboxVars.Bandits.General_SabotageVehicles and Bandit.HasExpertise(bandit, Bandit.Expertise.Mechanic) then
+                        -- SandboxVars.Bandits.General_SabotageVehicles and
+                        if Bandit.HasExpertise(bandit, Bandit.Expertise.Mechanic) then
                             local vehicle = square:getVehicleContainer()
-                            if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
-                                local vx, vy, vz = square:getX(), square:getY(), square:getZ()
-                                local test0 = vehicle:isHotwired()
-                                local test1 = vehicle:isEngineRunning()
-                                local vehiclePart = vehicle:getPartById("TireRearLeft")
-                                local vehiclePartSquare = vehiclePart:getSquare()
-                                -- local vpx, vpy, vpz = vehiclePartSquare:getX(), vehiclePartSquare:getY(), vehiclePartSquare:getZ()
+                            if vehicle and vehicle:isHotwired() then
+                                local vx, vy, vz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
+                                local partIds = {"TireFrontRight", "TireFrontLeft", "TireRearLeft", "TireRearRight"}
+                                for i=1, #partIds do
+                                    local partId = partIds[i]
+                                    local vehiclePart = vehicle:getPartById(partId)
+                                    if vehiclePart then
+                                        local item = vehiclePart:getInventoryItem()
+                                        if item then
+                                            local vector = vehicle:getAreaCenter(partId)
+                                            local tx, ty, tz = vector:getX(), vector:getY(), vehicle:getZ()
+                                            -- print ("PARTV: " .. partId .. " X:" .. tx .. " Y:" .. ty)
 
-                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, vx, vy, vz, walkType, 12, false))
-                                return {status=true, next="Main", tasks=tasks}
+                                            local dist = BanditUtils.DistTo(bx, by, tx, ty)
+                                            if dist < 0.8 then
+                                                local task = {action="VehicleAction", subaction="Uninstall", sound="RepairWithWrench", partId=partId, vx=vx, vy=vy, vz=vz, fx=vx, fy=vy, time=650}
+                                                table.insert(tasks, task)
+                                                return {status=true, next="Main", tasks=tasks}
+                                            else
+                                                table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, dist, false))
+                                                return {status=true, next="Main", tasks=tasks}
+                                            end
+                                        end
+                                    end
+                                end
                             end
                         end
                     end
@@ -82,10 +86,17 @@ ZombiePrograms.Bandit.Main = function(bandit)
         end
     end
 
-    local target = {}
-    local enemy
+    local config = {}
+    config.mustSee = true
+    config.hearDist = 7
 
-    local target, enemy = BanditUtils.GetTarget(bandit, false)
+    if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
+        config.hearDist = 20
+    elseif Bandit.HasExpertise(bandit, Bandit.Expertise.Tracker) then
+        config.hearDist = 60
+    end
+
+    local target, enemy = BanditUtils.GetTarget(bandit, config)
     
     -- engage with target
     if target.x and target.y and target.z then
@@ -94,42 +105,15 @@ ZombiePrograms.Bandit.Main = function(bandit)
             Bandit.SayLocation(bandit, targetSquare)
         end
 
-        if bandit:isInARoom() then
-            if outOfAmmo then
-                walkType = "Run"
-            else
-                walkType = "WalkAim"
-            end
-        else
-            if target.dist > 50 then
-                walkType = "Run"
-            elseif target.dist > 35 then
-                walkType = "Walk"
-            else
-                walkType = "WalkAim"
-            end
-        end
-
         local tx, ty, tz = target.x, target.y, target.z
     
         if enemy then
-            local weapon = enemy:getPrimaryHandItem()
-            if weapon and weapon:IsWeapon() then
-                local weaponType = WeaponType.getWeaponType(weapon)
-                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                    walkType = "Run"
-                end
-            end
-
             if target.fx and target.fy and (enemy:isRunning()  or enemy:isSprinting()) then
                 tx, ty = target.fx, target.fy
             end
         end
 
-        if health < 0.8 then
-            walkType = "Limp"
-            endurance = 0
-        end 
+        local walkType = Bandit.GetCombatWalktype(bandit, enemy, target.dist)
 
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist))
         return {status=true, next="Main", tasks=tasks}
@@ -154,7 +138,11 @@ ZombiePrograms.Bandit.Escape = function(bandit)
         endurance = 0
     end
 
-    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit)
+    local config = {}
+    config.mustSee = false
+    config.hearDist = 40
+
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(bandit, config)
 
     if closestPlayer.x and closestPlayer.y and closestPlayer.z then
 
@@ -184,66 +172,5 @@ ZombiePrograms.Bandit.Surrender = function(bandit)
     end
 
     return {status=true, next="Surrender", tasks=tasks}
-end
-
-ZombiePrograms.Bandit.SabotageVehicle = function(bandit)
-    local tasks = {}
-
-    local carfound = false
-    for y=-12, 12 do
-        for x=-12, 12 do
-            local square = getCell():getGridSquare(bandit:getX() + x, bandit:getY() + y, 0)
-            if square then
-                local vehicle = square:getVehicleContainer()
-                if vehicle and vehicle:isHotwired() and not vehicle:getDriver() then
-                    local vx = square:getX()
-                    local vy = square:getY()
-                    local vz = square:getZ()
-                    
-                    local uninstallPart
-                    local uninstallPartList = {"TireRearLeft", "Battery", "TireFrontRight", "TireRearRight", "TireFrontLeft"}
-                    for _, p in pairs(uninstallPartList) do
-                        local vehiclePart = vehicle:getPartById(p)
-                        if vehiclePart and vehiclePart:getInventoryItem() then
-                            uninstallPart = vehiclePart
-                            break
-                        end
-                    end
-
-                    if uninstallPart then
-                        carfound = true
-                        local uninstallPartId = uninstallPart:getId()
-                        local uninstallPartArea = uninstallPart:getArea()
-                        local uninstallPartSquare = uninstallPart:getSquare()
-                        local vpx = uninstallPartSquare:getX()
-                        local vpy = uninstallPartSquare:getY()
-
-                        local dist = vehicle:getAreaDist(uninstallPartArea, bandit)
-                        local minDist = 3.1
-                        if uninstallPartArea == "Engine" then minDist = 5.4 end
-                        -- AdjacentFreeTileFinder.Find(source:getSquare(), bandit)
-                        if dist > minDist then
-                            task = {action="Move", vehiclePartArea=uninstallPartArea, time=50, x=vx, y=vy, z=0, walkType=walkType}
-                            table.insert(tasks, task)
-                        else
-                            local task = {action="VehicleAction", subaction="Uninstall", id=uninstallPartId, area=uninstallPartArea, vx=vx, vy=vy, px=vpx, py=vpy, time=250}
-                            table.insert(tasks, task)
-                        end
-                        break
-                    else
-                        vehicle:setHotwired(false)
-                    end
-                end
-            end
-            if carfound then break end
-        end
-        if carfound then break end
-    end
-
-    if carfound then
-        return {status=true, next="SabotageVehicle", tasks=tasks}
-    else
-        return {status=true, next="Main", tasks=tasks}
-    end
 end
 

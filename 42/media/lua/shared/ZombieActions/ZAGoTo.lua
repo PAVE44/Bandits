@@ -3,9 +3,6 @@ ZombieActions = ZombieActions or {}
 ZombieActions.GoTo = {}
 ZombieActions.GoTo.onStart = function(zombie, task)
 
-    local dx = math.abs(zombie:getX() - task.x)
-    local dy = math.abs(zombie:getY() - task.y)
-
     zombie:setVariable("BanditWalkType", task.walkType)
 
     if not Bandit.IsMoving(zombie) then
@@ -42,15 +39,7 @@ ZombieActions.GoTo.onStart = function(zombie, task)
     end
 
     if BanditUtils.IsController(zombie) then
-        local dx = math.abs(zombie:getX() - task.x)
-        local dy = math.abs(zombie:getY() - task.y)
-        if dx <= 0.02 and dy <= 0.02 and zombie:getZ() == task.z then
-            -- print ("PATH DISTANCE REACHED")
-        else
-            zombie:pathToLocationF(task.x, task.y, task.z)
-            -- zombie:setVariable("BanditWalkType", "WalkAim")
-            --zombie:setWalkType(task.walkType)
-        end
+        zombie:pathToLocationF(task.x, task.y, task.z)
     end
    
     return true

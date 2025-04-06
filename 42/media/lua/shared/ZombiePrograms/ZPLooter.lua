@@ -41,7 +41,17 @@ ZombiePrograms.Looter.Main = function(bandit)
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
     local endurance = 0.00
 
-    local target, enemy = BanditUtils.GetTarget(bandit, true)
+    local config = {}
+    config.mustSee = true
+    config.hearDist = 7
+
+    if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
+        config.hearDist = 20
+    elseif Bandit.HasExpertise(bandit, Bandit.Expertise.Tracker) then
+        config.hearDist = 60
+    end
+
+    local target, enemy = BanditUtils.GetTarget(bandit, config)
     
     -- engage with target
     if target.x and target.y and target.z then

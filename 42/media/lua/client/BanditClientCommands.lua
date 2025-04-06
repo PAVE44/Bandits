@@ -64,6 +64,12 @@ ZSClient.Commands.UpdateHealth  = function(args)
     end
 end
 
+ZSClient.Commands.SendCustomToClients = function(args)
+    BanditCustom.banditData = args.banditData
+    BanditCustom.clanData = args.clanDatand
+    BanditCustom.Save()
+end
+
 ZSClient.Commands.SetMarker  = function(args)
     BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), args.icon, args.time, args.x, args.y, args.color, args.desc)
 end

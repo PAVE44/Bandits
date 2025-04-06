@@ -154,7 +154,7 @@ BanditCustom.GetMods = function()
     local fileName = BanditCustom.filePath .. BanditCustom.banditFile
     for i=0, mods:size()-1 do
         local modid = mods:get(i):gsub("^\\", "")
-        local file = getModFileReader("\\" .. modid, fileName, false)
+        local file = getModFileReader(BanditCompatibility.GetModPrefix() .. modid, fileName, false)
         if file then
             table.insert(ret, modid)
             file:close()

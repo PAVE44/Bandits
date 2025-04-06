@@ -957,7 +957,7 @@ BanditServer.Spawner.Clan = function(player, args)
     if not args.x then args.x = player:getX() end
     if not args.y then args.y = player:getY() end
     if not args.z then args.z = player:getZ() end
-    if not args.program then args.program = "Looter" end
+    if not args.program then args.program = "Bandit" end
     
     BanditCustom.Load()
 

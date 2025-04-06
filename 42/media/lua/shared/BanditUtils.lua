@@ -260,13 +260,16 @@ function BanditUtils.CalcAngle (x1, y1, x2, y2)
 end
 
 
-function BanditUtils.GetClosestPlayerLocation(character, mustSee)
+function BanditUtils.GetClosestPlayerLocation(character, config)
     local result = {}
     result.dist = math.huge
     result.x = false
     result.y = false
     result.z = false
     result.id = false
+
+    local mustSee = config.mustSee or true
+    local hearDist = config.hearDist or 7
 
     local cx, cy = character:getX(), character:getY()
     local playerList = BanditPlayer.GetPlayers()
@@ -276,7 +279,7 @@ function BanditUtils.GetClosestPlayerLocation(character, mustSee)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py = player:getX(), player:getY()
             local dist = BanditUtils.DistTo(cx, cy, px, py)
-            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < 7)) then
+            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < hearDist)) then
                 result.dist = dist
                 result.x = player:getX()
                 result.y = player:getY()
@@ -301,41 +304,13 @@ function BanditUtils.GetClosestZombieLocation(character)
 
     local zombieList = BanditZombie.CacheLightZ
     for id, zombie in pairs(zombieList) do
-        local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
+        local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
         if dist < result.dist then
             result.dist = dist
             result.x = zombie.x
             result.y = zombie.y
             result.z = zombie.z
             result.id = zombie.id
-        end
-    end
-
-    return result
-end
-
-function BanditUtils.GetClosestZombieLocationFast(character)
-    local result = {}
-    result.dist = math.huge
-    result.x = false
-    result.y = false
-    result.z = false
-    result.id = false
-
-    local cx, cy = character:getX(), character:getY()
-
-    local zombieList = BanditZombie.CacheLightZ
-    for id, zombie in pairs(zombieList) do
-        if math.abs(zombie.x - cx) < 30 or math.abs(zombie.y - cy) < 30 then
-            local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
-            if dist < result.dist then
-                result.dist = dist
-                result.x = zombie.x
-                result.y = zombie.y
-                result.z = zombie.z
-                result.d = zombie.d
-                result.id = zombie.id
-            end
         end
     end
 
@@ -357,7 +332,6 @@ function BanditUtils.GetClosestBanditLocation(character)
     local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
         local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
-        -- local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
         if dist < result.dist and cid ~= id then
             result.dist = dist
             result.x = zombie.x
@@ -365,36 +339,6 @@ function BanditUtils.GetClosestBanditLocation(character)
             result.z = zombie.z
             result.d = zombie.d
             result.id = zombie.id
-        end
-    end
-
-    return result
-end
-
-function BanditUtils.GetClosestBanditLocationFast(character)
-    local result = {}
-    local cid = BanditUtils.GetCharacterID(character)
-
-    result.dist = math.huge
-    result.x = false
-    result.y = false
-    result.z = false
-    result.id = false
-
-    local cx, cy = character:getX(), character:getY()
-
-    local zombieList = BanditZombie.CacheLightB
-    for id, zombie in pairs(zombieList) do
-        if math.abs(zombie.x - cx) < 30 or math.abs(zombie.y - cy) < 30 then
-            local dist = BanditUtils.DistTo(cx, cy, zombie.x, zombie.y)
-            if dist < result.dist and cid ~= id then
-                result.dist = dist
-                result.x = zombie.x
-                result.y = zombie.y
-                result.z = zombie.z
-                result.d = zombie.d
-                result.id = zombie.id
-            end
         end
     end
 
@@ -416,7 +360,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do
             if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
-                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
+                local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
                 if dist < result.dist then
                     result.dist = dist
                     result.x = otherBandit.x
@@ -426,12 +370,10 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
                 end
             end
         end
-    end
-
-    if instanceof(character, "IsoPlayer") then
+    elseif instanceof(character, "IsoPlayer") then
         for id, otherBandit in pairs(banditList) do
             if otherBandit.brain.hostile then
-                local dist = BanditUtils.DistTo(cx, cy, otherBandit.x, otherBandit.y)
+                local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
                 if dist < result.dist then
                     result.dist = dist
                     result.x = otherBandit.x
@@ -445,10 +387,11 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     return result
 end
 
-function BanditUtils.GetTarget(character, mustSee)
+function BanditUtils.GetTarget(character, config)
+
     local closestZombie = BanditUtils.GetClosestZombieLocation(character)
     local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(character)
-    local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, mustSee)
+    local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, config)
 
     local target = closestZombie
     local enemy = BanditZombie.Cache[target.id]
@@ -721,7 +664,15 @@ BanditUtils.GetStashMap = function(city)
         ["Louisville"] = function()
             local tab = {}
             for i=1, 16 do
-                table.insert(tab, "LouisvilleStashMap" .. i)
+                table.insert(tab, "Base.LouisvilleStashMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Jefferson"] = function()
+            local tab = {}
+            for i=1, 16 do
+                table.insert(tab, "Base.LouisvilleStashMap" .. i)
             end
             return tab
         end,
@@ -729,7 +680,7 @@ BanditUtils.GetStashMap = function(city)
         ["March Ridge"] = function()
             local tab = {}
             for i=1, 10 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -737,7 +688,7 @@ BanditUtils.GetStashMap = function(city)
         ["Muldraugh"] = function()
             local tab = {}
             for i=1, 18 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -745,7 +696,7 @@ BanditUtils.GetStashMap = function(city)
         ["Riverside"] = function()
             local tab = {}
             for i=1, 10 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -753,7 +704,7 @@ BanditUtils.GetStashMap = function(city)
         ["Rosewood"] = function()
             local tab = {}
             for i=1, 5 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -761,7 +712,7 @@ BanditUtils.GetStashMap = function(city)
         ["West Point"] = function()
             local tab = {}
             for i=1, 16 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -769,7 +720,7 @@ BanditUtils.GetStashMap = function(city)
         ["Brandenburg"] = function()
             local tab = {}
             for i=1, 8 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -777,7 +728,7 @@ BanditUtils.GetStashMap = function(city)
         ["Ekron"] = function()
             local tab = {}
             for i=1, 8 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end,
@@ -785,7 +736,7 @@ BanditUtils.GetStashMap = function(city)
         ["Irvington"] = function()
             local tab = {}
             for i=1, 10 do
-                table.insert(tab, "MarchRidgeStashMap" .. i)
+                table.insert(tab, "Base.MarchRidgeStashMap" .. i)
             end
             return tab
         end

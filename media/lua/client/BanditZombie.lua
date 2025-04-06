@@ -45,6 +45,7 @@ local UpdateZombieCache = function(numberTicks)
     if mr < 60 then mr = 60 end
     -- print ("MR: " .. mr)
     local player = getSpecificPlayer(0)
+    if not player then return end
     local px = player:getX()
     local py = player:getY()
 

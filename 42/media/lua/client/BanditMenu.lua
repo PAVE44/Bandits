@@ -173,7 +173,6 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local brain = BanditBrain.Get(zombie)
     local moddata = zombie:getModData()
     local id = BanditUtils.GetCharacterID(zombie)
-    local daysPassed = BanditScheduler.DaysSinceApo()
     local isUseless = zombie:isUseless()
     local isBandit = zombie:getVariableBoolean("Bandit")
     local walktype = zombie:getVariableString("zombieWalkType")
@@ -310,7 +309,18 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     -- Debug options
     if isDebugEnabled() then
 
+        local vehicle = square:getVehicleContainer()
         
+        if vehicle then
+            print ("VEHICLE: X:" .. vehicle:getX() .. " Y:" .. vehicle:getY())
+            local partIds = {"TireFrontRight", "TireFrontLeft", "TireRearLeft", "TireRearRight"}
+            for i=1, #partIds do
+                local vehiclePart = vehicle:getPartById(partIds[i])
+                --  ("PART: " .. partIds[i] .. " X:" .. vehiclePart:getX() .. " Y:" .. vehiclePart:getY())
+                local vector = vehicle:getAreaCenter(partIds[i])
+                print ("PARTV: " .. partIds[i] .. " X:" .. vector:getX() .. " Y:" .. vector:getY())
+            end
+        end
 
         context:addOption("Init Projectile", player, BanditMenu.InitProjectile)
 

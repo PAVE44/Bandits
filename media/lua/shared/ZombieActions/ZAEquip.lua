@@ -3,58 +3,56 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Equip = {}
 ZombieActions.Equip.onStart = function(zombie, task)
     task.tick = 1
-    local oldItemPrimary = zombie:getVariableString("BanditPrimary")
-    if task.itemPrimary and oldItemPrimary ~= task.itemPrimary then
 
-        --[[
-        if task.itemSecondary then
-            if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
-                local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
-                if oldSecondaryPrimary ~= task.itemSecondary then
-                    local secondaryItem = BanditCompatibility.InstanceItem(task.itemSecondary)
-                    zombie:setSecondaryHandItem(secondaryItem)
-                    zombie:setVariable("BanditSecondary", task.itemSecondary)
+    --[[
+    if task.itemSecondary then
+        if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
+            local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
+            if oldSecondaryPrimary ~= task.itemSecondary then
+                local secondaryItem = BanditCompatibility.InstanceItem(task.itemSecondary)
+                zombie:setSecondaryHandItem(secondaryItem)
+                zombie:setVariable("BanditSecondary", task.itemSecondary)
 
-                    local ls = secondaryItem:getLightStrength()
-                    if ls > 0 then
-                        secondaryItem:setActivated(true)
-                        zombie:setVariable("BanditTorch", true)
-                    else
-                        zombie:setVariable("BanditTorch", false)
-                    end
+                local ls = secondaryItem:getLightStrength()
+                if ls > 0 then
+                    secondaryItem:setActivated(true)
+                    zombie:setVariable("BanditTorch", true)
+                else
+                    zombie:setVariable("BanditTorch", false)
                 end
-            else
-                print ("ERROR: Cannot equip secondary item because primary item occupies both hands")
             end
-        end]]
+        else
+            print ("ERROR: Cannot equip secondary item because primary item occupies both hands")
+        end
+    end]]
 
-        local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
-        local attachmentType = primaryItem:getAttachmentType()
-        for _, def in pairs(ISHotbarAttachDefinition) do
-            if def.attachments then
-                for k, v in pairs(def.attachments) do
-                    if k == attachmentType then
-                        if def.type == "HolsterRight" then 
-                            task.anim1 = "AttachHolsterRight"
-                            task.anim2 = "AttachHolsterRightOut"
-                            task.slot = v
-                            return true
-                        elseif def.type == "Back" then
-                            task.anim1 = "AttachBack"
-                            task.anim2 = "AttachBackOut"
-                            task.slot = v
-                            return true
-                        elseif def.type == "SmallBeltLeft" then
-                            task.anim1 = "AttachHolsterLeft"
-                            task.anim2 = "AttachHolsterLeftOut"
-                            task.slot = v
-                            return true
-                        end
+    local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
+    local attachmentType = primaryItem:getAttachmentType()
+    for _, def in pairs(ISHotbarAttachDefinition) do
+        if def.attachments then
+            for k, v in pairs(def.attachments) do
+                if k == attachmentType then
+                    if def.type == "HolsterRight" then 
+                        task.anim1 = "AttachHolsterRight"
+                        task.anim2 = "AttachHolsterRightOut"
+                        task.slot = v
+                        return true
+                    elseif def.type == "Back" then
+                        task.anim1 = "AttachBack"
+                        task.anim2 = "AttachBackOut"
+                        task.slot = v
+                        return true
+                    elseif def.type == "SmallBeltLeft" then
+                        task.anim1 = "AttachHolsterLeft"
+                        task.anim2 = "AttachHolsterLeftOut"
+                        task.slot = v
+                        return true
                     end
                 end
             end
         end
     end
+
     task.anim1 = "AttachHolsterLeft"
     task.anim2 = "AttachHolsterLeftOut"
     return true
@@ -112,7 +110,7 @@ ZombieActions.Equip.onWorking = function(zombie, task)
         end
     end
     
-    if zombie:getBumpType() ~= task.anim1 and zombie:getBumpType() ~= task.anim2 then 
+    if task.tick > 20 and zombie:getBumpType() ~= task.anim1 and zombie:getBumpType() ~= task.anim2 then 
         return true
     end
 

@@ -9,6 +9,8 @@ function BanditClansMain:initialise()
     ISPanel.initialise(self)
 
     local btnCloseWidth = 100 -- getTextManager():MeasureStringX(UIFont.Small, "Cancel") + 64
+    local btnPullWidth = 150 -- getTextManager():MeasureStringX(UIFont.Small, "Pull From Server") + 64
+    local btnPushWidth = 150 -- getTextManager():MeasureStringX(UIFont.Small, "Push To Server") + 64
     local btnCloseX = math.floor(self:getWidth() / 2) - ((btnCloseWidth ) / 2)
 
     self.cancel = ISButton:new(btnCloseX, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnCloseWidth, BUTTON_HGT, "Close", self, BanditClansMain.onClick)
@@ -21,6 +23,28 @@ function BanditClansMain:initialise()
         self.cancel:enableCancelColor()
     end
     self:addChild(self.cancel)
+
+    self.pull = ISButton:new(UI_BORDER_SPACING, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnPullWidth, BUTTON_HGT, "Pull From Server", self, BanditClansMain.onClick)
+    self.pull.internal = "PULL"
+    self.pull.anchorTop = false
+    self.pull.anchorBottom = true
+    self.pull:initialise()
+    self.pull:instantiate()
+    if BanditCompatibility.GetGameVersion() >= 42 then
+        self.pull:enableCancelColor()
+    end
+    self:addChild(self.pull)
+
+    self.push = ISButton:new(UI_BORDER_SPACING + btnPullWidth + UI_BORDER_SPACING, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnPushWidth, BUTTON_HGT, "Push To Server", self, BanditClansMain.onClick)
+    self.push.internal = "PUSH"
+    self.push.anchorTop = false
+    self.push.anchorBottom = true
+    self.push:initialise()
+    self.push:instantiate()
+    if BanditCompatibility.GetGameVersion() >= 42 then
+        self.push:enableCancelColor()
+    end
+    self:addChild(self.push)
 
     local topY = 60
     local clanButtonWidth = 130
@@ -73,6 +97,7 @@ end
 
 function BanditClansMain:onClick(button)
     if button.internal == "CLOSE" then
+        self:removeFromUIManager()
         self:close()
     elseif button.internal == "EDITCLAN" then
         local modal = BanditClanMain:new(500, 80, 1220, 900, button.cid)
@@ -88,6 +113,21 @@ function BanditClansMain:onClick(button)
         modal:addToUIManager()
         self:removeFromUIManager()
         self:close()
+    elseif button.internal == "PULL" then
+
+        local args = {}
+        args.confirm = true
+        sendClientCommand(getSpecificPlayer(0), 'Custom', 'SendToClients', args)
+        self:removeFromUIManager()
+        self:close()
+
+    elseif button.internal == "PUSH" then
+        BanditCustom.Load()
+
+        local args = {}
+        args.banditData = BanditCustom.banditData
+        args.clanData = BanditCustom.clanData
+        sendClientCommand(getSpecificPlayer(0), 'Custom', 'ReceiveFromClient', args)
     end
 end
 

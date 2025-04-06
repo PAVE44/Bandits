@@ -771,7 +771,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         if city then
             local maps = BanditUtils.GetStashMap(city)
             for i=1, #maps do
-                table.insert (lootBag, {itemType=maps[i], chance=20, n=1})
+                table.insert (lootBag, {itemType=maps[i], chance=100, n=1})
             end
         end
         table.insert (loot, {itemType="Base.Pencil", chance=100, n=1})

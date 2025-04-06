@@ -251,7 +251,9 @@ local function addStuckItem(attacker, victim, behind, item)
     if #locations > 0 then
         local location = BanditUtils.Choice(locations)
         victim:setAttachedItem(location, item)
-        attacker:playSound(item:getBreakSound())
+        -- attacker:playSound(item:getBreakSound())
+        attacker:playSound("ZSWeaponStuck")
+        
         -- Bandit.Say(victim, "DEAD")
         local bloodLocations = getBloodLocations(location)
         for _, bloodLocation in pairs(bloodLocations) do
@@ -380,7 +382,7 @@ local function Hit(attacker, item, victim)
                 PlayerDamageModel.BareHandHit(attacker, victim)
             else
                 victim:setBumpDone(true)
-                victim:Hit(item, tempAttacker, 0.8, false, 1, false)
+                victim:Hit(item, tempAttacker, 1.4, false, 1, false)
 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)

@@ -116,51 +116,29 @@ end
 function Bandit.HasTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        if #brain.tasks > 0 then
-            return true
-        end
+        return BanditBrain.HasTask(brain)
     end
-    return false
 end
 
 function Bandit.HasTaskType(zombie, taskType)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        --[[
-        if #brain.tasks > 0 and brain.tasks[1].action == taskType then
-            return true
-        end]]
-        for _, task in pairs(brain.tasks) do
-            if task.action == taskType then
-                return true
-            end
-        end
+        return BanditBrain.HasTaskType(brain, taskType)
     end
-    return false
 end
 
 function Bandit.HasMoveTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        for _, task in pairs(brain.tasks) do
-            if task.action == "Move" or task.action == "GoTo" then
-                return true
-            end
-        end
+        return BanditBrain.HasMoveTask(brain)
     end
-    return false
 end
 
 function Bandit.HasActionTask(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        for _, task in pairs(brain.tasks) do
-            if task.action ~= "Move" and task.action ~= "GoTo" then
-                return true
-            end
-        end
+        return BanditBrain.HasActionTask(brain)
     end
-    return false
 end
 
 function Bandit.UpdateTask(zombie, task)
@@ -445,48 +423,22 @@ end
 function Bandit.IsOutOfAmmo(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if weapons.primary.bulletsLeft <= 0 and 
-            ((weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
-             (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0))
-            and weapons.secondary.bulletsLeft <= 0 and 
-            ((weapons.secondary.type == "mag" and weapons.secondary.magCount <= 0) or 
-             (weapons.secondary.type == "nomag" and weapons.secondary.ammoCount <= 0)) then
-            return true
-        end
+        return BanditBrain.IsOutOfAmmo(brain)
     end
-    return false
 end
 
 function Bandit.IsBareHands(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if weapons.melee == "Base.BareHands" then
-            return true
-        end
+        return BanditBrain.IsBareHands(brain)
     end
-    return false
 end
 
 function Bandit.NeedResupplySlot(zombie, slot)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        local weapons = brain.weapons
-        if not weapons[slot].name or 
-            (
-                weapons.primary.bulletsLeft <= 0 and 
-                (
-                    (weapons[slot].type == "mag" and weapons[slot].magCount <= 0) or
-                    (weapons[slot].type == "nomag" and weapons[slot].ammoCount <= 0)
-                )
-            ) then
-
-            return true
-
-        end
+        return BanditBrain.NeedResupplySlot(brain, slot)
     end
-    return false
 end
 
 function Bandit.SetWeapons(zombie, weapons)
@@ -819,7 +771,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
         if city then
             local maps = BanditUtils.GetStashMap(city)
             for i=1, #maps do
-                table.insert (lootBag, {itemType=maps[i], chance=20, n=1})
+                table.insert (lootBag, {itemType=maps[i], chance=100, n=1})
             end
         end
         table.insert (loot, {itemType="Base.Pencil", chance=100, n=1})
@@ -1055,6 +1007,60 @@ function Bandit.AddVisualDamage(bandit, handWeapon)
 
         bandit:addVisualDamage(itemVisual)
     end
+end
+
+function Bandit.GetCombatWalktype(bandit, enemy, dist)
+    local world = getWorld()
+    local cm = world:getClimateManager()
+    local dls = cm:getDayLightStrength()
+
+    local walkType = "Walk"
+
+    if dls < 0.3 then
+        if SandboxVars.Bandits.General_SneakAtNight then
+            walkType = "SneakWalk"
+        end
+    end
+
+    if bandit and dist then
+        if dist > 5 then
+            walkType = "Run"
+        else
+            walkType = "WalkAim"
+        end
+
+        if enemy then
+            local banditWeapon = enemy:getPrimaryHandItem()
+            if banditWeapon and banditWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(banditWeapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    walkType = "Run"
+                end
+            end
+            
+            local enemyWeapon = bandit:getPrimaryHandItem()
+            if enemyWeapon and enemyWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(enemyWeapon)
+                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                    local wrange = enemyWeapon:getMaxRange()
+
+                    if dist > wrange + 10 then
+                        walkType = "Run"
+                    elseif dist > wrange + 4 then
+                        walkType = "Walk"
+                    else
+                        walkType = "WalkAim"
+                    end
+                end
+            end
+
+        end
+
+        if bandit:getHealth() < 0.8 then
+            walkType = "Limp"
+        end 
+    end
+    return walkType
 end
 
 function Bandit.GetSkinTexture(female, idx)

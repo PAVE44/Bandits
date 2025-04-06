@@ -3,7 +3,6 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
-    -- local oldWalkType = zombie:getVariableString("BanditWalkType")
     if not zombie:getSquare():isFree(false) then
         local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)
         if asquare then
@@ -11,11 +10,7 @@ ZombieActions.Move.onStart = function(zombie, task)
             zombie:setY(asquare:getY() + 0.5)
         end
     end
-        
 
-    local dx = math.abs(zombie:getX() - task.x)
-    local dy = math.abs(zombie:getY() - task.y)
-    
     zombie:setVariable("BanditWalkType", task.walkType)
 
     if not Bandit.IsMoving(zombie) then
@@ -52,21 +47,9 @@ ZombieActions.Move.onStart = function(zombie, task)
     end
     
     if BanditUtils.IsController(zombie) then
-       
-        if task.vehiclePartArea then
-            local vehicle = getCell():getGridSquare(task.x, task.y, task.z):getVehicleContainer()
-            if vehicle then
-                zombie:getPathFindBehavior2():pathToVehicleArea(vehicle, task.vehiclePartArea)
-            end
-        else
-            zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
-        end
-        
+        zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
         zombie:getPathFindBehavior2():cancel()
-        -- zombie:getPathFindBehavior2():reset()
         zombie:setPath2(nil)
-        -- zombie:setWalkType(task.walkType)
-        
     end
     
     return true

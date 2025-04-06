@@ -157,7 +157,7 @@ local function hit(shooter, item, victim)
     local n = BanditRandom.Get()
     if n < accuracyThreshold then
         print ("HIT N: " .. n)
-        if instanceof(victim, "IsoPlayer") then
+        if instanceof(victim, "IsoPlayer") and brainShooter.hostile then
             BanditPlayer.WakeEveryone()
 
             local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
@@ -165,7 +165,7 @@ local function hit(shooter, item, victim)
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:Hit(item, tempShooter, 1, false, 1, false)
+            victim:Hit(item, tempShooter, 1.4, false, 1, false)
 
             -- addHolePlayer(victim)
             BanditCompatibility.Splash(victim, item, tempShooter)
@@ -186,20 +186,40 @@ local function hit(shooter, item, victim)
             end
             
         elseif instanceof(victim, "IsoZombie") then
-            victim:setBumpDone(true)
-            victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:setHitAngle(shooter:getForwardDirection())
-            victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-            victim:setHitReaction("ShotBelly")
-            victim:Hit(item, tempShooter, 1, false, 1, false)
-            victim:setAttackedBy(shooter)
-            addHole(victim)
-            BanditCompatibility.Splash(victim, item, tempShooter)
+            local brainVictim = BanditBrain.Get(victim)
+            if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
 
-            local h = victim:getHealth()
-            local id = BanditUtils.GetCharacterID(bandit)
-            local args = {id=id, h=h}
-            sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+                local isSeen = false
+                local playerList = BanditPlayer.GetPlayers()
+                for i=0, playerList:size()-1 do
+                    local player = playerList:get(i)
+                    if player and player:CanSee(victim) and victim:getSquare():isCanSee(0) then
+                        isSeen = true
+                    end
+                end
+
+                if true then
+                    victim:setBumpDone(true)
+                    victim:setHitFromBehind(shooter:isBehind(victim))
+                    victim:setHitAngle(shooter:getForwardDirection())
+                    victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+                    victim:setHitReaction("ShotBelly")
+                    victim:Hit(item, tempShooter, 1, false, 1, false)
+                    victim:setAttackedBy(shooter)
+                    addHole(victim)
+                    BanditCompatibility.Splash(victim, item, tempShooter)
+
+                    local h = victim:getHealth()
+                    local id = BanditUtils.GetCharacterID(bandit)
+                    local args = {id=id, h=h}
+                    sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+
+                else
+                    --victim:changeState(ZombieOnGroundState.instance())
+                    victim:removeFromSquare()
+                    victim:removeFromWorld()
+                end
+            end
         end
        
 
@@ -454,8 +474,12 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     BanditProjectile.Add(sx, sy, sz, sd, projectiles)
 
     -- handle real and "world" sound 
-    local emitter = getWorld():getFreeEmitter(sx, sy, sz)
-    emitter:playSound(weaponItem:getSwingSound())
+    -- local emitter = getWorld():getFreeEmitter(sx, sy, sz)
+    local emitter = zombie:getEmitter()
+    local swingSound = weaponItem:getSwingSound()
+    -- emitter:stopAll()
+    local long = emitter:playSound(swingSound)
+    -- emitter:setParameterValueByName(long, "CameraZoom", 1.0)
 
     if not brainShooter.sound or brainShooter.sound == 0 then
         addSound(getSpecificPlayer(0), sx, sy, sz, 40, 100)

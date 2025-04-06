@@ -251,7 +251,9 @@ local function addStuckItem(attacker, victim, behind, item)
     if #locations > 0 then
         local location = BanditUtils.Choice(locations)
         victim:setAttachedItem(location, item)
-        attacker:playSound(item:getBreakSound())
+        -- attacker:playSound(item:getBreakSound())
+        attacker:playSound("ZSWeaponStuck")
+        
         -- Bandit.Say(victim, "DEAD")
         local bloodLocations = getBloodLocations(location)
         for _, bloodLocation in pairs(bloodLocations) do
