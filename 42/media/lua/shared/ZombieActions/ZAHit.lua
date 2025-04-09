@@ -316,12 +316,13 @@ end
 
 local function Hit(attacker, item, victim)
     -- Clone the attacker to create a temporary IsoPlayer
-    local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
+    -- local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
+    local fakeZombie = getCell():getFakeZombieForHit()
 
     -- Calculate distance between attacker and victim
-    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempAttacker:getX(), tempAttacker:getY())
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), attacker:getX(), attacker:getY())
     local range = item:getMaxRange()
-    if dist < range + 0.5 then
+    if dist < range + 0.6 and not victim:isOnKillDone() then
 
         if instanceof(victim, "IsoPlayer") then
             BanditPlayer.WakeEveryone()
@@ -382,7 +383,7 @@ local function Hit(attacker, item, victim)
                 PlayerDamageModel.BareHandHit(attacker, victim)
             else
                 victim:setBumpDone(true)
-                victim:Hit(item, tempAttacker, 1.4, false, 1, false)
+                victim:Hit(item, fakeZombie, 1.4, false, 1, false)
 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)
@@ -395,7 +396,7 @@ local function Hit(attacker, item, victim)
             -- addBlood(victim, 100)
             -- addBlood(attacker, 30)
             
-            BanditCompatibility.Splash(victim, item, tempAttacker)
+            BanditCompatibility.Splash(victim, item, fakeZombie)
                 
             if instanceof(victim, "IsoPlayer") then
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
@@ -411,8 +412,8 @@ local function Hit(attacker, item, victim)
     end
 
     -- Clean up the temporary player after use
-    tempAttacker:removeFromWorld()
-    tempAttacker = nil
+    -- tempAttacker:removeFromWorld()
+    -- tempAttacker = nil
 end
 
 ZombieActions.Hit = {}

@@ -765,7 +765,6 @@ local function ManageCollisions(bandit)
 
                             if object:isBarricaded() then
                                 local barricade = object:getBarricadeOnSameSquare()
-                                local sameSide = barricade:getSquare():getX() == bandit:getSquare():getX() and barricade:getSquare():getY() == bandit:getSquare():getY()
                                 local fx, fy
                                 if barricade then
                                     if properties:Is(IsoFlagType.doorN) then
@@ -786,6 +785,7 @@ local function ManageCollisions(bandit)
                                         fy = barricade:getY()
                                     end
                                 end
+                                local sameSide = barricade:getSquare():getX() == bandit:getSquare():getX() and barricade:getSquare():getY() == bandit:getSquare():getY()
 
                                 if SandboxVars.Bandits.General_RemoveBarricade and Bandit.HasExpertise(bandit, Bandit.Expertise.Breaker) and sameSide then
                                     anim = "RemoveBarricadeCrowbarMid"
@@ -1088,6 +1088,10 @@ local function ManageCombat(bandit)
     -- COMBAT AGAINST ZOMBIES AND BANDITS FROM OTHER CLAN
     local cache, potentialEnemyList = BanditZombie.Cache, BanditZombie.CacheLight
     for id, potentialEnemy in pairs(potentialEnemyList) do
+
+        if brain.id == 6095095 and id == 4391035 then
+            print ("test")
+        end
 
         -- quick manhattan check for performance boost
         -- if BanditUtils.DistToManhattan(potentialEnemy.x, potentialEnemy.y, zx, zy) < 36 then
@@ -1409,7 +1413,7 @@ local function UpdateZombies(zombie)
     local zid = zombie:getModData().zid
     if zid and biteTab[zid] and zombie:getBumpType() == "Bite" and asn == "bumped" then
         local tick = biteTab[zid].tick
-        if tick == 4 then
+        if tick == 7 then
             local bandit = biteTab[zid].bandit
             local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), bandit:getX(), bandit:getY())
             if dist < 0.8 then 
@@ -1428,17 +1432,19 @@ local function UpdateZombies(zombie)
                     bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
                 end
         
-                Bandit.ClearTasks(bandit)
-                bandit:setBumpDone(true)
-                bandit:Hit(teeth, zombie, 1.01, false, 1, false)
-                Bandit.UpdateInfection(bandit, 0.001)
+                if not bandit:isOnKillDone() then
+                    Bandit.ClearTasks(bandit)
+                    -- bandit:setBumpDone(true)
+                    bandit:Hit(teeth, zombie, 1.01, false, 1, false)
+                    Bandit.UpdateInfection(bandit, 0.001)
 
-                local h = bandit:getHealth()
-                local id = BanditUtils.GetCharacterID(bandit)
-                local args = {id=id, h=h}
-                sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+                    local h = bandit:getHealth()
+                    local id = BanditUtils.GetCharacterID(bandit)
+                    local args = {id=id, h=h}
+                    sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+                end
             end
-        elseif tick >= 12 then
+        elseif tick >= 16 then
             biteTab[zid] = nil
             zombie:getModData().zid = nil
             return
@@ -1498,9 +1504,11 @@ local function UpdateZombies(zombie)
         --if player.dist < enemy.dist then return end
 
         local bandit = BanditZombie.Cache[enemy.id]
+        local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+        local dist = math.sqrt(((bx - zx) * (bx - zx)) + ((by - zy) * (by - zy)))
 
         -- Standard movement if bandit is far
-        if enemy.dist > 3 then
+        if dist > 3 then
             -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " far", 0.6, 0.6, 1)
             if zombie:CanSee(bandit) then
                 zombie:pathToCharacter(bandit)
@@ -1509,7 +1517,8 @@ local function UpdateZombies(zombie)
         -- Approach bandit if in range
         else
             -- zombie:addLineChatElement(string.format("mid %.2f", enemy.dist), 0.6, 0.6, 1)
-            -- local player = getSpecificPlayer(0)
+            local player = getSpecificPlayer(0)
+            -- local tempTarget = BanditUtils.CloneIsoPlayer(bandit)
             -- if zombie:CanSee(bandit) and zombie:CanSee(player) then
                 -- if BanditCompatibility.GetGameVersion() >= 42 then
                     -- zombie:pathToCharacter(bandit)
@@ -1519,14 +1528,18 @@ local function UpdateZombies(zombie)
                     -- zombie:changeState(LungeState.instance())
                     -- zombie:getPathFindBehavior2():cancel()
                     -- zombie:setPath2(nil)
-                    zombie:spotted(bandit, true)
+                    zombie:spotted(player, true)
                     zombie:setTarget(bandit)
                     zombie:setAttackedBy(bandit)
+
+                    --tempTarget:removeFromWorld()
+                    -- tempTarget = nil
+
                 -- end
             -- end
 
             -- Bite range attack
-            if enemy.dist < 0.65 and math.abs(zz - enemy.z) < 0.5 then
+            if dist < 0.65 and math.abs(zz - bz) < 0.5 then
                 -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " close", 0.6, 0.6, 1)
                 local isWallTo = zombie:getSquare():isSomethingTo(bandit:getSquare())
                 if not isWallTo then
@@ -1535,9 +1548,9 @@ local function UpdateZombies(zombie)
                         local attackingZombiesNumber = 0
                         for id, attackingZombie in pairs(BanditZombie.CacheLightZ) do
                             -- local distManhattan = BanditUtils.DistToManhattan(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
-                            if math.abs(attackingZombie.x - enemy.x) + math.abs(attackingZombie.y - enemy.y) < 1 then
+                            if math.abs(attackingZombie.x - bx) + math.abs(attackingZombie.y - by) < 1 then
                                 -- local dist = BanditUtils.DistTo(attackingZombie.x, attackingZombie.y, enemy.x, enemy.y)
-                                local dist = math.sqrt(((attackingZombie.x - enemy.x) * (attackingZombie.x - enemy.x)) + ((attackingZombie.y - enemy.y) * (attackingZombie.y - enemy.y)))
+                                local dist = math.sqrt(((attackingZombie.x - bx) * (attackingZombie.x - bx)) + ((attackingZombie.y - by) * (attackingZombie.y - by)))
                                 if dist < 0.6 then
                                     attackingZombiesNumber = attackingZombiesNumber + 1
                                     if attackingZombiesNumber > 2 then break end
@@ -1573,12 +1586,13 @@ end
 
 
 local function ProcessTask(bandit, task)
+
     if not task.action then return end
     if not task.state then task.state = "NEW" end
 
     if task.state == "NEW" then
         if not task.time then task.time = 1000 end
-        bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
+        -- bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
         if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
             Bandit.SetAim(bandit, false)
         end
@@ -1653,6 +1667,7 @@ local function ProcessTask(bandit, task)
 end
 
 local function GenerateTask(bandit, uTick)
+
     local tasks = {}
     
     -- MANAGE BANDIT ENDURANCE LOSS

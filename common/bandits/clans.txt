@@ -1,32 +1,8 @@
-[3a424953-fa5b-418f-8f11-462e52bfd574]
-	general: name = Rangers
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = false
-
 [8f4af04f-8f12-4155-8800-7d6c09f7af2e]
 	general: name = Professions
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = false
-	spawn: roadblock = false
-
-[bbe0c8c9-1135-4ced-abd2-73807e166a1e]
-	general: name = PrivateMilitia
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false
@@ -43,53 +19,6 @@
 	spawn: campers = false
 	spawn: assault = true
 	spawn: wanderer = true
-	spawn: roadblock = false
-
-[c4e24888-70f9-43ea-80f8-1bb2f6b9bd88]
-	general: name = PoliceBlue
-	spawn: wave = 6
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = true
-
-[c4878ebb-c8e5-4932-8850-370ee9c77d61]
-	general: name = Veterans
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = true
-	spawn: defenders = false
-	spawn: campers = true
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = false
-
-[f3ad89be-9368-4df7-a63b-0c315a96f23b]
-	general: name = Bikers
-	spawn: wave = 3
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
-	spawn: defenders = true
-	spawn: campers = false
-	spawn: assault = true
-	spawn: wanderer = true
-	spawn: roadblock = false
-
-[c15cc316-41f9-4c2c-b71a-3a3fb58c247d]
-	general: name = Inmates
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = false
 	spawn: roadblock = false
 
 [a2dec2f0-c76d-4640-8a71-733a547a1ebc]
@@ -116,18 +45,6 @@
 	spawn: wanderer = true
 	spawn: roadblock = false
 
-[eacda00e-6f8f-4afa-a813-f847d54720d8]
-	general: name = Black
-	spawn: wave = 3
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
-	spawn: defenders = true
-	spawn: campers = false
-	spawn: assault = true
-	spawn: wanderer = true
-	spawn: roadblock = true
-
 [84d300b0-25a2-42ac-922d-5e8839a010fb]
 	general: name = FBI
 	spawn: wave = 0
@@ -137,18 +54,6 @@
 	spawn: campers = false
 	spawn: assault = false
 	spawn: wanderer = false
-	spawn: roadblock = false
-
-[b6c61446-ad6c-4529-9bac-751b9b64843f]
-	general: name = SWAT
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = true
 	spawn: roadblock = false
 
 [a5def10b-bab9-46b1-8e8c-d5152c86457e]
@@ -163,30 +68,6 @@
 	spawn: wanderer = true
 	spawn: roadblock = false
 
-[d2860ee6-7e18-4132-ad42-8fb3a34ea499]
-	general: name = ArmyGreen
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = true
-	spawn: defenders = false
-	spawn: campers = true
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = true
-
-[33894253-b965-4eb3-94e1-4d642cadac88]
-	general: name = PoliceGray
-	spawn: wave = 6
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = false
-
 [a2fc481f-39ac-4baf-aabe-29971e4e92a1]
 	general: name = Lumberjacks
 	spawn: wave = 0
@@ -196,18 +77,6 @@
 	spawn: campers = false
 	spawn: assault = false
 	spawn: wanderer = false
-	spawn: roadblock = false
-
-[d6c3c644-42e7-466a-8ce4-c002ad29dd50]
-	general: name = Classy
-	spawn: wave = 4
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
-	spawn: defenders = true
-	spawn: campers = false
-	spawn: assault = true
-	spawn: wanderer = true
 	spawn: roadblock = false
 
 [bf5985eb-7cb0-44ba-8392-f656ffe421f4]
@@ -230,29 +99,6 @@
 	spawn: companion = false
 	spawn: defenders = false
 	spawn: campers = true
-	spawn: assault = false
-	spawn: wanderer = true
-	spawn: roadblock = false
-
-[526e57b9-52cf-42a8-a17b-50e32e4d33f3]
-	general: name = PoliceRiot
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = true
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = false
-	spawn: roadblock = false
-
-[9bf4882b-0622-4e77-82c1-feee90b566b4]
-	general: name = Hazmats
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
 	spawn: assault = false
 	spawn: wanderer = true
 	spawn: roadblock = false
@@ -330,18 +176,6 @@
 
 [fe1a8e07-7c73-466d-9ade-2e3e565dcb21]
 	general: name = Trash
-	spawn: wave = 0
-	spawn: zone = 0
-	spawn: friendly = false
-	spawn: companion = false
-	spawn: defenders = false
-	spawn: campers = false
-	spawn: assault = false
-	spawn: wanderer = false
-	spawn: roadblock = false
-
-[72fbcd15-a81b-476a-8c25-1b2caea694de]
-	general: name = Bandits
 	spawn: wave = 0
 	spawn: zone = 0
 	spawn: friendly = false

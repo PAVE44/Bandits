@@ -43,11 +43,27 @@ function BanditClanMain:onAvatarListChange()
     end
     self:addChild(self.save)
 
+    BanditCustom.Load()
+    local allData = BanditCustom.GetFromClanSorted(self.cid)
+
+    local cnt = 0
+    for _, _ in pairs(allData) do
+        cnt = cnt + 1
+    end
+
     local topY = 60
     local leftX = 130
     local avatarWidth = 130
     local avatarHeight = 240
     local avatarSpacing = 20
+    local inRow = 6
+
+    if cnt >= 18 then
+        avatarWidth = 75
+        avatarHeight = 120
+        avatarSpacing = 5
+        inRow = 11
+    end
 
     local player = getSpecificPlayer(0)
     local desc = SurvivorFactory.CreateSurvivor(SurvivorType.Neutral, false)
@@ -60,10 +76,6 @@ function BanditClanMain:onAvatarListChange()
         info:set(color:getRedFloat(), color:getGreenFloat(), color:getBlueFloat(), 1)
         table.insert(self.hairColors, { r=info:getR(), g=info:getG(), b=info:getB() })
     end
-
-    BanditCustom.Load()
-
-    
 
     local rowY = 0
 
@@ -135,21 +147,6 @@ function BanditClanMain:onAvatarListChange()
     self:loadConfig()
 
     leftX = 300
-    local allData = BanditCustom.GetAll()
-
-    local keys = {}
-    for key in pairs(allData) do
-        table.insert(keys, key)
-    end
-
-    table.sort(keys, function(k1, k2)
-        return allData[k1].general.name < allData[k2].general.name
-    end)
-
-    local allDataSorted = {}
-    for _, key in ipairs(keys) do
-        allDataSorted[key] = allData[key]
-    end
 
     self.models = {}
     self.avatarPanel = {}
@@ -158,7 +155,7 @@ function BanditClanMain:onAvatarListChange()
     local j = 0
     local x
     local y
-    for bid, data in pairs(allDataSorted) do
+    for bid, data in pairs(allData) do
         if data.general.cid == self.cid then
             x = leftX + (i * (avatarWidth + avatarSpacing)) + avatarSpacing
             y = topY + j * (avatarHeight + avatarSpacing)
@@ -241,7 +238,7 @@ function BanditClanMain:onAvatarListChange()
 
             self.avatarPanel[bid]:setCharacter(self.models[bid])
             i = i + 1
-            if i == 6 then
+            if i == inRow then
                 j = j + 1
                 i = 0
             end
@@ -249,7 +246,7 @@ function BanditClanMain:onAvatarListChange()
         end
     end
 
-    if total < 18 then
+    if total < 66 then
         x = leftX + (i * (avatarWidth + avatarSpacing)) + avatarSpacing
         y = topY + j * (avatarHeight + avatarSpacing)
         local bid = BanditCustom.GetNextId()

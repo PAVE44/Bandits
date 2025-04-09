@@ -55,6 +55,7 @@ function BanditClansMain:initialise()
 
     BanditCustom.Load()
     local allData = BanditCustom.ClanGetAllSorted()
+
     self.clanButton = {}
     local total = 0
     local i = 0

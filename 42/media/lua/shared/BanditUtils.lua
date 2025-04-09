@@ -452,7 +452,12 @@ function BanditUtils.CloneIsoPlayer(originalCharacter)
     tempPlayer:setSecondaryHandItem(originalCharacter:getSecondaryHandItem())
     tempPlayer:setSceneCulled(false)
     tempPlayer:setNPC(true)
-
+    --[[
+    tempPlayer:setX(originalCharacter:getX())
+    tempPlayer:setY(originalCharacter:getY())
+    tempPlayer:setZ(originalCharacter:getZ())
+]]
+    
     -- You can copy more properties as needed, depending on what you need for the Hit function
 
     return tempPlayer
