@@ -352,6 +352,7 @@ local function banditize(zombie, bandit, clan, args)
     brain.program = {}
     brain.program.name = args.program
     brain.program.stage = "Prepare"
+    brain.programFallback = args.program
 
     -- bwo uses it
     brain.occupation = args.occupation
