@@ -167,7 +167,8 @@
 	general: name = Karate
 	spawn: wave = 0
 	spawn: zone = 0
-	spawn: friendly = false
+	spawn: friendly = true
+	spawn: companion = false
 	spawn: defenders = false
 	spawn: campers = false
 	spawn: assault = false

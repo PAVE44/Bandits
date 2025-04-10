@@ -77,7 +77,7 @@ local function IsShotClear (shooter, enemy)
                 local chrs = square:getMovingObjects()
                 for i=0, chrs:size()-1 do
                     local chr = chrs:get(i)
-                    if instanceof(chr, "IsoPlayer") and not brainShooter.hostile then
+                    if instanceof(chr, "IsoPlayer") and not (brainShooter.hostile or brainShooter.hostileP) then
                         -- shooter:addLineChatElement("PLAYER IN LINE", 0.8, 0.8, 0.1)
                         return false
                     elseif instanceof(chr, "IsoZombie") then
@@ -105,56 +105,6 @@ local function IsShotClear (shooter, enemy)
     end
 
     return true
-end
-
--- hostilizes friendlies that witnessed player attacking a friendly
-local function CheckFriendlyFire(bandit, attacker)
-    if not attacker then return end
-
-    -- attacking zombies is ok!
-    if not bandit:getVariableBoolean("Bandit") then return end
-
-    -- hostility against civilians (clan=0) is handled by other mods
-    local brain = BanditBrain.Get(bandit)
-    if not brain then return end
-    if brain.clan == 0 then return end
-
-    -- attacking hostiles is ok!
-    if brain.hostile then return end
-
-    -- attacker is not a real player
-    if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
-
-    -- attacking thief needs to be handled separately because of his pseudo-friendliness
-    if brain.program.name == "Thief" then
-        Bandit.SetHostile(bandit, true)
-        Bandit.SetProgram(bandit, "Bandit", {})
-
-        local syncData = { id = brain.id, hostile = true, program = {name="Bandit", stage="Prepare"} }
-        Bandit.ForceSyncPart(bandit, syncData)
-        return
-    end
-
-    -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
-    local attackerX, attackerY = attacker:getX(), attacker:getY()
-    local cache, witnesses = BanditZombie.Cache, BanditZombie.CacheLightB
-
-    for _, witness in pairs(witnesses) do
-        if not witness.brain.hostile then
-            local dx, dy = witness.x - attackerX, witness.y - attackerY
-            if dx * dx + dy * dy < 144 then -- squared distance check (avoids sqrt call)
-                local friendly = cache[witness.id]
-                if friendly and friendly:CanSee(attacker) then
-                    Bandit.SetHostile(friendly, true)
-                    Bandit.SetProgram(friendly, "Bandit", {})
-
-                    local fBrain = BanditBrain.Get(friendly)
-                    local syncData = { id = fBrain.id, hostile = true, program = {name="Bandit", stage="Prepare"} }
-                    Bandit.ForceSyncPart(friendly, syncData)
-                end
-            end
-        end
-    end
 end
 
 -- turns a zombie into a bandit
@@ -1002,7 +952,7 @@ local function ManageCombat(bandit)
     local escapeDist = 5.2
 
     -- COMBAT AGAIST PLAYERS 
-    if brain.hostile then
+    if brain.hostile or brain.hostileP then
         local playerList = BanditPlayer.GetPlayers()
 
         for i=0, playerList:size()-1 do
@@ -1868,25 +1818,22 @@ local function OnBanditUpdate(zombie)
 end
 
 local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
-    if zombie:getVariableBoolean("Bandit") then
-        local bandit = zombie
+    if not zombie:getVariableBoolean("Bandit") then return end
 
-        Bandit.AddVisualDamage(bandit, handWeapon)
+    local bandit = zombie
+
+    Bandit.AddVisualDamage(bandit, handWeapon)
+    Bandit.ClearTasks(bandit)
+    Bandit.Say(bandit, "HIT", true)
+    if Bandit.IsSleeping(bandit) then
+        local task = {action="Time", lock=true, anim="GetUp", time=150}
         Bandit.ClearTasks(bandit)
-        Bandit.Say(bandit, "HIT", true)
-        if Bandit.IsSleeping(bandit) then
-            local task = {action="Time", lock=true, anim="GetUp", time=150}
-            Bandit.ClearTasks(bandit)
-            Bandit.AddTask(bandit, task)
-            Bandit.SetSleeping(bandit, false)
-            Bandit.SetProgramStage(bandit, "Prepare")
-        end
-   
-        if ZombRand(11) == 5 then
-            CheckFriendlyFire(bandit, attacker)
-        end
-        
+        Bandit.AddTask(bandit, task)
+        Bandit.SetSleeping(bandit, false)
+        Bandit.SetProgramStage(bandit, "Prepare")
     end
+
+    BanditPlayer.CheckFriendlyFire(bandit, attacker)
 end
 
 local function OnZombieDead(zombie)
@@ -1894,9 +1841,13 @@ local function OnZombieDead(zombie)
     if not zombie:getVariableBoolean("Bandit") then return end
 
     local bandit = zombie
-
+    local brain = BanditBrain.Get(bandit)
     local inventory = bandit:getInventory()
     local items = ArrayList.new()
+
+    local veh = bandit:getVehicle()
+    if veh then veh:exit(bandit) end
+
     inventory:getAllEvalRecurse(predicateRemovable, items)
     for i=0, items:size()-1 do
         local item = items:get(i)
@@ -1914,15 +1865,52 @@ local function OnZombieDead(zombie)
         end
     end
 
-    -- hostility against civilians (clan=0) is handled by other mods
-    local brain = BanditBrain.Get(bandit)
-    if brain.clan == 0 then return end
+    -- drop extra suitcase item 
+    if brain.bag then
+        if brain.bag == "Briefcase" then
+            local bag = BanditCompatibility.InstanceItem("Base.Briefcase")
+            local bagContainer = bag:getItemContainer()
+            if bagContainer then
+                local rn = ZombRand(3)
+                if rn == 0 then
+                    for i = 1, 1000 do
+                        local money = instanceItem("Base.Money")
+                        bagContainer:AddItem(money)
+                    end
+                elseif rn == 1 then
+                    local c1 = BanditCompatibility.InstanceItem("Base.Corset_Black")
+                    local c2 = BanditCompatibility.InstanceItem("Base.StockingsBlack")
+                    local c3 = BanditCompatibility.InstanceItem("Base.Hat_PeakedCapArmy")
+                    bagContainer:AddItem(c1)
+                    bagContainer:AddItem(c2)
+                    bagContainer:AddItem(c3)
+                elseif rn == 2 then
+                    local c1 = BanditCompatibility.InstanceItem("Base.Machete")
+                    bagContainer:AddItem(c1)
+                    if BanditCompatibility.GetGameVersion() >= 42 then
+                        local c2 = BanditCompatibility.InstanceItem("Base.Hat_HalloweenMaskVampire")
+                        local c3 = BanditCompatibility.InstanceItem("Base.BlackRobe")
+                        bagContainer:AddItem(c2)
+                        bagContainer:AddItem(c3)
+                    end
+                end
+                bandit:getSquare():AddWorldInventoryItem(bag, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+            end
+        end
+    end
+
+    -- add key to inv
+    if brain.key and ZombRand(3) == 1 then
+        local item = BanditCompatibility.InstanceItem("Base.Key1")
+        item:setKeyId(brain.key)
+        item:setName("Building Key")
+        bandit:getInventory():AddItem(item)
+        Bandit.UpdateItemsToSpawnAtDeath(bandit)
+    end
 
     Bandit.Say(bandit, "DEAD", true)
 
-    local attacker = bandit:getAttackedBy()
-    CheckFriendlyFire(bandit, attacker)
-
+    -- update player kills
     local player = getSpecificPlayer(0)
     local killer = bandit:getAttackedBy()
     if killer then
@@ -1934,20 +1922,17 @@ local function OnZombieDead(zombie)
         end
     end
 
-    local brain = BanditBrain.Get(bandit)
+    -- warning: bwo overwrites CheckFriendlyFire
+    local attacker = bandit:getAttackedBy()
+    BanditPlayer.CheckFriendlyFire(bandit, attacker)
 
+    -- deprovision
     bandit:setUseless(false)
     bandit:setReanim(false)
     bandit:setVariable("Bandit", false)
     bandit:setPrimaryHandItem(nil)
     bandit:clearAttachedItems()
     bandit:resetEquippedHandsModels()
-    -- bandit:getInventory():clear()
-
-    local veh = bandit:getVehicle()
-    if veh then
-        veh:exit(bandit)
-    end
 
     args = {}
     args.id = brain.id

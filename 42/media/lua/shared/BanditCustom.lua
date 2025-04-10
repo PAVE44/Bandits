@@ -298,3 +298,8 @@ BanditCustom.Get = function(bid)
 end
 
 
+local function onGameStart()
+    BanditCustom.Load()
+end
+
+Events.OnGameStart.Add(onGameStart)

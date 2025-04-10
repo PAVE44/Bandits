@@ -257,7 +257,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") then
         local brain = BanditBrain.Get(zombie)
-        if not brain.hostile then
+        if not (brain.hostile or brain.hostileP) then
             local banditOption = context:addOption(brain.fullname)
             local banditMenu = context:getNew(context)
 

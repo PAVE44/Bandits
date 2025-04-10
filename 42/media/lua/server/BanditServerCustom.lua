@@ -2,6 +2,7 @@ BanditServer = BanditServer or {}
 BanditServer.Custom = {}
 
 BanditServer.Custom.SendToClients  = function(player, argsOld)
+    BanditCustom.Load()
     local args = {}
     args.banditData = BanditCustom.banditData
     args.clanData = BanditCustom.clanData
@@ -26,4 +27,10 @@ local function onClientCommand(module, command, player, args)
     end
 end
 
+local function onServerStarted()
+    BanditCustom.Load()
+    print "[BANDITS] Custom Bandits loaded successfully."
+end
+
 Events.OnClientCommand.Add(onClientCommand)
+Events.OnServerStarted.Add(onServerStarted)

@@ -346,7 +346,8 @@ local function banditize(zombie, bandit, clan, args)
 
     -- properties from clan
     local spawn = clan.spawn
-    brain.hostile = not spawn.friendly
+    brain.hostile = not spawn.friendly -- global hostility
+    brain.hostileP = brain.hostile -- hostility against players
 
     -- properties taken from args, 
     brain.program = {}
@@ -363,6 +364,7 @@ local function banditize(zombie, bandit, clan, args)
 
     -- enforcing args
     brain.hostile = args.hostile or brain.hostile
+    brain.hostileP = args.hostileP or brain.hostileP
     
     -- ready!
     local gmd = GetBanditModData()
@@ -847,8 +849,6 @@ end
 
 local function spawnType(player, args)
 
-    BanditCustom.Load()
-
     local pid = BanditUtils.GetCharacterID(player)
     local wid = args.wid
     local dist = args.dist
@@ -992,8 +992,6 @@ BanditServer.Spawner.Clan = function(player, args)
     if not args.size then args.size = 1 end
     if not args.program then args.program = "Bandit" end
     
-    BanditCustom.Load()
-
     local spawnPoints = args.spawnPoints
     if not spawnPoints then
         if not args.x then args.x = player:getX() end
@@ -1017,8 +1015,6 @@ BanditServer.Spawner.Individual = function(player, bid)
 
     args.pid = BanditUtils.GetCharacterID(player)
     args.size = 1
-
-    BanditCustom.Load()
 
     local spawnPoint = generateSpawnPointHere(player, args.x, args.y, args.z, args.size)
     if #spawnPoints > 0 then

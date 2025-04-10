@@ -1,45 +1,17 @@
 ZombiePrograms = ZombiePrograms or {}
 
 ZombiePrograms.Companion = {}
-ZombiePrograms.Companion.Stages = {}
-
-ZombiePrograms.Companion.Init = function(bandit)
-end
 
 ZombiePrograms.Companion.Prepare = function(bandit)
     local tasks = {}
-    local world = getWorld()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
-
-    local weapons = Bandit.GetWeapons(bandit)
-    local primary = Bandit.GetBestWeapon(bandit)
 
     Bandit.ForceStationary(bandit, false)
-    Bandit.SetWeapons(bandit, weapons)
-
-    local secondary
-    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
-        secondary = "Base.HandTorch"
-    end
-
-    if weapons.secondary.name then
-        local task1 = {action="Unequip", time=100, itemPrimary=weapons.secondary.name}
-        table.insert(tasks, task1)
-    end
-
-    local task2 = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task2)
-
-    return {status=true, next="Follow", tasks=tasks}
+  
+    return {status=true, next="Main", tasks=tasks}
 end
 
-ZombiePrograms.Companion.Follow = function(bandit)
+ZombiePrograms.Companion.Main = function(bandit)
     local tasks = {}
-    local world = getWorld()
-    local cm = world:getClimateManager()
-    local cell = getCell()
-    -- local weapons = Bandit.GetWeapons(bandit)
  
     -- If at guardpost, switch to the CompanionGuard program.
     local atGuardpost = BanditPost.At(bandit, "guard")
@@ -54,7 +26,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     if not master then
         local task = {action="Time", anim="Shrug", time=200}
         table.insert(tasks, task)
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
     
     -- update walktype
@@ -84,35 +56,18 @@ ZombiePrograms.Companion.Follow = function(bandit)
     end 
 
     if dist < 20 then
-        local enemy
         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
         local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
         local closestEnemy = closestZombie
 
         if closestBandit.dist < closestZombie.dist then 
             closestEnemy = closestBandit
-            enemy = BanditZombie.Cache[closestEnemy.id]
         end
 
         if closestEnemy.dist < 8 then
-            -- We are trying to save the player, so the friendly should act with high motivation
-            -- that translates to running pace (even despite limping) and minimal endurance loss.
-
-            local closeSlow = true
-            if enemy then
-                local weapon = enemy:getPrimaryHandItem()
-                if weapon and weapon:IsWeapon() then
-                    local weaponType = WeaponType.getWeaponType(weapon)
-                    if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                        closeSlow = false
-                    end
-                end
-            end
-
             walkType = "WalkAim"
-            endurance = -0.01
-            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist, closeSlow))
-            return {status=true, next="Follow", tasks=tasks}
+            table.insert(tasks, BanditUtils.GetMoveTask(endurance, closestEnemy.x, closestEnemy.y, closestEnemy.z, walkType, closestEnemy.dist))
+            return {status=true, next="Main", tasks=tasks}
         end
     end
     
@@ -125,7 +80,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 local bvehicle = bandit:getVehicle()
                 if bvehicle then
                     bandit:changeState(ZombieOnGroundState.instance())
-                    return {status=true, next="Follow", tasks=tasks}
+                    return {status=true, next="Main", tasks=tasks}
                 else
                     print ("ENTER VEH")
                     local vx = bandit:getForwardDirection():getX()
@@ -236,7 +191,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
     local guardpost = BanditPost.GetClosestFree(bandit, "guard", 40)
     if guardpost then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist, false))
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 
     -- companion fishing
@@ -285,10 +240,10 @@ ZombiePrograms.Companion.Follow = function(bandit)
                     print ("should fish")
                     local task = {action="Fishing", time=1000, x=wx, y=wy}
                     table.insert(tasks, task)
-                    return {status=true, next="Follow", tasks=tasks}
+                    return {status=true, next="Main", tasks=tasks}
                 else
                     table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, 0, "Run", dist, false))
-                    return {status=true, next="Follow", tasks=tasks}
+                    return {status=true, next="Main", tasks=tasks}
                 end
             end
         end
@@ -332,7 +287,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 -- table.insert(tasks, task2)
                 -- local task3 = {action="Single", anim="Eat", time=400}
                 -- table.insert(tasks, task3)
-                return {status=true, next="Follow", tasks=tasks}
+                return {status=true, next="Main", tasks=tasks}
             end
         end
     end
@@ -351,7 +306,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                     for _, subTask in pairs(subTasks) do
                         table.insert(tasks, subTask)
                     end
-                    return {status=true, next="Follow", tasks=tasks}
+                    return {status=true, next="Main", tasks=tasks}
                 end
             end
 
@@ -362,7 +317,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                     for _, subTask in pairs(subTasks) do
                         table.insert(tasks, subTask)
                     end
-                    return {status=true, next="Follow", tasks=tasks}
+                    return {status=true, next="Main", tasks=tasks}
                 end
             end
         end
@@ -380,7 +335,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
                 for _, subTask in pairs(subTasks) do
                     table.insert(tasks, subTask)
                 end
-                return {status=true, next="Follow", tasks=tasks}
+                return {status=true, next="Main", tasks=tasks}
             end
         end
     end
@@ -392,7 +347,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 
     -- self
@@ -401,7 +356,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
     
 
@@ -411,7 +366,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 
     subTasks = BanditPrograms.Housekeeping.RemoveCorpses(bandit)
@@ -419,7 +374,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 
     subTasks = BanditPrograms.Housekeeping.RemoveTrash(bandit)
@@ -427,7 +382,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 
     subTasks = BanditPrograms.Housekeeping.CleanBlood(bandit)
@@ -435,7 +390,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
         for _, subTask in pairs(subTasks) do
             table.insert(tasks, subTask)
         end
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     end
 --]]
 
@@ -453,7 +408,7 @@ ZombiePrograms.Companion.Follow = function(bandit)
 
     if distTarget > 1 then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx, dy, dz, walkType, distTarget, false))
-        return {status=true, next="Follow", tasks=tasks}
+        return {status=true, next="Main", tasks=tasks}
     else
 
         local subTasks = BanditPrograms.Idle(bandit)
@@ -461,9 +416,9 @@ ZombiePrograms.Companion.Follow = function(bandit)
             for _, subTask in pairs(subTasks) do
                 table.insert(tasks, subTask)
             end
-            return {status=true, next="Follow", tasks=tasks}
+            return {status=true, next="Main", tasks=tasks}
         end
     end
     
-    return {status=true, next="Follow", tasks=tasks}
+    return {status=true, next="Main", tasks=tasks}
 end

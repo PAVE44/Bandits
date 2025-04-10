@@ -372,7 +372,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
         end
     elseif instanceof(character, "IsoPlayer") then
         for id, otherBandit in pairs(banditList) do
-            if otherBandit.brain.hostile then
+            if otherBandit.brain.hostile or otherBandit.brain.hostileP then
                 local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
                 if dist < result.dist then
                     result.dist = dist

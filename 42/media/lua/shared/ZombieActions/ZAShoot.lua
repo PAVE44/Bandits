@@ -158,7 +158,7 @@ local function hit(shooter, item, victim)
     local n = BanditRandom.Get()
     if n < accuracyThreshold then
         -- print ("HIT N: " .. n)
-        if instanceof(victim, "IsoPlayer") and brainShooter.hostile then
+        if instanceof(victim, "IsoPlayer") and (brainShooter.hostile or brainShooter.hostileP) then
             BanditPlayer.WakeEveryone()
 
             local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
