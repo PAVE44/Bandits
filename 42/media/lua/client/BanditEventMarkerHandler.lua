@@ -1,7 +1,9 @@
 BanditEventMarkerHandler = {}
 BanditEventMarkerHandler.markers = {}
 
-function BanditEventMarkerHandler.setOrUpdate(eventID, icon, duration, posX, posY, color, desc)
+-- this is now called by server for all clients
+-- it also handles duration
+function BanditEventMarkerHandler.set(eventID, icon, duration, posX, posY, color, desc)
 
     local player = getSpecificPlayer(0)
     local marker = BanditEventMarkerHandler.markers[eventID]

@@ -129,33 +129,26 @@ function BanditCreationMain:initialise()
 
     -- GENDER
 
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, getText("UI_characreation_gender"), 1, 1, 1, 1, UIFont.Small, false)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Gender & Skin", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
 
-    self.genderCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onGenderSelected)
+    self.genderCombo = ISComboBox:new(leftX, topY + rowY, 167, BUTTON_HGT, self, BanditCreationMain.onGenderSelected)
     self.genderCombo:initialise();
     self.genderCombo:addOption(getText("IGUI_char_Female"))
     self.genderCombo:addOption(getText("IGUI_char_Male"))
     self.genderCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1};
     self:addChild(self.genderCombo)
-    rowY = rowY + BUTTON_HGT + 8
 
     -- SKIN
-
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, getText("UI_SkinColor"), 1, 1, 1, 1, UIFont.Small);
-    lbl:initialise()
-    lbl:instantiate()
-    self:addChild(lbl)
-
     self.skinColors = { {r=1,g=0.91,b=0.72},
         {r=0.98,g=0.79,b=0.49},
         {r=0.8,g=0.65,b=0.45},
         {r=0.54,g=0.38,b=0.25},
         {r=0.36,g=0.25,b=0.14} }
 
-    local skinColorBtn = ISButton:new(leftX, topY + rowY, BUTTON_HGT, BUTTON_HGT, "", self, BanditCreationMain.onSkinColorSelected)
+    local skinColorBtn = ISButton:new(leftX + 167 + UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, BUTTON_HGT, "", self, BanditCreationMain.onSkinColorSelected)
     skinColorBtn:initialise()
     skinColorBtn:instantiate()
     local color = self.skinColors[1]
@@ -177,34 +170,16 @@ function BanditCreationMain:initialise()
 
     -- HAIR STYLE
 
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, getText("UI_characreation_hairtype"), 1, 1, 1, 1, UIFont.Small)
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Hair", 1, 1, 1, 1, UIFont.Small)
     lbl:initialise()
     lbl:instantiate()
     self:addChild(lbl)
 
-    self.hairTypeCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onHairTypeSelected)
+    self.hairTypeCombo = ISComboBox:new(leftX, topY + rowY, 167, BUTTON_HGT, self, BanditCreationMain.onHairTypeSelected)
     self.hairTypeCombo:initialise();
     self:addChild(self.hairTypeCombo)
-    rowY = rowY + BUTTON_HGT + 8
-
-    -- BEARD STYLE
-
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, getText("UI_characreation_beardtype"), 1, 1, 1, 1, UIFont.Small)
-    lbl:initialise()
-    lbl:instantiate()
-    self:addChild(lbl)
-
-    self.beardTypeCombo = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onBeardTypeSelected)
-    self.beardTypeCombo:initialise()
-    self:addChild(self.beardTypeCombo)
-    rowY = rowY + BUTTON_HGT + 8
 
     -- HAIR/BEARD COLOR
-
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, getText("UI_characreation_color"), 1, 1, 1, 1, UIFont.Small);
-    lbl:initialise()
-    lbl:instantiate()
-    self:addChild(lbl)
 
     local hairColors = self.desc:getCommonHairColor();
     self.hairColors = {}
@@ -215,7 +190,7 @@ function BanditCreationMain:initialise()
         table.insert(self.hairColors, { r=info:getR(), g=info:getG(), b=info:getB() })
     end
 
-    local hairColorBtn = ISButton:new(leftX, topY + rowY, BUTTON_HGT, BUTTON_HGT, "", self, BanditCreationMain.onHairColorMouseDown)
+    local hairColorBtn = ISButton:new(leftX + 167 + UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, BUTTON_HGT, "", self, BanditCreationMain.onHairColorMouseDown)
     hairColorBtn:initialise()
     hairColorBtn:instantiate()
     local color = self.hairColors[1]
@@ -229,6 +204,45 @@ function BanditCreationMain:initialise()
     self.colorPickerHair.pickedTarget = self
     self.colorPickerHair.resetFocusTo = self
     self.colorPickerHair:setColors(self.hairColors, math.min(#self.hairColors, 10), math.ceil(#self.hairColors / 10))
+    rowY = rowY + BUTTON_HGT + 8
+
+    -- BEARD STYLE
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Beard", 1, 1, 1, 1, UIFont.Small)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.beardTypeCombo = ISComboBox:new(leftX, topY + rowY, 167, BUTTON_HGT, self, BanditCreationMain.onBeardTypeSelected)
+    self.beardTypeCombo:initialise()
+    self:addChild(self.beardTypeCombo)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Makeup", 1, 1, 1, 1, UIFont.Small)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+    self.MakeupFaceCombo = ISComboBox:new(leftX, topY + rowY, 95, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
+    self.MakeupFaceCombo:initialise()
+    self.MakeupFaceCombo.internal = "MakeUp_FullFace"
+    self:addChild(self.MakeupFaceCombo)
+
+    self.MakeupEyesCombo = ISComboBox:new(leftX + 105, topY + rowY, 95, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
+    self.MakeupEyesCombo:initialise()
+    self.MakeupEyesCombo.internal = "MakeUp_Eyes"
+    self:addChild(self.MakeupEyesCombo)
+    rowY = rowY + BUTTON_HGT + 8
+
+    self.MakeupEyeShadowCombo = ISComboBox:new(leftX, topY + rowY, 95, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
+    self.MakeupEyeShadowCombo:initialise()
+    self.MakeupEyeShadowCombo.internal = "MakeUp_EyesShadow"
+    self:addChild(self.MakeupEyeShadowCombo)
+
+    self.MakeupLipsCombo = ISComboBox:new(leftX + 105, topY + rowY, 95, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
+    self.MakeupLipsCombo:initialise()
+    self.MakeupLipsCombo.internal = "MakeUp_Lips"
+    self:addChild(self.MakeupLipsCombo)
+
     rowY = rowY + BUTTON_HGT + 18
 
     self:updateHairCombo()
@@ -351,6 +365,7 @@ function BanditCreationMain:initialise()
         lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Expertise " .. i, 1, 1, 1, 1, UIFont.Small, false)
         lbl:initialise()
         lbl:instantiate()
+        lbl.tooltip = "You can assign up to 3 expertise skills for each bandit."
         self:addChild(lbl)
 
         self.expertise[i] = ISComboBox:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onExpertiseSelected)
@@ -370,6 +385,7 @@ function BanditCreationMain:initialise()
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Health", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
+    lbl.tooltip = "Health determines how hard it is to kill the bandit."
     self:addChild(lbl)
 
     self.healthSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
@@ -383,6 +399,7 @@ function BanditCreationMain:initialise()
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Strength", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
+    lbl.tooltip = "Strength determines how much damage bandit deals to enemies in melee combat and when thumping objects."
     self:addChild(lbl)
 
     self.strengthSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT);
@@ -409,6 +426,7 @@ function BanditCreationMain:initialise()
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Sight", 1, 1, 1, 1, UIFont.Small, false)
     lbl:initialise()
     lbl:instantiate()
+    lbl.tooltip = "Sight determines ranged weapon accuracy. Additionally, for higher values, scope will be added to a rifle if bandit has one. Scope will impact weapon max range. "
     self:addChild(lbl)
 
     self.sightSlider = ISSliderPanel:new(leftX, topY + rowY, 200, BUTTON_HGT, self, BanditCreationMain.onClothingChanged)
@@ -460,12 +478,32 @@ end
 function BanditCreationMain:onClothingChanged()
     self.model:reportEvent("EventWearClothing")
 
+    -- reset
     for bodyLocation, dropbox in pairs(self.clothing) do
         self.model:setWornItem(bodyLocation, nil)
     end
     self.model:setWornItem("Back", nil)
     self.model:clearAttachedItems()
 
+    -- makeup
+    local combos = {"MakeupFaceCombo", "MakeupEyesCombo",
+                    "MakeupEyeShadowCombo", "MakeupLipsCombo"}
+
+    for i=1, #combos do
+        local combo = self[combos[i]]
+        if combo then
+            self.model:setWornItem(combo.internal, nil)
+            local itemType = combo:getOptionData(combo.selected)
+            if itemType then
+                local makeup = BanditCompatibility.InstanceItem(itemType)
+                if makeup then
+                    self.model:setWornItem(makeup:getBodyLocation(), makeup)
+                end
+            end
+        end
+    end
+
+    -- clothing
     for bodyLocation, dropbox in pairs(self.clothing) do
         local item = dropbox.storedItem
         if item then
@@ -585,6 +623,30 @@ function BanditCreationMain:updateHairCombo()
                 label = getText("IGUI_Beard_" .. label);
             end
             self.beardTypeCombo:addOptionWithData(label, beardStyles:get(i-1))
+        end
+    end
+
+    self.MakeupFaceCombo.options = {}
+    self.MakeupFaceCombo:addOptionWithData("None", nil)
+
+    self.MakeupEyesCombo.options = {}
+    self.MakeupEyesCombo:addOptionWithData("None", nil)
+
+    self.MakeupEyeShadowCombo.options = {}
+    self.MakeupEyeShadowCombo:addOptionWithData("None", nil)
+
+    self.MakeupLipsCombo.options = {}
+    self.MakeupLipsCombo:addOptionWithData("None", nil)
+
+    for i, makeup in pairs(MakeUpDefinitions.makeup) do
+        if makeup.category == "FullFace" then
+            self.MakeupFaceCombo:addOptionWithData(makeup.name, makeup.item)
+        elseif makeup.category == "Eyes" then
+            self.MakeupEyesCombo:addOptionWithData(makeup.name, makeup.item)
+        elseif makeup.category == "EyesShadow" then
+            self.MakeupEyeShadowCombo:addOptionWithData(makeup.name, makeup.item)
+        elseif makeup.category == "Lips" then
+            self.MakeupLipsCombo:addOptionWithData(makeup.name, makeup.item)
         end
     end
 end
@@ -828,13 +890,29 @@ function BanditCreationMain:loadConfig()
 	end
 
 	if data.clothing then
+
+        local combos = {"MakeupFaceCombo", "MakeupEyesCombo",
+                        "MakeupEyeShadowCombo", "MakeupLipsCombo"}
+
 		for bodyLocation, itemType in pairs(data.clothing) do
+            -- clothing
 			for _, dropbox in pairs(self.clothing) do
 				if dropbox.internal == bodyLocation then
 					local item = BanditCompatibility.InstanceItem(itemType)
 					dropbox:setStoredItem(item)
+                    break
 				end
 			end
+
+            -- makeup
+            for i=1, #combos do
+                local combo = self[combos[i]]
+                if combo then
+                    if combo.internal == bodyLocation then
+                        combo:selectData(itemType)
+                    end
+                end
+            end
 		end
 	end
 
@@ -912,6 +990,19 @@ function BanditCreationMain:saveConfig(clone)
         local item = dropbox:getStoredItem()
         if item then
             data.clothing[dropbox.internal] = item:getFullType()
+        end
+    end
+
+    local combos = {"MakeupFaceCombo", "MakeupEyesCombo",
+                    "MakeupEyeShadowCombo", "MakeupLipsCombo"}
+
+    for i=1, #combos do
+        local combo = self[combos[i]]
+        if combo then
+            local selected = combo:getOptionData(combo.selected)
+            if selected then
+                data.clothing[combo.internal] = selected
+            end
         end
     end
 

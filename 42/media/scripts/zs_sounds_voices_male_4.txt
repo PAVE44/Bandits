@@ -455,6 +455,30 @@ module BanditsVoiceMale4 {
         } 
     }
 
+    sound ZSCar_Male_4_5 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_4/car_male_4_5.ogg, 
+            distanceMin = 1, 
+            distanceMax = 30, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
+    sound ZSCar_Male_4_6 {
+        category = Object, 
+        loop = false
+        is3D = true,
+        clip { 
+            file = media/sound/male_4/car_male_4_6.ogg, 
+            distanceMin = 1, 
+            distanceMax = 30, 
+            reverbFactor = 0.1, volume = 0.3, 
+        } 
+    }
+
     sound ZSDeath_Male_4_1 {
         category = Object, 
         loop = false

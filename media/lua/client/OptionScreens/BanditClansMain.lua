@@ -48,13 +48,14 @@ function BanditClansMain:initialise()
 
     local topY = 60
     local clanButtonWidth = 130
-    local clanButtonHeight = 130
+    local clanButtonHeight = 65
     local clanButtonSpacing = 20
 
     local rowY = 0
 
     BanditCustom.Load()
     local allData = BanditCustom.ClanGetAllSorted()
+
     self.clanButton = {}
     local total = 0
     local i = 0
@@ -81,7 +82,7 @@ function BanditClansMain:initialise()
         total = total + 1
     end
 
-    if total < 48 then 
+    if total < 80 then 
         x = i * (clanButtonWidth + clanButtonSpacing) + clanButtonSpacing
         y = topY + rowY + j * (clanButtonHeight + clanButtonSpacing)
 

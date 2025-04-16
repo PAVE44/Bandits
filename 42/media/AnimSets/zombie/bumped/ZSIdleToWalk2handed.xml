@@ -2,7 +2,7 @@
 <animNode>
 	<m_Name>ZSIdleToWalk2handed</m_Name>
 	<m_AnimName>Bob_IdleToWalk_Bat</m_AnimName>
-	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_SpeedScale>MovementSpeed</m_SpeedScale>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 	<m_BlendTime>0.35</m_BlendTime>

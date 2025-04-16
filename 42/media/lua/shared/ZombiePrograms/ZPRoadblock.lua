@@ -18,6 +18,7 @@ ZombiePrograms.Roadblock.Main = function(bandit)
     local tasks = {}
 
     -- player spotted
+    local spotDist = 30
     local playerList = BanditPlayer.GetPlayers()
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)

@@ -17,4 +17,8 @@
 		<m_TimePc>0.6</m_TimePc>
 		<m_ParameterValue>walk</m_ParameterValue>
 	</m_Events>
+	<m_Transitions>
+		<m_Target>ZSWalkAim</m_Target>
+		<m_AnimName>Bob_WalkToWalkAim1Hand</m_AnimName>
+	</m_Transitions>
 </animNode>

@@ -264,8 +264,42 @@ BanditCustom.GetFromClan = function(cid)
     return ret
 end
 
+BanditCustom.GetById = function(bid)
+    return BanditCustom.banditData[bid]
+end
+
+BanditCustom.GetFromClanSorted = function(cid)
+    local allData = {}
+    for bid, data in pairs(BanditCustom.banditData) do
+        if data.general.cid == cid then
+            allData[bid] = data
+        end
+    end
+
+    local keys = {}
+    for key in pairs(allData) do
+        table.insert(keys, key)
+    end
+
+    table.sort(keys, function(k1, k2)
+        return allData[k1].general.name < allData[k2].general.name
+    end)
+
+    local allDataSorted = {}
+    for _, key in ipairs(keys) do
+        allDataSorted[key] = allData[key]
+    end
+    return allDataSorted
+   
+end
+
 BanditCustom.Get = function(bid)
     return BanditCustom.banditData[bid]
 end
 
 
+local function onGameStart()
+    BanditCustom.Load()
+end
+
+Events.OnGameStart.Add(onGameStart)

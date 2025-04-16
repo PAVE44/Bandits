@@ -120,10 +120,11 @@ end
 local function hit(shooter, item, victim)
 
     -- Clone the shooter to create a temporary IsoPlayer
-    local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
+    -- local tempShooter = BanditUtils.CloneIsoPlayer(shooter)
+    local fakeZombie = getCell():getFakeZombieForHit()
 
     -- Calculate the distance between the shooter and the victim
-    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), tempShooter:getX(), tempShooter:getY())
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), shooter:getX(), shooter:getY())
 
     -- Determine accuracy based on SandboxVars and shooter clan
     local brainShooter = BanditBrain.Get(shooter)
@@ -156,8 +157,8 @@ local function hit(shooter, item, victim)
     -- if ZombRand(10000) < accuracyThreshold then
     local n = BanditRandom.Get()
     if n < accuracyThreshold then
-        print ("HIT N: " .. n)
-        if instanceof(victim, "IsoPlayer") and brainShooter.hostile then
+        -- print ("HIT N: " .. n)
+        if instanceof(victim, "IsoPlayer") and (brainShooter.hostile or brainShooter.hostileP) then
             BanditPlayer.WakeEveryone()
 
             local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
@@ -165,10 +166,10 @@ local function hit(shooter, item, victim)
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
-            victim:Hit(item, tempShooter, 1.4, false, 1, false)
+            victim:Hit(item, fakeZombie, 1.4, false, 1, false)
 
             -- addHolePlayer(victim)
-            BanditCompatibility.Splash(victim, item, tempShooter)
+            BanditCompatibility.Splash(victim, item, fakeZombie)
             
             local bodyDamage = victim:getBodyDamage()
             if bodyDamage then
@@ -185,7 +186,7 @@ local function hit(shooter, item, victim)
                 victim:setBumpFallType("pushedBehind")
             end
             
-        elseif instanceof(victim, "IsoZombie") then
+        elseif instanceof(victim, "IsoZombie") and not victim:isOnKillDone() then
             local brainVictim = BanditBrain.Get(victim)
             if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
 
@@ -199,15 +200,21 @@ local function hit(shooter, item, victim)
                 end
 
                 if true then
+
+                    local dmg = item:getMaxDamage()
+                    if instanceof(victim, "IsoZombie") then
+                        dmg = dmg * 2
+                    end
+
                     victim:setBumpDone(true)
                     victim:setHitFromBehind(shooter:isBehind(victim))
                     victim:setHitAngle(shooter:getForwardDirection())
                     victim:setPlayerAttackPosition(victim:testDotSide(shooter))
                     victim:setHitReaction("ShotBelly")
-                    victim:Hit(item, tempShooter, 1, false, 1, false)
+                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
                     victim:setAttackedBy(shooter)
                     addHole(victim)
-                    BanditCompatibility.Splash(victim, item, tempShooter)
+                    BanditCompatibility.Splash(victim, item, fakeZombie)
 
                     local h = victim:getHealth()
                     local id = BanditUtils.GetCharacterID(bandit)
@@ -229,8 +236,8 @@ local function hit(shooter, item, victim)
     end
 
     -- Clean up the temporary player after use
-    tempShooter:removeFromWorld()
-    tempShooter = nil
+    -- tempShooter:removeFromWorld()
+    -- tempShooter = nil
 
     return true
 end

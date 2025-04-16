@@ -51,8 +51,18 @@ function BanditClanMain:onAvatarListChange()
         cnt = cnt + 1
     end
 
+    if cnt == 0 then
+        local modal = BanditClansMain:new(500, 80, 1220, 900)
+        modal:initialise()
+        modal:addToUIManager()
+        self:clearChildren()
+        self:removeFromUIManager()
+        self:close()
+        return
+    end
+
     local topY = 60
-    local leftX = 130
+    local leftX = 160
     local avatarWidth = 130
     local avatarHeight = 240
     local avatarSpacing = 20
@@ -90,40 +100,10 @@ function BanditClanMain:onAvatarListChange()
     lbl:instantiate()
     self:addChild(lbl)
 
-    self.clanNameEntry = ISTextEntryBox:new("", leftX, topY + rowY, 160, BUTTON_HGT)
+    self.clanNameEntry = ISTextEntryBox:new("", leftX, topY + rowY, 130, BUTTON_HGT)
     self.clanNameEntry:initialise()
     self.clanNameEntry:instantiate()
     self:addChild(self.clanNameEntry)
-    rowY = rowY + BUTTON_HGT + 8
-
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Sandbox wave", 1, 1, 1, 1, UIFont.Small, false)
-    lbl:initialise()
-    lbl:instantiate()
-    self:addChild(lbl)
-    
-    self.waveCombo = ISComboBox:new(leftX, topY + rowY, 160, BUTTON_HGT, self)
-    self.waveCombo:initialise();
-    self.waveCombo:addOption("Disabled")
-    for i=1, 16 do
-        self.waveCombo:addOption("Wave " .. tostring(i))
-    end
-    self.waveCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
-    self:addChild(self.waveCombo)
-    rowY = rowY + BUTTON_HGT + 8
-
-    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Favorite zone", 1, 1, 1, 1, UIFont.Small, false)
-    lbl:initialise()
-    lbl:instantiate()
-    self:addChild(lbl)
-
-    self.zoneCombo = ISComboBox:new(leftX, topY + rowY, 160, BUTTON_HGT, self)
-    self.zoneCombo:initialise();
-    self.zoneCombo:addOption("None")
-    self.zoneCombo:addOption("Urban")
-    self.zoneCombo:addOption("Suburban")
-    self.zoneCombo:addOption("Wilderness")
-    self.zoneCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
-    self:addChild(self.zoneCombo)
     rowY = rowY + BUTTON_HGT + 8
 
     lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Spawn AI", 1, 1, 1, 1, UIFont.Small, false)
@@ -131,18 +111,104 @@ function BanditClanMain:onAvatarListChange()
     lbl:instantiate()
     self:addChild(lbl)
 
-    self.boolOptions = ISTickBox:new(leftX, topY + rowY, 200, BUTTON_HGT, "", self, BanditClanMain.onBoolOptionsChange)
+    self.boolOptions = BanditTickBox:new(leftX, topY + rowY, 130, BUTTON_HGT, "", self, BanditClanMain.onBoolOptionsChange)
     -- self.boolOptions.tooltip = "test"
     self.boolOptions:initialise()
     self:addChild(self.boolOptions)
-    self.boolOptions:addOption("Friendly")
-    self.boolOptions:addOption("Companions")
-    self.boolOptions:addOption("Defenders")
-    self.boolOptions:addOption("Campers")
-    self.boolOptions:addOption("Assault")
-    self.boolOptions:addOption("Wanderer")
-    self.boolOptions:addOption("Roadblock")
-    rowY = rowY + (6 * BUTTON_HGT) + 8
+    self.boolOptions:addOption("Friendly", nil, nil, "Will not attack human players.")
+    self.boolOptions:addOption("Companions", nil, nil, "Will follow the player. ")
+    self.boolOptions:addOption("Defenders", nil, nil, "May spawn in barricaded buildings.")
+    self.boolOptions:addOption("Campers", nil, nil, "May spawn with tent base in wilderness.")
+    self.boolOptions:addOption("Assault", nil, nil, "fixme")
+    self.boolOptions:addOption("Wanderer", nil, nil, "fixme")
+    self.boolOptions:addOption("Roadblock", nil, nil, "May organize a road blockade.")
+    rowY = rowY + (7 * (BUTTON_HGT + UI_BORDER_SPACING))
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Day start/end", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.dayStartEntry = ISTextEntryBox:new("", leftX, topY + rowY, 36, BUTTON_HGT)
+    self.dayStartEntry:initialise()
+    self.dayStartEntry:instantiate()
+    self.dayStartEntry:setOnlyNumbers(true)
+    self.dayStartEntry.tooltip = "Timeframe in which clan may spawn. \nIn signle player games, days number refer to the world age. \nIn multiplayer games, days refer to the number of survived days for a player near whom the spawn will occur. \n In both cases days are counted from zero."
+    self:addChild(self.dayStartEntry)
+
+    self.dayEndEntry = ISTextEntryBox:new("", leftX + 36 + UI_BORDER_SPACING, topY + rowY, 36, BUTTON_HGT)
+    self.dayEndEntry:initialise()
+    self.dayEndEntry:instantiate()
+    self.dayEndEntry:setOnlyNumbers(true)
+    self.dayEndEntry.tooltip = "Timeframe in which clan may spawn. \nIn signle player games, days number refer to the world age. \nIn multiplayer games, days refer to the number of survived days for a player near whom the spawn will occur. \n In both cases days are counted from zero."
+    self:addChild(self.dayEndEntry)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Hourly spawn chance (%)", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.spawnChanceEntry = ISTextEntryBox:new("", leftX, topY + rowY, 36, BUTTON_HGT)
+    self.spawnChanceEntry:initialise()
+    self.spawnChanceEntry:instantiate()
+    self.spawnChanceEntry:setOnlyNumbers(true)
+    self.spawnChanceEntry.tooltip = "Average nominal chance of a spawn per hour. "
+    self:addChild(self.spawnChanceEntry)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Group size min/max", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.groupMinEntry = ISTextEntryBox:new("", leftX, topY + rowY, 36, BUTTON_HGT)
+    self.groupMinEntry:initialise()
+    self.groupMinEntry:instantiate()
+    self.groupMinEntry:setOnlyNumbers(true)
+    self.groupMinEntry.tooltip = "Minimum number of bandits during one spawn."
+    self:addChild(self.groupMinEntry)
+
+    self.groupMaxEntry = ISTextEntryBox:new("", leftX + 36 + UI_BORDER_SPACING, topY + rowY, 36, BUTTON_HGT)
+    self.groupMaxEntry:initialise()
+    self.groupMaxEntry:instantiate()
+    self.groupMaxEntry:setOnlyNumbers(true)
+    self.groupMaxEntry.tooltip = "Maximum number of bandits during one spawn. Total members of the clan must be equal or higher that the max value."
+    self:addChild(self.groupMaxEntry)
+    rowY = rowY + BUTTON_HGT + 8
+
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Zone occurance", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.zoneCombo = ISComboBox:new(leftX, topY + rowY, 130, BUTTON_HGT, self)
+    self.zoneCombo:initialise();
+    self.zoneCombo:addOption("Any")
+    self.zoneCombo:addOption("Only urban")
+    self.zoneCombo:addOption("Only wilderness")
+    self.zoneCombo:setToolTipMap({["Any"] = "Bandits have the same chance to spawn in any zone.", ["Only urban"] = "Bandits will spawn only in urban areas.", ["Only wilderness"] = "Bandits will only spawn outside of cities."})
+    self.zoneCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self:addChild(self.zoneCombo)
+    rowY = rowY + BUTTON_HGT + 8
+
+    --[[
+    lbl = ISLabel:new(leftX - UI_BORDER_SPACING, topY + rowY, BUTTON_HGT, "Zone Boost Spawn", 1, 1, 1, 1, UIFont.Small, false)
+    lbl:initialise()
+    lbl:instantiate()
+    self:addChild(lbl)
+
+    self.zoneTypeCombo = ISComboBox:new(leftX, topY + rowY, 130, BUTTON_HGT, self)
+    self.zoneTypeCombo:initialise();
+    self.zoneTypeCombo:addOption("Any")
+
+    for zone, tab in pairs(ZombiesZoneDefinition) do
+        self.zoneTypeCombo:addOption(zone)
+    end
+    self.zoneTypeCombo.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
+    self:addChild(self.zoneTypeCombo)
+    rowY = rowY + BUTTON_HGT + 8
+    ]]
 
     self:loadConfig()
 
@@ -276,12 +342,11 @@ end
 function BanditClanMain:loadConfig()
     local data = BanditCustom.ClanGet(self.cid)
 
-    self.clanNameEntry:setText(data.general.name)
+    if data.general then
+        self.clanNameEntry:setText(data.general.name)
+    end
 
     if data.spawn then
-        self.waveCombo.selected = (data.spawn.wave or 0) + 1
-        self.zoneCombo.selected = (data.spawn.zone or 0) + 1
-
         if data.spawn.friendly then self.boolOptions:setSelected(1, true) end
         if data.spawn.companion then self.boolOptions:setSelected(2, true) end
         if data.spawn.defenders then self.boolOptions:setSelected(3, true) end
@@ -290,6 +355,13 @@ function BanditClanMain:loadConfig()
         if data.spawn.wanderer then self.boolOptions:setSelected(6, true) end
         if data.spawn.roadblock then self.boolOptions:setSelected(7, true) end
         self:onBoolOptionsChange()
+        
+        self.dayStartEntry:setText(data.spawn.dayStart and tostring(data.spawn.dayStart) or "0")
+        self.dayEndEntry:setText(data.spawn.dayEnd and tostring(data.spawn.dayEnd) or "10000")
+        self.spawnChanceEntry:setText(data.spawn.spawnChance and tostring(data.spawn.spawnChance) or "1.00")
+        self.groupMinEntry:setText(data.spawn.groupMin and tostring(data.spawn.groupMin) or "1")
+        self.groupMaxEntry:setText(data.spawn.groupMax and tostring(data.spawn.groupMax) or "4")
+        self.zoneCombo.selected = (data.spawn.zone or 0) + 1
     end
 end
 
@@ -299,8 +371,7 @@ function BanditClanMain:saveConfig()
     data.general = {}
     data.general.name = BanditUtils.SanitizeString(self.clanNameEntry:getText())
     data.spawn = {}
-    data.spawn.wave = self.waveCombo.selected - 1
-    data.spawn.zone = self.zoneCombo.selected - 1
+    
     data.spawn.friendly = self.boolOptions:isSelected(1)
     data.spawn.companion = self.boolOptions:isSelected(2)
     data.spawn.defenders = self.boolOptions:isSelected(3)
@@ -308,7 +379,13 @@ function BanditClanMain:saveConfig()
     data.spawn.assault = self.boolOptions:isSelected(5)
     data.spawn.wanderer = self.boolOptions:isSelected(6)
     data.spawn.roadblock = self.boolOptions:isSelected(7)
-    
+
+    data.spawn.dayStart = BanditUtils.SanitizeString(self.dayStartEntry:getText())
+    data.spawn.dayEnd = BanditUtils.SanitizeString(self.dayEndEntry:getText())
+    data.spawn.spawnChance = BanditUtils.SanitizeString(self.spawnChanceEntry:getText())
+    data.spawn.groupMin = BanditUtils.SanitizeString(self.groupMinEntry:getText())
+    data.spawn.groupMax = BanditUtils.SanitizeString(self.groupMaxEntry:getText())
+    data.spawn.zone = self.zoneCombo.selected - 1
 
     BanditCustom.Save()
 end

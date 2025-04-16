@@ -8,30 +8,9 @@ end
 
 ZombiePrograms.Looter.Prepare = function(bandit)
     local tasks = {}
-    local world = getWorld()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
-
-    local weapons = Bandit.GetWeapons(bandit)
-    local primary = Bandit.GetBestWeapon(bandit)
 
     Bandit.ForceStationary(bandit, false)
-    Bandit.SetWeapons(bandit, weapons)
-
-    local secondary
-    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
-        secondary = "Base.HandTorch"
-    end
-
-    if weapons.primary.name and weapons.secondary.name then
-        local task1 = {action="Unequip", time=100, itemPrimary=weapons.secondary.name}
-        table.insert(tasks, task1)
-    end
-
-    local task2 = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task2)
-
+  
     return {status=true, next="Main", tasks=tasks}
 end
 

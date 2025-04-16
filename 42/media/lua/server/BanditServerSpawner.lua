@@ -292,10 +292,10 @@ local function banditize(zombie, bandit, clan, args)
     brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, -4, 4)
 
     local enduranceBoost = general.endurance or 5
-    brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.5, 1.5)
+    brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.25, 1.75)
 
     local strengthBoost = general.strength or 5
-    brain.strengthBoost = BanditUtils.Lerp(strengthBoost, 1, 9, 0.5, 1.5)
+    brain.strengthBoost = BanditUtils.Lerp(strengthBoost, 1, 9, 0.25, 1.75)
 
     brain.exp = {0, 0, 0}
     if general.exp1 and general.exp2 and general.exp3 then
@@ -303,11 +303,15 @@ local function banditize(zombie, bandit, clan, args)
     end
 
     brain.weapons = {}
-    if bandit.weapons then
-        brain.weapons.melee = BanditCompatibility.GetLegacyItem(bandit.weapons.melee) or "Base.BareHands"
+    brain.weapons.melee = "Base.BareHands"
+    brain.weapons.primary = {}
+    brain.weapons.secondary = {}
 
+    if bandit.weapons then
+        if bandit.weapons.melee then
+            brain.weapons.melee = BanditCompatibility.GetLegacyItem(bandit.weapons.melee)
+        end
         for _, slot in pairs({"primary", "secondary"}) do
-            brain.weapons[slot] = {}
             brain.weapons[slot].bulletsLeft = 0
             brain.weapons[slot].magCount = 0
             if bandit.weapons[slot] and bandit.ammo[slot] then
@@ -802,17 +806,6 @@ local function spawnHouse(player, spawnPoint)
     return building
 end
 
-local function getRandomClanIdForWave(wid)
-    local clanData = BanditCustom.ClanGetAll()
-    local clanChoices = {}
-    for cid, clan in pairs(clanData) do
-        if clan.spawn.wave == wid then
-            table.insert(clanChoices, cid)
-        end
-    end
-    return BanditUtils.Choice(clanChoices)
-end
-
 local function getIconDataByProgram(program, friendly)
 
     local icon, color, desc
@@ -850,15 +843,18 @@ end
 local function spawnType(player, args)
 
     local pid = BanditUtils.GetCharacterID(player)
-    local wid = args.wid
-    local dist = args.dist
-    local wave = getWaveData()[wid]
-    local cid = getRandomClanIdForWave(wid)
+    local cid = args.cid
     if not cid then return end
 
-    local clan = BanditCustom.ClanGet(cid)
-    local groupSize = wave.groupSize
+    local clan = BanditCustom.ClanGet(cid).spawn
+    local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
     local spawnPoints = {}
+
+    if args.dist then
+        spawnPoints = generateSpawnPointUniform(player, args.dist, groupSize)
+    elseif args.x and args.y and args.z then
+        spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, groupSize)
+    end
 
     local args = {}
     args.pid = pid
@@ -867,33 +863,31 @@ local function spawnType(player, args)
     args.program = "Looter"
     -- args.key = false
 
-    spawnPoints = generateSpawnPointUniform(player, dist, groupSize)
-
-    if clan.spawn.wanderer and clan.spawn.assault then
+    if clan.wanderer and clan.assault then
         args.program = BanditUtils.Choice({"Looter", "Bandit"})
-    elseif clan.spawn.wanderer then
+    elseif clan.wanderer then
         args.program = "Looter"
-    elseif clan.spawn.assault then
+    elseif clan.assault then
         args.program = "Bandit"
-    elseif clan.spawn.companion then
+    elseif clan.companion then
         args.program = "Companion"
     end
 
-    if clan.spawn.roadblock then
+    if clan.roadblock then
         local res = spawnRoadblock(player, spawnPoints[1])
         if res then
             args.program = "Roadblock"
         end
     end
     
-    if clan.spawn.campers then
+    if clan.campers then
         local res = spawnCamp(player, spawnPoints[1])
         if res then
             args.program = "Camper"
         end
     end
 
-    if clan.spawn.defenders then
+    if clan.defenders then
         local building = spawnHouse(player, spawnPoints[1])
         if building then
             args.program = "Defend"
@@ -904,14 +898,14 @@ local function spawnType(player, args)
     if #spawnPoints > 0 then
         local cnt = spawnGroup(spawnPoints, args)
         if cnt > 0 then
-            local icon, color, desc = getIconDataByProgram(args.program, clan.spawn.friendly)
+            local icon, color, desc = getIconDataByProgram(args.program, clan.friendly)
             if icon and color and desc then
                 local x, y = spawnPoints[1].x, spawnPoints[1].y
                 if isServer() then
                     local args = {icon=icon, time=1800, x=x, y=y, color=color, desc=desc}
                     sendServerCommand('Commands', 'SetMarker', args)
                 else
-                    BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), icon, 1800, x, y, color, desc)
+                    BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, x, y, color, desc)
                 end
             end
         end
@@ -933,8 +927,9 @@ local function checkEvent()
     else
         player = getSpecificPlayer(0)
     end
-    
-    local waveData = getWaveData()
+
+    local clanData = BanditCustom.ClanGetAll()
+
     local day = player:getHoursSurvived() / 24
 
     local densityScore = 1
@@ -942,17 +937,24 @@ local function checkEvent()
         densityScore = getDensityScore(player, 120)
     end
 
-    for wid, wave in pairs(waveData) do
-        if (wave.enabled and day >= wave.firstDay and day <= wave.lastDay) then
-            local spawnChance = wave.spawnHourlyChance * densityScore / 6
+    for cid, clan in pairs(clanData) do
+        local spawnConfig = clan.spawn
+        if spawnConfig and spawnConfig.dayStart and spawnConfig.dayEnd and day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
+            local spawnChance = spawnConfig.spawnChance / 6
+
+            -- boost spawn in non-wilderness area
+            -- if spawnConfig.zone and spawnConfig.zone ~= 3 then 
+            --    spawnChance = spawnChance * densityScore
+            -- end
+
             local spawnRandom = ZombRandFloat(0, 100)
+            print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
 
             if spawnRandom < spawnChance then
                 local args = {}
-                args.wid = wid
+                args.cid = cid
                 args.dist = 50 + ZombRand(20)
                 spawnType(player, args)
-                break
             end
         end
     end
@@ -977,10 +979,11 @@ end
 BanditServer = BanditServer or {}
 BanditServer.Spawner = {}
 
--- used for debug wave spawning
-BanditServer.Spawner.Wave = function(player, args)
-    if not args.wid then return end
-    if not args.dist then args.dist = 60 end
+-- used for dedicated spawning by mods or debug
+BanditServer.Spawner.Type = function(player, args)
+    if not args.cid then return end
+    
+    args.pid = BanditUtils.GetCharacterID(player)
     spawnType(player, args)
 end
 

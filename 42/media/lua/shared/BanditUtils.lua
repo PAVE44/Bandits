@@ -662,6 +662,78 @@ BanditUtils.GetCity = function(character)
     end
 end
 
+BanditUtils.GetCityMap = function(city)
+    local ret = {}
+    local map = {
+        ["Louisville"] = function()
+            local tab = {}
+            for i=1, 9 do
+                table.insert(tab, "Base.LouisvilleMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Jefferson"] = function()
+            local tab = {}
+            for i=1, 9 do
+                table.insert(tab, "Base.LouisvilleMap" .. i)
+            end
+            return tab
+        end,
+
+        ["March Ridge"] = function()
+            local tab = {}
+            table.insert(tab, "Base.MarchRidgeMap")
+            return tab
+        end,
+
+        ["Muldraugh"] = function()
+            local tab = {}
+            table.insert(tab, "Base.MuldraughMap")
+            return tab
+        end,
+
+        ["Riverside"] = function()
+            local tab = {}
+            table.insert(tab, "Base.RiversideMap")
+            return tab
+        end,
+
+        ["Rosewood"] = function()
+            local tab = {}
+            table.insert(tab, "Base.Rosewood")
+            return tab
+        end,
+
+        ["West Point"] = function()
+            local tab = {}
+            table.insert(tab, "Base.WestPointMap")
+            return tab
+        end,
+
+        ["Brandenburg"] = function()
+            local tab = {}
+            return tab
+        end,
+
+        ["Ekron"] = function()
+            local tab = {}
+            return tab
+        end,
+
+        ["Irvington"] = function()
+            local tab = {}
+            return tab
+        end
+    }
+
+    if map[city] then
+        ret = map[city]()
+    end
+
+    return ret
+end
+
 BanditUtils.GetStashMap = function(city)
     local ret = {}
 

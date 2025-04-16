@@ -385,10 +385,18 @@ function Bandit.SetHostile(zombie, hostile)
     end
 end
 
+function Bandit.SetHostileP(zombie, hostileP)
+    local brain = BanditBrain.Get(zombie)
+    if brain then
+        brain.hostileP = hostileP
+        -- BanditBrain.Update(zombie, brain)
+    end
+end
+
 function Bandit.IsHostile(zombie)
     local brain = BanditBrain.Get(zombie)
     if brain then
-        return brain.hostile
+        return brain.hostile or brain.hostileP
     end
 end
 
@@ -944,7 +952,7 @@ function Bandit.Say(zombie, phrase, force)
                 -- text captions
                 if SandboxVars.Bandits.General_Captions then
                     local text = "IGUI_Bandits_Speech_" .. sound
-                    if brain.hostile then
+                    if brain.hostile or brain.hostileP then
                         zombie:addLineChatElement(getText(text), 0.8, 0.1, 0.1)
                     else
                         zombie:addLineChatElement(getText(text), 0.1, 0.8, 0.1)
@@ -1030,19 +1038,20 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
         end
 
         if enemy then
+            --[[
             local banditWeapon = enemy:getPrimaryHandItem()
             if banditWeapon and banditWeapon:IsWeapon() then
                 local weaponType = WeaponType.getWeaponType(banditWeapon)
                 if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
                     walkType = "Run"
                 end
-            end
+            end]]
             
-            local enemyWeapon = bandit:getPrimaryHandItem()
-            if enemyWeapon and enemyWeapon:IsWeapon() then
-                local weaponType = WeaponType.getWeaponType(enemyWeapon)
+            local banditWeapon = bandit:getPrimaryHandItem()
+            if banditWeapon and banditWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(banditWeapon)
                 if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                    local wrange = enemyWeapon:getMaxRange()
+                    local wrange = BanditCompatibility.GetMaxRange(banditWeapon)
 
                     if dist > wrange + 10 then
                         walkType = "Run"

@@ -14,7 +14,7 @@
 	<m_Conditions>
 		<m_Name>hitforce</m_Name>
 		<m_Type>GTR</m_Type>
-		<m_FloatValue>0.4</m_FloatValue>
+		<m_FloatValue>0.0</m_FloatValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetState</m_EventName>

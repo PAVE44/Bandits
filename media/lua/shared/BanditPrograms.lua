@@ -143,7 +143,8 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
             end
         end
 
-        local time = aimTimeMin + aimTimeSurp + brain.rnd[2]
+        local aimTimeIndividual = brain.rnd and brain.rnd[2] or 0
+        local time = aimTimeMin + aimTimeSurp +aimTimeIndividual
         if time > 60 then time = 60 end
 
         local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=time}
@@ -158,9 +159,10 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+    local fireTimeIndividual = brain.rnd and brain.rnd[2] or 0
 
     local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), enemyCharacter:getX(), enemyCharacter:getY())
-    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1) + brain.rnd[2]
+    local firingtime = weaponItem:getRecoilDelay() + math.floor(dist ^ 1.1) + fireTimeIndividual
 
     local bullets = 1
     local modes = weaponItem:getFireModePossibilities()
@@ -446,7 +448,7 @@ end
 
 BanditPrograms.Idle = function(bandit)
     local tasks = {}
-    local action = ZombRand(50)
+    local action = ZombRand(10)
 
     local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
     local gameTime = getGameTime()
@@ -483,7 +485,7 @@ BanditPrograms.Idle = function(bandit)
         local task = {action="Time", anim="WipeHead", time=200}
         table.insert(tasks, task)
     else
-        local task = {action="Time", anim="ShiftWeight", time=200}
+        local task = {action="Time", anim="ChewNails", time=200}
         table.insert(tasks, task)
     end
     return tasks

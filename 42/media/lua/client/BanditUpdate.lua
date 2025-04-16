@@ -4,6 +4,10 @@ local function predicateRemovable(item)
     end
 end
 
+local function predicateAll(item)
+	return true
+end
+
 local function CalcSpottedScore(player, dist)
     if not instanceof(player, "IsoPlayer") then return end
 
@@ -172,6 +176,12 @@ local function ApplyVisuals(bandit, brain)
     local itemVisuals = bandit:getItemVisuals()
 
     if brain.cid then
+
+        if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
+            bandit:setVariable("MovementSpeed", 1.00)
+        else
+            bandit:setVariable("MovementSpeed", 0.70)
+        end
 
         bandit:setHealth(brain.health)
 
@@ -799,7 +809,13 @@ local function ManageCollisions(bandit)
                                     end
                                 else
 
-                                    if (object:isLockedByKey() and bandit:getCurrentSquare():Is(IsoFlagType.exterior)) or object:getProperties():Is("forceLocked") or object:isObstructed() then
+                                    -- door locks are complicated... 
+                                    local test11=object:isLocked()
+                                    local test12=object:isLockedByKey()
+                                    local test13=bandit:getCurrentSquare():getRoom()
+                                    local test14=object:getProperties():Is("forceLocked")
+                                    local test15=object:isObstructed()
+                                    if ((object:isLocked() or object:isLockedByKey()) and (not bandit:getCurrentSquare():getRoom() or object:getProperties():Is("forceLocked"))) or object:isObstructed() then
                                         if bandit:isPrimaryEquipped(weapons.melee) then
                                             local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
                                             table.insert(tasks, task)
@@ -996,7 +1012,7 @@ local function ManageCombat(bandit)
                                 if not maxRangeRifle then
                                     local item = BanditCompatibility.InstanceItem(weapons.primary.name)
                                     item = BanditWeapons.Modify(item, brain)
-                                    maxRangeRifle = item:getMaxRange()
+                                    maxRangeRifle = BanditCompatibility.GetMaxRange(item)
                                     
                                 end
                                 if dist < maxRangeRifle then
@@ -1014,7 +1030,7 @@ local function ManageCombat(bandit)
                                 if not maxRangePistol then
                                     local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
                                     item = BanditWeapons.Modify(item, brain)
-                                    maxRangePistol = item:getMaxRange()
+                                    maxRangePistol = BanditCompatibility.GetMaxRange(item)
                                 end
                                 if dist < maxRangePistol then
                                     if bandit:isPrimaryEquipped(weapons.secondary.name) then
@@ -1079,7 +1095,7 @@ local function ManageCombat(bandit)
                             end
 
                             --determine if bandit will be in combat mode
-                            if weapons.melee and math.abs(zz - pz) < 0.5 then
+                            if weapons.melee and math.abs(zz - pz) < 0.5 and asn ~= "falldown" then
                                 if dist <= meleeDist then
                                     if bandit:isPrimaryEquipped(weapons.melee) then
 
@@ -1087,7 +1103,7 @@ local function ManageCombat(bandit)
                                             maxRangeMelee = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
                                         end
                                         local prone = enemyCharacter:isProne()
-                                        local fix = 0.4
+                                        local fix = 0.1
                                         if prone then fix = -0.2 end
 
                                         if dist <= maxRangeMelee + fix then
@@ -1106,7 +1122,9 @@ local function ManageCombat(bandit)
                             if not isOutOfAmmo and dist > meleeDist + 1 and not combat and not shove then
                                 if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                     if not maxRangeRifle then
-                                        maxRangeRifle = BanditCompatibility.InstanceItem(weapons.primary.name):getMaxRange()
+                                        local item = BanditCompatibility.InstanceItem(weapons.primary.name)
+                                        item = BanditWeapons.Modify(item, brain)
+                                        maxRangeRifle = BanditCompatibility.GetMaxRange(item)
                                     end
                                     if dist < maxRangeRifle then
                                         if bandit:isPrimaryEquipped(weapons.primary.name) then
@@ -1122,7 +1140,9 @@ local function ManageCombat(bandit)
                                     end
                                 elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
                                     if not maxRangePistol then
-                                        maxRangePistol = BanditCompatibility.InstanceItem(weapons.secondary.name):getMaxRange()
+                                        local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
+                                        item = BanditWeapons.Modify(item, brain)
+                                        maxRangePistol = BanditCompatibility.GetMaxRange(item)
                                     end
                                     if dist < maxRangePistol then
                                         if bandit:isPrimaryEquipped(weapons.secondary.name) then
@@ -1196,7 +1216,7 @@ local function ManageCombat(bandit)
 
             if bandit:isFacingObject(enemyCharacter, 0.1) then
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Shove", anim="Shove", sound="AttackShove", time=60, endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Push", anim="Shove", sound="AttackShove", time=60, endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -1211,14 +1231,14 @@ local function ManageCombat(bandit)
         end
 
     elseif combat then
-        if not BanditBrain.HasTaskTypes(brain, {"Hit", "Shove", "Equip", "Unequip"}) then 
+        if not BanditBrain.HasTaskTypes(brain, {"Smack", "Push", "Equip", "Unequip"}) then 
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
 
             if bandit:isFacingObject(enemyCharacter, 0.5) then
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Hit", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Smack", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -1363,7 +1383,7 @@ local function UpdateZombies(zombie)
     local zid = zombie:getModData().zid
     if zid and biteTab[zid] and zombie:getBumpType() == "Bite" and asn == "bumped" then
         local tick = biteTab[zid].tick
-        if tick == 7 then
+        if tick == 9 then
             local bandit = biteTab[zid].bandit
             local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), bandit:getX(), bandit:getY())
             if dist < 0.8 then 
@@ -1518,7 +1538,7 @@ local function UpdateZombies(zombie)
                             return
                         end
 
-                        if zombie:getBumpType() ~= "Bite" then
+                        if zombie:getBumpType() ~= "Bite" and asn ~= "staggerback" then
                             -- print ("BITE: " .. asn .. " " .. zombie:getBumpType())
                             zombie:setBumpType("Bite")
                             local zid = BanditUtils.GetCharacterID(zombie)
@@ -1542,7 +1562,7 @@ local function ProcessTask(bandit, task)
 
     if task.state == "NEW" then
         if not task.time then task.time = 1000 end
-        -- bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
+        bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
         if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
             Bandit.SetAim(bandit, false)
         end
@@ -1760,7 +1780,8 @@ local function OnBanditUpdate(zombie)
 
     -- WALKTYPE
     -- we do it this way, if walktype get overwritten by game engine we force our animations
-    zombie:setWalkType(zombie:getVariableString("BanditWalkType"))
+    bandit:setWalkType(bandit:getVariableString("BanditWalkType"))
+    bandit:setSpeedMod(1)
 
     -- NO ZOMBIE SOUNDS
     Bandit.SurpressZombieSounds(bandit)
@@ -1838,106 +1859,154 @@ end
 
 local function OnZombieDead(zombie)
 
-    if not zombie:getVariableBoolean("Bandit") then return end
+    if zombie:getVariableBoolean("Bandit") then 
 
-    local bandit = zombie
-    local brain = BanditBrain.Get(bandit)
-    local inventory = bandit:getInventory()
-    local items = ArrayList.new()
+        local brain = BanditBrain.Get(zombie)
+        local inventory = zombie:getInventory()
+        local items = ArrayList.new()
 
-    local veh = bandit:getVehicle()
-    if veh then veh:exit(bandit) end
+        local veh = zombie:getVehicle()
+        if veh then veh:exit(zombie) end
 
-    inventory:getAllEvalRecurse(predicateRemovable, items)
-    for i=0, items:size()-1 do
-        local item = items:get(i)
-        inventory:Remove(item)
-        inventory:setDrawDirty(true)
-    end
-
-    -- update stuck weapons
-    local stuckLocationList = {"MeatCleaver in Back", "Axe Back", "Knife in Back", "Knife Left Leg", "Knife Right Leg", "Knife Shoulder", "Knife Stomach"}
-    for _, stuckLocation in pairs(stuckLocationList) do
-        local attachedItem = zombie:getAttachedItem(stuckLocation)
-        if attachedItem then
-            inventory:AddItem(attachedItem)
+        inventory:getAllEvalRecurse(predicateRemovable, items)
+        for i=0, items:size()-1 do
+            local item = items:get(i)
+            inventory:Remove(item)
             inventory:setDrawDirty(true)
         end
-    end
 
-    -- drop extra suitcase item 
-    if brain.bag then
-        if brain.bag == "Briefcase" then
-            local bag = BanditCompatibility.InstanceItem("Base.Briefcase")
-            local bagContainer = bag:getItemContainer()
-            if bagContainer then
-                local rn = ZombRand(3)
-                if rn == 0 then
-                    for i = 1, 1000 do
-                        local money = instanceItem("Base.Money")
-                        bagContainer:AddItem(money)
-                    end
-                elseif rn == 1 then
-                    local c1 = BanditCompatibility.InstanceItem("Base.Corset_Black")
-                    local c2 = BanditCompatibility.InstanceItem("Base.StockingsBlack")
-                    local c3 = BanditCompatibility.InstanceItem("Base.Hat_PeakedCapArmy")
-                    bagContainer:AddItem(c1)
-                    bagContainer:AddItem(c2)
-                    bagContainer:AddItem(c3)
-                elseif rn == 2 then
-                    local c1 = BanditCompatibility.InstanceItem("Base.Machete")
-                    bagContainer:AddItem(c1)
-                    if BanditCompatibility.GetGameVersion() >= 42 then
-                        local c2 = BanditCompatibility.InstanceItem("Base.Hat_HalloweenMaskVampire")
-                        local c3 = BanditCompatibility.InstanceItem("Base.BlackRobe")
-                        bagContainer:AddItem(c2)
-                        bagContainer:AddItem(c3)
-                    end
-                end
-                bandit:getSquare():AddWorldInventoryItem(bag, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+        -- update stuck weapons
+        local stuckLocationList = {"MeatCleaver in Back", "Axe Back", "Knife in Back", "Knife Left Leg", "Knife Right Leg", "Knife Shoulder", "Knife Stomach"}
+        for _, stuckLocation in pairs(stuckLocationList) do
+            local attachedItem = zombie:getAttachedItem(stuckLocation)
+            if attachedItem then
+                inventory:AddItem(attachedItem)
+                inventory:setDrawDirty(true)
             end
         end
+
+        -- drop extra suitcase item 
+        if brain.bag then
+            if brain.bag == "Briefcase" then
+                local bag = BanditCompatibility.InstanceItem("Base.Briefcase")
+                local bagContainer = bag:getItemContainer()
+                if bagContainer then
+                    local rn = ZombRand(3)
+                    if rn == 0 then
+                        for i = 1, 1000 do
+                            local money = instanceItem("Base.Money")
+                            bagContainer:AddItem(money)
+                        end
+                    elseif rn == 1 then
+                        local c1 = BanditCompatibility.InstanceItem("Base.Corset_Black")
+                        local c2 = BanditCompatibility.InstanceItem("Base.StockingsBlack")
+                        local c3 = BanditCompatibility.InstanceItem("Base.Hat_PeakedCapArmy")
+                        bagContainer:AddItem(c1)
+                        bagContainer:AddItem(c2)
+                        bagContainer:AddItem(c3)
+                    elseif rn == 2 then
+                        local c1 = BanditCompatibility.InstanceItem("Base.Machete")
+                        bagContainer:AddItem(c1)
+                        if BanditCompatibility.GetGameVersion() >= 42 then
+                            local c2 = BanditCompatibility.InstanceItem("Base.Hat_HalloweenMaskVampire")
+                            local c3 = BanditCompatibility.InstanceItem("Base.BlackRobe")
+                            bagContainer:AddItem(c2)
+                            bagContainer:AddItem(c3)
+                        end
+                    end
+                    zombie:getSquare():AddWorldInventoryItem(bag, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+                end
+            end
+        end
+
+        -- add key to inv
+        if brain.key and ZombRand(3) == 1 then
+            local item = BanditCompatibility.InstanceItem("Base.Key1")
+            item:setKeyId(brain.key)
+            item:setName("Building Key")
+            zombie:getInventory():AddItem(item)
+            Bandit.UpdateItemsToSpawnAtDeath(zombie)
+        end
+
+        Bandit.Say(zombie, "DEAD", true)
+
+        -- update player kills
+        local player = getSpecificPlayer(0)
+        local killer = zombie:getAttackedBy()
+        if killer then
+            if killer == player then
+                local args = {}
+                args.id = 0
+                sendClientCommand(player, 'Commands', 'IncrementBanditKills', args)
+                player:setZombieKills(player:getZombieKills() - 1)
+            end
+        end
+
+        -- warning: bwo overwrites CheckFriendlyFire
+        local attacker = zombie:getAttackedBy()
+        BanditPlayer.CheckFriendlyFire(zombie, attacker)
+
+        -- deprovision
+        zombie:setUseless(false)
+        zombie:setReanim(false)
+        zombie:setVariable("Bandit", false)
+        zombie:setPrimaryHandItem(nil)
+        zombie:clearAttachedItems()
+        zombie:resetEquippedHandsModels()
+
+        args = {}
+        args.id = brain.id
+        sendClientCommand(player, 'Commands', 'BanditRemove', args)
+        BanditBrain.Remove(zombie)
     end
 
-    -- add key to inv
-    if brain.key and ZombRand(3) == 1 then
-        local item = BanditCompatibility.InstanceItem("Base.Key1")
-        item:setKeyId(brain.key)
-        item:setName("Building Key")
-        bandit:getInventory():AddItem(item)
-        Bandit.UpdateItemsToSpawnAtDeath(bandit)
-    end
-
-    Bandit.Say(bandit, "DEAD", true)
-
-    -- update player kills
-    local player = getSpecificPlayer(0)
-    local killer = bandit:getAttackedBy()
-    if killer then
-        if killer == player then
-            local args = {}
-            args.id = 0
-            sendClientCommand(player, 'Commands', 'IncrementBanditKills', args)
-            player:setZombieKills(player:getZombieKills() - 1)
+    -- stale corpse hack
+    local isSeen = false
+    local playerList = BanditPlayer.GetPlayers()
+    for i=0, playerList:size()-1 do
+        local player = playerList:get(i)
+        if player and player:CanSee(zombie) and zombie:getSquare():isCanSee(0) then
+            isSeen = true
         end
     end
 
-    -- warning: bwo overwrites CheckFriendlyFire
-    local attacker = bandit:getAttackedBy()
-    BanditPlayer.CheckFriendlyFire(bandit, attacker)
+    if not isSeen then
+        local zombie2 = createZombie(zombie:getX(), zombie:getY(), zombie:getZ(), nil, 0, IsoDirections.S)
+        
+        local hv = zombie:getHumanVisual()
+        local hv2 = zombie2:getHumanVisual()
+        local inv = zombie:getInventory()
+        local arrItems = ArrayList.new()
+        inv:getAllEvalRecurse(predicateAll, arrItems)
 
-    -- deprovision
-    bandit:setUseless(false)
-    bandit:setReanim(false)
-    bandit:setVariable("Bandit", false)
-    bandit:setPrimaryHandItem(nil)
-    bandit:clearAttachedItems()
-    bandit:resetEquippedHandsModels()
+        zombie2:setFemale(zombie:isFemale())
+        hv2:setSkinTextureName(hv:getSkinTexture())
+        hv2:setHairModel(hv:getHairModel())
+        hv2:setBeardModel(hv:getHairModel())
+        hv2:setHairColor(hv:getHairColor()) 
+        hv2:setBeardColor(hv:getBeardColor())
 
-    args = {}
-    args.id = brain.id
-    sendClientCommand(player, 'Commands', 'BanditRemove', args)
-    BanditBrain.Remove(bandit)
+        local wornItems = zombie:getWornItems()
+        zombie2:setWornItems(wornItems)
+        zombie2:setAttachedItems(zombie:getAttachedItems())
+
+        zombie:removeFromWorld()
+        zombie:removeFromSquare()
+
+        local body = IsoDeadBody.new(zombie2, false);
+        inv2 = body:getContainer()
+        for i = 0, wornItems:size() - 1 do
+            local wornItem = wornItems:get(i)
+            local item = wornItem:getItem()
+            inv2:AddItem(item)
+        end
+
+        for i = 0, arrItems:size()-1 do
+            local item = arrItems:get(i)
+            inv2:AddItem(item)
+        end
+    end
+
 end
 
 Events.OnZombieUpdate.Add(OnBanditUpdate)

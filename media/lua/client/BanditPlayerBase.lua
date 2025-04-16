@@ -260,9 +260,9 @@ BanditPlayerBase.Regenerate = function(baseId)
                 addObject(baseId, x, y, z, "generators")
             elseif object:getName() == "EmptyGraves" and md.filled == false then
                 addObject(baseId, x, y, z, "graves")
-            elseif object:getWaterAmount() > 10 then -- or (props and props:Is("waterPiped"))
+            --[[elseif object:getWaterAmount() > 10 then -- or (props and props:Is("waterPiped"))
                 local xx = object:getWaterAmount()
-                addObject(baseId, x, y, z, "waterSources")
+                addObject(baseId, x, y, z, "waterSources")]]
             elseif spriteProps and spriteProps:Is("IsTrashCan") then
                 addObject(baseId, x, y, z, "trashcans")
             elseif container then

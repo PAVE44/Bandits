@@ -65,6 +65,50 @@ BanditPlayer.WakeEveryone = function()
     end
 end
 
+-- hostilizes friendlies that witnessed player attacking a friendly
+BanditPlayer.CheckFriendlyFire = function(bandit, attacker)
+    if ZombRand(6) ~= 0 then return end
+
+    if not attacker then return end
+
+    -- attacking zombies is ok!
+    if not bandit:getVariableBoolean("Bandit") then return end
+
+    -- this is ugly reverse dependency
+    if getActivatedMods():contains("\\BanditsWeekOne") then return end
+
+    -- hostility against civilians (clan=0) is handled by other mods
+    local brain = BanditBrain.Get(bandit)
+    if not brain then return end
+
+    -- attacking hostiles is ok!
+    if brain.hostile or brain.hostileP then return end
+
+    -- attacker is not a real player
+    if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
+
+    -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
+    local attackerX, attackerY = attacker:getX(), attacker:getY()
+    local cache, witnesses = BanditZombie.Cache, BanditZombie.CacheLightB
+
+    for _, witness in pairs(witnesses) do
+        if not (witness.brain.hostile or witness.brain.hostileP) then
+            local dx, dy = witness.x - attackerX, witness.y - attackerY
+            if dx * dx + dy * dy < 144 then -- squared distance check (avoids sqrt call)
+                local friendly = cache[witness.id]
+                if friendly and friendly:CanSee(attacker) then
+                    Bandit.SetHostileP(friendly, true)
+                    Bandit.SetProgram(friendly, "Bandit", {})
+
+                    local fBrain = BanditBrain.Get(friendly)
+                    local syncData = { id = fBrain.id, hostileP = true, program = {name="Bandit", stage="Prepare"} }
+                    Bandit.ForceSyncPart(friendly, syncData)
+                end
+            end
+        end
+    end
+end
+
 local UpdatePlayersOnline = function ()
     if isServer() then return end
 

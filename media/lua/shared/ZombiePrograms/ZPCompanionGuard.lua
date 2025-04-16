@@ -1,36 +1,16 @@
 ZombiePrograms = ZombiePrograms or {}
 
 ZombiePrograms.CompanionGuard = {}
-ZombiePrograms.CompanionGuard.Stages = {}
-
-ZombiePrograms.CompanionGuard.Init = function(bandit)
-end
 
 ZombiePrograms.CompanionGuard.Prepare = function(bandit)
     local tasks = {}
-    local world = getWorld()
-    local cell = getCell()
-    local cm = world:getClimateManager()
-    local dls = cm:getDayLightStrength()
 
     Bandit.ForceStationary(bandit, true)
-
-    Bandit.SetWeapons(bandit, Bandit.GetWeapons(bandit))
-    
-    local primary = Bandit.GetBestWeapon(bandit)
-
-    local secondary
-    if SandboxVars.Bandits.General_CarryTorches and dls < 0.3 then
-        secondary = "Base.HandTorch"
-    end
-
-    local task = {action="Equip", itemPrimary=primary, itemSecondary=secondary}
-    table.insert(tasks, task)
-
-    return {status=true, next="Guard", tasks=tasks}
+  
+    return {status=true, next="Main", tasks=tasks}
 end
 
-ZombiePrograms.CompanionGuard.Guard = function(bandit)
+ZombiePrograms.CompanionGuard.Main = function(bandit)
     local tasks = {}
     local master = BanditPlayer.GetMasterPlayer(bandit)
 
@@ -74,10 +54,6 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
 
     end
     
-    local idle = true
-    local x1, y1
-    local outOfAmmo = Bandit.IsOutOfAmmo(bandit)
-
     local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
     local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
     local closestEnemy = closestZombie
@@ -86,7 +62,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         closestEnemy = closestBandit 
     end
 
-    if closestEnemy.dist < 12 then
+    if closestEnemy.dist < 24 then
         local task = {action="FaceLocation", anim=anim, x=closestEnemy.x, y=closestEnemy.y, time=100}
         table.insert(tasks, task)
     else
@@ -98,7 +74,7 @@ ZombiePrograms.CompanionGuard.Guard = function(bandit)
         end
     end
 
-    return {status=true, next="Guard", tasks=tasks}
+    return {status=true, next="Main", tasks=tasks}
 end
 
 

@@ -3,9 +3,7 @@
 	<m_Name>ZSIdle2handed</m_Name>
 	<m_AnimName>Bob_IdleBat</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
-	<m_SpeedScale>0.23</m_SpeedScale>
-	<m_SpeedScaleRandomMultiplierMin>0.2</m_SpeedScaleRandomMultiplierMin>
-	<m_SpeedScaleRandomMultiplierMax>1.25</m_SpeedScaleRandomMultiplierMax>
+	<m_SpeedScale>0.80</m_SpeedScale>
 	<m_BlendTime>0.35</m_BlendTime>
 	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
 	<m_Conditions>
@@ -14,8 +12,8 @@
 		<m_BoolValue>true</m_BoolValue>
 	</m_Conditions>
 	<m_Conditions>
-		<m_Name>Weapon</m_Name>
+		<m_Name>BanditPrimaryType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>2handed</m_StringValue>
+		<m_StringValue>twohanded</m_StringValue>
 	</m_Conditions>
 </animNode>

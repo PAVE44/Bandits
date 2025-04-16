@@ -89,6 +89,8 @@ local loadFile = function(dataKey, fileName)
         local modid = mods:get(i):gsub("^\\", "")
         table.insert(modList, modid)
     end
+
+    -- LOCAL needs to load last so it remains untouched by other mods!
     table.insert(modList, "LOCAL")
 
     for i=1, #modList do

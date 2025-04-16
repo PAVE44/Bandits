@@ -777,7 +777,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Tracker) then
         local city = BanditUtils.GetCity(zombie)
         if city then
-            local maps = BanditUtils.GetStashMap(city)
+            local maps = BanditUtils.GetCityMap(city)
             for i=1, #maps do
                 table.insert (lootBag, {itemType=maps[i], chance=100, n=1})
             end
@@ -903,7 +903,7 @@ end
 
 function Bandit.PickVoice(zombie)
     local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
-    local femaleOptions = {"1", "2"}
+    local femaleOptions = {"1", "2", "4"}
 
     if zombie:isFemale() then
         return BanditUtils.Choice(femaleOptions)
@@ -1038,19 +1038,20 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
         end
 
         if enemy then
-            local banditWeapon = enemy:getPrimaryHandItem()
-            if banditWeapon and banditWeapon:IsWeapon() then
-                local weaponType = WeaponType.getWeaponType(banditWeapon)
+
+            local enemyWeapon = enemy:getPrimaryHandItem()
+            if enemyWeapon and enemyWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(enemyWeapon)
                 if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
                     walkType = "Run"
                 end
             end
             
-            local enemyWeapon = bandit:getPrimaryHandItem()
-            if enemyWeapon and enemyWeapon:IsWeapon() then
-                local weaponType = WeaponType.getWeaponType(enemyWeapon)
+            local banditWeapon = bandit:getPrimaryHandItem()
+            if banditWeapon and banditWeapon:IsWeapon() then
+                local weaponType = WeaponType.getWeaponType(banditWeapon)
                 if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
-                    local wrange = enemyWeapon:getMaxRange()
+                    local wrange = BanditCompatibility.GetMaxRange(banditWeapon)
 
                     if dist > wrange + 10 then
                         walkType = "Run"

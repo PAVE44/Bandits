@@ -118,11 +118,10 @@ end
 function BanditMenu.SpawnClan(player, square, cid)
     local args = {}
     args.cid = cid
-    args.size = 24
     args.x = square:getX()
     args.y = square:getY()
     args.z = square:getZ()
-    sendClientCommand(player, 'Spawner', 'Clan', args)
+    sendClientCommand(player, 'Spawner', 'Type', args)
 end
 
 function BanditMenu.SpawnDefenders (player, square)
@@ -339,6 +338,11 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
           
         end
 
+        local zone = square:getZone()
+        if zone then
+            local zoneType = zone:getType()
+            print ("ZONE TYPE:" .. zoneType)
+        end
         -- context:addOption("[DGB] Bandit UI", player, ShowCustomizationUI)
 
         -- context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)

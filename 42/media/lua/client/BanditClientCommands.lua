@@ -71,7 +71,7 @@ ZSClient.Commands.SendCustomToClients = function(args)
 end
 
 ZSClient.Commands.SetMarker  = function(args)
-    BanditEventMarkerHandler.setOrUpdate(getRandomUUID(), args.icon, args.time, args.x, args.y, args.color, args.desc)
+    BanditEventMarkerHandler.set(getRandomUUID(), args.icon, args.time, args.x, args.y, args.color, args.desc)
 end
 
 local onServerCommand = function(module, command, args)

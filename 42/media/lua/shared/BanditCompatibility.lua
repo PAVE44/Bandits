@@ -217,6 +217,49 @@ BanditCompatibility.GetMovementSpeed = function(object)
     end
 end
 
+BanditCompatibility.GetMaxRange = function(weapon)
+    
+    --                      b42       b41
+    -- AssaultRifle         30        11 3
+    -- AssaultRifle2        40        10 3
+    -- DoubleBarrel         15        9
+    -- DoubleBarrelShff     8         8
+    -- HuntingRifle         40        10    3
+    -- Pistol               15        7     1.5
+    -- Pistol2              12        8     1.5
+    -- Pistol3              17        10    1.5
+    -- Revoler              12        9     1.5
+    -- Revolver_Long        18        11    1.5
+    -- Revolver_Short       8         6
+    -- Shotgun              12        7
+    -- Shotgun Sawn         10        6
+    -- Varmint              30        10    2
+
+    if getGameVersion() >= 42 then
+        local wrange = weapon:getMaxRange()
+        local scope = weapon:getWeaponPart("Scope")
+        if scope then
+            wrange = wrange + scope:getMaxSightRange()
+        end
+        return wrange
+    else
+        local weaponType = WeaponType.getWeaponType(weapon)
+        local wrange = weapon:getMaxRange()
+        if weaponType == WeaponType.firearm then
+            if wrange >= 10 then
+                wrange = wrange + 20
+            end
+            local scope = weapon:getScope()
+            if scope then
+                wrange = wrange + scope:getMaxRange()
+            end
+        elseif weaponType == WeaponType.handgun then
+            wrange = wrange + 6
+        end
+        return wrange
+    end   
+end
+
 BanditCompatibility.UsesExternalMagazine = function(weapon)
     if getGameVersion() >= 42 then
         return weapon:usesExternalMagazine()
@@ -237,7 +280,7 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe"},
             TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
             TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
-            TopExtra = {"TorsoExtra", "TorsoExtraVest", "TorsoExtraVestBullet", "VestTexture", "Sweater", "SweaterHat"},
+            TopExtra = {"TorsoExtraVest", "VestTexture", "TorsoExtraVestBullet", "Sweater", "SweaterHat", "TorsoExtra"},
             Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
             TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left"},
             Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
@@ -245,7 +288,7 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
             Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
             BottomArmor = {"Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left"},
-            Shoes = {"Shoes", "Socks"}
+            Feet = {"Socks", "Shoes"}
         }
     else
         bodyLocations = {
@@ -255,13 +298,13 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "BathRobe"},
             TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
             TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
-            TopExtra = {"TorsoExtra", "TorsoExtraVest", "Sweater", "SweaterHat"},
+            TopExtra = {"TorsoExtraVest", "Sweater", "SweaterHat", "TorsoExtra"},
             Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
             Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
             Bags = {"FannyPackFront", "FannyPackBack"},
             Holsters = {"AmmoStrap", "BeltExtra"},
             Bottom = {"Pants", "Legs1", "Skirt"},
-            Shoes = {"Shoes", "Socks"}
+            Feet = {"Socks", "Shoes"}
         }
     end
     return bodyLocations
