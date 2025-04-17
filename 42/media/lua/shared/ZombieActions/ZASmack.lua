@@ -392,7 +392,7 @@ local function Hit(attacker, item, victim)
                 local brainAttacker = BanditBrain.Get(attacker)
                 local strengthBoost = brainAttacker.strengthBoost or 1
                 dmg = dmg * strengthBoost
-                print ("DMG: " .. dmg)
+                -- print ("DMG: " .. dmg)
                 victim:Hit(item, fakeZombie, dmg, false, 1, false)
 
                 local h = victim:getHealth()
@@ -517,7 +517,8 @@ ZombieActions.Smack.onWorking = function(bandit, task)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
             local brainEnemy = BanditBrain.Get(enemy)
-            if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
+            if BanditUtils.AreEnemies(brainEnemy, brainBandit) then
+            -- if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
                 Hit (bandit, item, enemy)
             end
         end

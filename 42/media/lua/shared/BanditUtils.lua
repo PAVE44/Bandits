@@ -259,6 +259,16 @@ function BanditUtils.CalcAngle (x1, y1, x2, y2)
     return angleDegrees
 end
 
+function BanditUtils.AreEnemies(brain1, brain2)
+    if  not brain1 or -- zombie case
+        not brain2 or -- zombie case
+        (brain1.clan ~= brain2.clan and (brain1.hostile or brain2.hostile)) or -- at least one of them is hostile and they are from different clans
+        (brain1.loyal and brain2.hostileP) or -- is hostile against player only, but the second one is loyal to the player (babe case)
+        (brain2.loyal and brain1.hostileP) then
+            return true
+    end
+    return false
+end
 
 function BanditUtils.GetClosestPlayerLocation(character, config)
     local result = {}
@@ -359,7 +369,8 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     if instanceof(character, "IsoZombie") then
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do
-            if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
+            if BanditUtils.AreEnemies(brain, otherBandit.brain) then
+            -- if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
                 local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
                 if dist < result.dist then
                     result.dist = dist

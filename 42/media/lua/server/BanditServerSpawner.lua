@@ -278,6 +278,7 @@ local function banditize(zombie, bandit, clan, args)
     local general = bandit.general
     brain.clan = general.cid
     brain.cid = general.cid
+    brain.bid = general.bid
     brain.female = general.female or false
     brain.skin = general.skin or 1
     brain.hairType = general.hairType or 1
@@ -304,8 +305,8 @@ local function banditize(zombie, bandit, clan, args)
 
     brain.weapons = {}
     brain.weapons.melee = "Base.BareHands"
-    brain.weapons.primary = {}
-    brain.weapons.secondary = {}
+    brain.weapons.primary = {["bulletsLeft"] = 0, ["magCount"] = 0}
+    brain.weapons.secondary = {["bulletsLeft"] = 0, ["magCount"] = 0}
 
     if bandit.weapons then
         if bandit.weapons.melee then
@@ -361,6 +362,7 @@ local function banditize(zombie, bandit, clan, args)
 
     -- bwo uses it
     brain.occupation = args.occupation
+    brain.loyal = args.loyal or false
 
     brain.master = args.pid
     brain.permanent = args.permanent and true or false
@@ -419,21 +421,70 @@ local function spawnGroup(spawnPoints, args)
 
     local i = 1
     for bid, bandit in pairs(banditSelected) do
+        bandit.general.bid = bid
         local femaleChance = bandit.general.female and 100 or 0
         local health = 1 -- client needs to update this later
 
         local sp = spawnPoints[i]
 
-        local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, "Naked", femaleChance, 
+        -- local outfit = BanditUtils.Choice({"Generic01", "Generic02", "Generic03", "Generic04", "Generic05"})
+        local outfit = "Naked"
+        local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, outfit, femaleChance, 
                                                                   crawler, fallOnFront, fakeDead, 
                                                                   knockedDown, invulnerable, sitting,
                                                                   health)
         local zombie = zombieList:get(0)
+        -- zombie:getModData().IsBandit = true
         banditize(zombie, bandit, clan, args)
 
         i = i + 1
     end
     return i - 1
+end
+
+local function spawnRestore(brain)
+    local knockedDown = false
+    local crawler = false
+    local fallOnFront = false
+    local fakeDead = false
+    local invulnerable = false
+    local sitting = false
+    local outfit = "Naked"
+    local femaleChance = 0
+    local health = 1
+    local oldId = brain.id
+    local gx = brain.bornCoords.x
+    local gy = brain.bornCoords.y
+    local gz = brain.bornCoords.z
+
+    local bandit = BanditCustom.GetById(brain.bid)
+    if not bandit then return end
+
+    local clan = BanditCustom.ClanGet(brain.cid)
+    if not clan then return end
+    
+    local args = {}
+    args.program = brain.program.name
+    args.occupation = brain.occupation
+    args.loyal = brain.loyal
+    args.master = brain.pid
+    args.permanent = brain.permanent
+    args.key = brain.key
+
+    if bandit.general.female then
+        femaleChance = 100
+    end
+
+    local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, outfit, femaleChance, crawler, fallOnFront, fakeDead, knockedDown, invulnerable, sitting, health)
+    
+    local zombie = zombieList:get(0)
+    -- zombie:getModData().IsBandit = true
+    banditize(zombie, bandit, clan, args)
+
+    -- remove old one
+    local gmd = GetBanditModData()
+    gmd.Queue[oldId] = nil
+
 end
 
 local function spawnIndividual(sp, args)
@@ -461,6 +512,7 @@ local function spawnIndividual(sp, args)
                                                                   knockedDown, invulnerable, sitting,
                                                                   health)
         local zombie = zombieList:get(0)
+        -- zombie:getModData().IsBandit = true
         banditize(zombie, bandit, clan, args)
     end
 end
@@ -897,7 +949,7 @@ local function spawnType(player, args)
 
     if #spawnPoints > 0 then
         local cnt = spawnGroup(spawnPoints, args)
-        if cnt > 0 then
+        if SandboxVars.Bandits.General_ArrivalIcon and cnt > 0 then
             local icon, color, desc = getIconDataByProgram(args.program, clan.friendly)
             if icon and color and desc then
                 local x, y = spawnPoints[1].x, spawnPoints[1].y
@@ -948,7 +1000,7 @@ local function checkEvent()
             -- end
 
             local spawnRandom = ZombRandFloat(0, 100)
-            print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
+            -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
 
             if spawnRandom < spawnChance then
                 local args = {}
@@ -1009,7 +1061,7 @@ BanditServer.Spawner.Clan = function(player, args)
 end
 
 -- used for dedicated spawning of an individual by mods
-BanditServer.Spawner.Individual = function(player, bid)
+BanditServer.Spawner.Individual = function(player, args)
     if not args.bid then return end
     if not args.x then args.x = player:getX() end
     if not args.y then args.y = player:getY() end
@@ -1023,6 +1075,12 @@ BanditServer.Spawner.Individual = function(player, bid)
     if #spawnPoints > 0 then
         spawnIndividual(spawnPoints[1], args)
     end
+end
+
+-- used for restoring an individual
+BanditServer.Spawner.Restore = function(player, args)
+    local brain = args
+    spawnRestore(brain)
 end
 
 -- used for dedicated spawning by mods

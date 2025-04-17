@@ -16,10 +16,10 @@ BanditPermanent.Check = function()
     local cell = getCell()
     for id, gmdBrain in pairs(gmd.Queue) do
         if gmdBrain.permanent and not gmdBrain.inVehicle then
-            if not cache[id] then
+            if not cache[id] or cache[id].brain.permanent == false then
                 local square = cell:getGridSquare(gmdBrain.bornCoords.x, gmdBrain.bornCoords.y, gmdBrain.bornCoords.z)
                 if square then
-                    sendClientCommand(player, 'Commands', 'SpawnRestore', gmdBrain)
+                    sendClientCommand(player, 'Spawner', 'Restore', gmdBrain)
                 end
             end
         end

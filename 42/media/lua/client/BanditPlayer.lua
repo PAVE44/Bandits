@@ -150,7 +150,7 @@ local PanicHandler = function(player)
     for id, zombie in pairs(zombieList) do
         local dist = BanditUtils.DistToManhattan(zombie.x, zombie.y, px, py)
         if dist <= panicRadius then
-            if zombie.brain and not zombie.brain.hostile then
+            if zombie.brain and not zombie.brain.hostile and not zombie.brain.hostileP then
                 -- Found a friendly Bandit, mark as potentially only friendlies
                 onlyFriendlies = true
             else

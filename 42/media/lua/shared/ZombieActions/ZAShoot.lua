@@ -138,7 +138,7 @@ local function hit(shooter, item, victim)
         return baseChance / (1 + math.exp(k * (distance - d50)))
     end
 
-    local accuracyLevelMap = {-5, -2, 0, 2, 5}
+    local accuracyLevelMap = {-8, -4, 0, 2, 4}
     local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
 
     -- general sandbox setting for accuracy 
@@ -190,7 +190,8 @@ local function hit(shooter, item, victim)
             
         elseif instanceof(victim, "IsoZombie") and not victim:isOnKillDone() then
             local brainVictim = BanditBrain.Get(victim)
-            if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
+            if BanditUtils.AreEnemies(brainVictim, brainShooter) then
+            -- if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
 
                 local isSeen = false
                 local playerList = BanditPlayer.GetPlayers()
@@ -326,7 +327,7 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                         matName = props:Val("MaterialType")
                     end
                     if matName then
-                        print (matName)
+                        -- print (matName)
                         local emitter = getWorld():getFreeEmitter(c.x, c.y, c.z)
                         local sid = emitter:playSound("BulletImpact")
                         emitter:setParameterValueByName(sid, "BulletHitSurface", getMatId(matName))
@@ -424,12 +425,14 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                 -- manage character "obstacles"
                 local chrs = square:getMovingObjects()
                 local wasHit = false
-                for i=0, math.min(chrs:size()-1, projectiles) do
+                --for i=0, math.min(chrs:size()-1, projectiles) do
+                for i=0, chrs:size()-1 do
                     local chr = chrs:get(i)
                     if instanceof(chr, "IsoZombie") or instanceof(chr, "IsoPlayer") then
                         if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(chr) then 
                             hit(shooter, weaponItem, chr)
                             wasHit = true
+                            if i + 1 >= projectiles then break end
                         end
                     end
                 end
@@ -488,6 +491,8 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local brainShooter = BanditBrain.Get(shooter)
     local weapon = brainShooter.weapons[task.slot]
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
+    if not weaponItem then return true end
+
     weaponItem = BanditWeapons.Modify(weaponItem, brainShooter)
 
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)

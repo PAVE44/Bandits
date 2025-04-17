@@ -54,7 +54,7 @@ local UpdateZombieCache = function(numberTicks)
     local cacheLight = {}
     local cacheLightB = {}
     local cacheLightZ = {}
-
+    local d = 0
     for i = 0, zombieListSize - 1 do
 
         local zombie = zombieList:get(i)

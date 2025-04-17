@@ -86,7 +86,8 @@ local function IsShotClear (shooter, enemy)
                         return false
                     elseif instanceof(chr, "IsoZombie") then
                         local brainEnemy = BanditBrain.Get(chr)
-                        if brainEnemy and brainEnemy.clan and brainShooter.clan == brainEnemy.clan and (not brainShooter.hostile or brainEnemy.hostile) then
+                        if not BanditUtils.AreEnemies(brainEnemy, brainShooter) then
+                        -- if brainEnemy and brainEnemy.clan and brainShooter.clan == brainEnemy.clan and (not brainShooter.hostile or brainEnemy.hostile) then
                             -- shooter:addLineChatElement("FRIENDLY IN LINE", 0.8, 0.8, 0.1)
                             return false
                         end
@@ -973,7 +974,7 @@ local function ManageCombat(bandit)
 
         for i=0, playerList:size()-1 do
             local potentialEnemy = playerList:get(i)
-            if potentialEnemy and bandit:CanSee(potentialEnemy) and not potentialEnemy:isBehind(bandit) and (instanceof(potentialEnemy, "IsoPlayer") and not BanditPlayer.IsGhost(potentialEnemy)) then
+            if potentialEnemy and potentialEnemy:isAlive() and bandit:CanSee(potentialEnemy) and not potentialEnemy:isBehind(bandit) and (instanceof(potentialEnemy, "IsoPlayer") and not BanditPlayer.IsGhost(potentialEnemy)) then
                 local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
                 -- local dist = BanditUtils.DistTo(zx, zy, px, py)
                 local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py))) -- no function call for performance
@@ -1055,19 +1056,16 @@ local function ManageCombat(bandit)
     local cache, potentialEnemyList = BanditZombie.Cache, BanditZombie.CacheLight
     for id, potentialEnemy in pairs(potentialEnemyList) do
 
-        if brain.id == 6095095 and id == 4391035 then
-            print ("test")
-        end
-
         -- quick manhattan check for performance boost
         -- if BanditUtils.DistToManhattan(potentialEnemy.x, potentialEnemy.y, zx, zy) < 36 then
         if math.abs(potentialEnemy.x - zx) + math.abs(potentialEnemy.y - zy) < 57 then
 
-            if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
-            
+            if BanditUtils.AreEnemies(potentialEnemy.brain, brain) then
+            -- if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
+     
                 -- load real instance here
                 local potentialEnemy = cache[id]
-                if bandit:CanSee(potentialEnemy) then
+                if potentialEnemy:isAlive() and bandit:CanSee(potentialEnemy) then
                     local pesq = potentialEnemy:getSquare()
                     if pesq and pesq:getLightLevel(0) > 0.31 and not bandit:getSquare():isSomethingTo(pesq) then
                         local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
@@ -1562,7 +1560,7 @@ local function ProcessTask(bandit, task)
 
     if task.state == "NEW" then
         if not task.time then task.time = 1000 end
-        bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
+        -- bandit:addLineChatElement(task.action, 0.8, 0.8, 0.1)
         if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
             Bandit.SetAim(bandit, false)
         end

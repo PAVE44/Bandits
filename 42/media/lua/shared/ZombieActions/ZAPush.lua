@@ -66,7 +66,8 @@ ZombieActions.Push.onWorking = function(bandit, task)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
             local brainEnemy = BanditBrain.Get(enemy)
-            if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
+            if BanditUtils.AreEnemies(brainEnemy, brainBandit) then
+            -- if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
                 ShoveZombie (bandit, enemy)
             end
         end
