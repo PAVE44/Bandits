@@ -3,9 +3,7 @@
 	<m_Name>ZSIdle</m_Name>
 	<m_AnimName>Bob_Idle</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
-	<m_SpeedScale>0.23</m_SpeedScale>
-	<m_SpeedScaleRandomMultiplierMin>0.2</m_SpeedScaleRandomMultiplierMin>
-	<m_SpeedScaleRandomMultiplierMax>1.25</m_SpeedScaleRandomMultiplierMax>
+	<m_SpeedScale>0.80</m_SpeedScale>
 	<m_BlendTime>0.35</m_BlendTime>
 	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
 	<m_Conditions>

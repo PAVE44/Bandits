@@ -1,19 +1,25 @@
-local function getWaveData()
-    local waveCnt = 16
-    local waveData = {}
-    for i=1, waveCnt do
-        local wave = {}
+local LogLevel = 3
 
-        wave.id = i
-        wave.enabled = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_WaveEnabled"]
-        wave.firstDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_FirstDay"]
-        wave.lastDay = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_LastDay"]
-        wave.spawnHourlyChance = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_SpawnHourlyChance"]
-        wave.groupSize = SandboxVars.Bandits["Clan_" .. tostring(i) .. "_GroupSize"]
-
-        table.insert(waveData, wave)
+local isGhost = function(player)
+    local gmd = GetBanditModDataPlayers()
+    local id = BanditUtils.GetCharacterID(player)
+    if gmd.OnlinePlayers[id] then
+        return gmd.OnlinePlayers[id].isGhost
     end
-    return waveData
+    return false
+end
+
+local getPlayers = function()
+    local world = getWorld()
+    local gamemode = world:getGameMode()
+
+    local playerList = {}
+    if gamemode == "Multiplayer" then
+        playerList = getOnlinePlayers()
+    else
+        playerList = IsoPlayer.getPlayers()
+    end
+    return playerList
 end
 
 local function getDensityScore(player, r)
@@ -129,10 +135,10 @@ local function generateSpawnPointUniform(player, d, count)
             return false
         end
 
-        local playerList = BanditPlayer.GetPlayers()
+        local playerList = getPlayers()
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
-            if player and not BanditPlayer.IsGhost(player) then
+            if player and not isGhost(player) then
                 local dist = BanditUtils.DistTo(x, y, player:getX(), player:getY())
                 if dist < 35 then
                     return true
@@ -249,7 +255,8 @@ end
 
 -- args: program, permanent, key
 local function banditize(zombie, bandit, clan, args)
-    local id = BanditUtils.GetCharacterID(zombie)
+    local id = zombie:getPersistentOutfitID()
+    if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
 
     local brain = {}
 
@@ -290,7 +297,7 @@ local function banditize(zombie, bandit, clan, args)
     brain.health = BanditUtils.Lerp(health, 1, 9, 1, 2.6)
 
     local accuracyBoost = general.sight or 5
-    brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, -4, 4)
+    brain.accuracyBoost = BanditUtils.Lerp(accuracyBoost, 1, 9, -8, 8)
 
     local enduranceBoost = general.endurance or 5
     brain.enduranceBoost = BanditUtils.Lerp(enduranceBoost, 1, 9, 0.25, 1.75)
@@ -376,12 +383,9 @@ local function banditize(zombie, bandit, clan, args)
     local gmd = GetBanditModData()
     gmd.Queue[id] = brain
 
-    zombie:setHealth(health)
-    zombie:setVariable("Bandit", false)
-    zombie:setPrimaryHandItem(nil)
-    zombie:setSecondaryHandItem(nil)
-    zombie:clearAttachedItems()
-    zombie:getModData().IsBandit = true
+    if LogLevel >= 3 then print ("[BANDITS] banditize finished id " .. id) end
+
+    -- zombie:getModData().IsBandit = true
 end
 
 -- args: pid, waveId or cid, 
@@ -408,6 +412,8 @@ local function spawnGroup(spawnPoints, args)
         table.insert(keys, key)
     end
 
+    if LogLevel >= 3 then print ("[BANDITS] spawnGroup has bandit options " .. #keys) end
+
     for i = #keys, 2, -1 do
         local j = ZombRand(i) + 1
         keys[i], keys[j] = keys[j], keys[i]
@@ -428,13 +434,12 @@ local function spawnGroup(spawnPoints, args)
         local sp = spawnPoints[i]
 
         -- local outfit = BanditUtils.Choice({"Generic01", "Generic02", "Generic03", "Generic04", "Generic05"})
-        local outfit = "Naked"
+        local outfit = "Naked" .. (1 + ZombRand(101))
         local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, outfit, femaleChance, 
                                                                   crawler, fallOnFront, fakeDead, 
                                                                   knockedDown, invulnerable, sitting,
                                                                   health)
         local zombie = zombieList:get(0)
-        -- zombie:getModData().IsBandit = true
         banditize(zombie, bandit, clan, args)
 
         i = i + 1
@@ -449,7 +454,7 @@ local function spawnRestore(brain)
     local fakeDead = false
     local invulnerable = false
     local sitting = false
-    local outfit = "Naked"
+    local outfit = "Naked" .. (1 + ZombRand(101))
     local femaleChance = 0
     local health = 1
     local oldId = brain.id
@@ -478,7 +483,6 @@ local function spawnRestore(brain)
     local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, outfit, femaleChance, crawler, fallOnFront, fakeDead, knockedDown, invulnerable, sitting, health)
     
     local zombie = zombieList:get(0)
-    -- zombie:getModData().IsBandit = true
     banditize(zombie, bandit, clan, args)
 
     -- remove old one
@@ -494,6 +498,7 @@ local function spawnIndividual(sp, args)
     local fakeDead = false
     local invulnerable = false
     local sitting = false
+    local outfit = "Naked" .. (1 + ZombRand(101))
 
     local bid = args.bid
     if not bid then return end
@@ -507,12 +512,11 @@ local function spawnIndividual(sp, args)
         local femaleChance = bandit.general.female and 100 or 0
         local health = 1 -- client needs to update this later
 
-        local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, "Naked", femaleChance, 
+        local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, outfit, femaleChance, 
                                                                   crawler, fallOnFront, fakeDead, 
                                                                   knockedDown, invulnerable, sitting,
                                                                   health)
         local zombie = zombieList:get(0)
-        -- zombie:getModData().IsBandit = true
         banditize(zombie, bandit, clan, args)
     end
 end
@@ -898,15 +902,20 @@ local function spawnType(player, args)
     local cid = args.cid
     if not cid then return end
 
+    if LogLevel >= 3 then print ("[BANDITS] spawnType has cid " .. cid) end
     local clan = BanditCustom.ClanGet(cid).spawn
     local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
     local spawnPoints = {}
+
+    if LogLevel >= 3 then print ("[BANDITS] groupSize is " .. groupSize) end
 
     if args.dist then
         spawnPoints = generateSpawnPointUniform(player, args.dist, groupSize)
     elseif args.x and args.y and args.z then
         spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, groupSize)
     end
+
+    if LogLevel >= 3 then print ("[BANDITS] spawnPoints generated " .. #spawnPoints) end
 
     local args = {}
     args.pid = pid
@@ -947,6 +956,8 @@ local function spawnType(player, args)
         end
     end
 
+    if LogLevel >= 3 then print ("[BANDITS] AI program is " .. args.program) end
+
     if #spawnPoints > 0 then
         local cnt = spawnGroup(spawnPoints, args)
         if SandboxVars.Bandits.General_ArrivalIcon and cnt > 0 then
@@ -966,7 +977,7 @@ local function spawnType(player, args)
 end
 
 local function checkEvent()
-    if isServer() then return end
+    if isClient() then return end
 
     local world = getWorld()
     local gamemode = world:getGameMode()
@@ -1003,10 +1014,13 @@ local function checkEvent()
             -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
 
             if spawnRandom < spawnChance then
+                print ("[BANDITS] Scheduler is spawning bandits now.")
                 local args = {}
                 args.cid = cid
-                args.dist = 50 + ZombRand(20)
+                args.dist = 5 + ZombRand(3)
                 spawnType(player, args)
+                TransmitBanditModData()
+                print ("[BANDITS] Data transmitted.")
             end
         end
     end

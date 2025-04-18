@@ -151,7 +151,7 @@ local function hit(shooter, item, victim)
     local sightScope = 0
     local scope = item:getWeaponPart("Scope")
     if scope then
-        sightScope = scope:getMaxSightRange()
+        sightScope = BanditCompatibility.GetScopeRange(scope)
     end
 
     local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightScope)
@@ -330,7 +330,7 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                         -- print (matName)
                         local emitter = getWorld():getFreeEmitter(c.x, c.y, c.z)
                         local sid = emitter:playSound("BulletImpact")
-                        emitter:setParameterValueByName(sid, "BulletHitSurface", getMatId(matName))
+                        BanditCompatibility.setParameterValueByName(emitter, sid, "BulletHitSurface", getMatId(matName))
                         -- BanditProjectile.Stop(brainShooter.id)
                     end
                     -- return false

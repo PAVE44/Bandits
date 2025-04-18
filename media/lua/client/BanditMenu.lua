@@ -8,19 +8,6 @@
 
 BanditMenu = BanditMenu or {}
 
-function BanditMenu.InitProjectile(player)
-    -- local modal = BanditCreationMain:new(200, 100, 1520, 880)
-    BanditProjectile.Add(player:getX(), player:getY(), player:getZ(), player:getDirectionAngle())
-end
-
-
-function BanditMenu.BanditCreator(player)
-    -- local modal = BanditCreationMain:new(200, 100, 1520, 880)
-    local modal = BanditClansMain:new(500, 80, 1220, 900)
-    modal:initialise()
-    modal:addToUIManager()
-end
-
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -108,59 +95,6 @@ function BanditMenu.MakeProcedure (player, square)
                             
 end
 
-function BanditMenu.SpawnWave (player, wid)
-    local args = {}
-    args.wid = wid
-    args.dist = 10
-    sendClientCommand(player, 'Spawner', 'Wave', args)
-end
-
-function BanditMenu.SpawnClan(player, square, cid)
-    local args = {}
-    args.cid = cid
-    args.size = 24
-    args.x = square:getX()
-    args.y = square:getY()
-    args.z = square:getZ()
-    sendClientCommand(player, 'Spawner', 'Clan', args)
-end
-
-function BanditMenu.SpawnDefenders (player, square)
-    BanditScheduler.SpawnDefenders(player, 1, 15)
-end
-
-function BanditMenu.RaiseDefences (player, square)
-    BanditScheduler.RaiseDefences(square:getX(), square:getY())
-end
-
-function BanditMenu.ClearSpace (player, square)
-    BanditBaseGroupPlacements.ClearSpace (player:getX(), player:getY(), player:getZ(), 50, 50)
-end
-
-function BanditMenu.BroadcastTV (player, square)
-    BanditScheduler.BroadcastTV(square:getX(), square:getY())
-end
-
-function BanditMenu.TestAction (player, square, zombie)
-
-    local task = {action="Time", anim="DanceHipHop3", time=400}
-    Bandit.AddTask(zombie, task)
-end
-
-function BanditMenu.Zombify (player, zombie)
-    local task = {action="Zombify", anim="Faint", time=400}
-    Bandit.AddTask(zombie, task)
-end
-
-function BanditMenu.SpawnBase (player, square, sceneNo)
-    BanditScheduler.SpawnBase(player, sceneNo)
-end
-
-function BanditMenu.CheckFloor (player, square)
-    local canPlace = BanditBaseGroupPlacements.CheckSpace(square:getX(), square:getY(), 32, 32)
-    print ("CANPLACE: " .. tostring(canPlace))
-end
-
 function BanditMenu.ShowBrain (player, square, zombie)
     local gmd = GetBanditModData()
 
@@ -204,39 +138,10 @@ function BanditMenu.BanditFlush(player)
     sendClientCommand(player, 'Commands', 'BanditFlush', args)
 end
 
-function BanditMenu.ResetGenerator (player, generator)
-    generator:setFuel(20)
-    generator:setCondition(50)
-end
-
-function BanditMenu.RegenerateBase (player)
-    BanditPlayerBase.Regenerate(player)
-end
-
-function BanditMenu.SwitchProgram(player, bandit, program)
-    local brain = BanditBrain.Get(bandit)
-    if brain then
-        local pid = BanditUtils.GetCharacterID(player)
-
-        brain.master = pid
-        brain.program = {}
-        brain.program.name = program
-        brain.program.stage = "Prepare"
-        BanditBrain.Update(bandit, brain)
-
-        local syncData = {}
-        syncData.id = brain.id
-        syncData.master = brain.master
-        syncData.program = brain.program
-        Bandit.ForceSyncPart(bandit, syncData)
-    end
-end
-
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local world = getWorld()
     local gamemode = world:getGameMode()
     local player = getSpecificPlayer(playerID)
-    print (player:getDirectionAngle())
     local square = BanditCompatibility.GetClickedSquare()
     local generator = square:getGenerator()
 
@@ -271,86 +176,15 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
     end
 
-    if zombie then
-        local x = 0
-        local items = zombie:getAttachedItems()
-        for i=0, items:size()-1 do
-            local item = items:get(i)
-            local location = item:getLocation()
-            local itm = item:getItem()
-        end
-
-    end
-
-    -- Admin spawn options
-    if isDebugEnabled() or isAdmin() then
-        local spawnOption = context:addOption("Spawn Bandit Wave")
-        local spawnMenu = context:getNew(context)
-        context:addSubMenu(spawnOption, spawnMenu)
-        for i=1, 16 do
-            spawnMenu:addOption("Wave " .. tostring(i), player, BanditMenu.SpawnWave, i)
-        end
-
-        context:addOption("Remove All Bandits", player, BanditMenu.BanditFlush, square)
-    end
-    
-    BanditCustom.Load()
-    local clanData  = BanditCustom.ClanGetAllSorted()
-    local clanSpawnOption = context:addOption("Spawn Bandit Clan")
-    local clanSpawnMenu = context:getNew(context)
-    context:addSubMenu(clanSpawnOption, clanSpawnMenu)
-    for cid, clan in pairs(clanData) do
-        clanSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.SpawnClan, square, cid)
-    end
-
-    context:addOption("Bandit Creator", player, BanditMenu.BanditCreator)
-
-
     -- Debug options
     if isDebugEnabled() then
 
-        local vehicle = square:getVehicleContainer()
-        
-        if vehicle then
-            print ("VEHICLE: X:" .. vehicle:getX() .. " Y:" .. vehicle:getY())
-            local partIds = {"TireFrontRight", "TireFrontLeft", "TireRearLeft", "TireRearRight"}
-            for i=1, #partIds do
-                local vehiclePart = vehicle:getPartById(partIds[i])
-                --  ("PART: " .. partIds[i] .. " X:" .. vehiclePart:getX() .. " Y:" .. vehiclePart:getY())
-                local vector = vehicle:getAreaCenter(partIds[i])
-                print ("PARTV: " .. partIds[i] .. " X:" .. vector:getX() .. " Y:" .. vector:getY())
-            end
-        end
-
-        context:addOption("Init Projectile", player, BanditMenu.InitProjectile)
-
-        print (BanditUtils.GetCharacterID(player))
-        print (player:getHoursSurvived() / 24)
-        context:addOption("[DGB] Make Prcedure", player, BanditMenu.MakeProcedure, square)
-        context:addOption("[DGB] Place Plane", player, BanditMenu.PlacePlane, square)
+        context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
+        context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
         if zombie then
-            print ("this is zombie index: " .. BanditUtils.GetCharacterID(zombie))
-            print ("this zombie dir is: " .. zombie:getDirectionAngle())
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
-            context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
-            context:addOption("[DGB] Zombify", player, BanditMenu.Zombify, zombie)
-
-          
         end
-
-        -- context:addOption("[DGB] Bandit UI", player, ShowCustomizationUI)
-
-        -- context:addOption("[DGB] Bandit Diagnostics", player, BanditMenu.RemoveAllBandits)
-        -- context:addOption("[DGB] Clear Space", player, BanditMenu.ClearSpace, square)
-        -- context:addOption("[DGB] Regenerate base", player, BanditMenu.RegenerateBase)
-        -- context:addOption("[DGB] Raise Defences", player, BanditMenu.RaiseDefences, square)
-        -- context:addOption("[DGB] Emergency TC Broadcast", player, BanditMenu.BroadcastTV, square)
-        
-        -- if generator then
-        --    context:addOption("[DGB] Reset generator", player, BanditMenu.ResetGenerator, generator)
-        -- end
-
     end
 end
 

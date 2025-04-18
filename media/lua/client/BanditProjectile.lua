@@ -1,18 +1,28 @@
 BanditProjectile = BanditProjectile or {}
 BanditProjectile.list = {}
 
-BanditProjectile.Add = function(isox, isoy, isoz, dir, projectiles)
+BanditProjectile.Add = function(oid, isox, isoy, isoz, dir, projectiles)
     local x, y = ISCoordConversion.ToScreen(isox, isoy, isoz)
     local ndir = dir + ZombRandFloat(0, 0.3) - 0.3
     -- local altTarget = 20 + ZombRand(75)
     if projectiles == 1 then
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir, tick=1})
     elseif projectiles == 5 then
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir-1.7, tick=1})
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir-1.3, tick=1})
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir, tick=1})
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir+1.4, tick=1})
-        table.insert(BanditProjectile.list, {x=x, y=y, dir=ndir+1.7, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir-1.7, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir-1.3, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir+1.4, tick=1})
+        table.insert(BanditProjectile.list, {oid=oid, x=x, y=y, dir=ndir+1.7, tick=1})
+    end
+end
+
+BanditProjectile.Stop = function(oid)
+    local projectileList = BanditProjectile.list
+    for i = #projectileList, 1, -1 do
+        local projectile = projectileList[i]
+        if projectile.oid == oid then
+            table.remove(projectileList, i)
+        end
     end
 end
 
@@ -35,7 +45,7 @@ local updateProjectile = function()
         local theta = projectile.dir * math.pi / 180  
 
         -- Apply isometric movement correction
-        local b_l = 400 / zoom  -- Bullet movement length
+        local b_l = 600 / zoom  -- Bullet movement length
         local dx = math.cos(theta) - math.sin(theta)  -- Isometric X correction
         local dy = (math.cos(theta) + math.sin(theta)) / 2  -- Isometric Y correction
 

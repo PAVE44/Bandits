@@ -63,6 +63,10 @@ local UpdateZombieCache = function(numberTicks)
 
             local id = BanditUtils.GetZombieID(zombie)
 
+            if cache[id] then
+                print ("DUPLICATE ID!!!")
+            end
+
             cache[id] = zombie
 
             local zx, zy, zz, zd = zombie:getX(), zombie:getY(), zombie:getZ(), zombie:getDirectionAngle()

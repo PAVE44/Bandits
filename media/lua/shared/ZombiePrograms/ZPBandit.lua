@@ -1,5 +1,9 @@
 ZombiePrograms = ZombiePrograms or {}
 
+local function predicateAll(item)
+    return true
+end
+
 ZombiePrograms.Bandit = {}
 ZombiePrograms.Bandit.Stages = {}
 
@@ -18,12 +22,47 @@ ZombiePrograms.Bandit.Main = function(bandit)
     local tasks = {}
     local cell = getCell()
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local baseId, base = BanditPlayerBase.GetBaseClosest(bandit)
     local endurance = 0.00
     local health = bandit:getHealth()
     local healthMin = 0.7
+    local walkType = "Run"
 
     if SandboxVars.Bandits.General_RunAway and health < healthMin then
         return {status=true, next="Escape", tasks=tasks}
+    end
+
+    local room = bandit:getSquare():getRoom()
+    if room then
+        local lsList = room:getLightSwitches()
+        local distBest = math.huge
+        local lsBest
+        for i=0, lsList:size()-1 do
+            local ls = lsList:get(i)
+            local square = ls:getSquare()
+            if not ls:isActivated() and square:isFree(false) then
+                local tx, ty, tz = square:getX() + 0.5, square:getY() + 0.5, square:getZ()
+                local dist = BanditUtils.DistTo(bx, by, tx, ty)
+                if dist < distBest then
+                    distBest = dist
+                    lsBest = ls
+                end
+            end
+        end
+
+        if lsBest then
+            local square = lsBest:getSquare()
+            local tx, ty, tz = square:getX() + 0.5, square:getY() + 0.5, square:getZ()
+            local dist = BanditUtils.DistTo(bx, by, tx, ty)
+            if distBest < 1.2 and bz == tz then
+                local task = {action="LightToggle", time=20, active=true, x=tx, y=ty, z=tz}
+                table.insert(tasks, task)
+                return {status=true, next="Main", tasks=tasks}
+            else
+                table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, dist, false))
+                return {status=true, next="Main", tasks=tasks}
+            end
+        end
     end
 
     if SandboxVars.Bandits.General_GeneratorCutoff or SandboxVars.Bandits.General_SabotageVehicles then 
@@ -82,6 +121,70 @@ ZombiePrograms.Bandit.Main = function(bandit)
                         end
                     end
                 end
+            end
+        end
+    end
+
+    if SandboxVars.Bandits.General_Theft then
+        local inventory = bandit:getInventory()
+        local items = ArrayList.new()
+        inventory:getAllEvalRecurse(predicateAll, items)
+        if items:size() < 10 then
+            if base and Bandit.HasExpertise(bandit, Bandit.Expertise.Thief) then
+                local contId, cont = BanditPlayerBase.GetContainerClosest(bandit, baseId)
+                if contId then
+                    -- select first item
+                    local itemType
+                    local cnt
+                    for k, v in pairs(cont.items) do
+                        itemType = k
+                        cnt = v
+                        break
+                    end
+                    if itemType then
+                        local square = cell:getGridSquare(cont.x, cont.y, cont.z)
+                        if square then
+                            local asquare = AdjacentFreeTileFinder.Find(square, bandit)
+                        
+                            if asquare then
+                                local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), asquare:getX() + 0.5, asquare:getY() + 0.5)
+                                if dist > 0.90 or bandit:getZ() ~= asquare:getZ() then
+                                    local task = BanditUtils.GetMoveTask(0, asquare:getX(), asquare:getY(), asquare:getZ(), "Run", dist, false)
+                                    table.insert(tasks, task)
+                                    return {status=true, next="Main", tasks=tasks}
+                                elseif bandit:getZ() == asquare:getZ() then
+                                    Bandit.Say(bandit, "THIEF_SPOTTED")
+                                    if cont.type == "floor" then
+                                        -- bandit:addLineChatElement(("pickup " .. itemType), 1, 1, 1)
+                                        local task = {action="PickUp", anim="LootLow", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ(), cnt=cnt}
+                                        table.insert(tasks, task)
+                                        return {status=true, next="Main", tasks=tasks}
+                                    else
+                                        -- bandit:addLineChatElement(("take from container: " .. itemType), 1, 1, 1)
+                                        local task = {action="TakeFromContainer", anim="Loot", itemType=itemType, x=square:getX(), y=square:getY(), z=square:getZ(), cnt=cnt}
+                                        table.insert(tasks, task)
+                                        return {status=true, next="Main", tasks=tasks}
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if SandboxVars.Bandits.General_SabotageCrops then
+        local plant = BanditPlayerBase.GetFarm(bandit)
+        if plant then
+            local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), plant.x + 0.5, plant.y + 0.5)
+            if dist > 0.80 then
+                table.insert(tasks, BanditUtils.GetMoveTask(0, plant.x, plant.y, plant.z, walkType, dist, false))
+                return {status=true, next="Main", tasks=tasks}
+            else
+                local task = {action="StompPlant", x=plant.x, y=plant.y, z=plant.z, anim="Attack2HStamp", sound="AttackStomp"}
+                table.insert(tasks, task)
+                return {status=true, next="Main", tasks=tasks}
             end
         end
     end

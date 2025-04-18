@@ -66,7 +66,7 @@ end
 
 ZSClient.Commands.SendCustomToClients = function(args)
     BanditCustom.banditData = args.banditData
-    BanditCustom.clanData = args.clanDatand
+    BanditCustom.clanData = args.clanData
     BanditCustom.Save()
 end
 

@@ -217,6 +217,16 @@ BanditCompatibility.GetMovementSpeed = function(object)
     end
 end
 
+BanditCompatibility.GetScopeRange = function(scope)
+    local sightScope
+    if getGameVersion() >= 42 then
+        sightScope = scope:getMaxSightRange()
+    else
+        sightScope = scope:getMaxRange()
+    end
+    return sightScope
+end
+
 BanditCompatibility.GetMaxRange = function(weapon)
     
     --                      b42       b41
@@ -266,6 +276,15 @@ BanditCompatibility.UsesExternalMagazine = function(weapon)
     else
         local magazineType = weapon:getMagazineType()
         if magazineType then return true end
+    end
+    return false
+end
+
+BanditCompatibility.setParameterValueByName = function(emitter, sid, name, mat)
+    if getGameVersion() >= 42 then
+        emitter:setParameterValueByName(sid, name, mat)
+    else
+        -- no implementation
     end
     return false
 end

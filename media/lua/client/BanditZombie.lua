@@ -54,7 +54,7 @@ local UpdateZombieCache = function(numberTicks)
     local cacheLight = {}
     local cacheLightB = {}
     local cacheLightZ = {}
-
+    local d = 0
     for i = 0, zombieListSize - 1 do
 
         local zombie = zombieList:get(i)
@@ -62,6 +62,10 @@ local UpdateZombieCache = function(numberTicks)
         if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then
 
             local id = BanditUtils.GetZombieID(zombie)
+
+            if cache[id] then
+                print ("DUPLICATE ID!!!")
+            end
 
             cache[id] = zombie
 

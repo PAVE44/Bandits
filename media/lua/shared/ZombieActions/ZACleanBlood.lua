@@ -35,17 +35,12 @@ ZombieActions.CleanBlood.onComplete = function(zombie, task)
     if not square then return true end
 
     local bleach = zombie:getInventory():getItemFromType("Bleach")
-    bleach:setThirstChange(bleach:getThirstChange() + 0.05)
-    if bleach:getThirstChange() > -0.05 then
-        bleach:Use()
+    local amount = bleach:getFluidContainer():getAmount()
+    local use = ZomboidGlobals.CleanBloodBleachAmount
+    if amount >= use then
+        bleach:getFluidContainer():adjustAmount(amount - use)
+        square:removeBlood(false, false)
     end
-
-    square:removeBlood(false, false)
-
-    local item = zombie:getPrimaryHandItem()
-    local inventory = zombie:getInventory()
-    inventory:AddItem(item)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     return true
 end

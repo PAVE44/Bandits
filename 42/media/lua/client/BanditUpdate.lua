@@ -1084,13 +1084,6 @@ local function ManageCombat(bandit)
                             combat, switch, firing, shove, escape = false, false, false, false, false
                             
                             local asn = enemyCharacter:getActionStateName()
-                            if asn == "onground" then
-                                local h = enemyCharacter:getHealth()
-                                if h <=0 then
-                                    enemyCharacter:setAttackedBy(getCell():getFakeZombieForHit())
-                                    enemyCharacter:becomeCorpse()
-                                end
-                            end
 
                             --determine if bandit will be in combat mode
                             if weapons.melee and math.abs(zz - pz) < 0.5 and asn ~= "falldown" then
@@ -1750,6 +1743,15 @@ local function OnBanditUpdate(zombie)
         UpdateZombies(zombie)
     end
 
+    local asn = zombie:getActionStateName()
+    if asn == "onground" then
+        local h = zombie:getHealth()
+        if h <=0 then
+            zombie:setAttackedBy(getCell():getFakeZombieForHit())
+            zombie:becomeCorpse()
+        end
+    end
+
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
     ------------------------------------------------------------------------------------------------------------------------------------
@@ -1958,50 +1960,53 @@ local function OnZombieDead(zombie)
         BanditBrain.Remove(zombie)
     end
 
-    -- stale corpse hack
-    local isSeen = false
-    local playerList = BanditPlayer.GetPlayers()
-    for i=0, playerList:size()-1 do
-        local player = playerList:get(i)
-        if player and player:CanSee(zombie) and zombie:getSquare():isCanSee(0) then
-            isSeen = true
-        end
-    end
-
-    if not isSeen then
-        local zombie2 = createZombie(zombie:getX(), zombie:getY(), zombie:getZ(), nil, 0, IsoDirections.S)
-        
-        local hv = zombie:getHumanVisual()
-        local hv2 = zombie2:getHumanVisual()
-        local inv = zombie:getInventory()
-        local arrItems = ArrayList.new()
-        inv:getAllEvalRecurse(predicateAll, arrItems)
-
-        zombie2:setFemale(zombie:isFemale())
-        hv2:setSkinTextureName(hv:getSkinTexture())
-        hv2:setHairModel(hv:getHairModel())
-        hv2:setBeardModel(hv:getHairModel())
-        hv2:setHairColor(hv:getHairColor()) 
-        hv2:setBeardColor(hv:getBeardColor())
-
-        local wornItems = zombie:getWornItems()
-        zombie2:setWornItems(wornItems)
-        zombie2:setAttachedItems(zombie:getAttachedItems())
-
-        zombie:removeFromWorld()
-        zombie:removeFromSquare()
-
-        local body = IsoDeadBody.new(zombie2, false);
-        inv2 = body:getContainer()
-        for i = 0, wornItems:size() - 1 do
-            local wornItem = wornItems:get(i)
-            local item = wornItem:getItem()
-            inv2:AddItem(item)
+    -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
+    -- and copies most of the properties to look as the original 
+    if BanditCompatibility.GetGameVersion() >= 42 then
+        local isSeen = false
+        local playerList = BanditPlayer.GetPlayers()
+        for i=0, playerList:size()-1 do
+            local player = playerList:get(i)
+            if player and player:CanSee(zombie) and zombie:getSquare():isCanSee(0) then
+                isSeen = true
+            end
         end
 
-        for i = 0, arrItems:size()-1 do
-            local item = arrItems:get(i)
-            inv2:AddItem(item)
+        if not isSeen then
+            local zombie2 = createZombie(zombie:getX(), zombie:getY(), zombie:getZ(), nil, 0, IsoDirections.S)
+            
+            local hv = zombie:getHumanVisual()
+            local hv2 = zombie2:getHumanVisual()
+            local inv = zombie:getInventory()
+            local arrItems = ArrayList.new()
+            inv:getAllEvalRecurse(predicateAll, arrItems)
+
+            zombie2:setFemale(zombie:isFemale())
+            hv2:setSkinTextureName(hv:getSkinTexture())
+            hv2:setHairModel(hv:getHairModel())
+            hv2:setBeardModel(hv:getHairModel())
+            hv2:setHairColor(hv:getHairColor()) 
+            hv2:setBeardColor(hv:getBeardColor())
+
+            local wornItems = zombie:getWornItems()
+            zombie2:setWornItems(wornItems)
+            zombie2:setAttachedItems(zombie:getAttachedItems())
+
+            zombie:removeFromWorld()
+            zombie:removeFromSquare()
+
+            local body = IsoDeadBody.new(zombie2, false);
+            inv2 = body:getContainer()
+            for i = 0, wornItems:size() - 1 do
+                local wornItem = wornItems:get(i)
+                local item = wornItem:getItem()
+                inv2:AddItem(item)
+            end
+
+            for i = 0, arrItems:size()-1 do
+                local item = arrItems:get(i)
+                inv2:AddItem(item)
+            end
         end
     end
 

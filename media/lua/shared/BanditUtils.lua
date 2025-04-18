@@ -259,6 +259,16 @@ function BanditUtils.CalcAngle (x1, y1, x2, y2)
     return angleDegrees
 end
 
+function BanditUtils.AreEnemies(brain1, brain2)
+    if  not brain1 or -- zombie case
+        not brain2 or -- zombie case
+        (brain1.clan ~= brain2.clan and (brain1.hostile or brain2.hostile)) or -- at least one of them is hostile and they are from different clans
+        (brain1.loyal and brain2.hostileP) or -- is hostile against player only, but the second one is loyal to the player (babe case)
+        (brain2.loyal and brain1.hostileP) then
+            return true
+    end
+    return false
+end
 
 function BanditUtils.GetClosestPlayerLocation(character, config)
     local result = {}
@@ -359,7 +369,8 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     if instanceof(character, "IsoZombie") then
         local brain = BanditBrain.Get(character)
         for id, otherBandit in pairs(banditList) do
-            if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
+            if BanditUtils.AreEnemies(brain, otherBandit.brain) then
+            -- if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
                 local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
                 if dist < result.dist then
                     result.dist = dist
@@ -660,6 +671,78 @@ BanditUtils.GetCity = function(character)
             end
         end
     end
+end
+
+BanditUtils.GetCityMap = function(city)
+    local ret = {}
+    local map = {
+        ["Louisville"] = function()
+            local tab = {}
+            for i=1, 9 do
+                table.insert(tab, "Base.LouisvilleMap" .. i)
+            end
+            return tab
+        end,
+
+        ["Jefferson"] = function()
+            local tab = {}
+            for i=1, 9 do
+                table.insert(tab, "Base.LouisvilleMap" .. i)
+            end
+            return tab
+        end,
+
+        ["March Ridge"] = function()
+            local tab = {}
+            table.insert(tab, "Base.MarchRidgeMap")
+            return tab
+        end,
+
+        ["Muldraugh"] = function()
+            local tab = {}
+            table.insert(tab, "Base.MuldraughMap")
+            return tab
+        end,
+
+        ["Riverside"] = function()
+            local tab = {}
+            table.insert(tab, "Base.RiversideMap")
+            return tab
+        end,
+
+        ["Rosewood"] = function()
+            local tab = {}
+            table.insert(tab, "Base.Rosewood")
+            return tab
+        end,
+
+        ["West Point"] = function()
+            local tab = {}
+            table.insert(tab, "Base.WestPointMap")
+            return tab
+        end,
+
+        ["Brandenburg"] = function()
+            local tab = {}
+            return tab
+        end,
+
+        ["Ekron"] = function()
+            local tab = {}
+            return tab
+        end,
+
+        ["Irvington"] = function()
+            local tab = {}
+            return tab
+        end
+    }
+
+    if map[city] then
+        ret = map[city]()
+    end
+
+    return ret
 end
 
 BanditUtils.GetStashMap = function(city)

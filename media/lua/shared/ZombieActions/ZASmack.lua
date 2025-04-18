@@ -322,7 +322,7 @@ local function Hit(attacker, item, victim)
     -- Calculate distance between attacker and victim
     local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), attacker:getX(), attacker:getY())
     local range = item:getMaxRange()
-    if dist < range + 0.6 and not victim:isOnKillDone() then
+    if dist < range + 0.1 and not victim:isOnKillDone() then
 
         if instanceof(victim, "IsoPlayer") then
             BanditPlayer.WakeEveryone()
@@ -374,6 +374,8 @@ local function Hit(attacker, item, victim)
             if instanceof(victim, "IsoZombie") then
                 victim:setHitAngle(attacker:getForwardDirection())
                 victim:setPlayerAttackPosition(victim:testDotSide(attacker))
+                victim:setHitHeadWhileOnFloor(0)
+                victim:setHitLegsWhileOnFloor(false)
                 if BanditRandom.Get() % 4 == 0 then
                     addStuckItem(attacker, victim, behind, item)
                 end
@@ -385,8 +387,12 @@ local function Hit(attacker, item, victim)
                 -- victim:setBumpDone(true)
                 local dmg = item:getMaxDamage()
                 if instanceof(victim, "IsoZombie") then
-                    dmg = dmg * 2
+                    dmg = dmg * 1.25
                 end
+                local brainAttacker = BanditBrain.Get(attacker)
+                local strengthBoost = brainAttacker.strengthBoost or 1
+                dmg = dmg * strengthBoost
+                -- print ("DMG: " .. dmg)
                 victim:Hit(item, fakeZombie, dmg, false, 1, false)
 
                 local h = victim:getHealth()
@@ -511,7 +517,8 @@ ZombieActions.Smack.onWorking = function(bandit, task)
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
             local brainEnemy = BanditBrain.Get(enemy)
-            if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
+            if BanditUtils.AreEnemies(brainEnemy, brainBandit) then
+            -- if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
                 Hit (bandit, item, enemy)
             end
         end

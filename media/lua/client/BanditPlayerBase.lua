@@ -493,13 +493,11 @@ BanditPlayerBase.GetFarm = function(character)
         local square = character:getCell():getGridSquare(farm.x, farm.y, farm.z)
         if square then
             local plant = CFarmingSystem.instance:getLuaObjectAt(farm.x, farm.y, farm.z)
-            if plant then
-                if plant.waterNeeded > 0 and plant.waterLvl < plant.waterNeeded - 20 then
-                    local dist = BanditUtils.DistTo(farm.x, farm.y, x, y)
-                    if dist < bestDist then
-                        bestPlant = plant
-                        bestDist = dist
-                    end
+            if plant and plant.health > 0 then
+                local dist = BanditUtils.DistTo(farm.x, farm.y, x, y)
+                if dist < bestDist then
+                    bestPlant = plant
+                    bestDist = dist
                 end
             end
         end

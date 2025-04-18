@@ -260,7 +260,7 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
     local loadAnim
     local rackAnim
 
-    if reloadType == "boltaction" then
+    if reloadType == "boltaction" or (reloadType == "boltactionnomag" and magazineType) then -- b41 wrongly indicates hunting rifle as nomag weapon
         clipMode = true
         unloadAnim = "UnloadRifle"
         loadAnim = "LoadRifle"

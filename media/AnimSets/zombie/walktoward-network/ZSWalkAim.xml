@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="slow.xml">
-	<m_Name>Bob_WalkAim1Hand</m_Name>
+	<m_Name>ZSWalkAim</m_Name>
 	<m_AnimName>Bob_WalkAim1Hand</m_AnimName>
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
@@ -17,4 +17,8 @@
 		<m_TimePc>0.6</m_TimePc>
 		<m_ParameterValue>walk</m_ParameterValue>
 	</m_Events>
+	<m_Transitions>
+		<m_Target>ZSWalk</m_Target>
+		<m_AnimName>Bob_WalkAim1HandToWalk</m_AnimName>
+	</m_Transitions>
 </animNode>
