@@ -270,6 +270,29 @@ function BanditUtils.AreEnemies(brain1, brain2)
     return false
 end
 
+function BanditUtils.ModifyWeapon(weapon, brain)
+    local sight = brain.accuracyBoost
+    local scopeItem
+    if sight >= 1 and sight <= 2 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x2Scope")
+    elseif sight > 2 and sight <= 3 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x4Scope")
+    elseif sight > 3 then
+        scopeItem = BanditCompatibility.InstanceItem("Base.x8Scope")
+    end
+
+    if scopeItem then
+        local mountList = scopeItem:getMountOn()
+        for i=1, mountList:size() do
+            local mount = mountList:get(i-1)
+            if mount == weapon:getFullType() then
+                weapon:attachWeaponPart(scopeItem)
+            end
+        end
+    end
+    return weapon
+end
+
 function BanditUtils.GetClosestPlayerLocation(character, config)
     local result = {}
     result.dist = math.huge
@@ -416,9 +439,9 @@ function BanditUtils.GetTarget(character, config)
     if Bandit.IsHostile(character) and closestPlayer.dist + handicap < closestBandit.dist then
         target = closestPlayer
         enemy = BanditPlayer.GetPlayerById(target.id)
-        
+
     end
-    
+
     if target.x and target.y and target.d then
         local i = target.dist
         local theta = target.d * 0.0174533  -- Convert degrees to radians
@@ -468,7 +491,7 @@ function BanditUtils.CloneIsoPlayer(originalCharacter)
     tempPlayer:setY(originalCharacter:getY())
     tempPlayer:setZ(originalCharacter:getZ())
 ]]
-    
+
     -- You can copy more properties as needed, depending on what you need for the Hit function
 
     return tempPlayer

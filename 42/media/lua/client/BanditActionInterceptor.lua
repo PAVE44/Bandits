@@ -22,7 +22,7 @@ BanditActionInterceptor.Main = function(data)
         if not container then return end
 
         local containerType = container:getType()
-        
+
         if containerType == "fridge" or containerType == "freezer" then
             -- print ("base created")
             local object = container:getParent()

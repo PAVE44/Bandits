@@ -34,7 +34,7 @@ ZombieActions.Load.onComplete = function(zombie, task)
             weapon.racked = false
         end
     end
-    
+
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     return true

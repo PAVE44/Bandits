@@ -76,10 +76,6 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
     end
 end
 
-BanditServer.Commands.AddEffect = function(player, args)
-    sendServerCommand('BanditEffects', 'Add', args)
-end
-
 BanditServer.Commands.Unbarricade = function(player, args)
     local object = getBarricadeAble(args.x, args.y, args.z, args.index)
     if object then

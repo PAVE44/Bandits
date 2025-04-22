@@ -416,7 +416,7 @@ local function banditize(zombie, bandit, clan, args)
     -- enforcing args
     brain.hostile = args.hostile or brain.hostile
     brain.hostileP = args.hostileP or brain.hostileP
-    
+
     -- ready!
     local gmd = GetBanditModData()
     gmd.Queue[id] = brain
@@ -505,7 +505,7 @@ local function spawnRestore(brain)
 
     local clan = BanditCustom.ClanGet(brain.cid)
     if not clan then return end
-    
+
     local args = {}
     args.program = brain.program.name
     args.occupation = brain.occupation
@@ -519,7 +519,7 @@ local function spawnRestore(brain)
     end
 
     local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, outfit, femaleChance, crawler, fallOnFront, fakeDead, knockedDown, invulnerable, sitting, health)
-    
+
     local zombie = zombieList:get(0)
     banditize(zombie, bandit, clan, args)
 
@@ -668,7 +668,6 @@ local function spawnRoadblock(player, spawnPoint)
                 local testSquare = cell:getGridSquare(x, y, 0)
                 if testSquare then
                     if not testSquare:isFree(false) then allfree = false end
-                    
                     local testVeh = testSquare:getVehicleContainer()
                     if testVeh then allfree = false end
                 else
@@ -676,7 +675,7 @@ local function spawnRoadblock(player, spawnPoint)
                 end
             end
         end
-        
+
         if allfree then
 
             local xcnt = 0
@@ -757,7 +756,7 @@ local function spawnHouse(player, spawnPoint)
 
     local building = square:getBuilding()
     if not building then return false end
-    
+
     local buildingDef = building:getDef()
     if not buildingDef then return false end
 

@@ -30,7 +30,7 @@ local UpdateZombieCache = function(numberTicks)
     -- recreate global cache vars with new findings
     BanditServerZombie.Cache = cache
 
-    print ("BZS:" .. (getTimestampMs() - ts))
+    -- print ("BZS:" .. (getTimestampMs() - ts))
 end 
 
 -- Events.OnTick.Add(UpdateZombieCache)

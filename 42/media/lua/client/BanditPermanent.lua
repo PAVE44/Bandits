@@ -12,7 +12,6 @@ BanditPermanent.Check = function()
     if not cache then return end
 
     local player = getSpecificPlayer(0)
-
     local cell = getCell()
     for id, gmdBrain in pairs(gmd.Queue) do
         if gmdBrain.permanent and not gmdBrain.inVehicle then

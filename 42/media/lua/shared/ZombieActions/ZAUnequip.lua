@@ -33,7 +33,7 @@ ZombieActions.Unequip.onStart = function(zombie, task)
             end
         end
     end
-    
+
     return true
 end
 
@@ -45,7 +45,7 @@ ZombieActions.Unequip.onWorking = function(zombie, task)
         local brain = BanditBrain.Get(zombie)
         if task.itemPrimary then
             local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
-            primaryItem = BanditWeapons.Modify(primaryItem, brain)
+            primaryItem = BanditUtils.ModifyWeapon(primaryItem, brain)
             if task.slot then
                 zombie:setAttachedItem(task.slot, primaryItem)
             end

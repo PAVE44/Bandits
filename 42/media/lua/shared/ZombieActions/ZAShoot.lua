@@ -128,7 +128,6 @@ local function hit(shooter, item, victim)
 
     -- Determine accuracy based on SandboxVars and shooter clan
     local brainShooter = BanditBrain.Get(shooter)
-    local accuracyBoost = brainShooter.accuracyBoost or 1
 
     -- Logistic curve
     local function calculateHitChance(distance, accuracy)
@@ -172,7 +171,7 @@ local function hit(shooter, item, victim)
 
             -- addHolePlayer(victim)
             BanditCompatibility.Splash(victim, item, fakeZombie)
-            
+
             local bodyDamage = victim:getBodyDamage()
             if bodyDamage then
                 local health = bodyDamage:getOverallBodyHealth()
@@ -180,14 +179,14 @@ local function hit(shooter, item, victim)
                 if health > 100 then health = 100 end
                 bodyDamage:setOverallBodyHealth(health)
             end
-            
+
             if (victim:isSprinting() or victim:isRunning()) and ZombRand(12) == 1 then
                 victim:clearVariable("BumpFallType")
                 victim:setBumpType("stagger")
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             end
-            
+
         elseif instanceof(victim, "IsoZombie") and not victim:isOnKillDone() then
             local brainVictim = BanditBrain.Get(victim)
             if BanditUtils.AreEnemies(brainVictim, brainShooter) then
@@ -231,7 +230,7 @@ local function hit(shooter, item, victim)
                 end
             end
         end
-       
+
 
     else
         local missSound = "ZSMiss".. tostring(1 + ZombRand(8))
@@ -275,7 +274,6 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
 
     local cell = getCell()
 
-    local brainShooter = BanditBrain.Get(shooter)
     local x0 = math.floor(shooter:getX())
     local y0 = math.floor(shooter:getY())
     local x1 = math.floor(enemy:getX())
@@ -315,9 +313,6 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
         for _, c in pairs(list) do
             local square = cell:getGridSquare(c.x, c.y, c.z)
             if i > 1 and square then
-
-                local obstacle
-
                 -- manage wall obstacle
                 local props = square:getProperties()
                 if props then
@@ -382,9 +377,7 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                                     square:playSound(snds[doorSound])
                                 end
                             end
-        
                             thump(door, shooter)
-        
                             return false
                         end
                     end
@@ -399,12 +392,12 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                     if vp[partRandom] then
                         vehiclePart = vehicle:getPartById(vp[partRandom].name)
                         if vehiclePart and vehiclePart:getInventoryItem() then
-        
+
                             local vehiclePartId = vehiclePart:getId()
-        
+
                             local dmg = vp[partRandom].dmg
                             vehiclePart:damage(dmg)
-        
+
                             if vehiclePart:getCondition() <= 0 then
                                 vehiclePart:setInventoryItem(nil)
                                 square:playSound(vp[partRandom].sndDest)
@@ -412,12 +405,12 @@ local function manageLineOfFire (shooter, enemy, weaponItem)
                                 square:playSound(vp[partRandom].sndHit)
                                 return false
                             end
-        
+
                             vehicle:updatePartStats()
-        
+
                             local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
                             sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-        
+
                         end
                     end
                 end
