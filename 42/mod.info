@@ -3,5 +3,5 @@ poster=poster.png
 icon=icon.png
 id=Bandits
 description=Adds armed hostile bandits to the game
-incompatible=\BetterFPS_B42,\TrueCrawlStealth,\TrueCrawl
+incompatible=\BetterFPS_B42,\TrueCrawlStealth,\TrueCrawl,\BanditsAddOptions
 author=Slayer
