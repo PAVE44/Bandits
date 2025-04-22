@@ -661,6 +661,20 @@ function BanditUtils.BanditRand(n)
     return seed % (n + 1)
 end
 
+BanditUtils.rgb2dec = function(r, g, b)
+    local r255 = math.floor(r * 255 + 0.5)
+    local g255 = math.floor(g * 255 + 0.5)
+    local b255 = math.floor(b * 255 + 0.5)
+    return r255 * 65536 + g255 * 256 + b255
+end
+
+BanditUtils.dec2rgb = function(value)
+    local r = math.floor(value / 65536)
+    local g = math.floor((value % 65536) / 256)
+    local b = value % 256
+    return {r = r / 255, g = g / 255, b = b / 255}
+end
+
 BanditUtils.GetCity = function(character)
     local zones = getZones(character:getX(), character:getY(), character:getZ())
     if zones then

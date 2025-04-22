@@ -75,7 +75,10 @@ BanditPlayer.CheckFriendlyFire = function(bandit, attacker)
     if not bandit:getVariableBoolean("Bandit") then return end
 
     -- this is ugly reverse dependency
-    if getActivatedMods():contains("\\BanditsWeekOne") then return end
+    if getActivatedMods():contains("\\BanditsWeekOne") then 
+        BWOPlayer.ActivateWitness(attacker, 25)
+        return
+    end
 
     -- hostility against civilians (clan=0) is handled by other mods
     local brain = BanditBrain.Get(bandit)

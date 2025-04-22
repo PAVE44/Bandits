@@ -1,4 +1,41 @@
-local LogLevel = 3
+local LogLevel = 0
+
+local function daysInMonth(month)
+    local daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+    return daysPerMonth[month]
+end
+
+local function calculateHourDifference(startHour, startDay, startMonth, startYear, hour, day, month, year)
+    local startTotalHours = startHour + (startDay - 1) * 24
+    for m = 1, startMonth - 1 do
+        startTotalHours = startTotalHours + daysInMonth(m) * 24
+    end
+    startTotalHours = startTotalHours + (startYear * 365 * 24) 
+
+    local totalHours = hour + (day - 1) * 24
+    for m = 1, month - 1 do
+        totalHours = totalHours + daysInMonth(m) * 24
+    end
+    totalHours = totalHours + (year * 365 * 24) 
+
+    return totalHours - startTotalHours
+end
+
+local function getWorldAge()
+    local gametime = getGameTime()
+    local startHour = gametime:getStartTimeOfDay()
+    local startDay = gametime:getStartDay()
+    local startMonth = gametime:getStartMonth()
+    local startYear = gametime:getStartYear()
+    local hour = gametime:getHour()
+    local day = gametime:getDay()
+    local month = gametime:getMonth()
+    local year = gametime:getYear()
+
+    local worldAge = calculateHourDifference(startHour, startDay, startMonth, startYear, hour, day, month, year)
+    return math.floor(worldAge / 24)
+end
+
 
 local isGhost = function(player)
     local gmd = GetBanditModDataPlayers()
@@ -329,6 +366,7 @@ local function banditize(zombie, bandit, clan, args)
     end
 
     brain.clothing = bandit.clothing or {}
+    brain.tint = bandit.tint or {}
     brain.bag = bandit.bag
 
     brain.loot = {}
@@ -905,6 +943,7 @@ local function spawnType(player, args)
     if LogLevel >= 3 then print ("[BANDITS] spawnType has cid " .. cid) end
     local clan = BanditCustom.ClanGet(cid).spawn
     local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
+    groupSize = math.floor(groupSize * SandboxVars.Bandits.General_SpawnMultiplier + 0.5)
     local spawnPoints = {}
 
     if LogLevel >= 3 then print ("[BANDITS] groupSize is " .. groupSize) end
@@ -982,19 +1021,21 @@ local function checkEvent()
     local world = getWorld()
     local gamemode = world:getGameMode()
     local player 
-    
+    local day
+
     if gamemode == "Multiplayer" then
+        day = player:getHoursSurvived() / 24
         local playerList = getOnlinePlayers()
         local pid = ZombRand(playerList:size())
         player = playerList:get(pid)
     else
+        day = getWorldAge()
         player = getSpecificPlayer(0)
     end
 
+    print (day)
+
     local clanData = BanditCustom.ClanGetAll()
-
-    local day = player:getHoursSurvived() / 24
-
     local densityScore = 1
     if SandboxVars.Bandits.General_DensityScore then
         densityScore = getDensityScore(player, 120)
@@ -1003,8 +1044,7 @@ local function checkEvent()
     for cid, clan in pairs(clanData) do
         local spawnConfig = clan.spawn
         if spawnConfig and spawnConfig.dayStart and spawnConfig.dayEnd and day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
-            local spawnChance = spawnConfig.spawnChance / 6
-
+            local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
             -- boost spawn in non-wilderness area
             -- if spawnConfig.zone and spawnConfig.zone ~= 3 then 
             --    spawnChance = spawnChance * densityScore

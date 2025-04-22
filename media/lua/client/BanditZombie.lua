@@ -63,8 +63,8 @@ local UpdateZombieCache = function(numberTicks)
 
             local id = BanditUtils.GetZombieID(zombie)
 
-            if cache[id] then
-                print ("DUPLICATE ID!!!")
+            if cache[id] and id ~= 0 then
+                -- print ("DUPLICATE ID " .. id)
             end
 
             cache[id] = zombie
