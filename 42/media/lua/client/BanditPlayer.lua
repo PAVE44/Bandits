@@ -127,7 +127,6 @@ local originalPanicIncreaseValue = nil
 
 -- Function to check nearby entities and set panic increase value
 local PanicHandler = function(player)
-    -- if true then return end 
     if isServer() then return end
 
     -- Step 1: Store the original PanicIncreaseValue if it's the first time modifying it

@@ -140,10 +140,8 @@ end
 
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local world = getWorld()
-    local gamemode = world:getGameMode()
     local player = getSpecificPlayer(playerID)
     local square = BanditCompatibility.GetClickedSquare()
-    local generator = square:getGenerator()
 
     local zombie = square:getZombie()
     if not zombie then
@@ -158,7 +156,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
             end
         end
     end
-    
+
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") then
         local brain = BanditBrain.Get(zombie)
@@ -178,7 +176,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
     -- Debug options
     if isDebugEnabled() then
-
         context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 

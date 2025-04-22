@@ -73,14 +73,14 @@ ZombieActions.Equip.onWorking = function(zombie, task)
 
         if task.itemPrimary then
             local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
-            primaryItem = BanditWeapons.Modify(primaryItem, brain)
+            primaryItem = BanditUtils.ModifyWeapon(primaryItem, brain)
             zombie:setPrimaryHandItem(primaryItem)
             zombie:setVariable("BanditPrimary", task.itemPrimary)
 
             local hands
             if primaryItem:IsWeapon() then
                 local primaryItemType = WeaponType.getWeaponType(primaryItem)
-                
+
                 if primaryItemType == WeaponType.barehand then
                     hands = "barehand"
                 elseif primaryItemType == WeaponType.firearm then
@@ -109,7 +109,7 @@ ZombieActions.Equip.onWorking = function(zombie, task)
             zombie:setVariable("BanditPrimaryType", hands)
         end
     end
-    
+
     if task.tick > 20 and zombie:getBumpType() ~= task.anim1 and zombie:getBumpType() ~= task.anim2 then 
         return true
     end

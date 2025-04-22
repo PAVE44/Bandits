@@ -21,7 +21,6 @@ ZombieActions.PutInContainer.onComplete = function(zombie, task)
     if not csquare then return end
 
     local objects = csquare:getObjects()
-    local cnt = 0
     for i=0, objects:size() - 1 do
         local object = objects:get(i)
         local container = object:getContainer()

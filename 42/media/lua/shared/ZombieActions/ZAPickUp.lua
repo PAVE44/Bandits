@@ -36,12 +36,12 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
                 if cnt >= task.cnt then break end
             end
         end
-        
+
         for k, object in pairs(toRemove) do
             square:removeWorldObject(object)
             square:transmitRemoveItemFromSquare(object)
             square:RecalcProperties()
-    		square:RecalcAllWithNeighbours(true)
+            square:RecalcAllWithNeighbours(true)
 
             object:removeFromWorld()
             object:removeFromSquare()

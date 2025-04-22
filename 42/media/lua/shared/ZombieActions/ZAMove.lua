@@ -45,13 +45,13 @@ ZombieActions.Move.onStart = function(zombie, task)
             zombie:setBumpType(bump)
         end
     end
-    
+
     if BanditUtils.IsController(zombie) then
         zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
         zombie:getPathFindBehavior2():cancel()
         zombie:setPath2(nil)
     end
-    
+
     return true
 end
 
@@ -82,7 +82,7 @@ ZombieActions.Move.onWorking = function(zombie, task)
             zombie:getPathFindBehavior2():cancel()
             zombie:setPath2(nil)
         end]]
-        
+
         local result = zombie:getPathFindBehavior2():update()
         if result == BehaviorResult.Failed then
             return true

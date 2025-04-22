@@ -1,3 +1,0 @@
--- deprecated
-
-BanditCreator = BanditCreator or {}

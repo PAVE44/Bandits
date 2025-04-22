@@ -13,7 +13,7 @@ end
 
 ZombieActions.PlaceItem.onComplete = function(zombie, task)
     if not BanditUtils.IsController(zombie) then return true end
-    
+
     local inventory = zombie:getInventory()
     local item = inventory:getItemFromType(task.itemType)
     if not item then return true end
@@ -42,7 +42,7 @@ ZombieActions.PlaceItem.onComplete = function(zombie, task)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     square:AddWorldInventoryItem(item, ZombRandFloat(0.35, 0.65), ZombRandFloat(0.35, 0.65), squareSurfaceOffset)
-        
+
     return true
 end
 

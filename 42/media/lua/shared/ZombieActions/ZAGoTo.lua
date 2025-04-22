@@ -41,7 +41,7 @@ ZombieActions.GoTo.onStart = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         zombie:pathToLocationF(task.x, task.y, task.z)
     end
-   
+
     return true
 end
 
