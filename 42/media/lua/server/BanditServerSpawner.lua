@@ -1056,7 +1056,7 @@ local function checkEvent()
                 print ("[BANDITS] Scheduler is spawning bandits now.")
                 local args = {}
                 args.cid = cid
-                args.dist = 5 + ZombRand(3)
+                args.dist = 45 + ZombRand(20)
                 spawnType(player, args)
                 TransmitBanditModData()
                 print ("[BANDITS] Data transmitted.")

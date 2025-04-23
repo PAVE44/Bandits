@@ -1,7 +1,11 @@
 name=Bandits
 poster=poster.png
 icon=icon.png
-id=Bandits
-description=Adds armed hostile bandits to the game
+id=Bandits2
+description=<H1><GREEN>BANDITS V2 B42 
+description=<BR>
+description=During the zombie apocalypse, 
+description= it's not the zombies you should be afraid of; it's the people... 
+description=<BR>
 incompatible=\BetterFPS_B42,\TrueCrawlStealth,\TrueCrawl,\BanditsAddOptions
 author=Slayer
