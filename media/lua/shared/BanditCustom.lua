@@ -81,13 +81,21 @@ local loadFile = function(dataKey, fileName)
         return result
     end
 
-    local types = {} -- {clothing="array", hairstyles="array"}
+    local types = {}
 
     local modList = {}
     local mods = getActivatedMods()
     for i=0, mods:size()-1 do
         local modid = mods:get(i):gsub("^\\", "")
-        table.insert(modList, modid)
+
+        if modid == "Bandits" and isIngameState() then
+            if SandboxVars.Bandits.General_OriginalBandits then
+                table.insert(modList, modid)
+            end
+        else
+            table.insert(modList, modid)
+        end
+
     end
 
     -- LOCAL needs to load last so it remains untouched by other mods!
@@ -227,6 +235,7 @@ BanditCustom.Create = function(bid)
     data.general.beardType = 1
     data.general.hairColor = 1
     data.clothing = {}
+    data.tint = {}
     data.weapons = {}
     data.ammo = {}
     data.bag = {}

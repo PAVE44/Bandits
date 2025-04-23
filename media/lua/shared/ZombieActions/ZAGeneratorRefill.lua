@@ -37,7 +37,7 @@ ZombieActions.GeneratorRefill.onComplete = function(zombie, task)
     local newFuel = fuel + gasFuel
     local gasLeft = (newFuel - 100) / 80
     if newFuel > 100 then newFuel = 100 end
-    
+
     if gasLeft > 0 then
         item:setUsedDelta(gasLeft)
     else

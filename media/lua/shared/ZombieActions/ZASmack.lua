@@ -253,7 +253,7 @@ local function addStuckItem(attacker, victim, behind, item)
         victim:setAttachedItem(location, item)
         -- attacker:playSound(item:getBreakSound())
         attacker:playSound("ZSWeaponStuck")
-        
+
         -- Bandit.Say(victim, "DEAD")
         local bloodLocations = getBloodLocations(location)
         for _, bloodLocation in pairs(bloodLocations) do
@@ -314,6 +314,16 @@ local function addBlood (character, chance)
     character:resetModel()
 end
 
+local function Bite(attacker, victim)
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), attacker:getX(), attacker:getY())
+    if dist < 0.86 and not victim:isOnKillDone() then
+        local bd = victim:getBodyDamage()
+        local bps = {BodyPartType.Torso_Upper, BodyPartType.UpperArm_R, BodyPartType.UpperArm_L}
+        bd:SetBitten(BanditUtils.Choice(bps), true)
+        victim:playSound("ZombieBite")
+    end
+end
+
 local function Hit(attacker, item, victim)
     -- Clone the attacker to create a temporary IsoPlayer
     -- local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
@@ -342,7 +352,7 @@ local function Hit(attacker, item, victim)
                 if window and not window:isOpen() then
                     local vehiclePartId = vehiclePart:getId()
                     vehiclePart:damage(20)
-            
+
                     if vehiclePart:getCondition() <= 0 then
                         vehiclePart:setInventoryItem(nil)
                         square:playSound("SmashWindow")
@@ -400,14 +410,14 @@ local function Hit(attacker, item, victim)
                 local args={id=id, h=h}
                 sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
             end
-            
+
             victim:playSound(item:getZombieHitSound())
 
             -- addBlood(victim, 100)
             -- addBlood(attacker, 30)
-            
+
             BanditCompatibility.Splash(victim, item, fakeZombie)
-                
+
             if instanceof(victim, "IsoPlayer") then
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
@@ -417,7 +427,7 @@ local function Hit(attacker, item, victim)
                 -- :Kill(getCell():getFakeZombieForHit(), true) 
             end
         end
-        
+
         -- addSound(getPlayer(), victim:getX(), victim:getY(), victim:getZ(), 4, 50)
     end
 
@@ -429,17 +439,19 @@ end
 ZombieActions.Smack = {}
 ZombieActions.Smack.onStart = function(bandit, task)
     local anim 
-    local soundSwing, soundVoice
+    local soundVoice
 
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
-    
+
     local prone = enemy:isProne() or enemy:getActionStateName() == "onground" or enemy:getActionStateName() == "sitonground" or enemy:getActionStateName() == "climbfence" 
     local female = bandit:isFemale()
     local meleeItem = BanditCompatibility.InstanceItem(task.weapon)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
     local soundSwing = meleeItem:getSwingSound()
+    
+    task.attackTime = 50
 
     if prone then
         task.prone = true
@@ -473,6 +485,17 @@ ZombieActions.Smack.onStart = function(bandit, task)
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
         end
 
+        if instanceof(enemy, "IsoPlayer") and Bandit.HasExpertise(bandit, Bandit.Expertise.Infected) then
+            local dist = BanditUtils.DistTo(enemy:getX(), enemy:getY(), bandit:getX(), bandit:getY())
+            if dist < 0.855 then
+                attacks = {"Bite"}
+                task.bite = true
+                task.attackTime = 20
+                soundVoice = nil
+                soundSwing = nil
+            end
+        end
+
         if attacks then 
             anim = attacks[1+ZombRand(#attacks)]
         end
@@ -500,8 +523,8 @@ ZombieActions.Smack.onWorking = function(bandit, task)
     local bumpType = bandit:getBumpType()
 
     if bumpType ~= task.anim then return false end
-    
-    if not task.hit and task.time <= 50 then
+
+    if not task.hit and task.time <= task.attackTime then
 
         task.hit = true
 
@@ -528,7 +551,13 @@ ZombieActions.Smack.onWorking = function(bandit, task)
             if player then
                 local eid = BanditUtils.GetCharacterID(player)
                 if player:isAlive() and eid == task.eid then
-                    Hit (bandit, item, player)
+                    if task.bite then
+                        Bite(bandit, player)
+                        task.time = 40
+                    else
+                        Hit (bandit, item, player)
+                        task.time = 50
+                    end
                 end
             end
         end
@@ -536,7 +565,7 @@ ZombieActions.Smack.onWorking = function(bandit, task)
         return false
 
     end
-    
+
     return false
 end
 

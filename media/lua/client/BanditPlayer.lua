@@ -75,7 +75,10 @@ BanditPlayer.CheckFriendlyFire = function(bandit, attacker)
     if not bandit:getVariableBoolean("Bandit") then return end
 
     -- this is ugly reverse dependency
-    if getActivatedMods():contains("\\BanditsWeekOne") then return end
+    if getActivatedMods():contains("\\BanditsWeekOne") then 
+        BWOPlayer.ActivateWitness(attacker, 25)
+        return
+    end
 
     -- hostility against civilians (clan=0) is handled by other mods
     local brain = BanditBrain.Get(bandit)
@@ -127,7 +130,6 @@ local originalPanicIncreaseValue = nil
 
 -- Function to check nearby entities and set panic increase value
 local PanicHandler = function(player)
-    -- if true then return end 
     if isServer() then return end
 
     -- Step 1: Store the original PanicIncreaseValue if it's the first time modifying it

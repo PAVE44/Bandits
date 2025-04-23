@@ -17,11 +17,11 @@ BanditServer.Sync.Health  = function(player, args)
                 zombie:setAttackedBy(getCell():getFakeZombieForHit())
                 zombie:becomeCorpse()
             end
-            
+
         end
     end
     ]]
-    
+
     --[[
     local square = getCell():getGridSquare(args.x, args.y, args.z)
     if square then

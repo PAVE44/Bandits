@@ -315,10 +315,13 @@ local function addBlood (character, chance)
 end
 
 local function Bite(attacker, victim)
-    local bd = victim:getBodyDamage()
-    local bps = {BodyPartType.Torso_Upper, BodyPartType.UpperArm_R, BodyPartType.UpperArm_L}
-    bd:SetBitten(BanditUtils.Choice(bps))
-    victim:playSound("ZombieBite")
+    local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), attacker:getX(), attacker:getY())
+    if dist < 0.86 and not victim:isOnKillDone() then
+        local bd = victim:getBodyDamage()
+        local bps = {BodyPartType.Torso_Upper, BodyPartType.UpperArm_R, BodyPartType.UpperArm_L}
+        bd:SetBitten(BanditUtils.Choice(bps), true)
+        victim:playSound("ZombieBite")
+    end
 end
 
 local function Hit(attacker, item, victim)
@@ -447,6 +450,8 @@ ZombieActions.Smack.onStart = function(bandit, task)
     local meleeItemType = WeaponType.getWeaponType(meleeItem)
 
     local soundSwing = meleeItem:getSwingSound()
+    
+    task.attackTime = 50
 
     if prone then
         task.prone = true
@@ -481,10 +486,14 @@ ZombieActions.Smack.onStart = function(bandit, task)
         end
 
         if instanceof(enemy, "IsoPlayer") and Bandit.HasExpertise(bandit, Bandit.Expertise.Infected) then
-            attacks = {"Bite"}
-            task.bite = true
-            soundVoice = nil
-            soundSwing = nil
+            local dist = BanditUtils.DistTo(enemy:getX(), enemy:getY(), bandit:getX(), bandit:getY())
+            if dist < 0.855 then
+                attacks = {"Bite"}
+                task.bite = true
+                task.attackTime = 20
+                soundVoice = nil
+                soundSwing = nil
+            end
         end
 
         if attacks then 
@@ -515,7 +524,7 @@ ZombieActions.Smack.onWorking = function(bandit, task)
 
     if bumpType ~= task.anim then return false end
 
-    if not task.hit and task.time <= 50 then
+    if not task.hit and task.time <= task.attackTime then
 
         task.hit = true
 
@@ -544,8 +553,10 @@ ZombieActions.Smack.onWorking = function(bandit, task)
                 if player:isAlive() and eid == task.eid then
                     if task.bite then
                         Bite(bandit, player)
+                        task.time = 40
                     else
                         Hit (bandit, item, player)
+                        task.time = 50
                     end
                 end
             end

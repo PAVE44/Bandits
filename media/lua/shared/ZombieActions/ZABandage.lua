@@ -47,7 +47,7 @@ ZombieActions.Bandage.onComplete = function(zombie, task)
     local bodyParts = getBodyParts()
     local bodyPart = bodyParts[bpi]
 
-    zombie:setHealth(1.6)
+    zombie:setHealth(1.2)
     zombie:addVisualBandage(bodyPart.name, true)
     return true
 end

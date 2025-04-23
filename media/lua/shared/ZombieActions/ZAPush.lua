@@ -61,7 +61,7 @@ ZombieActions.Push.onWorking = function(bandit, task)
         -- print ("SHOVE AS:" .. asn)
         if asn == "getup" or asn == "getup-fromonback" or asn == "getup-fromonfront" or asn == "getup-fromsitting"
                  or asn =="staggerback" or asn == "staggerback-knockeddown" or asn == "falldown" then return false end
-    
+
         local enemy = BanditZombie.Cache[task.eid]
         if enemy then 
             local brainBandit = BanditBrain.Get(bandit)
@@ -71,7 +71,7 @@ ZombieActions.Push.onWorking = function(bandit, task)
                 ShoveZombie (bandit, enemy)
             end
         end
-    
+
         if Bandit.IsHostile(bandit) then
             local playerList = BanditPlayer.GetPlayers()
             for i=0, playerList:size()-1 do

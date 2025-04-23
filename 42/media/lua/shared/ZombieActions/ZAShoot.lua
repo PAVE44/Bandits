@@ -486,7 +486,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
     if not weaponItem then return true end
 
-    weaponItem = BanditWeapons.Modify(weaponItem, brainShooter)
+    weaponItem = BanditUtils.ModifyWeapon(weaponItem, brainShooter)
 
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end

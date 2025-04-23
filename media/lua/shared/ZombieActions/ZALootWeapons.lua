@@ -60,7 +60,7 @@ local function lootContainer(zombie, container, task)
                 else
                     local ammoType = weaponItem:getAmmoType()
                     local ammoCount = 0
-                    
+
                     for j=0, items:size()-1 do
                         local item = items:get(j)
                         if item:getFullType() == ammoType then
@@ -103,7 +103,7 @@ local function lootContainer(zombie, container, task)
     syncData.weapons = weapons
     Bandit.ForceSyncPart(zombie, syncData)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)
-    
+
     --[[
     local success = false
     for _, v in pairs(task.toRemove) do
@@ -162,7 +162,7 @@ ZombieActions.LootWeapons.onComplete = function(zombie, task)
     if emitter:isPlaying("RummageInInventory") then
         emitter:stopSoundByName("ChainsawIdle")
     end
-    
+
     local cell = getCell()
     local square = cell:getGridSquare(task.x, task.y, task.z)
     if square then

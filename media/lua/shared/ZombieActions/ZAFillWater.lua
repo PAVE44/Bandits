@@ -59,7 +59,7 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
     local newWater = (item:getUsedDelta() + waterToTake * item:getUseDelta())
     if newWater > 1 then newWater = 1 end
     item:setUsedDelta(newWater)
-    
+
     local inventory = zombie:getInventory()
     inventory:AddItem(item)
     Bandit.UpdateItemsToSpawnAtDeath(zombie)

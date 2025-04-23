@@ -69,7 +69,7 @@ Bandit.Engine = true
 local function predicateAll(item)
     return true
 end
-                        
+
 
 function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getSpecificPlayer(0), 'Commands', 'BanditUpdatePart', syncData)
@@ -83,7 +83,7 @@ function Bandit.AddTask(zombie, task)
             print ("[WARN] Task queue too big, flushing!")
             brain.tasks = {}
         end
-    
+
         table.insert(brain.tasks, task)
         -- BanditBrain.Update(zombie, brain)
     end
@@ -499,7 +499,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
             local gun = BanditCompatibility.InstanceItem(weapons.primary.name)
             if gun then
-                gun = BanditWeapons.Modify(gun, brain)
+                gun = BanditUtils.ModifyWeapon(gun, brain)
                 gun:getModData().preserve = true
                 gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
                 zombie:addItemToSpawnAtDeath(gun)
@@ -540,7 +540,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
             local gun = BanditCompatibility.InstanceItem(weapons.secondary.name)
             if gun then
-                gun = BanditWeapons.Modify(gun, brain)
+                gun = BanditUtils.ModifyWeapon(gun, brain)
                 gun:getModData().preserve = true
                 gun = BanditCompatibility.SetRandomCondition(gun, 0.8)
                 zombie:addItemToSpawnAtDeath(gun)

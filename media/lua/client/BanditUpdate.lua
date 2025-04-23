@@ -216,10 +216,16 @@ local function ApplyVisuals(bandit, brain)
                 if clothingItem then
                     local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
                 end]]
-
                 local itemVisual = ItemVisual.new()
                 itemVisual:setItemType(itemType)
                 itemVisual:setClothingItemName(itemType)
+
+                if brain.tint[bodyLocation] then
+                    local color = BanditUtils.dec2rgb(brain.tint[bodyLocation])
+                    local immutableColor = ImmutableColor.new(color.r, color.g, color.b, 1)
+                    itemVisual:setTint(immutableColor)
+                end
+
                 itemVisuals:add(itemVisual)
             end
         end
@@ -230,10 +236,10 @@ local function ApplyVisuals(bandit, brain)
                 local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
 
                 if weapon then
-                    weapon = BanditWeapons.Modify(weapon, brain)
+                    weapon = BanditUtils.ModifyWeapon(weapon, brain)
 
                     local attachmentType = weapon:getAttachmentType()
-                    
+
                     for _, def in pairs(ISHotbarAttachDefinition) do
                         if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
                             if def.attachments then
@@ -260,6 +266,8 @@ local function ApplyVisuals(bandit, brain)
                 local itemVisual = ItemVisual.new()
                 itemVisual:setItemType(brain.bag.name)
                 itemVisual:setClothingItemName(brain.bag.name)
+                local immutableColor = ImmutableColor.new(0.1, 0.1, 0.1, 1)
+                itemVisual:setTint(immutableColor)
                 itemVisuals:add(itemVisual)
             end
             -- bandit:setWornItem(item:canBeEquipped(), item)
@@ -1012,7 +1020,7 @@ local function ManageCombat(bandit)
                             if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                 if not maxRangeRifle then
                                     local item = BanditCompatibility.InstanceItem(weapons.primary.name)
-                                    item = BanditWeapons.Modify(item, brain)
+                                    item = BanditUtils.ModifyWeapon(item, brain)
                                     maxRangeRifle = BanditCompatibility.GetMaxRange(item)
                                     
                                 end
@@ -1030,7 +1038,7 @@ local function ManageCombat(bandit)
                             elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
                                 if not maxRangePistol then
                                     local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
-                                    item = BanditWeapons.Modify(item, brain)
+                                    item = BanditUtils.ModifyWeapon(item, brain)
                                     maxRangePistol = BanditCompatibility.GetMaxRange(item)
                                 end
                                 if dist < maxRangePistol then
@@ -1114,7 +1122,7 @@ local function ManageCombat(bandit)
                                 if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                     if not maxRangeRifle then
                                         local item = BanditCompatibility.InstanceItem(weapons.primary.name)
-                                        item = BanditWeapons.Modify(item, brain)
+                                        item = BanditUtils.ModifyWeapon(item, brain)
                                         maxRangeRifle = BanditCompatibility.GetMaxRange(item)
                                     end
                                     if dist < maxRangeRifle then
@@ -1132,7 +1140,7 @@ local function ManageCombat(bandit)
                                 elseif weapons.secondary.name and weapons.secondary.bulletsLeft > 0 then
                                     if not maxRangePistol then
                                         local item = BanditCompatibility.InstanceItem(weapons.secondary.name)
-                                        item = BanditWeapons.Modify(item, brain)
+                                        item = BanditUtils.ModifyWeapon(item, brain)
                                         maxRangePistol = BanditCompatibility.GetMaxRange(item)
                                     end
                                     if dist < maxRangePistol then

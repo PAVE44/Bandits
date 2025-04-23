@@ -122,14 +122,14 @@ BanditPlayerBase.Regenerate = function(baseId)
         obj.x = x
         obj.y = y
         obj.z = z
-    
+
         if not BanditPlayerBase.data[baseId][objectType] then
             BanditPlayerBase.data[baseId][objectType] = {}
         end
-    
+
         BanditPlayerBase.data[baseId][objectType][id] = obj
     end
-    
+
     -- unregisters virtual object at the given location of a given type
     local function removeObject(baseId, x, y, z, objectType)
         local id = x .. "-" .. y .. "-" .. z
@@ -146,7 +146,7 @@ BanditPlayerBase.Regenerate = function(baseId)
         obj.z = z
         obj.type = contType
         obj.items = items
-    
+
         if not BanditPlayerBase.data[baseId].containers then
             BanditPlayerBase.data[baseId].containers = {}
         end
@@ -170,13 +170,13 @@ BanditPlayerBase.Regenerate = function(baseId)
             BanditPlayerBase.data[baseId].items[itemType][id] = tab
         end
     end
-    
+
     -- unregisters all items located at the given location for a given base
     local function removeItems(baseId, x, y, z)
         local id = x .. "-" .. y .. "-" .. z
         BanditPlayerBase.data[baseId].containers[id] = nil
     end
-    
+
     -- scans square for square features and ground items to be registered as virtual objects and items
     local function updateSquare(baseId, square)
         local x = square:getX()
@@ -379,7 +379,7 @@ BanditPlayerBase.ReindexItems = function(baseId)
     local i = 0
     for contId, cont in pairs(BanditPlayerBase.data[baseId].containers) do
         for itemType, cnt in pairs(cont.items) do
-            
+
             if not items[itemType] then
                 items[itemType] = {}
             end
