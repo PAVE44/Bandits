@@ -1,5 +1,5 @@
 [1aaa4e35-f208-48b5-90c1-67449111787d]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 2681ecf5-d0d9-481d-b769-7c4fb626eb81
 	general: name = Apprentice_01
 	general: female = true
@@ -14,15 +14,16 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
-	clothing: BathRobe = Base.BlackRobe
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LongWomenGloves
+	clothing: Pants = Base.Trousers_Suit
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
+	tint: Shirt = 3355443
 	weapons: melee = Base.Katana
 
 [f5dd67b8-ebe9-4cae-8c20-f20a9f7b84e8]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 2681ecf5-d0d9-481d-b769-7c4fb626eb81
 	general: name = Apprentice_02
 	general: female = false
@@ -37,15 +38,16 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
-	clothing: BathRobe = Base.BlackRobe
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: Pants = Base.Trousers_Suit
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
+	tint: Shirt = 3355443
 	weapons: melee = Base.Katana
 
 [776c90b5-6dd9-4a0e-b933-c780216c2272]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Assault_01
 	general: female = false
@@ -60,28 +62,21 @@
 	general: exp1 = 2
 	general: exp2 = 3
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [7e88732c-ac22-4d61-8265-3b6ee4c132ff]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Assault_02
 	general: female = false
@@ -96,28 +91,21 @@
 	general: exp1 = 2
 	general: exp2 = 7
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [92b38839-ca1d-4c34-a546-627e456f7b97]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Assault_03
 	general: female = false
@@ -132,28 +120,21 @@
 	general: exp1 = 2
 	general: exp2 = 11
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [3608c8dd-6b90-4a1e-a2ad-38262b5b9fbb]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Assault_04
 	general: female = false
@@ -168,28 +149,21 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [0967f76b-6910-4f7d-bab6-1a4ae3bd2d7c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Sniper_01
 	general: female = false
@@ -204,28 +178,21 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_BonnieHat_DesertCamo
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.VarmintRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [c5a7383e-f2fe-46fb-8b1d-49061f69c684]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Sniper_02
 	general: female = true
@@ -240,28 +207,21 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Female
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.VarmintRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [6fd31afc-1a0b-46f1-972d-68afd2bff697]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Medic_01
 	general: female = false
@@ -276,28 +236,21 @@
 	general: exp1 = 8
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [f3f80312-a3e2-455c-ade7-24730910f0dc]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Medic_02
 	general: female = true
@@ -312,28 +265,21 @@
 	general: exp1 = 8
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Female
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle2
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [4827b397-3a29-4f77-87c4-c7dbebce2839]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Recon_01
 	general: female = false
@@ -348,28 +294,21 @@
 	general: exp1 = 9
 	general: exp2 = 12
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_BonnieHat_DesertCamo
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.HuntingRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 2
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [12712089-759b-49e8-8bf8-ea84e3437834]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Recon_02
 	general: female = false
@@ -384,28 +323,21 @@
 	general: exp1 = 9
 	general: exp2 = 13
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [6566fe73-dd7f-48fd-8fec-797bb14d4e7d]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
 	general: name = Officer_01
 	general: female = false
@@ -424,15 +356,15 @@
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
 	clothing: Jacket = Base.Jacket_CoatArmy
 	clothing: UnderwearBottom = Base.Boxers_RedStripes
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_ArmyService
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.HuntingKnife
 	ammo: secondary = 2
 
 [1d506491-4bba-4878-9476-014f5d4663a3]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
 	general: name = Officer_02
 	general: female = false
@@ -452,15 +384,14 @@
 	clothing: Tshirt = Base.Tshirt_CamoGreen
 	clothing: Jacket = Base.Jacket_CoatArmy
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_ArmyService
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Long_Black
 	weapons: secondary = Base.Pistol2
-	weapons: melee = Base.KnifeButterfly
 	ammo: secondary = 1
 
 [36817a9e-8567-428b-90cf-a4a919e5c264]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
 	general: name = Officer_03
 	general: female = true
@@ -478,15 +409,15 @@
 	clothing: Hat = Base.Hat_PeakedCapArmy
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Jacket = Base.Jacket_CoatArmy
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_ArmyService
-	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol2
-	weapons: melee = Base.SmallKnife
 	ammo: secondary = 1
 
 [cabade47-8284-4afb-b979-31ec2189572e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_01
 	general: female = false
@@ -501,12 +432,12 @@
 	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
-	weapons: melee = Base.SpearCrudeLong
+	tint: Dress = 13421772
 
 [51f643b4-20df-424a-a1cd-8c2cee1bd90e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_02
 	general: female = false
@@ -521,13 +452,12 @@
 	general: exp1 = 12
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
-	weapons: melee = Base.Spear_BoneLong
-	bag: name = Base.Bag_CrudeLeatherBag
+	tint: Dress = 13421772
 
 [dba32857-8c98-4980-96dc-e1732ef094a8]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_03
 	general: female = false
@@ -542,12 +472,13 @@
 	general: exp1 = 4
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
+	tint: Dress = 10066329
 	weapons: melee = Base.HandScythe
 
 [86f4dec8-8319-41fb-8e8d-be4c02c15785]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_04
 	general: female = false
@@ -563,13 +494,12 @@
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BandanaTied
-	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
-	weapons: melee = Base.AnimalBone
-	bag: name = Base.Bag_ClothSatchel_Burlap
+	tint: Dress = 10066329
 
 [b224fd1c-9434-4190-9553-b946c4aa8c9c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 2681ecf5-d0d9-481d-b769-7c4fb626eb81
 	general: name = Master_01
 	general: female = false
@@ -584,17 +514,15 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_DeerHeadress
-	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: BathRobe = Base.BlackRobe
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
+	tint: Shirt = 3355443
 	weapons: melee = Base.Katana
 
 [1c9f5d16-6652-46c7-af25-299747db868e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_01
 	general: female = false
@@ -609,26 +537,15 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: TorsoExtraVest = Base.Vest_Leather
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.ThighMetal_R
-	clothing: Thigh_Left = Base.ThighMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_BlackBoots
-	weapons: melee = Base.LongMace
+	tint: Shirt = 3355443
+	weapons: melee = Base.Sledgehammer
 
 [712753e4-4651-4eeb-b69b-bd20c03e8e41]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_02
 	general: female = false
@@ -643,26 +560,14 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
 	clothing: JacketSuit = Base.WeddingJacket
-	clothing: ShoulderpadRight = Base.Shoulderpad_Metal_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_Metal_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
-	clothing: Thigh_Right = Base.ThighMetalSpike_R
-	clothing: Thigh_Left = Base.ThighMetalSpike_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuard_L_Metal
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.CrudeSword
+	weapons: melee = Base.Sledgehammer2
 
 [b19444e3-12a7-4b4f-bf41-bb26d080070a]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_03
 	general: female = false
@@ -677,24 +582,14 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalScrapHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
 	clothing: Jacket_Down = Base.PonchoGreenDOWN
-	clothing: ShoulderpadRight = Base.Shoulderpad_ArticulatedSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_ArticulatedSpike_L
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.Thigh_ArticMetal_R
-	clothing: Thigh_Left = Base.Thigh_ArticMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuard_L_Metal
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_BlackBoots
-	weapons: melee = Base.Sword
+	weapons: melee = Base.ClubHammer
 
 [be4eaa3b-e57e-4d02-ae0a-5d78ddd39b5e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_04
 	general: female = false
@@ -706,30 +601,17 @@
 	general: strength = 6
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: Jacket_Down = Base.PonchoGarbageBagDOWN
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.Vambrace_Right
-	clothing: ForeArm_Left = Base.Vambrace_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Brown
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.Thigh_ArticMetal_R
-	clothing: Thigh_Left = Base.Thigh_ArticMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
 	clothing: Shoes = Base.Shoes_Brown
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.Sword
+	tint: TankTop = 3355443
+	weapons: melee = Base.ClubHammer
 
 [d80fb25a-2791-4486-91dd-8f77c37c1c83]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_05
 	general: female = false
@@ -741,27 +623,15 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: JacketSuit = Base.JacketLong_Black
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Calf_Right = Base.ShinKneeGuardSpike_R_Protective
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Protective
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
 	weapons: melee = Base.WoodAxe
 
 [15bb287d-a48f-44a9-aa2b-34ba73855202]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_06
 	general: female = false
@@ -773,24 +643,19 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalScrapHelmet
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
+	general: exp1 = 4
+	general: exp2 = 7
+	general: exp3 = 8
 	clothing: Sweater = Base.Jumper_RoundNeck
-	clothing: ShoulderpadRight = Base.Shoulderpad_Metal_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_Metal_L
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuard_L_Metal
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.Morningstar_Scrap
+	tint: Sweater = 6710886
+	weapons: melee = Base.WoodAxe
+	bag: name = Base.Bag_DuffelBagTINT
 
 [028e38fc-e1db-4b40-b11e-8e99cd552a68]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_07
 	general: female = false
@@ -802,29 +667,17 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: MaskEyes = Base.Hat_HockeyMask_Copper
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: VestTexture = Base.Vest_Waistcoat
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 7
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.ThighMetal_R
-	clothing: Thigh_Left = Base.ThighMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.Sword
+	weapons: melee = Base.WoodAxe
+	bag: name = Base.Bag_DuffelBagTINT
 
 [8e30f3ca-d1d7-455d-b267-91f44ff73140]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_08
 	general: female = false
@@ -839,24 +692,12 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: JacketSuit = Base.JacketLong_Hide
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Brown
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.ThighMetal_R
-	clothing: Thigh_Left = Base.ThighMetal_L
-	clothing: Calf_Right = Base.GreaveSpike_Right
-	clothing: Calf_Left = Base.GreaveSpike_Left
 	clothing: Shoes = Base.Shoes_Brown
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.Morningstar_Scrap
+	weapons: melee = Base.WoodAxe
 
 [59db65aa-b0fa-4d0b-8e48-d3fa6b4c33a4]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_09
 	general: female = false
@@ -868,25 +709,17 @@
 	general: strength = 6
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 4
+	general: exp2 = 5
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_MetalScrapHelmet
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: JacketSuit = Base.JacketLong_Hide
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpikeScrap_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpikeScrap_L
-	clothing: ForeArm_Right = Base.VambraceSpikeScrap_Right
-	clothing: ForeArm_Left = Base.VambraceSpikeScrap_Left
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.Sword
+	weapons: melee = Base.Sledgehammer
+	bag: name = Base.Bag_DuffelBagTINT
 
 [a28db0cb-96fa-416f-9cd8-6c4681f0eba1]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_10
 	general: female = false
@@ -901,33 +734,22 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: MaskEyes = Base.Hat_HockeyMask_Metal
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: TorsoExtraVest = Base.Vest_Foreman
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.ThighMetal_R
-	clothing: Thigh_Left = Base.ThighMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.CrudeShortSword
+	tint: TankTop = 3355443
+	weapons: melee = Base.ClubHammer
 
 [3c65138f-f345-4923-9258-d4fb019efc98]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_11
 	general: female = false
-	general: skin = 1
+	general: skin = 2
 	general: hairType = 38
-	general: beardType = 1
-	general: hairColor = 13
+	general: beardType = 10
+	general: hairColor = 11
 	general: health = 5
 	general: strength = 7
 	general: endurance = 5
@@ -935,32 +757,20 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_HeadSack_Garbage
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: Jacket_Down = Base.PonchoGarbageBagDOWN
-	clothing: TorsoExtraVest = Base.Vest_Leather
-	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
-	clothing: ForeArm_Right = Base.VambraceSpike_Right
-	clothing: ForeArm_Left = Base.VambraceSpike_Left
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
 	clothing: Shoes = Base.Shoes_BlackBoots
-	clothing: Socks = Base.Socks_Long_Black
-	weapons: melee = Base.BlockMaul
+	weapons: melee = Base.WoodAxe
 
 [14a87232-59c0-4807-ab57-48e2957ca43b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Knight_12
 	general: female = false
-	general: skin = 1
+	general: skin = 5
 	general: hairType = 38
 	general: beardType = 1
-	general: hairColor = 13
+	general: hairColor = 11
 	general: health = 5
 	general: strength = 5
 	general: endurance = 5
@@ -968,30 +778,18 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: FullHat = Base.Hat_HeadSack_Hide
-	clothing: Gorget = Base.Gorget_Metal
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: JacketSuit = Base.JacketLong_Hide
-	clothing: ShoulderpadRight = Base.Shoulderpad_Articulated_R_Metal
-	clothing: ShoulderpadLeft = Base.Shoulderpad_Articulated_L_Metal
-	clothing: ForeArm_Right = Base.Vambrace_LeatherSpike_Right
-	clothing: ForeArm_Left = Base.Vambrace_LeatherSpike_Left
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.TrousersMesh_Leather
-	clothing: Thigh_Right = Base.ThighMetal_R
-	clothing: Thigh_Left = Base.ThighMetal_L
-	clothing: Calf_Right = Base.ShinKneeGuardSpike_R_Protective
-	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Protective
-	clothing: Socks = Base.Socks_Long_White
-	clothing: Shoes = Base.Shoes_CowboyBoots
-	weapons: melee = Base.Mace
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	weapons: melee = Base.WoodAxe
+	bag: name = Base.Bag_DuffelBagTINT
 
 [7b5c74f5-f76f-4c63-b513-eb6831391a3c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = bf5985eb-7cb0-44ba-8392-f656ffe421f4
 	general: name = Witch_02
 	general: female = true
-	general: skin = 1
+	general: skin = 3
 	general: hairType = 22
 	general: beardType = 1
 	general: hairColor = 16
@@ -1000,20 +798,18 @@
 	general: endurance = 6
 	general: sight = 5
 	general: exp1 = 0
-	general: exp2 = 0
+	general: exp2 = 6
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_Witch
-	clothing: MaskEyes = Base.Hat_HalloweenMaskWitch
-	clothing: BathRobe = Base.BlackRobe
-	clothing: UnderwearBottom = Base.FrillyUnderpants_Black
-	clothing: UnderwearTop = Base.Bra_Strapless_FrillyBlack
-	clothing: UnderwearExtra1 = Base.TightsBlack
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LongWomenGloves
-	clothing: Shoes = Base.Shoes_CowboyBoots_Black
-	weapons: melee = Base.SpearGlass
+	clothing: Pants = Base.TrousersMesh_Leather
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Shirt = 3355443
+	tint: Hands = 3355443
+	weapons: melee = Base.ClubHammer
 
 [03001466-ddeb-4d23-a388-f9d0bde89848]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_01
 	general: female = false
@@ -1030,18 +826,19 @@
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Eyes = Base.Glasses_Sun
-	clothing: Tshirt = Base.Tshirt_DefaultDECAL
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Socks = 5085542
 	weapons: primary = Base.HuntingRifle
 	weapons: melee = Base.HuntingKnife
 	ammo: primary = 1
 	bag: name = Base.Bag_BigHikingBag
 
 [27ab876a-8749-4038-95c8-cc3f6003c418]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_02
 	general: female = false
@@ -1059,13 +856,13 @@
 	clothing: Hat = Base.Hat_BaseballCapGreen_Reverse
 	clothing: Shirt = Base.Shirt_CamoGreen
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
-	clothing: Pants = Base.Shorts_CamoGreenLong
+	clothing: Pants = Base.TrousersMesh_DenimLight
 	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: melee = Base.HandAxe
 
 [418dce8d-c297-455c-a008-23c1049425ab]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_03
 	general: female = false
@@ -1085,16 +882,16 @@
 	clothing: Shirt = Base.Shirt_Denim
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Grey
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
-	clothing: Pants = Base.Shorts_CamoGreenLong
+	clothing: Pants = Base.Trousers_CamoGreen
 	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Revolver
 	weapons: melee = Base.HandAxe
 	ammo: secondary = 2
 	bag: name = Base.Bag_BigHikingBag
 
 [92ff53f6-5ce8-476d-8021-84fc901e6976]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_04
 	general: female = false
@@ -1113,14 +910,14 @@
 	clothing: Tshirt = Base.Tshirt_WhiteTINT
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
-	clothing: Pants = Base.Shorts_CamoGreenLong
+	clothing: Pants = Base.Trousers_Denim
 	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: melee = Base.SpearCrafted
 	bag: name = Base.Bag_ALICEpack
 
 [232becd3-b69e-446e-9bfe-455daa88db93]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_05
 	general: female = false
@@ -1140,14 +937,15 @@
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
 	clothing: Pants = Base.Trousers_DefaultTEXTURE
-	clothing: Socks = Base.Socks_Ankle
+	clothing: Socks = Base.Socks_Ankle_Black
 	clothing: Shoes = Base.Shoes_Black
 	weapons: primary = Base.VarmintRifle
 	weapons: melee = Base.Machete
 	ammo: primary = 2
+	bag: name = Base.Bag_BigHikingBag_Travel
 
 [652dd114-f7b9-4ec6-97e2-b5eda87b3867]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_06
 	general: female = false
@@ -1162,19 +960,19 @@
 	general: exp1 = 4
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_Bandana
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
 	clothing: Pants = Base.Shorts_CamoGreenLong
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Socks = 1710618
 	weapons: primary = Base.DoubleBarrelShotgun
 	weapons: melee = Base.FishingRod
 	ammo: primary = 2
 	bag: name = Base.Bag_BigHikingBag
 
 [ce72a115-c6a2-4fa8-bd35-45f0eed42148]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_07
 	general: female = true
@@ -1194,14 +992,16 @@
 	clothing: Tshirt = Base.Tshirt_DefaultDECAL
 	clothing: Shirt = Base.Shirt_CamoGreen
 	clothing: FannyPackFront = Base.Bag_FannyPackFront
-	clothing: Pants = Base.Shorts_CamoGreenLong
+	clothing: Pants = Base.Shorts_ShortDenim
 	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Socks = 3355443
+	tint: Shoes = 3355443
 	weapons: melee = Base.SpearHuntingKnife
 	bag: name = Base.Bag_BigHikingBag
 
 [234b7734-0609-4c58-afd5-dc622c1fb1d9]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
 	general: name = Hiker_08
 	general: female = true
@@ -1219,80 +1019,17 @@
 	clothing: Tshirt = Base.Tshirt_DefaultDECAL
 	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalRed
-	clothing: Pants = Base.Shorts_CamoGreenLong
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_ArmyBootsDesert
+	clothing: Pants = Base.Trousers_CamoGreen
+	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: SweaterHat = 1730099
 	weapons: secondary = Base.Revolver_Short
 	weapons: melee = Base.KitchenKnife
 	ammo: secondary = 2
 	bag: name = Base.Bag_ALICEpack_Army
 
-[15761d0e-bb90-4caf-ba38-1f2a59ae3b49]
-	general: modid = Bandits
-	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
-	general: name = Legionary_Assault_05
-	general: female = false
-	general: skin = 2
-	general: hairType = 8
-	general: beardType = 8
-	general: hairColor = 1
-	general: health = 9
-	general: strength = 9
-	general: endurance = 9
-	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
-	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
-	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
-	weapons: primary = Base.AssaultRifle
-	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
-	ammo: primary = 5
-	ammo: secondary = 3
-
-[7a2fea9c-8a91-441e-ae60-c5792f3ed68d]
-	general: modid = Bandits
-	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
-	general: name = Legionary_Assault_06
-	general: female = false
-	general: skin = 5
-	general: hairType = 8
-	general: beardType = 10
-	general: hairColor = 12
-	general: health = 9
-	general: strength = 9
-	general: endurance = 9
-	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
-	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
-	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
-	weapons: primary = Base.AssaultRifle
-	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
-	ammo: primary = 5
-	ammo: secondary = 2
-
 [150c717b-df83-4fcb-9517-54bb37af09f0]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Medic_01
 	general: female = false
@@ -1307,24 +1044,24 @@
 	general: exp1 = 0
 	general: exp2 = 8
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Socks = Base.Socks_Heavy
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 3
 	ammo: secondary = 2
+	bag: name = Base.Bag_DuffelBagTINT
 
 [2c0baf5b-5e9a-4b99-9703-31d12bdd1991]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Medic_02
 	general: female = true
@@ -1339,24 +1076,23 @@
 	general: exp1 = 0
 	general: exp2 = 8
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 3
 	ammo: secondary = 2
 
 [bebdfbab-1cc2-409c-a41c-666531627132]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Sniper_01
 	general: female = true
@@ -1368,27 +1104,25 @@
 	general: strength = 9
 	general: endurance = 9
 	general: sight = 9
-	general: exp1 = 0
+	general: exp1 = 12
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.VarmintRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 5
 	ammo: secondary = 2
 
 [a280c59e-c2c2-4383-84e5-b7fa711c2978]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Recon_01
 	general: female = false
@@ -1400,27 +1134,26 @@
 	general: strength = 9
 	general: endurance = 9
 	general: sight = 9
-	general: exp1 = 0
+	general: exp1 = 11
 	general: exp2 = 9
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	clothing: Hat = Base.Hat_BaseballCapArmy_Reverse
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.HuntingRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 2
 	ammo: secondary = 2
 
 [ff51f265-3653-4583-99c2-397bd0445aaf]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Assault_03
 	general: female = false
@@ -1432,27 +1165,26 @@
 	general: strength = 9
 	general: endurance = 9
 	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	general: exp1 = 2
+	general: exp2 = 9
+	general: exp3 = 12
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 5
 	ammo: secondary = 2
 
 [ef70e845-c16e-44ff-8ad8-69dbbc4ac75c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Assault_02
 	general: female = false
@@ -1464,59 +1196,26 @@
 	general: strength = 9
 	general: endurance = 9
 	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 12
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
-	ammo: primary = 5
-	ammo: secondary = 2
-
-[51120b64-6308-435b-9d6f-3db8806626b4]
-	general: modid = Bandits
-	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
-	general: name = Legionary_Assault_04
-	general: female = false
-	general: skin = 4
-	general: hairType = 32
-	general: beardType = 4
-	general: hairColor = 13
-	general: health = 9
-	general: strength = 9
-	general: endurance = 9
-	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
-	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
-	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
-	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
-	weapons: primary = Base.AssaultRifle
-	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 5
 	ammo: secondary = 2
 
 [a3303b56-9bbc-4292-9bd8-9b1eb32bbb9c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 49facd22-4067-4ebd-9196-9bf6951a435c
 	general: name = Legionary_Assault_01
 	general: female = false
@@ -1528,27 +1227,27 @@
 	general: strength = 9
 	general: endurance = 9
 	general: sight = 8
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 2
+	general: exp2 = 3
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_SWAT
+	clothing: Hat = Base.Hat_Army
 	clothing: MaskEyes = Base.Hat_GasMask
-	clothing: Boilersuit = Base.Boilersuit_SWAT
+	clothing: Boilersuit = Base.Boilersuit
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletOliveDrab
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Webbing = Base.Bag_ChestRig
-	clothing: BeltExtra = Base.HolsterSimple_Black
+	clothing: TorsoExtraVest = Base.Vest_BulletArmy
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Shoes = Base.Shoes_ArmyBoots
-	clothing: Socks = Base.Socks_Heavy
+	tint: Boilersuit = 3355443
+	tint: TankTop = 1710618
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.FightingKnife
+	weapons: melee = Base.HuntingKnife
 	ammo: primary = 5
 	ammo: secondary = 2
 
 [e22c9bf7-6151-4062-acad-3a375fe43b91]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_01
 	general: female = false
@@ -1566,11 +1265,12 @@
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_Black
 	clothing: Pants = Base.Trousers_Shellsuit_Black
-	clothing: Shoes = Base.Shoes_BlueTrainers
+	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Shoes = 11763916
 	weapons: melee = Base.BaseballBat
 
 [d4013998-0755-49bb-836c-baaa3c07a463]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_01
 	general: female = false
@@ -1592,7 +1292,7 @@
 	bag: name = Base.Bag_DuffelBag
 
 [b98fe0e9-27c4-4951-bf0c-ceebd39c9421]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_03
 	general: female = false
@@ -1610,11 +1310,12 @@
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_TINT
 	clothing: Pants = Base.Trousers_Shellsuit_TINT
-	clothing: Shoes = Base.Shoes_RedTrainers
+	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Shoes = 10059904
 	weapons: melee = Base.DumbBell
 
 [203d2184-d8e3-4cce-9fb2-f8d511c2efbf]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_04
 	general: female = true
@@ -1632,11 +1333,12 @@
 	clothing: Tshirt = Base.BoobTubeSmall
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_Pink
 	clothing: Pants = Base.Trousers_Shellsuit_Pink
-	clothing: Shoes = Base.Shoes_BlueTrainers
+	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Shoes = 16777215
 	weapons: melee = Base.Crowbar
 
 [c067e954-0cae-4337-aa76-e8d0f2e39221]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_05
 	general: female = true
@@ -1658,7 +1360,7 @@
 	weapons: melee = Base.MeatCleaver
 
 [355162d3-ce3a-44e8-bc77-da0e36f108ef]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_06
 	general: female = false
@@ -1680,7 +1382,7 @@
 	weapons: melee = Base.Machete
 
 [64eec485-4a40-4a28-a759-1c58b3183490]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_07
 	general: female = false
@@ -1696,12 +1398,15 @@
 	general: exp2 = 5
 	general: exp3 = 0
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_Green
-	clothing: Pants = Base.Trousers_Shellsuit_Green
+	clothing: Pants = Base.Trousers_Shellsuit_TINT
 	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Pants = 5085542
+	tint: Shoes = 16777215
+	weapons: melee = Base.DumbBell
 	bag: name = Base.Bag_MoneyBag
 
 [38af5592-dce1-4429-b8a5-26f16209d511]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f06e063f-551c-4fd5-aa19-bc15185c2371
 	general: name = Sport_08
 	general: female = false
@@ -1719,10 +1424,12 @@
 	clothing: Tshirt = Base.Tshirt_Sport
 	clothing: Pants = Base.Shorts_LongSport
 	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_RedTrainers
+	clothing: Shoes = Base.Shoes_TrainerTINT
+	tint: Socks = 16777215
+	tint: Shoes = 16777215
 
 [97245ae9-2131-4253-ba46-0f20ff796431]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_01
 	general: female = false
@@ -1740,15 +1447,15 @@
 	clothing: Hat = Base.Hat_BaseballCap
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Shirt = Base.Shirt_Lumberjack
-	clothing: Pants = Base.Shorts_LongDenim
-	clothing: Socks = Base.Socks_Ankle
+	clothing: Pants = Base.TrousersMesh_DenimLight
+	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: melee = Base.GardenFork
 	ammo: primary = 2
 
 [38f5107a-7120-46d6-bb18-6b32c97fc114]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_02
 	general: female = false
@@ -1767,18 +1474,17 @@
 	clothing: Shirt = Base.Shirt_Workman
 	clothing: Pants = Base.TrousersMesh_DenimLight
 	clothing: Socks = Base.Socks_Long
-	clothing: Shoes = Base.Shoes_Brown
 	weapons: secondary = Base.Revolver_Short
 	weapons: melee = Base.Shovel
 	ammo: secondary = 2
 
 [81c34a67-1ba6-4902-a5f9-337831743d15]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_03
 	general: female = false
 	general: skin = 2
-	general: hairType = 21
+	general: hairType = 10
 	general: beardType = 8
 	general: hairColor = 2
 	general: health = 1
@@ -1788,14 +1494,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Pants = Base.Trousers_Denim
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.Shovel2
 
 [91cb4517-d574-4432-a6a0-eed7da8ecfbf]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_04
 	general: female = false
@@ -1812,15 +1517,14 @@
 	general: exp3 = 0
 	clothing: Shirt = Base.Shirt_Denim
 	clothing: Sweater = Base.Jumper_TankTopDiamondTINT
-	clothing: Pants = Base.Shorts_LongDenim
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_Black
+	clothing: Pants = Base.Trousers_Denim
+	clothing: Shoes = Base.Shoes_Brown
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: melee = Base.GardenFork
 	ammo: primary = 1
 
 [f9f6dc37-cd4f-4e91-b210-4b8b770b40cf]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_05
 	general: female = false
@@ -1838,12 +1542,11 @@
 	clothing: Hat = Base.Hat_BaseballCapKY_Red
 	clothing: Shirt = Base.Shirt_Lumberjack
 	clothing: Pants = Base.Trousers_Denim
-	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.HandAxe
 
 [b756023c-5f58-44e9-bab5-f52851d74185]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_06
 	general: female = false
@@ -1858,14 +1561,14 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Shirt = Base.Shirt_Denim
-	clothing: Pants = Base.TrousersMesh_DenimLight
-	clothing: Socks = Base.Socks_Ankle
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Pants = Base.Trousers_Denim
 	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: TankTop = 3355443
 	weapons: melee = Base.HandScythe
 
 [cabf87bb-79b8-4a13-98d7-951e14e6ebab]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_07
 	general: female = false
@@ -1880,16 +1583,15 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Shirt = Base.Shirt_Lumberjack
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Pants = Base.Trousers
-	clothing: Socks = Base.Socks_Long
-	clothing: Shoes = Base.Shoes_BlackBoots
+	clothing: Shoes = Base.Shoes_Black
 	weapons: secondary = Base.Revolver
 	weapons: melee = Base.GuitarAcoustic
 	ammo: secondary = 1
 
 [a6a1fffc-e5f5-42a6-b6ef-34594fd5284f]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_08
 	general: female = false
@@ -1913,7 +1615,7 @@
 	bag: name = Base.Bag_Schoolbag
 
 [e08aa737-72d2-4e2e-aef0-dc6bd354420d]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_09
 	general: female = true
@@ -1929,15 +1631,14 @@
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Shirt = Base.Shirt_Lumberjack
-	clothing: Pants = Base.TrousersMesh_DenimLight
-	clothing: Socks = Base.Socks_Ankle
+	clothing: Pants = Base.Shorts_LongDenim
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: secondary = Base.Revolver_Short
 	weapons: melee = Base.MeatCleaver
 	ammo: secondary = 1
 
 [f97f2ee4-9e9a-43b0-b53f-e3f18c0f1da7]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_10
 	general: female = true
@@ -1952,15 +1653,14 @@
 	general: exp1 = 1
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Shirt = Base.Shirt_Lumberjack
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL
 	clothing: Pants = Base.Trousers_Denim
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: secondary = Base.Revolver_Long
 	ammo: secondary = 1
 
 [38fdbefe-25e2-4e31-b354-004b92846609]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_11
 	general: female = true
@@ -1970,21 +1670,20 @@
 	general: hairColor = 3
 	general: health = 1
 	general: strength = 5
-	general: endurance = 6
+	general: endurance = 5
 	general: sight = 2
 	general: exp1 = 8
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Cowboy
 	clothing: Shirt = Base.Shirt_Lumberjack
-	clothing: Skirt = Base.Skirt_Knees
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_Black
+	clothing: Pants = Base.TrousersMesh_DenimLight
+	clothing: Shoes = Base.Shoes_Brown
 	weapons: secondary = Base.Revolver
 	ammo: secondary = 1
 
 [6cd71bd0-3e1b-4078-b784-999190e01610]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f6e2ca8c-311e-4ee2-9fe6-1c9e14dbcd11
 	general: name = Redneck_12
 	general: female = true
@@ -2000,7 +1699,7 @@
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapRed
-	clothing: Shirt = Base.Shirt_Denim
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
 	clothing: Pants = Base.TrousersMesh_DenimLight
 	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_Brown
@@ -2008,12 +1707,12 @@
 	bag: name = Base.Bag_Schoolbag
 
 [c3c606c3-1aba-4baf-923f-a762977e543e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 0dfc13d3-4ce6-4af8-aac6-326eb7514c36
 	general: name = Karate01
 	general: female = false
 	general: skin = 1
-	general: hairType = 27
+	general: hairType = 32
 	general: beardType = 1
 	general: hairColor = 7
 	general: health = 5
@@ -2023,33 +1722,15 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_BandanaTied
+	clothing: Hat = Base.Hat_BandanaTiedTINT
 	clothing: Jacket = Base.Jacket_Chef
-	clothing: Pants = Base.Trousers_SuitWhite_White
-	weapons: melee = Base.BareHands
-
-[3af549b6-bf5d-48e1-bfe3-86b06a1e723c]
-	general: modid = Bandits
-	general: cid = 0dfc13d3-4ce6-4af8-aac6-326eb7514c36
-	general: name = Karate02
-	general: female = false
-	general: skin = 1
-	general: hairType = 34
-	general: beardType = 9
-	general: hairColor = 2
-	general: health = 5
-	general: strength = 5
-	general: endurance = 5
-	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_LeatherStripTied
-	clothing: Pants = Base.Trousers_SuitWhite_White
+	clothing: Pants = Base.Trousers_WhiteTINT
+	tint: Hat = 3355443
+	tint: Pants = 16777215
 	weapons: melee = Base.BareHands
 
 [9be6c882-f3d8-4f45-843a-bdc1b18589a6]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 2681ecf5-d0d9-481d-b769-7c4fb626eb81
 	general: name = Apprentice_03
 	general: female = false
@@ -2064,15 +1745,18 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
-	clothing: BathRobe = Base.BlackRobe
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
-	clothing: Shoes = Base.Shoes_CowboyBoots_Black
-	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: Pants = Base.Trousers_Suit
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
+	tint: Shirt = 3355443
+	tint: Socks = 3355443
 	weapons: melee = Base.Katana
 
 [48fe3de2-320e-48e1-af7c-ae64fd9bca0e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a2dec2f0-c76d-4640-8a71-733a547a1ebc
 	general: name = ArmyDesert_Assault_05
 	general: female = false
@@ -2087,28 +1771,21 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: Hat = Base.Hat_ArmyDesert
 	clothing: Eyes = Base.Glasses_SafetyGoggles
-	clothing: Necklace = Base.Necklace_DogTag_Male
 	clothing: Tshirt = Base.Tshirt_CamoDesert
 	clothing: Jacket = Base.Jacket_ArmyCamoDesert
-	clothing: TorsoExtraVestBullet = Base.Vest_BulletDesert
 	clothing: UnderwearBottom = Base.Briefs_White
-	clothing: Hands = Base.Gloves_LeatherGlovesBrown
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Pants = Base.Trousers_CamoDesert
-	clothing: Socks = Base.Socks_Long_White
 	clothing: Shoes = Base.Shoes_ArmyBootsDesert
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Machete
 	ammo: primary = 4
 	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_DesertCamo
 
 [8c055a23-c820-4452-8b52-e305116caaa3]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_05
 	general: female = false
@@ -2123,13 +1800,13 @@
 	general: exp1 = 11
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
+	tint: Dress = 10066329
 	weapons: melee = Base.AxeStone
-	bag: name = Base.Bag_ClothSatchel_Burlap
 
 [c9245395-f325-47ad-aecb-4c3932e41294]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = a5def10b-bab9-46b1-8e8c-d5152c86457e
 	general: name = Hermit_06
 	general: female = false
@@ -2144,13 +1821,12 @@
 	general: exp1 = 12
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: LongDress = Base.Dress_Long_Crafted_Burlap
+	clothing: Dress = Base.Dress_Long
 	clothing: Shoes = Base.Shoes_Sandals
-	weapons: melee = Base.SpearLargeKnife
-	bag: name = Base.Bag_CrudeLeatherBag
+	tint: Dress = 10066329
 
 [09f3f5e5-394f-4ba2-84b4-990d3b1832a7]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = fe1a8e07-7c73-466d-9ade-2e3e565dcb21
 	general: name = Trash_01
 	general: female = false
@@ -2166,23 +1842,14 @@
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Beany
-	clothing: TankTop = Base.Vest_Garbage
-	clothing: Jacket_Down = Base.PonchoGarbageBagDOWN
-	clothing: ForeArm_Right = Base.VambraceMagazine_Right
-	clothing: ForeArm_Left = Base.VambraceMagazine_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Pants = Base.Trousers_CamoUrban
-	clothing: Thigh_Right = Base.ThighMagazine_R
-	clothing: Thigh_Left = Base.ThighMagazine_L
-	clothing: Calf_Right = Base.GreaveMagazine_Right
-	clothing: Calf_Left = Base.GreaveMagazine_Left
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
-	weapons: melee = Base.Axe_Sawblade
-	bag: name = Base.Bag_SheetSlingBag
+	tint: Hat = 6710886
+	weapons: melee = Base.HammerStone
 
 [37a8e6e4-52c2-4995-ab5f-25cd7c7be1b9]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = fe1a8e07-7c73-466d-9ade-2e3e565dcb21
 	general: name = Trash_02
 	general: female = false
@@ -2197,22 +1864,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: TankTop = Base.Vest_Garbage
-	clothing: ForeArm_Right = Base.VambraceMagazine_Right
-	clothing: ForeArm_Left = Base.VambraceMagazine_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Pants = Base.Trousers_CamoUrban
-	clothing: Thigh_Right = Base.ThighMagazine_R
-	clothing: Thigh_Left = Base.ThighMagazine_L
-	clothing: Calf_Right = Base.GreaveMagazine_Right
-	clothing: Calf_Left = Base.GreaveMagazine_Left
-	clothing: Socks = Base.Socks_Ankle_Black
 	clothing: Shoes = Base.Shoes_Black
-	weapons: melee = Base.Axe_ScrapCleaver
-	bag: name = Base.Bag_SheetSlingBag
+	weapons: melee = Base.AxeStone
 
 [a1412dd1-1b49-49eb-ab4e-196d4cb7dd77]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = fe1a8e07-7c73-466d-9ade-2e3e565dcb21
 	general: name = Trash_03
 	general: female = false
@@ -2227,23 +1885,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: TankTop = Base.Vest_Garbage
 	clothing: Shirt = Base.Shirt_CamoUrban
-	clothing: ForeArm_Right = Base.VambraceMagazine_Right
-	clothing: ForeArm_Left = Base.VambraceMagazine_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
 	clothing: Pants = Base.Trousers_Shellsuit_Black
-	clothing: Thigh_Right = Base.ThighMagazine_R
-	clothing: Thigh_Left = Base.ThighMagazine_L
-	clothing: Calf_Right = Base.GreaveMagazine_Right
-	clothing: Calf_Left = Base.GreaveMagazine_Left
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
-	weapons: melee = Base.Axe_Sawblade
-	bag: name = Base.Bag_SheetSlingBag
+	weapons: melee = Base.FlintKnife
 
 [f9507df6-f83b-4e6e-8950-2f60564a188c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = fe1a8e07-7c73-466d-9ade-2e3e565dcb21
 	general: name = Trash_04
 	general: female = true
@@ -2258,23 +1906,14 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	clothing: TankTop = Base.Vest_Garbage
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: ForeArm_Right = Base.VambraceMagazine_Right
-	clothing: ForeArm_Left = Base.VambraceMagazine_Left
-	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Pants = Base.Trousers_Shellsuit_Black
-	clothing: Thigh_Right = Base.ThighMagazine_R
-	clothing: Thigh_Left = Base.ThighMagazine_L
-	clothing: Calf_Right = Base.GreaveMagazine_Right
-	clothing: Calf_Left = Base.GreaveMagazine_Left
 	clothing: Shoes = Base.Shoes_Black
-	clothing: Socks = Base.Socks_Ankle_Black
-	weapons: melee = Base.BaseballBat_Metal_Bolts
-	bag: name = Base.Bag_SheetSlingBag
+	tint: TankTop = 13421772
+	weapons: melee = Base.AxeStone
 
 [4d660e5f-7508-4d3a-8f99-03d4d14de960]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_10
 	general: female = false
@@ -2291,7 +1930,9 @@
 	general: exp3 = 0
 	clothing: Tshirt = Base.Tshirt_DefaultTEXTURE
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_Black
 	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_ArmyBoots
@@ -2302,7 +1943,7 @@
 	ammo: secondary = 2
 
 [7621ae38-71a1-4ceb-902f-0a0199db009b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_09
 	general: female = false
@@ -2320,8 +1961,10 @@
 	clothing: Hat = Base.Hat_BeretArmy
 	clothing: Tshirt = Base.Tshirt_CamoUrban
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
-	clothing: Pants = Base.Trousers_Denim
+	clothing: BeltExtra = Base.HolsterSimple
+	clothing: Pants = Base.Trousers_Suit
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes2
 	weapons: primary = Base.AssaultRifle2
@@ -2331,7 +1974,7 @@
 	ammo: secondary = 2
 
 [c5b5ef8c-d76d-40e9-8a83-9c0143d66b9c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_08
 	general: female = false
@@ -2346,23 +1989,21 @@
 	general: exp1 = 7
 	general: exp2 = 10
 	general: exp3 = 0
-	clothing: Mask = Base.Hat_BandanaMask
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Shirt = Base.Shirt_Denim
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
-	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_Denim
 	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Pants = 6710886
 	weapons: primary = Base.AssaultRifle2
 	weapons: secondary = Base.Revolver
-	weapons: melee = Base.IronBar
 	ammo: primary = 2
 	ammo: secondary = 2
-	bag: name = Base.Bag_HideSlingBag
 
 [a947c280-eaa6-4625-9e35-22f6499c1bed]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_07
 	general: female = false
@@ -2382,9 +2023,11 @@
 	clothing: Jacket = Base.Jacket_Black
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalRed
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_CamoGreen
 	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_Black
+	tint: Mask = 5069133
 	weapons: primary = Base.AssaultRifle
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.BaseballBatNails
@@ -2393,7 +2036,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [f7d0e294-2da4-4d07-8e58-22fecbface66]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_06
 	general: female = false
@@ -2410,10 +2053,12 @@
 	general: exp3 = 10
 	clothing: Mask = Base.Hat_BalaclavaFull
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
-	clothing: Jacket = Base.Jacket_ArmyCamoGreen
-	clothing: TorsoExtraVest = Base.Vest_BulletArmy
-	clothing: Pants = Base.Trousers_Black
+	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: BeltExtra = Base.HolsterSimple
+	clothing: Pants = Base.Trousers_CamoGreen
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Mask = 5069133
+	tint: Hands = 19738
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver_Short
 	weapons: melee = Base.HandAxe
@@ -2421,7 +2066,7 @@
 	ammo: secondary = 2
 
 [7bb12c67-65bc-4fd9-9bf9-6b2e9bede2b4]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_05
 	general: female = false
@@ -2438,8 +2083,10 @@
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_CamoGreen
-	clothing: TorsoExtraVest = Base.Vest_BulletArmy
-	clothing: Pants = Base.Trousers_DefaultTEXTURE
+	clothing: Jacket = Base.Jacket_Black
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: BeltExtra = Base.HolsterSimple
+	clothing: Pants = Base.Trousers_CamoGreen
 	clothing: Socks = Base.Socks_Long
 	clothing: Shoes = Base.Shoes_Black
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace1
@@ -2451,7 +2098,7 @@
 	bag: name = Base.Bag_Military
 
 [6d417516-00c0-4183-a92c-2d2851fb107d]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_04
 	general: female = false
@@ -2469,12 +2116,14 @@
 	clothing: Hat = Base.Hat_BaseballCapArmy_Reverse
 	clothing: Mask = Base.Hat_BandanaMask
 	clothing: Eyes = Base.Glasses_Aviators
-	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
-	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
-	clothing: Hands = Base.Gloves_LeatherGloves
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
+	clothing: Jacket = Base.Jacket_ArmyCamoGreen
+	clothing: Hands = Base.Gloves_FingerlessGloves
 	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Hands = 19738
 	weapons: primary = Base.HuntingRifle
 	weapons: secondary = Base.Revolver_Long
 	ammo: primary = 2
@@ -2482,7 +2131,7 @@
 	bag: name = Base.Bag_Satchel
 
 [752dffdc-ae30-416b-a560-6545112c3820]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_03
 	general: female = false
@@ -2500,15 +2149,14 @@
 	clothing: Mask = Base.Hat_BalaclavaFace
 	clothing: Eyes = Base.Glasses_Shooting
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
-	clothing: Jacket = Base.Jacket_ArmyCamoGreen
-	clothing: Hands = Base.Gloves_LeatherGloves
 	clothing: RightWrist = Base.Bracelet_ChainRightGold
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
 	clothing: FannyPackBack = Base.Bag_FannyPackBack
-	clothing: Pants = Base.Trousers_JeanBaggy
-	clothing: Socks = Base.Socks_Ankle
+	clothing: BeltExtra = Base.HolsterSimple
+	clothing: Pants = Base.Trousers_CamoGreen
 	clothing: Shoes = Base.Shoes_Black
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace2
+	tint: Mask = 3355443
 	weapons: primary = Base.HuntingRifle
 	weapons: secondary = Base.Pistol
 	weapons: melee = Base.HuntingKnife
@@ -2517,7 +2165,7 @@
 	bag: name = Base.Bag_Military
 
 [63f30778-b84b-4b9b-ae8d-b166cd34322b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 6e147770-2d41-4fd2-ab7d-05a8acf4157b
 	general: name = PrivateMilitia_01
 	general: female = false
@@ -2538,9 +2186,10 @@
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicMilitary
+	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_Black
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Mask = 3355443
 	weapons: primary = Base.AssaultRifle2
 	weapons: secondary = Base.Pistol3
 	weapons: melee = Base.BaseballBatNails
@@ -2549,7 +2198,7 @@
 	bag: name = Base.Bag_ALICEpack
 
 [47e06602-9bc5-4a53-8a09-1b06a474791b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_01
 	general: female = false
@@ -2569,14 +2218,13 @@
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol3
 	weapons: melee = Base.HuntingKnife
 	ammo: secondary = 2
 
 [ddf1ed6d-573c-4c19-90fa-f0a57a15f468]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_02
 	general: female = false
@@ -2593,18 +2241,18 @@
 	general: exp3 = 10
 	clothing: Eyes = Base.Glasses_Aviators
 	clothing: Shirt = Base.Shirt_FormalWhite
+	clothing: Jacket = Base.Jacket_WhiteTINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Jacket = 3355443
 	weapons: primary = Base.VarmintRifle
 	weapons: secondary = Base.Pistol3
-	weapons: melee = Base.Machete
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [8a700409-f6f4-4a66-8498-c920b5d0904e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_03
 	general: female = false
@@ -2624,7 +2272,6 @@
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: primary = Base.DoubleBarrelShotgun
 	weapons: secondary = Base.Pistol3
@@ -2633,7 +2280,7 @@
 	ammo: secondary = 2
 
 [c2333f91-a82d-4475-9360-526003d99e9b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_04
 	general: female = false
@@ -2652,14 +2299,13 @@
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol3
 	weapons: melee = Base.HuntingKnife
 	ammo: secondary = 2
 
 [621d4c5a-6ed5-4e8e-8ec4-b72f94686fd5]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_05
 	general: female = false
@@ -2680,14 +2326,13 @@
 	clothing: JacketSuit = Base.Suit_Jacket
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol3
 	weapons: melee = Base.Katana
 	ammo: secondary = 2
 
 [cfc52f05-14c2-4cfb-9749-1180ecf623b8]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_06
 	general: female = false
@@ -2708,13 +2353,12 @@
 	clothing: JacketSuit = Base.Suit_Jacket
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol3
 	ammo: secondary = 2
 
 [91d5fa1f-18ab-4db0-ac91-507c178d23cc]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_07
 	general: female = false
@@ -2742,7 +2386,7 @@
 	ammo: secondary = 2
 
 [522f3aa3-4be8-48e4-bffc-923d3fc310ad]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
 	general: name = Mafia_08
 	general: female = false
@@ -2762,14 +2406,13 @@
 	clothing: ShortSleeveShirt = Base.Shirt_FormalWhite_ShortSleeve
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_Suit
-	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol3
-	weapons: melee = Base.Machete
+	weapons: melee = Base.BareHands
 	ammo: secondary = 2
 
 [c40999a1-6624-43e7-a248-80e5a70e6432]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_01
 	general: female = false
@@ -2785,21 +2428,19 @@
 	general: exp2 = 12
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BandanaMask
-	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: Jacket = Base.Jacket_LeatherBarrelDogs
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Crow
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol3
-	weapons: melee = Base.BaseballBat_Metal
+	weapons: melee = Base.BaseballBatNails
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [aac94c8a-d922-4764-8e5e-827f35873895]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_02
 	general: female = false
@@ -2815,11 +2456,12 @@
 	general: exp2 = 7
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BandanaMaskTINT
-	clothing: TankTop = Base.Vest_DefaultTEXTURE
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
+	tint: TankTop = 1710618
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol3
 	weapons: melee = Base.BaseballBatNails
@@ -2827,7 +2469,7 @@
 	ammo: secondary = 2
 
 [a36854d1-8852-44cb-8efb-be6823619e8e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_03
 	general: female = false
@@ -2843,18 +2485,20 @@
 	general: exp2 = 3
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BandanaMaskTINT
-	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Shirt = Base.Shirt_FormalTINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
+	tint: Shirt = 3355443
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Pistol
+	weapons: melee = Base.BaseballBatNails
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [b5039f4c-9397-4dc0-b147-c12192803724]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_04
 	general: female = false
@@ -2869,18 +2513,20 @@
 	general: exp1 = 2
 	general: exp2 = 12
 	general: exp3 = 0
-	clothing: Tshirt = Base.Tshirt_Rock
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
+	clothing: Jacket = Base.Jacket_LeatherIronRodent
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_BraveHeart
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: secondary = Base.Pistol
+	weapons: melee = Base.BaseballBat
 	ammo: primary = 2
 	ammo: secondary = 2
 
 [45995e6c-c727-4c66-88c9-af5c170b17a5]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_05
 	general: female = false
@@ -2895,21 +2541,18 @@
 	general: exp1 = 2
 	general: exp2 = 12
 	general: exp3 = 0
-	clothing: Neck = Base.ShemaghScarfFace
-	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: Jacket = Base.Jacket_LeatherIronRodent
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver
-	weapons: melee = Base.BaseballBat_Nails
+	weapons: melee = Base.BaseballBatNails
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [1fa314d3-fe49-4903-8854-27581ebd83bf]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_06
 	general: female = false
@@ -2924,22 +2567,19 @@
 	general: exp1 = 2
 	general: exp2 = 12
 	general: exp3 = 0
-	clothing: Neck = Base.ShemaghScarfFace
-	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: Jacket = Base.Jacket_LeatherWildRacoons
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Football
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver_Long
-	weapons: melee = Base.BaseballBat_RakeHead
+	weapons: melee = Base.BaseballBat
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [c553f42e-49a1-4d25-a62b-e6e538117d31]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_09
 	general: female = true
@@ -2954,21 +2594,17 @@
 	general: exp1 = 2
 	general: exp2 = 8
 	general: exp3 = 0
-	clothing: Neck = Base.ShemaghScarfFace
-	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: Jacket = Base.Jacket_LeatherWildRacoons
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes1
 	weapons: secondary = Base.Pistol3
-	weapons: melee = Base.BaseballBat_RakeHead
+	weapons: melee = Base.BallPeenHammer
 	ammo: secondary = 2
-	bag: name = Base.Bag_ClothSatchel_DenimBlack
 
 [695a4ca9-78e4-4bf1-a635-9498283fab33]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_10
 	general: female = true
@@ -2989,13 +2625,15 @@
 	clothing: Skirt = Base.Skirt_Mini
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Football
+	tint: Skirt = 3355443
 	weapons: primary = Base.HuntingRifle
 	weapons: secondary = Base.Pistol3
+	weapons: melee = Base.Crowbar
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [1bff031b-921c-47af-8889-84d7698cbf90]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_07
 	general: female = false
@@ -3010,18 +2648,19 @@
 	general: exp1 = 2
 	general: exp2 = 11
 	general: exp3 = 0
-	clothing: Tshirt = Base.Tshirt_Rock
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Football
+	tint: Tshirt = 3355443
 	weapons: primary = Base.Shotgun
 	weapons: secondary = Base.Revolver_Long
 	ammo: primary = 1
 	ammo: secondary = 2
 
 [ea0ee781-ab42-4734-8371-26fab5169eeb]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
 	general: name = Leather_08
 	general: female = false
@@ -3036,16 +2675,17 @@
 	general: exp1 = 2
 	general: exp2 = 11
 	general: exp3 = 0
-	clothing: Tshirt = Base.Tshirt_Rock
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Football
+	tint: Tshirt = 3355443
 	weapons: secondary = Base.Revolver_Long
 	ammo: secondary = 2
 
 [63c03733-6df5-4cd9-ab66-fd2027f22fe1]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_01
 	general: female = false
@@ -3074,7 +2714,7 @@
 	ammo: secondary = 2
 
 [430b1db9-8ae9-439b-a20d-a32587799821]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_02
 	general: female = false
@@ -3103,7 +2743,7 @@
 	ammo: secondary = 2
 
 [28442598-0187-43ec-8e55-fdf8bcb53e61]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_03
 	general: female = false
@@ -3125,13 +2765,14 @@
 	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: SweaterHat = 3355443
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Crowbar
 	ammo: secondary = 1
 	bag: name = Base.Bag_NormalHikingBag
 
 [f13ade7e-b25e-426e-a59f-79d26baa7e79]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_04
 	general: female = false
@@ -3147,7 +2788,7 @@
 	general: exp2 = 7
 	general: exp3 = 0
 	clothing: Necklace = Base.Necklace_Gold
-	clothing: ShortSleeveShirt = Base.Shirt_HawaiianRed
+	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
 	clothing: BeltExtra = Base.HolsterSimple
 	clothing: Pants = Base.Trousers_JeanBaggy
@@ -3158,7 +2799,7 @@
 	bag: name = Base.Bag_NormalHikingBag
 
 [dc6ac9e7-cd80-4431-ae25-dda6c7565626]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_05
 	general: female = false
@@ -3181,13 +2822,15 @@
 	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: Hat = 3355443
+	tint: Sweater = 3355443
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.Axe
 	ammo: secondary = 2
 	bag: name = Base.Bag_NormalHikingBag
 
 [9ef82a51-4aab-4ea8-a6c7-d791af501b6a]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_06
 	general: female = false
@@ -3210,6 +2853,8 @@
 	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: Hat = 10066329
+	tint: Sweater = 6710886
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.HandAxe
@@ -3217,7 +2862,7 @@
 	ammo: secondary = 2
 
 [11dde25a-127e-420d-9660-3d88cdc465a4]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_07
 	general: female = true
@@ -3240,6 +2885,8 @@
 	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: Hat = 8408371
+	tint: Sweater = 8408371
 	weapons: primary = Base.DoubleBarrelShotgunSawnoff
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.HuntingKnife
@@ -3247,7 +2894,7 @@
 	ammo: secondary = 2
 
 [7bc7668d-aa75-4ea7-a645-2086417af405]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_08
 	general: female = true
@@ -3269,12 +2916,13 @@
 	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: SweaterHat = 1710618
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.HuntingKnife
 	ammo: secondary = 2
 
 [baed2738-7e05-493d-9682-d66fb3debca4]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_09
 	general: female = false
@@ -3291,19 +2939,19 @@
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapBlue_Reverse
 	clothing: Necklace = Base.Necklace_Gold
-	clothing: Tshirt = Base.Tshirt_DefaultDECAL
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
-	clothing: FannyPackFront = Base.Bag_FannyPackFront
 	clothing: BeltExtra = Base.HolsterSimple
-	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Pants = Base.Trousers_JeanBaggy
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: TankTop = 3355443
 	weapons: secondary = Base.Pistol2
 	ammo: secondary = 2
 	bag: name = Base.Bag_NormalHikingBag
 
 [ece684a7-d8a8-4115-84ce-65f4f7da719c]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 1eb2f74a-8d09-4346-8ba4-3a02665647e5
 	general: name = Criminal_10
 	general: female = false
@@ -3326,12 +2974,14 @@
 	clothing: Pants = Base.Shorts_CamoUrbanLong
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
+	tint: Sweater = 1723776
+	tint: Socks = 8408371
 	weapons: secondary = Base.Pistol2
 	ammo: secondary = 2
 	bag: name = Base.Bag_NormalHikingBag
 
 [b629d22e-d5db-4b96-94c8-1fa8b2616534]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_01
 	general: female = false
@@ -3350,9 +3000,7 @@
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Shirt = Base.Shirt_CamoGreen
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Grey
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace1
 	weapons: primary = Base.HuntingRifle
@@ -3363,7 +3011,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [75365390-d169-4f1e-9820-360ada990c7e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_02
 	general: female = false
@@ -3380,11 +3028,8 @@
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_CamoStripes
 	weapons: primary = Base.HuntingRifle
@@ -3395,7 +3040,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [3e59c52a-1741-4b6c-aa67-bec4e413b499]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_03
 	general: female = false
@@ -3413,9 +3058,7 @@
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace2
 	weapons: primary = Base.HuntingRifle
@@ -3426,7 +3069,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [93853543-7ae0-4745-ae56-46c81b77bd13]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_04
 	general: female = false
@@ -3445,9 +3088,7 @@
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Shirt = Base.Shirt_CamoGreen
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Grey
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_Eyes = Base.MakeUp_Football
 	weapons: primary = Base.HuntingRifle
@@ -3458,7 +3099,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [915ba017-eeed-4cf1-90d9-c03a1f912b87]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_05
 	general: female = false
@@ -3475,11 +3116,8 @@
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapArmy_Reverse
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
-	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
 	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace1
 	weapons: primary = Base.HuntingRifle
@@ -3490,7 +3128,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [107c0de2-d96b-4cab-97a4-a819818a287f]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = f9e0dc17-95a0-4cb9-97f1-b04bfc448c96
 	general: name = Hunter_06
 	general: female = false
@@ -3508,9 +3146,7 @@
 	clothing: Hat = Base.Hat_BaseballCapArmy
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
-	clothing: BeltExtra = Base.HolsterSimple_Black
 	clothing: Pants = Base.Trousers_CamoGreen
-	clothing: Socks = Base.Socks_Long_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: MakeUp_FullFace = Base.MakeUp_CamoFullFace2
 	weapons: primary = Base.HuntingRifle
@@ -3521,7 +3157,7 @@
 	bag: name = Base.Bag_ALICEpack_Army
 
 [329ae89c-6f32-4f2c-9378-90b2cc48315e]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_02
 	general: female = false
@@ -3544,7 +3180,7 @@
 	weapons: melee = Base.BaseballBat
 
 [ecb7a41b-5c6d-4654-baa8-62a72b31f978]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_03
 	general: female = false
@@ -3567,7 +3203,7 @@
 	weapons: melee = Base.BaseballBatNails
 
 [9a977bec-d8f8-4516-88b7-8448f0840f82]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_04
 	general: female = false
@@ -3590,7 +3226,7 @@
 	weapons: melee = Base.BaseballBatNails
 
 [8fbcfaf6-1f69-48a6-a944-e7a280e3389b]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_05
 	general: female = false
@@ -3611,7 +3247,7 @@
 	clothing: Shoes = Base.Shoes_RedTrainers
 
 [a1607dbd-2f1a-4837-ba4f-8af7c2f11975]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_06
 	general: female = false
@@ -3634,39 +3270,34 @@
 	weapons: melee = Base.BaseballBatNails
 
 [fd058603-7aea-49ed-8bc0-412ed25cd3b9]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Blood_Drinker
+	general: name = Blood_01
 	general: female = false
 	general: skin = 1
 	general: hairType = 27
 	general: beardType = 1
-	general: hairColor = 12
+	general: hairColor = 19
 	general: health = 4
 	general: strength = 5
 	general: endurance = 8
 	general: sight = 9
 	general: exp1 = 1
 	general: exp2 = 9
-	general: exp3 = 12
-	clothing: Ears = Base.Earring_BirdSkull
-	clothing: MaskEyes = Base.Hat_BoneMask
-	clothing: Necklace = Base.Necklace_Teeth
-	clothing: Gorget = Base.Necklace_Choker_Bone
-	clothing: Tshirt = Base.Bandeau_Hide
-	clothing: ForeArm_Right = Base.VambraceBone_Right
-	clothing: ForeArm_Left = Base.VambraceBone_Left
-	clothing: Hands = Base.Gloves_LeatherWrap
-	clothing: Pants = Base.Trousers_Hide
-	clothing: Calf_Right = Base.GreaveBone_Right
-	clothing: Calf_Left = Base.GreaveBone_Left
-	clothing: Shoes = Base.Shoes_LeatherWrap
-	weapons: melee = Base.SharpBone_Long
+	general: exp3 = 10
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Pants = Base.Trousers_WhiteTINT
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: TankTop = 3355443
+	tint: Pants = 13369344
+	weapons: melee = Base.MeatCleaver
+	bag: name = Base.Bag_DuffelBagTINT
 
 [b51839bf-e966-475e-8359-fd819c52bb80]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Bone_Crusher
+	general: name = Blood_02
 	general: female = false
 	general: skin = 1
 	general: hairType = 37
@@ -3679,127 +3310,18 @@
 	general: exp1 = 2
 	general: exp2 = 13
 	general: exp3 = 6
-	clothing: Ears = Base.Earring_BoarTusk
-	clothing: MaskEyes = Base.Hat_HockeyMask_MetalScrap
-	clothing: Necklace = Base.Necklace_SkullSmall_Multi
-	clothing: Gorget = Base.Necklace_Choker_Bone
-	clothing: UnderwearBottom = Base.Briefs_Hide
-	clothing: ShoulderpadRight = Base.Shoulderpad_Bone_R
-	clothing: ShoulderpadLeft = Base.Shoulderpad_Bone_L
-	clothing: ForeArm_Right = Base.VambraceBone_Right
-	clothing: ForeArm_Left = Base.VambraceBone_Left
-	clothing: Hands = Base.Gloves_BoneGloves
-	clothing: Pants = Base.Trousers_Hide
-	clothing: Thigh_Right = Base.ThighBone_R
-	clothing: Thigh_Left = Base.ThighBone_L
-	clothing: Calf_Right = Base.GreaveBone_Right
-	clothing: Calf_Left = Base.GreaveBone_Left
-	weapons: melee = Base.BlockMaul
-
-[5cf6c33b-d119-433f-89ea-c03dc8aafa92]
-	general: modid = Bandits
-	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Flesher
-	general: female = false
-	general: skin = 1
-	general: hairType = 1
-	general: beardType = 10
-	general: hairColor = 12
-	general: health = 7
-	general: strength = 6
-	general: endurance = 6
-	general: sight = 3
-	general: exp1 = 4
-	general: exp2 = 8
-	general: exp3 = 6
-	clothing: Necklace = Base.Necklace_BoarTusk_Multi
-	clothing: TorsoExtra = Base.Apron_Hide
-	clothing: Pants = Base.Trousers_Hide
-	clothing: Shoes = Base.Shoes_CrudeLeatherFootwear
-	weapons: melee = Base.Axe_ScrapCleaver
-	bag: name = Base.Bag_HideSlingBag
-
-[52ef632e-9688-4eee-99a9-a8abbe8017ec]
-	general: modid = Bandits
-	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Hidden_Fang
-	general: female = false
-	general: skin = 1
-	general: hairType = 15
-	general: beardType = 1
-	general: hairColor = 12
-	general: health = 4
-	general: strength = 5
-	general: endurance = 5
-	general: sight = 7
-	general: exp1 = 14
-	general: exp2 = 6
-	general: exp3 = 3
-	clothing: Necklace = Base.Necklace_BoarTusk
-	clothing: Tshirt = Base.Tshirt_BluesCountry
-	clothing: Jacket = Base.Jacket_LeatherIronRodent
-	clothing: UnderwearBottom = Base.Briefs_Hide
-	clothing: Pants = Base.TrousersMesh_DenimLight
-	clothing: Socks = Base.Socks_Long_Black
-	clothing: Shoes = Base.Shoes_BlackBoots
-	weapons: melee = Base.HuntingKnife
-	bag: name = Base.Bag_CrudeLeatherBag
-
-[f47ded47-b927-4ac9-94ee-dabe6da34e5e]
-	general: modid = Bandits
-	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Proven
-	general: female = false
-	general: skin = 1
-	general: hairType = 24
-	general: beardType = 1
-	general: hairColor = 12
-	general: health = 6
-	general: strength = 7
-	general: endurance = 6
-	general: sight = 4
-	general: exp1 = 11
-	general: exp2 = 6
-	general: exp3 = 10
-	clothing: Necklace = Base.Necklace_BoarTusk
-	clothing: Gorget = Base.Necklace_Choker_Bone
-	clothing: TankTop = Base.Vest_Hide
-	clothing: ShoulderpadRight = Base.Shoulderpad_Bone_R
-	clothing: ForeArm_Right = Base.VambraceBone_Right
-	clothing: ForeArm_Left = Base.VambraceBone_Left
-	clothing: Pants = Base.Trousers_Hide
-	clothing: Thigh_Right = Base.ThighBone_R
-	clothing: Thigh_Left = Base.ThighBone_L
-	clothing: Calf_Right = Base.GreaveBone_Right
-	clothing: Calf_Left = Base.GreaveBone_Left
-	clothing: Shoes = Base.Shoes_HideBoots
-	weapons: melee = Base.BoneClub_Spiked
-	bag: name = Base.Bag_HideSatchel
-
-[364f91f8-ee65-4a6a-ae69-3ab17fda5c21]
-	general: modid = Bandits
-	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
-	general: name = Unproven
-	general: female = false
-	general: skin = 1
-	general: hairType = 1
-	general: beardType = 1
-	general: hairColor = 1
-	general: health = 6
-	general: strength = 6
-	general: endurance = 6
-	general: sight = 4
-	general: exp1 = 5
-	general: exp2 = 6
-	general: exp3 = 0
-	clothing: Gorget = Base.Necklace_Choker_Bone
-	clothing: Hands = Base.Gloves_BoneGloves
-	clothing: Pants = Base.Trousers_Hide
-	clothing: Shoes = Base.Shoes_CrudeLeatherFootwear
-	weapons: melee = Base.BoneClub
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes1
+	tint: Shirt = 3355443
+	tint: Hands = 13369344
+	tint: Pants = 13369344
+	weapons: melee = Base.MeatCleaver
 
 [e530b385-0889-4dba-a7e0-61b3b98cc4da]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = c5c7f769-e5e8-44bb-ada6-cdf00ee2c234
 	general: name = Baseball_01
 	general: female = false
@@ -3822,7 +3344,7 @@
 	weapons: melee = Base.BaseballBatNails
 
 [ebbb1c3c-1cef-43c4-9d66-d3dc36eb7df5]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_01
 	general: female = false
@@ -3840,11 +3362,10 @@
 	clothing: TorsoExtra = Base.Apron_Black
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_Black
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
 	weapons: melee = Base.MeatCleaver
 
 [8e55ed56-ae7a-4890-85b8-2edfc84112d9]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_02
 	general: female = false
@@ -3863,11 +3384,10 @@
 	clothing: TorsoExtra = Base.Apron_Black
 	clothing: Pants = Base.Trousers_LeatherBlack
 	clothing: Shoes = Base.Shoes_Black
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
 	weapons: melee = Base.MeatCleaver
 
 [80c566ea-c407-4375-a0c7-bccac4731a84]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_03
 	general: female = false
@@ -3887,11 +3407,10 @@
 	clothing: TorsoExtra = Base.Apron_Black
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Black
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
 	weapons: melee = Base.MeatCleaver
 
 [a11819f6-d1b3-455e-b10c-3a0e3923d3e5]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_04
 	general: female = false
@@ -3910,11 +3429,10 @@
 	clothing: Jacket = Base.Jacket_Black
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Black
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
 	weapons: melee = Base.Machete
 
 [cf9288e9-d7c9-44db-a195-d84b79346dae]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_05
 	general: female = false
@@ -3932,11 +3450,10 @@
 	clothing: Jacket = Base.Jacket_Black
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Brown
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace1
 	weapons: melee = Base.Machete
 
 [56b949e5-f622-4fa9-ba61-2c0c2eb75e48]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8db5a57f-b0a9-4b04-9228-beeadd2db2fa
 	general: name = Buther_06
 	general: female = false
@@ -3955,11 +3472,10 @@
 	clothing: Jacket = Base.Jacket_Black
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Brown
-	clothing: MakeUp_FullFace = Base.MakeUp_SkullFace2
 	weapons: melee = Base.Machete
 
 [5c819caf-bde8-47f9-9d5a-859eb48ec910]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_01
 	general: female = false
@@ -3975,7 +3491,6 @@
 	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: secondary = Base.Pistol
@@ -3983,7 +3498,7 @@
 	ammo: secondary = 1
 
 [74001c94-fc95-4ce3-be40-ec3211e75dab]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_02
 	general: female = false
@@ -4000,7 +3515,6 @@
 	general: exp3 = 4
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
 	clothing: AmmoStrap = Base.AmmoStrap_Shells
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: primary = Base.DoubleBarrelShotgun
@@ -4011,7 +3525,7 @@
 	bag: name = Base.Bag_InmateEscapedBag
 
 [cd37ae95-af44-4c09-b167-0066b4580ee9]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_03
 	general: female = false
@@ -4027,7 +3541,6 @@
 	general: exp2 = 12
 	general: exp3 = 10
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: primary = Base.DoubleBarrelShotgun
@@ -4037,7 +3550,7 @@
 	ammo: secondary = 2
 
 [7b8bb39e-bde2-48c6-81cc-9b4b119e9521]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_04
 	general: female = false
@@ -4053,16 +3566,15 @@
 	general: exp2 = 7
 	general: exp3 = 10
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: secondary = Base.Pistol
-	weapons: melee = Base.IronBar
+	weapons: melee = Base.LeadPipe
 	ammo: secondary = 3
 	bag: name = Base.Bag_DuffelBag
 
 [d93558ef-5d36-45c1-ab7b-d0294c993b8f]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_05
 	general: female = false
@@ -4078,16 +3590,14 @@
 	general: exp2 = 7
 	general: exp3 = 10
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: secondary = Base.Revolver_Long
-	weapons: melee = Base.IronBar
+	weapons: melee = Base.Shovel2
 	ammo: secondary = 2
-	bag: name = Base.Bag_BreakdownBag
 
 [e1d59775-6822-4b76-986f-906e467825dc]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = 8365593d-f3b2-4e93-a96f-29315f83c51f
 	general: name = Prison_06
 	general: female = false
@@ -4102,17 +3612,15 @@
 	general: exp1 = 2
 	general: exp2 = 12
 	general: exp3 = 10
-	clothing: Eyes = Base.Glasses_CatsEye
 	clothing: Boilersuit = Base.Boilersuit_PrisonerKhaki
-	clothing: BeltExtra = Base.HolsterSimple_Brown
 	clothing: Socks = Base.Socks_Ankle
 	clothing: Shoes = Base.Shoes_Random
 	weapons: secondary = Base.Revolver_Long
-	weapons: melee = Base.IronBar
+	weapons: melee = Base.MetalPipe
 	ammo: secondary = 2
 
 [1655bc37-9444-4a4b-aa4e-06912358db37]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = e42fc351-dd10-4a0c-a154-b383cef3b987
 	general: name = Wedding_01
 	general: female = true
@@ -4138,7 +3646,7 @@
 	ammo: secondary = 2
 
 [5907ece2-7e04-4d60-bd57-c4dc0a630525]
-	general: modid = Bandits
+	general: modid = Bandits2
 	general: cid = e42fc351-dd10-4a0c-a154-b383cef3b987
 	general: name = Wedding_02
 	general: female = false
@@ -4163,4 +3671,647 @@
 	weapons: secondary = Base.Revolver_Long
 	weapons: melee = Base.FireplacePoker
 	ammo: secondary = 2
+
+[91cf5a83-08d5-421b-b57a-486432e69dad]
+	general: modid = Bandits2
+	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
+	general: name = Mafia_09
+	general: female = false
+	general: skin = 3
+	general: hairType = 5
+	general: beardType = 10
+	general: hairColor = 12
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 1
+	general: exp2 = 2
+	general: exp3 = 10
+	clothing: Eyes = Base.Glasses_Aviators
+	clothing: Neck = Base.Tie_Full
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: Pants = Base.Trousers_Suit
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Shirt = 3355443
+	weapons: secondary = Base.Pistol3
+	weapons: melee = Base.BareHands
+	ammo: secondary = 2
+
+[2439555e-1cb9-4aba-8a0a-b6176979405d]
+	general: modid = Bandits2
+	general: cid = cf115969-1f01-425e-9f42-bc4aec99555a
+	general: name = Mafia_10
+	general: female = false
+	general: skin = 2
+	general: hairType = 13
+	general: beardType = 4
+	general: hairColor = 18
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 3
+	general: exp1 = 1
+	general: exp2 = 2
+	general: exp3 = 7
+	clothing: Eyes = Base.Glasses_Aviators
+	clothing: Neck = Base.Tie_Worn
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: Pants = Base.Trousers_Suit
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: Shirt = 3355443
+	weapons: primary = Base.DoubleBarrelShotgun
+	weapons: secondary = Base.Pistol3
+	weapons: melee = Base.HuntingKnife
+	ammo: primary = 1
+	ammo: secondary = 2
+
+[be3daebf-b3f5-412e-a25e-79b2fa2c3f84]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_03
+	general: female = false
+	general: skin = 5
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 11
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Sweater = Base.Jumper_TankTopTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: Sweater = 6710886
+	tint: Pants = 6710886
+	weapons: secondary = Base.Revolver
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[37f81f27-edfd-45b7-ba79-3a213fa2d7c5]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_02
+	general: female = false
+	general: skin = 2
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 7
+	general: exp2 = 2
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Jacket = Base.Jacket_WhiteTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: Jacket = 3355443
+	tint: Pants = 6710886
+	weapons: secondary = Base.Revolver
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[5c33bd9c-90bc-4e51-b2e4-15adb563502a]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_04
+	general: female = false
+	general: skin = 1
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 2
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Sweater = Base.Jumper_PoloNeck
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_LeatherBlack
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: Sweater = 3355443
+	tint: Pants = 6710886
+	weapons: secondary = Base.Pistol
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[cb174354-7f72-4e29-933f-00263c5122f0]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_01
+	general: female = false
+	general: skin = 1
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 2
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Sweater = Base.Jumper_PoloNeck
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: Sweater = 3355443
+	tint: Pants = 6710886
+	weapons: secondary = Base.Revolver
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[cf9b208b-0476-4df0-95af-cccd28547831]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_05
+	general: female = false
+	general: skin = 2
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 7
+	general: exp2 = 2
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Jacket = Base.Jacket_WhiteTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: Jacket = 3355443
+	tint: Pants = 6710886
+	weapons: secondary = Base.Pistol
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[9512e5bc-00b6-4cce-8a00-8429714bb22a]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_06
+	general: female = false
+	general: skin = 5
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 11
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: SweaterHat = 3355443
+	tint: Pants = 6710886
+	weapons: secondary = Base.Revolver
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[bb965377-9074-403b-8ff3-ab95ef9b37dd]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_07
+	general: female = false
+	general: skin = 5
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 11
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: SweaterHat = 3355443
+	tint: Pants = 6710886
+	weapons: primary = Base.DoubleBarrelShotgun
+	weapons: melee = Base.Crowbar
+	ammo: primary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[263b60d5-8299-4567-bd3d-4b95a2c2c86b]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_08
+	general: female = true
+	general: skin = 4
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 11
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 4
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
+	clothing: UnderwearExtra1 = Base.TightsFishnets
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Skirt = Base.Skirt_Mini
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: SweaterHat = 3355443
+	tint: Skirt = 3355443
+	weapons: secondary = Base.Revolver_Short
+	weapons: melee = Base.Crowbar
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[ec7ce557-79eb-4e96-ace0-03a6ec24cbb9]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_09
+	general: female = true
+	general: skin = 3
+	general: hairType = 13
+	general: beardType = 1
+	general: hairColor = 11
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 8
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Pants = Base.Trousers_LeatherBlack
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: SweaterHat = 3355443
+	weapons: secondary = Base.Revolver_Short
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[a7556865-b536-4840-b043-70473ccb9d14]
+	general: modid = Bandits2
+	general: cid = f8aa0e8c-92ee-4dce-99e8-e4cc3a5a8fbe
+	general: name = Robber_10
+	general: female = true
+	general: skin = 2
+	general: hairType = 15
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 3
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 8
+	general: exp3 = 10
+	clothing: Mask = Base.Hat_BalaclavaFull
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: SweaterHat = Base.HoodieUP_WhiteTINT
+	clothing: UnderwearExtra1 = Base.TightsBlackSemiTrans
+	clothing: LeftWrist = Base.WristWatch_Left_ClassicGold
+	clothing: Skirt = Base.Skirt_Mini
+	clothing: Shoes = Base.Shoes_BlackBoots
+	tint: Mask = 3355443
+	tint: TankTop = 3355443
+	tint: SweaterHat = 3355443
+	tint: Skirt = 3355443
+	weapons: secondary = Base.Revolver_Short
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[cf63fb2e-ca3e-477e-bc8d-a01db4ce2f24]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_01
+	general: female = false
+	general: skin = 1
+	general: hairType = 37
+	general: beardType = 7
+	general: hairColor = 1
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 3
+	general: exp3 = 0
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
+	clothing: Pants = Base.TrousersMesh_DenimLight
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	weapons: melee = Base.Crowbar
+	bag: name = Base.Bag_DuffelBagTINT
+
+[7c0b5bcf-87a2-4db6-b4d1-4f36468bab75]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_02
+	general: female = false
+	general: skin = 2
+	general: hairType = 37
+	general: beardType = 5
+	general: hairColor = 19
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 0
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
+	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	weapons: melee = Base.BaseballBat
+	bag: name = Base.Bag_DuffelBagTINT
+
+[7f4f3426-4996-4d7e-baeb-743b3f8d7ee4]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_03
+	general: female = false
+	general: skin = 2
+	general: hairType = 37
+	general: beardType = 8
+	general: hairColor = 18
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 7
+	general: exp3 = 0
+	clothing: Tshirt = Base.Tshirt_DefaultDECAL_TINT
+	clothing: Pants = Base.Trousers_JeanBaggy
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	weapons: secondary = Base.Revolver_Short
+	weapons: melee = Base.Axe
+	ammo: secondary = 1
+	bag: name = Base.Bag_DuffelBagTINT
+
+[13a1bad4-06e4-41aa-ae7b-2841c68a10d1]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_04
+	general: female = false
+	general: skin = 3
+	general: hairType = 37
+	general: beardType = 10
+	general: hairColor = 12
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Pants = Base.Shorts_CamoUrbanLong
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	tint: TankTop = 15099418
+	tint: Socks = 15099418
+	bag: name = Base.Bag_DuffelBagTINT
+
+[ba5f393b-3e1f-4f82-86ed-cf0faf7b3f4d]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_05
+	general: female = false
+	general: skin = 2
+	general: hairType = 37
+	general: beardType = 9
+	general: hairColor = 17
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 11
+	general: exp3 = 0
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: Pants = Base.Trousers_CamoUrban
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	tint: TankTop = 3355443
+	weapons: melee = Base.HuntingKnife
+	bag: name = Base.Bag_DuffelBagTINT
+
+[969d637d-b0d9-4a3f-a1e4-877c4e439ea1]
+	general: modid = Bandits2
+	general: cid = 94d0c40a-539f-480a-883e-f3fdf15c703f
+	general: name = Spike_06
+	general: female = true
+	general: skin = 2
+	general: hairType = 43
+	general: beardType = 9
+	general: hairColor = 17
+	general: health = 3
+	general: strength = 4
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 2
+	general: exp2 = 8
+	general: exp3 = 0
+	clothing: ShortSleeveShirt = Base.Shirt_HawaiianTINT
+	clothing: UnderwearExtra1 = Base.TightsFishnets
+	clothing: Skirt = Base.Skirt_Mini
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_Black
+	tint: ShortSleeveShirt = 6710886
+	tint: Skirt = 6710886
+	weapons: melee = Base.HuntingKnife
+	bag: name = Base.Bag_DuffelBagTINT
+
+[869523a8-bb68-4586-8dbc-5251b9ec9f43]
+	general: modid = Bandits2
+	general: cid = 0dfc13d3-4ce6-4af8-aac6-326eb7514c36
+	general: name = Karate01_01
+	general: female = false
+	general: skin = 2
+	general: hairType = 8
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: Hat = Base.Hat_BandanaTiedTINT
+	clothing: Jacket = Base.Jacket_Chef
+	clothing: Pants = Base.Trousers_WhiteTINT
+	tint: Hat = 3355443
+	tint: Pants = 16777215
+	weapons: melee = Base.BareHands
+
+[492bb585-0c67-4e9a-9aaf-0db9303dc534]
+	general: modid = Bandits2
+	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
+	general: name = Blood_03
+	general: female = false
+	general: skin = 1
+	general: hairType = 29
+	general: beardType = 1
+	general: hairColor = 19
+	general: health = 4
+	general: strength = 5
+	general: endurance = 8
+	general: sight = 9
+	general: exp1 = 1
+	general: exp2 = 9
+	general: exp3 = 12
+	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
+	clothing: JacketSuit = Base.Suit_JacketTINT
+	clothing: Hands = Base.Gloves_LeatherGlovesBlack
+	clothing: Pants = Base.Trousers_WhiteTINT
+	clothing: Socks = Base.Socks_Ankle
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	tint: TankTop = 3355443
+	tint: JacketSuit = 10033690
+	tint: Pants = 13369344
+	weapons: melee = Base.Katana
+
+[aa02117f-08d9-486d-9bd5-146cbc531578]
+	general: modid = Bandits2
+	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
+	general: name = Blood_04
+	general: female = false
+	general: skin = 1
+	general: hairType = 1
+	general: beardType = 1
+	general: hairColor = 12
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 13
+	general: exp3 = 6
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Sweater = Base.Jumper_TankTopDiamondTINT
+	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes1
+	tint: Shirt = 3355443
+	tint: Sweater = 13369344
+	tint: Hands = 13369344
+	tint: Pants = 13369344
+	weapons: melee = Base.MeatCleaver
+
+[ac833b26-6a0f-40ca-8387-4a7561685602]
+	general: modid = Bandits2
+	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
+	general: name = Blood_05
+	general: female = false
+	general: skin = 2
+	general: hairType = 33
+	general: beardType = 1
+	general: hairColor = 2
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 13
+	general: exp3 = 6
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_TINT
+	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes2
+	tint: Shirt = 3355443
+	tint: Jacket_Bulky = 10033690
+	tint: Hands = 13369344
+	tint: Pants = 3355443
+	weapons: melee = Base.MeatCleaver
+
+[66425663-6c55-4860-92f0-a2cde0b626b3]
+	general: modid = Bandits2
+	general: cid = b7d3a430-e966-48e8-97fa-9078c8d848a4
+	general: name = Blood_06
+	general: female = false
+	general: skin = 1
+	general: hairType = 38
+	general: beardType = 10
+	general: hairColor = 13
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 4
+	general: exp1 = 2
+	general: exp2 = 4
+	general: exp3 = 6
+	clothing: Shirt = Base.Shirt_FormalTINT
+	clothing: Hands = Base.Gloves_FingerlessGloves
+	clothing: Pants = Base.Trousers_DefaultTEXTURE_TINT
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	clothing: MakeUp_Eyes = Base.MakeUp_RedStripes1
+	tint: Shirt = 3355443
+	tint: Hands = 13369344
+	tint: Pants = 13369344
+	weapons: melee = Base.KitchenKnife
+	bag: name = Base.Bag_DuffelBagTINT
 

@@ -133,24 +133,26 @@ local function hit(shooter, item, victim)
     local function calculateHitChance(distance, accuracy)
         local baseChance = 9000  -- 90% hit chance at point blank
         local d50 = 16 + accuracy -- Distance where hit chance is 50%
-        local k = 0.2   -- Steepness of falloff
-        return baseChance / (1 + math.exp(k * (distance - d50)))
+        local k = 0.13   -- Steepness of falloff
+        local floor = 1200 -- Minimal hit chance
+        return floor + (baseChance - floor) / (1 + math.exp(k * (distance - d50)))
+        -- return baseChance / (1 + math.exp(k * (distance - d50)))
     end
 
-    local accuracyLevelMap = {-8, -4, 0, 2, 4}
+    local accuracyLevelMap = {-8, -4, 0, 4, 8}
     local accuracyLevel = SandboxVars.Bandits.General_OverallAccuracy
 
     -- general sandbox setting for accuracy 
-    local sightGeneral = accuracyLevelMap[accuracyLevel] or 0
+    local sightGeneral = accuracyLevelMap[accuracyLevel] or 0 -- will add or substract max 8
 
     -- accuracy set in bandit creator
-    local sightCharacter = brainShooter.accuracyBoost or 0
+    local sightCharacter = brainShooter.accuracyBoost or 0 -- will add or substract max 8
 
     -- scope boost
     local sightScope = 0
     local scope = item:getWeaponPart("Scope")
     if scope then
-        sightScope = BanditCompatibility.GetScopeRange(scope)
+        sightScope = BanditCompatibility.GetScopeRange(scope) -- will add 12, 16 or 22
     end
 
     local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightScope)

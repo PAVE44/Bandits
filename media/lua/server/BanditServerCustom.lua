@@ -6,14 +6,14 @@ BanditServer.Custom.SendToClients  = function(player, argsOld)
     local args = {}
     args.banditData = BanditCustom.banditData
     args.clanData = BanditCustom.clanData
-    sendServerCommand('Commands', 'SendCustomToClients', args)
+    -- sendServerCommand('Commands', 'SendCustomToClients', args)
 end
 
 BanditServer.Custom.ReceiveFromClient  = function(player, args)
     BanditCustom.banditData = args.banditData
     BanditCustom.clanData = args.clanData
     BanditCustom.Save()
-    sendServerCommand('Commands', 'SendCustomToClients', args)
+    -- sendServerCommand('Commands', 'SendCustomToClients', args)
 end
 
 local function onClientCommand(module, command, player, args)

@@ -212,7 +212,9 @@ function BanditBasePlacements.IsoLightSwitch (sprite, x, y, z)
     obj = IsoLightSwitch.new(cell, square, spriteObj, square:getRoomID())
     obj:setUseBattery(false)
     obj:addLightSourceFromSprite()
+    obj:setActive(true)
     square:AddSpecialObject(obj)
+    obj:setActive(true)
     obj:transmitCompleteItemToServer()
 end
 

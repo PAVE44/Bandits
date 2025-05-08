@@ -212,25 +212,25 @@ local function generateSpawnPointUniform(player, d, count)
         end
     end
 
-    local spawnPoints = {}
-    table.insert(spawnPoints, {x=px+d, y=py+d, z=pz})
-    table.insert(spawnPoints, {x=px+d, y=py-d, z=pz})
-    table.insert(spawnPoints, {x=px-d, y=py+d, z=pz})
-    table.insert(spawnPoints, {x=px-d, y=py-d, z=pz})
-    table.insert(spawnPoints, {x=px+d, y=py, z=pz})
-    table.insert(spawnPoints, {x=px-d, y=py, z=pz})
-    table.insert(spawnPoints, {x=px, y=py+d, z=pz})
-    table.insert(spawnPoints, {x=px, y=py-d, z=pz})
-
     local validSpawnPoints = {}
-    for i, sp in pairs(spawnPoints) do
-        local square = cell:getGridSquare(sp.x, sp.y, sp.z)
+    for i=1, 16 do
+        local theta = ZombRandFloat(0, 2 * math.pi)
+        local x = px + (d * math.cos(theta))
+        local y = py + (d * math.sin(theta))
+        local z = pz
+
+        local square = cell:getGridSquare(x, y, z)
         if square then
+            local sp = {
+                x = x,
+                y = y,
+                z = z
+            }
             if SafeHouse.isSafeHouse(square, nil, true) then
                 print("[INFO] Spawn point is inside a safehouse, skipping.")
             elseif not square:isFree(false) then
                 print("[INFO] Square is occupied, skipping.")
-            elseif isTooCloseToPlayer(sp.x, sp.y) then
+            elseif isTooCloseToPlayer(x, y) then
                 print("[INFO] Spawn is too close to one of the players, skipping.")
             else
                 sp.groundType = getGroundType(square)
@@ -953,6 +953,8 @@ local function spawnType(player, args)
         spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, groupSize)
     end
 
+    if #spawnPoints == 0 then return end
+
     if LogLevel >= 3 then print ("[BANDITS] spawnPoints generated " .. #spawnPoints) end
 
     local args = {}
@@ -1023,10 +1025,10 @@ local function checkEvent()
     local day
 
     if gamemode == "Multiplayer" then
-        day = player:getHoursSurvived() / 24
         local playerList = getOnlinePlayers()
         local pid = ZombRand(playerList:size())
         player = playerList:get(pid)
+        day = player:getHoursSurvived() / 24
     else
         day = getWorldAge()
         player = getSpecificPlayer(0)
@@ -1056,7 +1058,7 @@ local function checkEvent()
                 print ("[BANDITS] Scheduler is spawning bandits now.")
                 local args = {}
                 args.cid = cid
-                args.dist = 45 + ZombRand(20)
+                args.dist = 55 + ZombRand(10)
                 spawnType(player, args)
                 TransmitBanditModData()
                 print ("[BANDITS] Data transmitted.")
@@ -1066,7 +1068,7 @@ local function checkEvent()
 end
 
 local function onClientCommand(module, command, player, args)
-    if BanditServer[module] and BanditServer[module][command] then
+    if module == "Spawner" and BanditServer[module] and BanditServer[module][command] then
         local argStr = ""
         for k, v in pairs(args) do
             argStr = argStr .. " " .. k .. "=" .. tostring(v)

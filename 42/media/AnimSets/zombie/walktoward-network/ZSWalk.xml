@@ -21,4 +21,8 @@
 		<m_Target>ZSWalkAim</m_Target>
 		<m_AnimName>Bob_WalkToWalkAim1Hand</m_AnimName>
 	</m_Transitions>
+       <m_Transitions>
+		<m_Target>ZSWalkAimSpear</m_Target>
+		<m_AnimName>Bob_WalkToWalkAimSpear</m_AnimName>
+	</m_Transitions>
 </animNode>

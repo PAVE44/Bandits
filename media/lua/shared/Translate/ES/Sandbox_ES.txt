@@ -4,7 +4,7 @@ Sandbox_ES = {
     Sandbox_Bandits_General = "Bandidos - General"
 
     Sandbox_Bandits.KillCounter = "Contador de muertes"
-    Sandbox_Bandits.StunlockHitSpeed = "Velocidad de animaciÃ³n del golpe del jugador (un valor mÃ¡s alto significa menos aturdimiento)"
+    Sandbox_Bandits.StunlockHitSpeed = "Velocidad de animación del golpe del jugador (un valor más alto significa menos aturdimiento)"
     Sandbox_Bandits.DensityScore = "Tasa de aparicion aumentada en pueblos y reducida en areas aisladas"
     Sandbox_Bandits.Surrender = "Bandidos heridos pueden rendirse"
     Sandbox_Bandits.BleedOut = "Bandidos heridos pueden sangrar y morir"
@@ -35,8 +35,8 @@ Sandbox_ES = {
     Sandbox_Bandits.PistolRange = "Rango maximo de pistola de los bandidos [cuadrados]"
     Sandbox_Bandits.RifleRange = "Rango maximo de rifle de los bandidos [cuadrados]"
 
-    Sandbox_Bandits.HitModel = "Modelo de daÃ±o de golpe del jugador"
-    Sandbox_Bandits.HitModel_tooltip = "Como el daÃ±o es calculado"
+    Sandbox_Bandits.HitModel = "Modelo de daño de golpe del jugador"
+    Sandbox_Bandits.HitModel_tooltip = "Como el daño es calculado"
     Sandbox_Bandits.HitModel_option1 = "Vanilla (mas compatible)"    
     Sandbox_Bandits.HitModel_option2 = "Bandidos"
     
@@ -49,7 +49,7 @@ Sandbox_ES = {
     Sandbox_Bandits.OverallAccuracy_option5 = "Ninja con guia laser"
 
     Sandbox_Bandits.DefenderSpawnHourlyChance = "Probabilidad de aparicion de defensores bandidos por hora [%]"
-    Sandbox_Bandits.DefenderMaxOccupants = "NÃºmero mÃ¡ximo de bandidos defensores en un edificio"
+    Sandbox_Bandits.DefenderMaxOccupants = "Número máximo de bandidos defensores en un edificio"
     Sandbox_Bandits.BaseSpawnHourlyChance = "Probabilidad de aparicion de base por hora (si la ubicacion lo permite) [%]"
     Sandbox_Bandits.DefenderLootAmount = "Cantidad de botin de defensores/base"
 

@@ -64,7 +64,6 @@ ZombieActions.Equip.onWorking = function(zombie, task)
     end
 
     if task.tick == 15 then
-        local brain = BanditBrain.Get(zombie)
         if task.slot then
             zombie:setAttachedItem(task.slot, nil)
         end
@@ -72,41 +71,7 @@ ZombieActions.Equip.onWorking = function(zombie, task)
         zombie:setBumpType(task.anim2)
 
         if task.itemPrimary then
-            local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
-            primaryItem = BanditUtils.ModifyWeapon(primaryItem, brain)
-            zombie:setPrimaryHandItem(primaryItem)
-            zombie:setVariable("BanditPrimary", task.itemPrimary)
-
-            local hands
-            if primaryItem:IsWeapon() then
-                local primaryItemType = WeaponType.getWeaponType(primaryItem)
-
-                if primaryItemType == WeaponType.barehand then
-                    hands = "barehand"
-                elseif primaryItemType == WeaponType.firearm then
-                    hands = "rifle"
-                elseif primaryItemType == WeaponType.handgun then
-                    hands = "handgun"
-                elseif primaryItemType == WeaponType.heavy then
-                    hands = "twohanded"
-                elseif primaryItemType == WeaponType.onehanded then
-                    hands = "onehanded"
-                elseif primaryItemType == WeaponType.spear then
-                    hands = "spear"
-                elseif primaryItemType == WeaponType.twohanded then
-                    hands = "twohanded"
-                elseif primaryItemType == WeaponType.throwing then
-                    hands = "throwing"
-                elseif primaryItemType == WeaponType.chainsaw then
-                    hands = "chainsaw"
-                else
-                    hands = "onehanded"
-                end
-            else
-                hands = "item"
-            end
-
-            zombie:setVariable("BanditPrimaryType", hands)
+            Bandit.SetHands(zombie, task.itemPrimary)
         end
     end
 

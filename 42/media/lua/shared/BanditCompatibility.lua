@@ -296,13 +296,13 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
             Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
             Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
-            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe"},
+            Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe", "Tail"},
             TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
             TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
-            TopExtra = {"TorsoExtraVest", "VestTexture", "TorsoExtraVestBullet", "Sweater", "SweaterHat", "TorsoExtra"},
-            Underwear = {"UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
-            TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left"},
-            Hands = {"Hands", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
+            TopExtra = {"TorsoExtraVest", "VestTexture", "TorsoExtraVestBullet", "Cuirass", "Sweater", "SweaterHat", "TorsoExtra"},
+            Underwear = {"Underwear", "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
+            TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left", "Elbow_Right", "Elbow_Left"},
+            Hands = {"Hands", "HandsRight", "HandsLeft", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
             Bags = {"FannyPackFront", "FannyPackBack", "Webbing"},
             Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
             Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
@@ -324,6 +324,48 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Holsters = {"AmmoStrap", "BeltExtra"},
             Bottom = {"Pants", "Legs1", "Skirt"},
             Feet = {"Socks", "Shoes"}
+        }
+    end
+    return bodyLocations
+end
+
+BanditCompatibility.GetBodyLocationsOrdered = function()
+    local bodyLocations = {}
+    if getGameVersion() >= 42 then
+        bodyLocations = {
+            "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Underwear", "Torso1Legs1", "Legs1",
+            "Ears", "EarTop", "Nose", "Hat", "FullHat",
+            "Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye",
+            "Neck", "Necklace", "Gorget", "Scarf",
+            "TankTop", "Tshirt", "ShortSleeveShirt", "Shirt",
+            "VestTexture", "Sweater", "SweaterHat", "TorsoExtraVest", "TorsoExtraVestBullet", "Cuirass", "TorsoExtra",
+            "Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop",
+            "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger", "Hands", "HandsRight", "HandsLeft",
+            "Pants", "PantsExtra", "ShortPants", "ShortsShort", "LongSkirt", "Skirt", "Dress", "LongDress",
+            "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit", "Tail",
+            "ShoulderpadRight", "ShoulderpadLeft", "Elbow_Right", "Elbow_Left", "ForeArm_Right", "ForeArm_Left",
+            "Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left",
+            "FannyPackFront", "FannyPackBack", "Webbing",
+            "AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster",
+            "Socks", "Shoes"
+        }
+    else
+        bodyLocations = {
+            "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Torso1Legs1", "Legs1",
+            "Ears", "EarTop", "Nose", "Hat", "FullHat",
+            "Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye",
+            "Neck", "Necklace", "Gorget", "Scarf",
+            "TankTop", "Tshirt", "ShortSleeveShirt", "Shirt",
+            "VestTexture", "Sweater", "SweaterHat", "TorsoExtraVest", "TorsoExtraVestBullet", "TorsoExtra",
+            "Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop",
+            "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger", "Hands",
+            "Pants", "PantsExtra", "ShortPants", "ShortsShort", "LongSkirt", "Skirt", "Dress", "LongDress",
+            "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit",
+            "ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left",
+            "Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left",
+            "FannyPackFront", "FannyPackBack", "Webbing",
+            "AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster",
+            "Socks", "Shoes"
         }
     end
     return bodyLocations

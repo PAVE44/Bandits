@@ -12,9 +12,24 @@ option Bandits.General_StunlockHitSpeed = {
     page = Bandits_General, translation = Bandits.StunlockHitSpeed,
 }
 
+option Bandits.General_SpawnMultiplier = {
+    type = double, min = 0.25, max = 4, default = 1.00,
+    page = Bandits_General, translation = Bandits.SpawnMultiplier,
+}
+
+option Bandits.General_SizeMultiplier = {
+    type = double, min = 0.25, max = 4, default = 1.00,
+    page = Bandits_General, translation = Bandits.SizeMultiplier,
+}
+
 option Bandits.General_DensityScore = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.DensityScore,
+}
+
+option Bandits.General_OriginalBandits = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.OriginalBandits,
 }
 
 option Bandits.General_Surrender = {

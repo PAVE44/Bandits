@@ -12,6 +12,10 @@ local saveFile = function()
     local mods = BanditCustom.GetMods()
     table.insert(mods, "LOCAL")
 
+    local globalClanFileName = BanditCustom.filePath .. BanditCustom.clanFile
+    local globalClanFile = getFileWriter(globalClanFileName, true, false)
+    local globalClanOutput = ""
+
     for i=1, #mods do
         local modid = mods[i]
         local banditFileName
@@ -21,8 +25,6 @@ local saveFile = function()
         if modid == "LOCAL" then
             banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
             banditFile = getFileWriter(banditFileName, true, false)
-            clanFileName = BanditCustom.filePath .. BanditCustom.clanFile
-            clanFile = getFileWriter(clanFileName, true, false)
         else
             banditFileName = BanditCustom.filePath .. BanditCustom.banditFile
             banditFile = getModFileWriter(BanditCompatibility.GetModPrefix() .. modid, banditFileName, true, false)
@@ -30,7 +32,7 @@ local saveFile = function()
             clanFile = getModFileWriter(BanditCompatibility.GetModPrefix() .. modid, clanFileName, true, false)
         end
 
-        if banditFile and clanFile then
+        if banditFile then
             local data = BanditCustom.banditData
             local banditOutput = ""
             local clanOutput = ""
@@ -52,22 +54,34 @@ local saveFile = function()
                         if not clanData then
                             clanData = BanditCustom.ClanCreate(cid)
                         end
-                        clanOutput = clanOutput .. "[" .. cid .. "]\n"
+                        local o = ""
+                        o = o .. "[" .. cid .. "]\n"
                         for sname, tab in pairs(clanData) do
                             for k, v in pairs(tab) do
-                                clanOutput = clanOutput .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
+                                o = o .. "\t" .. sname .. ": " .. k .. " = " .. tostring(v) .. "\n"
                             end
                         end
-                        clanOutput = clanOutput .. "\n"
+                        o = o .. "\n"
+
+                        clanOutput = clanOutput .. o
+                        globalClanOutput = globalClanOutput .. o
                         cids[cid] = true
                     end
                 end
             end
             banditFile:write(banditOutput)
-            clanFile:write(clanOutput)
             banditFile:close()
-            clanFile:close()
+
+            if clanFile then
+                clanFile:write(clanOutput)
+                clanFile:close()
+            end
         end
+    end
+
+    if globalClanFile then
+        globalClanFile:write(globalClanOutput)
+        globalClanFile:close()
     end
 end
 

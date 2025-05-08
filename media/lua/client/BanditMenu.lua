@@ -8,6 +8,12 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.TestAction (player, square, zombie)
+
+    local task = {action="Time", anim="TEST", time=400}
+    Bandit.AddTask(zombie, task)
+end
+
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
@@ -133,9 +139,37 @@ function BanditMenu.ShowBrain (player, square, zombie)
 
 end
 
+function BanditMenu.SwitchProgram(player, bandit, program)
+    local brain = BanditBrain.Get(bandit)
+    if brain then
+        local pid = BanditUtils.GetCharacterID(player)
+
+        brain.master = pid
+        brain.program = {}
+        brain.program.name = program
+        brain.program.stage = "Prepare"
+        BanditBrain.Update(bandit, brain)
+
+        local syncData = {}
+        syncData.id = brain.id
+        syncData.master = brain.master
+        syncData.program = brain.program
+        Bandit.ForceSyncPart(bandit, syncData)
+    end
+end
+
 function BanditMenu.BanditFlush(player)
     local args = {a=1}
     sendClientCommand(player, 'Commands', 'BanditFlush', args)
+end
+
+function BanditMenu.SpawnClan(player, square, cid)
+    local args = {}
+    args.cid = cid
+    args.x = square:getX()
+    args.y = square:getY()
+    args.z = square:getZ()
+    sendClientCommand(player, 'Spawner', 'Type', args)
 end
 
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
@@ -172,6 +206,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
                 banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
             end
         end
+        context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
     end
 
     -- Debug options
@@ -181,6 +216,17 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
         if zombie then
             context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
+        end
+    end
+
+    if isDebugEnabled() or isAdmin() then
+        BanditCustom.Load()
+        local clanData  = BanditCustom.ClanGetAllSorted()
+        local clanSpawnOption = context:addOption("Spawn Bandit Clan")
+        local clanSpawnMenu = context:getNew(context)
+        context:addSubMenu(clanSpawnOption, clanSpawnMenu)
+        for cid, clan in pairs(clanData) do
+            clanSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.SpawnClan, square, cid)
         end
     end
 end

@@ -9,7 +9,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 42
 	spawn: dayEnd = 55
-	spawn: spawnChance = 1.1
+	spawn: spawnChance = 1.5
 	spawn: groupMin = 4
 	spawn: groupMax = 4
 	spawn: zone = 0
@@ -57,7 +57,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 365
 	spawn: dayEnd = 10000
-	spawn: spawnChance = 1
+	spawn: spawnChance = 1.2
 	spawn: groupMin = 3
 	spawn: groupMax = 6
 	spawn: zone = 0
@@ -73,7 +73,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 100
 	spawn: dayEnd = 200
-	spawn: spawnChance = 1
+	spawn: spawnChance = 1.4
 	spawn: groupMin = 8
 	spawn: groupMax = 13
 	spawn: zone = 0
@@ -89,7 +89,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 49
 	spawn: dayEnd = 69
-	spawn: spawnChance = 1.6
+	spawn: spawnChance = 2
 	spawn: groupMin = 4
 	spawn: groupMax = 6
 	spawn: zone = 2
@@ -121,7 +121,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 1
 	spawn: dayEnd = 13
-	spawn: spawnChance = 1.5
+	spawn: spawnChance = 2
 	spawn: groupMin = 2
 	spawn: groupMax = 4
 	spawn: zone = 0
@@ -137,7 +137,7 @@
 	spawn: roadblock = true
 	spawn: dayStart = 0
 	spawn: dayEnd = 13
-	spawn: spawnChance = 2
+	spawn: spawnChance = 2.5
 	spawn: groupMin = 1
 	spawn: groupMax = 3
 	spawn: zone = 0
@@ -185,7 +185,7 @@
 	spawn: roadblock = true
 	spawn: dayStart = 84
 	spawn: dayEnd = 365
-	spawn: spawnChance = 1.1
+	spawn: spawnChance = 2
 	spawn: groupMin = 2
 	spawn: groupMax = 6
 	spawn: zone = 1
@@ -217,7 +217,7 @@
 	spawn: roadblock = true
 	spawn: dayStart = 56
 	spawn: dayEnd = 76
-	spawn: spawnChance = 1.4
+	spawn: spawnChance = 1.7
 	spawn: groupMin = 5
 	spawn: groupMax = 6
 	spawn: zone = 0
@@ -233,7 +233,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 30
 	spawn: dayEnd = 90
-	spawn: spawnChance = 1.4
+	spawn: spawnChance = 1.8
 	spawn: groupMin = 1
 	spawn: groupMax = 4
 	spawn: zone = 0
@@ -297,7 +297,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 14
 	spawn: dayEnd = 27
-	spawn: spawnChance = 2
+	spawn: spawnChance = 2.5
 	spawn: groupMin = 3
 	spawn: groupMax = 4
 	spawn: zone = 0
@@ -345,8 +345,24 @@
 	spawn: roadblock = false
 	spawn: dayStart = 35
 	spawn: dayEnd = 48
-	spawn: spawnChance = 1.2
+	spawn: spawnChance = 1.8
 	spawn: groupMin = 3
 	spawn: groupMax = 6
+	spawn: zone = 0
+
+[94d0c40a-539f-480a-883e-f3fdf15c703f]
+	general: name = 05_Spike
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = true
+	spawn: campers = true
+	spawn: assault = true
+	spawn: wanderer = false
+	spawn: roadblock = true
+	spawn: dayStart = 30
+	spawn: dayEnd = 43
+	spawn: spawnChance = 2.2
+	spawn: groupMin = 3
+	spawn: groupMax = 5
 	spawn: zone = 0
 

@@ -442,6 +442,45 @@ function Bandit.IsBareHands(zombie)
     end
 end
 
+function Bandit.SetHands(zombie, itemType)
+    local brain = BanditBrain.Get(zombie)
+    local primaryItem = BanditCompatibility.InstanceItem(itemType)
+    primaryItem = BanditUtils.ModifyWeapon(primaryItem, brain)
+    zombie:setPrimaryHandItem(primaryItem)
+    zombie:setVariable("BanditPrimary", itemType)
+
+    local hands
+    if primaryItem:IsWeapon() then
+        local primaryItemType = WeaponType.getWeaponType(primaryItem)
+
+        if primaryItemType == WeaponType.barehand then
+            hands = "barehand"
+        elseif primaryItemType == WeaponType.firearm then
+            hands = "rifle"
+        elseif primaryItemType == WeaponType.handgun then
+            hands = "handgun"
+        elseif primaryItemType == WeaponType.heavy then
+            hands = "twohanded"
+        elseif primaryItemType == WeaponType.onehanded then
+            hands = "onehanded"
+        elseif primaryItemType == WeaponType.spear then
+            hands = "spear"
+        elseif primaryItemType == WeaponType.twohanded then
+            hands = "twohanded"
+        elseif primaryItemType == WeaponType.throwing then
+            hands = "throwing"
+        elseif primaryItemType == WeaponType.chainsaw then
+            hands = "chainsaw"
+        else
+            hands = "onehanded"
+        end
+    else
+        hands = "item"
+    end
+
+    zombie:setVariable("BanditPrimaryType", hands)
+end
+
 function Bandit.NeedResupplySlot(zombie, slot)
     local brain = BanditBrain.Get(zombie)
     if brain then
@@ -1031,8 +1070,10 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
     end
 
     if bandit and dist then
-        if dist > 5 then
+        if dist > 7 then
             walkType = "Run"
+        elseif dist > 4 then
+            walkType = "Walk"
         else
             walkType = "WalkAim"
         end

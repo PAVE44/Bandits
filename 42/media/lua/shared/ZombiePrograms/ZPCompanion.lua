@@ -12,12 +12,13 @@ end
 
 ZombiePrograms.Companion.Main = function(bandit)
     local tasks = {}
+
+    Bandit.ForceStationary(bandit, false)
  
     -- If at guardpost, switch to the CompanionGuard program.
     local atGuardpost = BanditPost.At(bandit, "guard")
     if atGuardpost then
-        Bandit.SetProgram(bandit, "CompanionGuard", {})
-        return {status=true, next="Prepare", tasks=tasks}
+        return {status=true, next="Guard", tasks=tasks}
     end
     
     -- Companion logic depends on one of the players who is the master od the companion
@@ -54,6 +55,13 @@ ZombiePrograms.Companion.Main = function(bandit)
         walkType = "Limp"
         endurance = 0
     end 
+
+    -- If there is a guardpost in the vicinity, take it.
+    local guardpost = BanditPost.GetClosestFree(bandit, "guard", 40)
+    if guardpost then
+        table.insert(tasks, BanditUtils.GetMoveTask(endurance, guardpost.x, guardpost.y, guardpost.z, walkType, dist))
+        return {status=true, next="Main", tasks=tasks}
+    end
 
     if dist < 20 then
         local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
@@ -421,4 +429,37 @@ ZombiePrograms.Companion.Main = function(bandit)
     end
     
     return {status=true, next="Main", tasks=tasks}
+end
+
+ZombiePrograms.Companion.Guard = function(bandit)
+    local tasks = {}
+
+    Bandit.ForceStationary(bandit, true)
+    
+    -- If at guardpost, switch to the CompanionGuard program.
+    local atGuardpost = BanditPost.At(bandit, "guard")
+    if not atGuardpost then
+        return {status=true, next="Main", tasks=tasks}
+    end
+
+    local closestZombie = BanditUtils.GetClosestZombieLocation(bandit)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(bandit)
+    local closestEnemy = closestZombie
+
+    if closestBandit.dist < closestZombie.dist then 
+        closestEnemy = closestBandit
+    end
+
+    if closestEnemy.dist < 24 then
+        local task = {action="FaceLocation", anim=anim, x=closestEnemy.x, y=closestEnemy.y, time=100}
+        table.insert(tasks, task)
+    else
+        local subTasks = BanditPrograms.Idle(bandit)
+        if #subTasks > 0 then
+            for _, subTask in pairs(subTasks) do
+                table.insert(tasks, subTask)
+            end
+        end
+    end
+    return {status=true, next="Guard", tasks=tasks}
 end

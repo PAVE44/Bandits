@@ -72,6 +72,10 @@ function BanditBaseGroupPlacements.ClearSpace (x, y, z, w, h)
                                 if not isSolidFloor or cz > 0 then
                                     table.insert(destroyList, object)
                                 end
+
+                                if isSolidFloor and spriteName:embodies("natural") then
+                                    object:clearAttachedAnimSprite()
+                                end
                             end
                         end
                     end
