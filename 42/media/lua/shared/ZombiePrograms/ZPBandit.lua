@@ -191,12 +191,12 @@ ZombiePrograms.Bandit.Main = function(bandit)
 
     local config = {}
     config.mustSee = true
-    config.hearDist = 7
+    config.hearDist = 5
 
     if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
-        config.hearDist = 20
+        config.hearDist = 13
     elseif Bandit.HasExpertise(bandit, Bandit.Expertise.Tracker) then
-        config.hearDist = 60
+        config.hearDist = 55
     end
 
     local target, enemy = BanditUtils.GetTarget(bandit, config)

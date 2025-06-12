@@ -14,8 +14,8 @@ local function CalcSpottedScore(player, dist)
     local square = player:getSquare()
     local spottedScore = square:getLightLevel(0)
 
-    if player:isRunning() then spottedScore = spottedScore + 0.1 end
-    if player:isSprinting() then spottedScore = spottedScore + 0.12 end
+    if player:isRunning() then spottedScore = spottedScore + 0.05 end
+    if player:isSprinting() then spottedScore = spottedScore + 0.08 end
 
     if player:isSneaking() then
         spottedScore = spottedScore - 0.1
@@ -1022,7 +1022,7 @@ local function ManageCombat(bandit)
                 local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py))) -- no function call for performance
                 if dist < bestDist and math.abs(zz - pz) < 0.5 then
                     local spottedScore = CalcSpottedScore(potentialEnemy, dist)
-                    if not bandit:getSquare():isSomethingTo(potentialEnemy:getSquare()) and spottedScore > 0.32 then
+                    if not bandit:getSquare():isSomethingTo(potentialEnemy:getSquare()) and spottedScore > 0.49 then
                         bestDist, enemyCharacter = dist, potentialEnemy
 
                         --reset action flags, only one can be true
@@ -1106,7 +1106,7 @@ local function ManageCombat(bandit)
      
                 -- load real instance here
                 local potentialEnemy = cache[id]
-                if potentialEnemy:isAlive() and bandit:CanSee(potentialEnemy) then
+                if potentialEnemy:isAlive() and potentialEnemy:getHealth() > 0 and bandit:CanSee(potentialEnemy) then
                     local pesq = potentialEnemy:getSquare()
                     if pesq and pesq:getLightLevel(0) > 0.31 and not bandit:getSquare():isSomethingTo(pesq) then
                         local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
@@ -1307,7 +1307,7 @@ local function ManageCombat(bandit)
         end
 
     elseif firing then
-        if not BanditBrain.HasTaskTypes(brain, {"Shoot", "Aim", "Rack", "Equip", "Unequip", "Load", "Unload"}) then 
+        if not BanditBrain.HasTaskTypes(brain, {"Shoot", "Turn", "Aim", "Rack", "Equip", "Unequip", "Load", "Unload"}) then 
 
             Bandit.ClearTasks(bandit)
             if enemyCharacter:isAlive() then
@@ -1920,6 +1920,53 @@ local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     end
 
     BanditPlayer.CheckFriendlyFire(bandit, attacker)
+
+    if handWeapon:isRanged() then
+        local bodyPartTypes = {
+            Foot_R = {},
+            Foot_L = {},
+            LowerLeg_R = {},
+            LowerLeg_L = {},
+            UpperLeg_R = {},
+            UpperLeg_L = {},
+            Groin = {serious = true},
+            Neck = {serious = true},
+            Head = {insta = true},
+            Torso_Lower = {serious = true},
+            Torso_Upper = {serious = true},
+            UpperArm_R = {},
+            UpperArm_L = {},
+            ForeArm_R = {},
+            ForeArm_L = {},
+            Hand_R = {},
+            Hand_L = {}
+        }
+
+        for k, tab in pairs(bodyPartTypes) do
+            if BodyPartType[k] == bodyPartType then
+                local idx = BodyPartType.ToIndex(bodyPartType)
+                local def = bandit:getBodyPartClothingDefense(idx, false, true)
+                local rnd = ZombRand(100)
+                if rnd > def then
+                    if tab.insta then
+                        bandit:Kill(nil)
+                        return
+                    end
+                    if tab.serious then
+                        local maxDmg = handWeapon:getMaxDamage() or 1
+                        local extraDmg = 0.26 * maxDmg
+                        local health = bandit:getHealth() - extraDmg
+                        if health <=0 then
+                            bandit:Kill(nil)
+                            return
+                        else
+                            bandit:setHealth(health)
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
 
 local function OnZombieDead(zombie)
@@ -2027,7 +2074,8 @@ local function OnZombieDead(zombie)
 
     -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
     -- and copies most of the properties to look as the original 
-    if BanditCompatibility.GetGameVersion() >= 42 then
+    -- 42.8.1 seems to be fixed
+    if false and BanditCompatibility.GetGameVersion() >= 42 then
         local isSeen = false
         local playerList = BanditPlayer.GetPlayers()
         for i=0, playerList:size()-1 do

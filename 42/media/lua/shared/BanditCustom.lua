@@ -1,3 +1,4 @@
+require "BanditCompatibility"
 BanditCustom = BanditCustom or {}
 
 BanditCustom.banditData = {}

@@ -113,11 +113,14 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
     else
         -- player handicap
         aimTimeSurp = aimTimeSurp + 10
+
+        if enemyCharacter:getVehicle() then
+            aimTimeSurp = aimTimeSurp - 20
+        end
     end
 
     -- choose anim
     if aimTimeMin + aimTimeSurp > 0 then
-
         local anim
         local asn = enemyCharacter:getActionStateName()
         local down = enemyCharacter:isProne() or enemyCharacter:isBumpFall() or asn == "onground" or asn == "getup"
@@ -144,7 +147,7 @@ BanditPrograms.Weapon.Aim = function(bandit, enemyCharacter, slot)
         end
 
         local aimTimeIndividual = brain.rnd and brain.rnd[2] or 0
-        local time = aimTimeMin + aimTimeSurp +aimTimeIndividual
+        local time = aimTimeMin + aimTimeSurp + aimTimeIndividual
         if time > 60 then time = 60 end
 
         local task = {action="Aim", anim=anim, sound=sound, x=enemyCharacter:getX(), y=enemyCharacter:getY(), time=time}
@@ -169,7 +172,7 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     if modes then
         for i=0, modes:size()-1 do
             local mode = modes:get(i)
-            if dist < 12 and mode == "Auto" then
+            if (dist < 12 or enemyCharacter:getVehicle()) and mode == "Auto" then
                 bullets = 2 + ZombRand(6)
                 break
             end
@@ -179,6 +182,7 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local anim
     local asn = enemyCharacter:getActionStateName()
     local down = enemyCharacter:isProne() or enemyCharacter:isBumpFall() or asn == "onground" or asn == "getup"
+
     if slot == "primary" then
         if dist < 2.5 and down then
             anim = "AimRifleLow"

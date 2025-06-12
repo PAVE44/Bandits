@@ -429,7 +429,7 @@ end
 -- args: pid, waveId or cid, 
 local function spawnGroup(spawnPoints, args)
     local knockedDown = false
-    local crawler = false
+    local crawler = args.crawler and true or false
     local fallOnFront = false
     local fakeDead = false
     local invulnerable = false
@@ -502,6 +502,8 @@ local function spawnRestore(brain)
 
     local bandit = BanditCustom.GetById(brain.bid)
     if not bandit then return end
+
+    bandit.general.bid = brain.bid
 
     local clan = BanditCustom.ClanGet(brain.cid)
     if not clan then return end
@@ -1033,8 +1035,6 @@ local function checkEvent()
         day = getWorldAge()
         player = getSpecificPlayer(0)
     end
-
-    print (day)
 
     local clanData = BanditCustom.ClanGetAll()
     local densityScore = 1

@@ -503,6 +503,8 @@ local function spawnRestore(brain)
     local bandit = BanditCustom.GetById(brain.bid)
     if not bandit then return end
 
+    bandit.general.bid = brain.bid
+
     local clan = BanditCustom.ClanGet(brain.cid)
     if not clan then return end
 

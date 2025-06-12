@@ -8,6 +8,10 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.BanditTest (player)
+    BanditTest.Check()
+end
+
 function BanditMenu.TestAction (player, square, zombie)
 
     local task = {action="Time", anim="TEST", time=400}
@@ -169,7 +173,9 @@ function BanditMenu.SpawnClan(player, square, cid)
     args.x = square:getX()
     args.y = square:getY()
     args.z = square:getZ()
-    sendClientCommand(player, 'Spawner', 'Type', args)
+    args.program = "Bandit"
+    args.size = 6
+    sendClientCommand(player, 'Spawner', 'Clan', args)
 end
 
 function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
@@ -212,6 +218,8 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
     -- Debug options
     if isDebugEnabled() then
+    
+        context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
         context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 

@@ -14,8 +14,8 @@ local function CalcSpottedScore(player, dist)
     local square = player:getSquare()
     local spottedScore = square:getLightLevel(0)
 
-    if player:isRunning() then spottedScore = spottedScore + 0.1 end
-    if player:isSprinting() then spottedScore = spottedScore + 0.12 end
+    if player:isRunning() then spottedScore = spottedScore + 0.05 end
+    if player:isSprinting() then spottedScore = spottedScore + 0.08 end
 
     if player:isSneaking() then
         spottedScore = spottedScore - 0.1
@@ -147,6 +147,8 @@ local function Banditize(zombie, brain)
 
     -- makes bandit unstuck after spawns
     zombie:setTurnAlertedValues(-5, 5)
+
+    zombie:setVisibleToNPCs(false)
 
 end
 
@@ -1022,7 +1024,7 @@ local function ManageCombat(bandit)
                 local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py))) -- no function call for performance
                 if dist < bestDist and math.abs(zz - pz) < 0.5 then
                     local spottedScore = CalcSpottedScore(potentialEnemy, dist)
-                    if not bandit:getSquare():isSomethingTo(potentialEnemy:getSquare()) and spottedScore > 0.32 then
+                    if not bandit:getSquare():isSomethingTo(potentialEnemy:getSquare()) and spottedScore > 0.49 then
                         bestDist, enemyCharacter = dist, potentialEnemy
 
                         --reset action flags, only one can be true

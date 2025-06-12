@@ -126,6 +126,25 @@ BanditCompatibility.Splash = function(bandit, item, zombie)
         end
         bandit:splatBloodFloorBig()
         bandit:playBloodSplatterSound()
+
+        --[[
+        local test = IsoZombieGiblets.GibletType
+        for i=1, 2 do
+            IsoZombieGiblets.new(
+                "A",
+                bandit:getCell(),
+                bandit:getX(),
+                bandit:getY(),
+                bandit:getZ() + 0.5,
+                bandit:getHitDir():getX() * ZombRandFloat(0, 0.5),
+                bandit:getHitDir():getY() * ZombRandFloat(0, 0.5)
+            )
+        end
+        
+        local rwb = getWorld():getRandomizedWorldBase()
+        rwb:addTrailOfBlood(bandit:getX(), bandit:getY(), bandit:getZ() + 0.6, 34, 14)
+        ]]
+
     else
         SwipeStatePlayer.splash(bandit, item, zombie)
     end

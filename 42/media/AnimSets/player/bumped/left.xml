@@ -2,23 +2,22 @@
 <animNode>
 	<m_Name>left</m_Name>
 	<m_AnimName>Bob_Run_BumpL</m_AnimName>
-	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_Looped>false</m_Looped>
-	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
-	<m_SpeedScale>1.2</m_SpeedScale>
 	<m_BlendTime>0.10</m_BlendTime>
 	<m_BlendOutTime>0.25</m_BlendOutTime>
-	<m_Conditions>
+	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+	<m_SpeedScale>1.2</m_SpeedScale>
+	<m_Conditions x_name="0cb74c8f-a35c-4950-985c-d641a04f47c3">
 		<m_Name>BumpType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>left</m_StringValue>
+		<m_Value>left</m_Value>
 	</m_Conditions>
-	<m_Events>
+	<m_Events x_name="cc7c985e-e3d3-406e-a95d-404bfc37863a">
 		<m_EventName>SetVariable</m_EventName>
 		<m_TimePc>0.5</m_TimePc>
 		<m_ParameterValue>BumpDone=true</m_ParameterValue>
 	</m_Events>
-	<m_Events>
+	<m_Events x_name="e6455718-3552-4b97-8efb-9736b6d83cb1">
 		<m_EventName>SetVariable</m_EventName>
 		<m_TimePc>0.5</m_TimePc>
 		<m_ParameterValue>BumpStaggered=false</m_ParameterValue>

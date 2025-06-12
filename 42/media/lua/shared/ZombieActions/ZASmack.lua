@@ -468,7 +468,7 @@ ZombieActions.Smack.onStart = function(bandit, task)
         local attacks
         soundVoice = female and "VoiceFemaleMeleeAttack" or "VoiceMaleMeleeAttack"
         if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.barehand then
-            attacks = {"AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
+            attacks = {"HighKick", "FrontKick", "AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
             if task.shm then
                 attacks = {"AttackBareHands2Bwd", "AttackBareHands4Bwd"}
             end

@@ -11,14 +11,14 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 9
+	general: exp2 = 5
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
 	clothing: BathRobe = Base.BlackRobe
 	clothing: Hands = Base.Gloves_LongWomenGloves
-	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.Katana
 
 [f5dd67b8-ebe9-4cae-8c20-f20a9f7b84e8]
@@ -34,14 +34,14 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 9
+	general: exp2 = 5
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
 	clothing: BathRobe = Base.BlackRobe
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
-	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.Katana
 
 [776c90b5-6dd9-4a0e-b933-c780216c2272]
@@ -581,7 +581,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_DeerHeadress
@@ -589,8 +589,8 @@
 	clothing: Gorget = Base.Gorget_Metal
 	clothing: BathRobe = Base.BlackRobe
 	clothing: Hands = Base.Gloves_FingerlessLeatherGloves_Black
-	clothing: Shoes = Base.Shoes_Black
 	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.Katana
 
 [1c9f5d16-6652-46c7-af25-299747db868e]
@@ -606,13 +606,13 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalHelmet
 	clothing: Gorget = Base.Gorget_Metal
 	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: TorsoExtraVest = Base.Vest_Leather
+	clothing: Cuirass = Base.Cuirass_CoatOfPlates
 	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
 	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
 	clothing: ForeArm_Right = Base.VambraceSpike_Right
@@ -640,8 +640,8 @@
 	general: strength = 6
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 2
+	general: exp2 = 13
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalHelmet
 	clothing: Gorget = Base.Gorget_Metal
@@ -657,8 +657,8 @@
 	clothing: Thigh_Left = Base.ThighMetalSpike_L
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuard_L_Metal
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.CrudeSword
 
 [b19444e3-12a7-4b4f-bf41-bb26d080070a]
@@ -674,7 +674,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 1
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalScrapHelmet
@@ -706,7 +706,7 @@
 	general: strength = 6
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalHelmet
@@ -724,8 +724,8 @@
 	clothing: Thigh_Left = Base.Thigh_ArticMetal_L
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
-	clothing: Shoes = Base.Shoes_Brown
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.Sword
 
 [d80fb25a-2791-4486-91dd-8f77c37c1c83]
@@ -741,7 +741,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalHelmet
@@ -756,8 +756,8 @@
 	clothing: Pants = Base.TrousersMesh_Leather
 	clothing: Calf_Right = Base.ShinKneeGuardSpike_R_Protective
 	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Protective
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.WoodAxe
 
 [15bb287d-a48f-44a9-aa2b-34ba73855202]
@@ -773,7 +773,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 13
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_MetalScrapHelmet
@@ -785,8 +785,8 @@
 	clothing: Pants = Base.TrousersMesh_Leather
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuard_L_Metal
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.Morningstar_Scrap
 
 [028e38fc-e1db-4b40-b11e-8e99cd552a68]
@@ -809,6 +809,7 @@
 	clothing: Gorget = Base.Gorget_Metal
 	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
 	clothing: VestTexture = Base.Vest_Waistcoat
+	clothing: Cuirass = Base.Cuirass_Metal
 	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
 	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
 	clothing: ForeArm_Right = Base.VambraceSpike_Right
@@ -819,8 +820,8 @@
 	clothing: Thigh_Left = Base.ThighMetal_L
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.Sword
 
 [8e30f3ca-d1d7-455d-b267-91f44ff73140]
@@ -904,7 +905,7 @@
 	clothing: MaskEyes = Base.Hat_HockeyMask_Metal
 	clothing: Gorget = Base.Gorget_Metal
 	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
-	clothing: TorsoExtraVest = Base.Vest_Foreman
+	clothing: Cuirass = Base.Cuirass_Metal
 	clothing: ShoulderpadRight = Base.Shoulderpad_MetalSpike_R
 	clothing: ShoulderpadLeft = Base.Shoulderpad_MetalSpike_L
 	clothing: ForeArm_Right = Base.VambraceSpike_Right
@@ -915,8 +916,8 @@
 	clothing: Thigh_Left = Base.ThighMetal_L
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.CrudeShortSword
 
 [3c65138f-f345-4923-9258-d4fb019efc98]
@@ -932,7 +933,7 @@
 	general: strength = 7
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: FullHat = Base.Hat_HeadSack_Garbage
@@ -948,8 +949,8 @@
 	clothing: Pants = Base.TrousersMesh_Leather
 	clothing: Calf_Right = Base.ShinKneeGuard_R_Metal
 	clothing: Calf_Left = Base.ShinKneeGuardSpike_L_Metal
-	clothing: Shoes = Base.Shoes_BlackBoots
 	clothing: Socks = Base.Socks_Long_Black
+	clothing: Shoes = Base.Shoes_BlackBoots
 	weapons: melee = Base.BlockMaul
 
 [14a87232-59c0-4807-ab57-48e2957ca43b]
@@ -999,7 +1000,7 @@
 	general: strength = 4
 	general: endurance = 6
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 6
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Witch
@@ -1164,7 +1165,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 4
+	general: exp1 = 11
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Eyes = Base.Glasses_SunCheap
@@ -1193,7 +1194,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 4
+	general: exp1 = 8
 	general: exp2 = 8
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapArmy_Reverse
@@ -1619,6 +1620,7 @@
 	general: exp1 = 10
 	general: exp2 = 0
 	general: exp3 = 0
+	general: bid = b98fe0e9-27c4-4951-bf0c-ceebd39c9421
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_TINT
 	clothing: Pants = Base.Trousers_Shellsuit_TINT
@@ -1689,6 +1691,7 @@
 	general: exp1 = 11
 	general: exp2 = 0
 	general: exp3 = 0
+	general: bid = 355162d3-ce3a-44e8-bc77-da0e36f108ef
 	clothing: Necklace = Base.Necklace_Gold
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Pants = Base.Trousers_Shellsuit_TINT
@@ -1712,6 +1715,7 @@
 	general: exp1 = 10
 	general: exp2 = 5
 	general: exp3 = 0
+	general: bid = 64eec485-4a40-4a28-a759-1c58b3183490
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_Green
 	clothing: ShortPants = Base.Shorts_LongSport
 	clothing: Socks = Base.Socks_Ankle_White
@@ -1735,6 +1739,7 @@
 	general: exp1 = 10
 	general: exp2 = 9
 	general: exp3 = 0
+	general: bid = 38af5592-dce1-4429-b8a5-26f16209d511
 	clothing: Tshirt = Base.Tshirt_Sport
 	clothing: ShortPants = Base.Shorts_LongSport_Red
 	clothing: Socks = Base.Socks_Ankle
@@ -1755,7 +1760,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 4
-	general: exp1 = 0
+	general: exp1 = 3
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCap
@@ -1781,7 +1786,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 4
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Cowboy
@@ -1806,7 +1811,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 4
-	general: exp1 = 0
+	general: exp1 = 11
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Shirt = Base.Shirt_Lumberjack_TINT
@@ -1876,7 +1881,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 2
-	general: exp1 = 0
+	general: exp1 = 4
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_StrawHat
@@ -1899,7 +1904,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 3
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Cowboy_Black
@@ -1925,7 +1930,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 2
-	general: exp1 = 0
+	general: exp1 = 8
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapRed
@@ -2023,7 +2028,7 @@
 	general: endurance = 5
 	general: sight = 3
 	general: exp1 = 11
-	general: exp2 = 0
+	general: exp2 = 4
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapRed
 	clothing: Shirt = Base.Shirt_Lumberjack_TINT
@@ -2087,14 +2092,14 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 13
+	general: exp2 = 16
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HalloweenMaskDevil
 	clothing: BathRobe = Base.BlackRobe
 	clothing: Hands = Base.Gloves_LeatherGlovesBlack
-	clothing: Shoes = Base.Shoes_CowboyBoots_Black
 	clothing: Socks = Base.Socks_Ankle_Black
+	clothing: Shoes = Base.Shoes_CowboyBoots_Black
 	weapons: melee = Base.Katana
 
 [48fe3de2-320e-48e1-af7c-ae64fd9bca0e]
@@ -2314,7 +2319,7 @@
 	general: endurance = 5
 	general: sight = 8
 	general: exp1 = 9
-	general: exp2 = 12
+	general: exp2 = 7
 	general: exp3 = 0
 	clothing: Neck = Base.ShemaghScarfFace
 	clothing: Tshirt = Base.Tshirt_DefaultTEXTURE
@@ -2699,8 +2704,8 @@
 	general: strength = 6
 	general: endurance = 6
 	general: sight = 6
-	general: exp1 = 12
-	general: exp2 = 0
+	general: exp1 = 1
+	general: exp2 = 9
 	general: exp3 = 0
 	clothing: Eyes = Base.Glasses_Aviators
 	clothing: Neck = Base.Tie_Full
@@ -2818,7 +2823,7 @@
 	general: endurance = 5
 	general: sight = 6
 	general: exp1 = 2
-	general: exp2 = 12
+	general: exp2 = 1
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BandanaMask
 	clothing: Tshirt = Base.Tshirt_Metal
@@ -2880,7 +2885,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 12
+	general: exp2 = 9
 	general: exp3 = 0
 	clothing: Neck = Base.ShemaghScarf
 	clothing: Tshirt = Base.Tshirt_Metal
@@ -2910,7 +2915,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 12
+	general: exp2 = 1
 	general: exp3 = 0
 	clothing: Neck = Base.ShemaghScarfFace
 	clothing: Tshirt = Base.Tshirt_Metal
@@ -3304,8 +3309,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 12
+	general: exp2 = 11
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
@@ -3336,8 +3341,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 12
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
@@ -3368,9 +3373,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
+	general: exp1 = 12
+	general: exp2 = 3
+	general: exp3 = 2
 	clothing: Hat = Base.Hat_BonnieHat_CamoGreen
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
@@ -3399,8 +3404,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 12
+	general: exp2 = 4
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapArmy
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
@@ -3431,9 +3436,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
+	general: exp1 = 12
+	general: exp2 = 8
+	general: exp3 = 2
 	clothing: Hat = Base.Hat_BaseballCapArmy_Reverse
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Shirt = Base.Shirt_Crafted_DenimBlack
@@ -3463,9 +3468,9 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 9
-	general: exp1 = 0
-	general: exp2 = 0
-	general: exp3 = 0
+	general: exp1 = 12
+	general: exp2 = 13
+	general: exp3 = 2
 	clothing: Hat = Base.Hat_BaseballCapArmy
 	clothing: Tshirt = Base.Tshirt_Profession_VeterenRed
 	clothing: Jacket = Base.Jacket_ArmyCamoGreen
@@ -3621,7 +3626,7 @@
 	general: sight = 9
 	general: exp1 = 1
 	general: exp2 = 9
-	general: exp3 = 12
+	general: exp3 = 0
 	clothing: Ears = Base.Earring_BirdSkull
 	clothing: MaskEyes = Base.Hat_BoneMask
 	clothing: Necklace = Base.Necklace_Teeth
@@ -3764,7 +3769,7 @@
 	general: sight = 4
 	general: exp1 = 5
 	general: exp2 = 6
-	general: exp3 = 0
+	general: exp3 = 10
 	clothing: Gorget = Base.Necklace_Choker_Bone
 	clothing: Hands = Base.Gloves_BoneGloves
 	clothing: Pants = Base.Trousers_Hide
@@ -3810,7 +3815,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
@@ -3835,7 +3840,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
@@ -3861,7 +3866,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
@@ -3887,7 +3892,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
+	general: exp1 = 5
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
@@ -3913,8 +3918,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
-	general: exp2 = 0
+	general: exp1 = 5
+	general: exp2 = 2
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
 	clothing: ShortSleeveShirt = Base.Shirt_NoSleeves_Crafted_DenimBlack
@@ -3939,8 +3944,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 12
-	general: exp2 = 0
+	general: exp1 = 5
+	general: exp2 = 2
 	general: exp3 = 0
 	clothing: MaskEyes = Base.Hat_HockeyMask_Silver
 	clothing: Tshirt = Base.Tshirt_DefaultDECAL
@@ -4642,7 +4647,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: ShortPants = Base.Shorts_LongDenim_Punk
@@ -4665,7 +4670,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 11
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Tshirt = Base.Tshirt_Metal
 	clothing: ShortsShort = Base.Shorts_ShortDenim
@@ -4790,64 +4795,6 @@
 	ammo: secondary = 2
 	bag: name = Base.Bag_SWAT
 
-[3c4e1ff8-1b6e-4810-b7c5-8880d3637765]
-	general: modid = Bandits2
-	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
-	general: name = Hiker_Spongies_01
-	general: female = true
-	general: skin = 4
-	general: hairType = 20
-	general: beardType = 1
-	general: hairColor = 12
-	general: health = 5
-	general: strength = 5
-	general: endurance = 5
-	general: sight = 5
-	general: exp1 = 4
-	general: exp2 = 9
-	general: exp3 = 0
-	clothing: Tshirt = Base.Tshirt_DefaultDECAL
-	clothing: TorsoExtra = Spongie.Jumper_MilitaryTIED
-	clothing: LeftWrist = Base.WristWatch_Left_DigitalRed
-	clothing: BeltExtra = Base.HolsterSimple_Brown
-	clothing: ShortPants = Base.Shorts_CamoGreenLong
-	clothing: Socks = Base.Socks_Ankle_White
-	clothing: Shoes = Base.Shoes_HikingBoots
-	tint: TorsoExtra = 1730099
-	weapons: secondary = Base.Revolver_Short
-	weapons: melee = Base.KitchenKnife
-	ammo: secondary = 2
-	bag: name = Base.Bag_ALICEpack_Army
-
-[e3ea9946-ca1b-4c14-8c7f-cf6c8877ded2]
-	general: modid = Bandits2
-	general: cid = 6e319aac-4480-4367-aa9a-5d4bf2ced9d1
-	general: name = Hiker_Spongies_02
-	general: female = false
-	general: skin = 1
-	general: hairType = 15
-	general: beardType = 9
-	general: hairColor = 13
-	general: health = 5
-	general: strength = 5
-	general: endurance = 5
-	general: sight = 5
-	general: exp1 = 4
-	general: exp2 = 4
-	general: exp3 = 0
-	clothing: Hat = Base.Hat_Bandana_Green
-	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
-	clothing: Tshirt = Base.Tshirt_WhiteTINT
-	clothing: TorsoExtraVest = Base.Vest_Hunting_Camo
-	clothing: TorsoExtra = Spongie.Jumper_MilitaryTIED
-	clothing: LeftWrist = Base.WristWatch_Left_DigitalBlack
-	clothing: ShortPants = Base.Shorts_CamoGreenLong
-	clothing: Socks = Base.Socks_Ankle
-	clothing: Shoes = Base.Shoes_HikingBoots
-	tint: Tshirt = 1730099
-	weapons: melee = Base.SpearHuntingKnife
-	bag: name = Base.Bag_ALICEpack
-
 [1d370773-de89-44ea-ba31-d6431f1638a2]
 	general: modid = Bandits2
 	general: cid = 48b1d4b0-ca4e-4b02-ab56-e1fff39afe48
@@ -4862,7 +4809,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 12
+	general: exp2 = 5
 	general: exp3 = 0
 	clothing: Neck = Base.ShemaghScarfFace
 	clothing: Tshirt = Base.Tshirt_Metal
