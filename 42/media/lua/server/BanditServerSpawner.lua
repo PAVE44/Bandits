@@ -477,10 +477,12 @@ local function spawnGroup(spawnPoints, args)
                                                                   crawler, fallOnFront, fakeDead, 
                                                                   knockedDown, invulnerable, sitting,
                                                                   health)
-        local zombie = zombieList:get(0)
-        banditize(zombie, bandit, clan, args)
 
-        i = i + 1
+        if zombieList:size() > 0 then
+            local zombie = zombieList:get(0)
+            banditize(zombie, bandit, clan, args)
+            i = i + 1
+        end
     end
     return i - 1
 end

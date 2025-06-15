@@ -160,7 +160,7 @@ end
 ZombieActions.LootWeapons.onComplete = function(zombie, task)
     local emitter = zombie:getEmitter()
     if emitter:isPlaying("RummageInInventory") then
-        emitter:stopSoundByName("ChainsawIdle")
+        emitter:stopSoundByName("RummageInInventory")
     end
 
     local cell = getCell()
