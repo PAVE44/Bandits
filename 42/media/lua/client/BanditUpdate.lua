@@ -148,6 +148,10 @@ local function Banditize(zombie, brain)
     -- makes bandit unstuck after spawns
     zombie:setTurnAlertedValues(-5, 5)
 
+    local desc = zombie:getDescriptor()
+    -- local test = desc:getVoicePrefix()
+    desc:setVoicePrefix("Bandit")
+
 end
 
 -- turns bandit into a zombie

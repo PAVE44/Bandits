@@ -204,15 +204,8 @@ end
 
 BanditCompatibility.SurpressZombieSounds = function(bandit)
     if getGameVersion() >= 42 then
-        local emitter = bandit:getEmitter()
-        local a = bandit:getVoiceSoundName()
-        local b = bandit:getBiteSoundName()
-        if emitter and emitter:isPlaying(a) then
-            emitter:stopSoundByName(a)
-        end
-        if emitter and emitter:isPlaying(b) then
-            emitter:stopSoundByName(b)
-        end
+        local desc = bandit:getDescriptor()
+        desc:setVoicePrefix("Bandit")
     else
         bandit:getEmitter():stopSoundByName("MaleZombieCombined")
         bandit:getEmitter():stopSoundByName("FemaleZombieCombined")
