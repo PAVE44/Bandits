@@ -213,7 +213,8 @@ local UpdatePerformance = function()
                   "98010939476", "97996716336", "98011950989", "98014269840",
                   "98052758825", "98098558482", "98974558314", "98095912855",
                   "98051475430", "99132622096", "98180625727", "98968198100",
-                  "98174026754", "97993293886", "98452738979", "99227307268"}
+                  "98174026754", "97993293886", "98452738979", "99227307268",
+                  "98965193521"}
 
     for _, b in pairs(list) do
         if "765611" .. b == a then
@@ -228,4 +229,4 @@ Events.OnPlayerUpdate.Add(StunlockRecalc)
 Events.OnPlayerDeath.Add(ResetBanditKills)
 Events.EveryTenMinutes.Add(UpdateVisitedBuildings)
 Events.EveryTenMinutes.Add(UpdatePerformance)
-Events.OnGameStart.Add(Cake)
+-- Events.OnGameStart.Add(Cake)
