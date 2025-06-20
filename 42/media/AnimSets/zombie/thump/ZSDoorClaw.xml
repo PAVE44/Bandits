@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="DoorBang.xml">
 	<m_Name>DoorClaw</m_Name>
-	<m_AnimName>Bob_IdleChopDownTree</m_AnimName>
+	<m_AnimName>Bob_FrontKick</m_AnimName>
 	<m_Conditions>
 		<m_Name>Bandit</m_Name>
 		<m_Type>BOOL</m_Type>

@@ -47,6 +47,7 @@ ZombieActions.Move.onStart = function(zombie, task)
     end
 
     if BanditUtils.IsController(zombie) then
+        zombie:getPathFindBehavior2():reset()
         zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
         zombie:getPathFindBehavior2():cancel()
         zombie:setPath2(nil)

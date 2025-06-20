@@ -35,10 +35,10 @@ BanditTest.Check = function()
     end]]
     
     -- UI refresh rate
-    if getCore():getOptionUIRenderFPS() < 120 then
+    if getCore():getOptionUIRenderFPS() < 60 then
         -- getCore():setOptionUIRenderFPS(120)
-        getCore():setOptionUIRenderFPS(120)
-        table.insert(problems, "UI rendering FPS was too low and was changed to 120. This way the visual effects will run with the proper timing and smoothness.")
+        getCore():setOptionUIRenderFPS(60)
+        table.insert(problems, "UI rendering FPS was too low and was changed to 60. This way the visual effects will run with the proper timing and smoothness.")
     end
     
     -- report problems
