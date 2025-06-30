@@ -1415,7 +1415,7 @@ local function UpdateZombies(zombie)
 
     local asn = zombie:getActionStateName()
     local zid = zombie:getModData().zid
-    if zid and biteTab[zid] and zombie:getBumpType() == "Bite" and asn == "bumped" then
+    if zid and biteTab[zid] and (zombie:getBumpType() == "Bite" or zombie:getBumpType() == "BiteLow") and asn == "bumped" then
         local tick = biteTab[zid].tick
         if tick == 9 then
             local bandit = biteTab[zid].bandit
@@ -1573,11 +1573,15 @@ local function UpdateZombies(zombie)
                             return
                         end
 
-                        if zombie:getBumpType() ~= "Bite" and asn ~= "staggerback" then
+                        if zombie:getBumpType() ~= "Bite" and zombie:getBumpType() ~= "BiteLow" and asn ~= "staggerback" then
                             -- prevents zombie into entering real attack state (we want simulate out own attack)
                             -- zombie:setVariable("bAttack", false)
                             bandit:setZombiesDontAttack(true)
-                            zombie:setBumpType("Bite")
+                            if bandit:isProne() or bandit:isCrawling() then
+                                zombie:setBumpType("BiteLow")
+                            else
+                                zombie:setBumpType("Bite")
+                            end
                             local zid = BanditUtils.GetCharacterID(zombie)
                             zombie:getModData().zid = zid 
                             biteTab[zid] = {bandit=bandit, tick=0}
@@ -1950,16 +1954,16 @@ local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     end
 end
 
-local function OnZombieDead(zombie)
+local function OnZombieDead(bandit)
 
-    if zombie:getVariableBoolean("Bandit") then 
+    if bandit:getVariableBoolean("Bandit") then 
 
-        local brain = BanditBrain.Get(zombie)
-        local inventory = zombie:getInventory()
+        local brain = BanditBrain.Get(bandit)
+        local inventory = bandit:getInventory()
         local items = ArrayList.new()
 
-        local veh = zombie:getVehicle()
-        if veh then veh:exit(zombie) end
+        local veh = bandit:getVehicle()
+        if veh then veh:exit(bandit) end
 
         inventory:getAllEvalRecurse(predicateRemovable, items)
         for i=0, items:size()-1 do
@@ -1971,7 +1975,7 @@ local function OnZombieDead(zombie)
         -- update stuck weapons
         local stuckLocationList = {"MeatCleaver in Back", "Axe Back", "Knife in Back", "Knife Left Leg", "Knife Right Leg", "Knife Shoulder", "Knife Stomach"}
         for _, stuckLocation in pairs(stuckLocationList) do
-            local attachedItem = zombie:getAttachedItem(stuckLocation)
+            local attachedItem = bandit:getAttachedItem(stuckLocation)
             if attachedItem then
                 inventory:AddItem(attachedItem)
                 inventory:setDrawDirty(true)
@@ -2007,7 +2011,7 @@ local function OnZombieDead(zombie)
                             bagContainer:AddItem(c3)
                         end
                     end
-                    zombie:getSquare():AddWorldInventoryItem(bag, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+                    bandit:getSquare():AddWorldInventoryItem(bag, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
                 end
             end
         end
@@ -2018,14 +2022,14 @@ local function OnZombieDead(zombie)
             item:setKeyId(brain.key)
             item:setName("Building Key")
             inventory:AddItem(item)
-            Bandit.UpdateItemsToSpawnAtDeath(zombie)
+            Bandit.UpdateItemsToSpawnAtDeath(bandit)
         end
 
-        Bandit.Say(zombie, "DEAD", true)
+        Bandit.Say(bandit, "DEAD", true)
 
         -- update player kills
         local player = getSpecificPlayer(0)
-        local killer = zombie:getAttackedBy()
+        local killer = bandit:getAttackedBy()
         if killer then
             if killer == player then
                 local args = {}
@@ -2036,21 +2040,33 @@ local function OnZombieDead(zombie)
         end
 
         -- warning: bwo overwrites CheckFriendlyFire
-        local attacker = zombie:getAttackedBy()
-        BanditPlayer.CheckFriendlyFire(zombie, attacker)
+        local attacker = bandit:getAttackedBy()
+        BanditPlayer.CheckFriendlyFire(bandit, attacker)
 
         -- deprovision
-        zombie:setUseless(false)
-        zombie:setReanim(false)
-        zombie:setVariable("Bandit", false)
-        zombie:setPrimaryHandItem(nil)
-        zombie:clearAttachedItems()
-        zombie:resetEquippedHandsModels()
+        bandit:setUseless(false)
+        bandit:setReanim(false)
+        bandit:setVariable("Bandit", false)
+        bandit:setPrimaryHandItem(nil)
+        bandit:clearAttachedItems()
+        bandit:resetEquippedHandsModels()
 
         args = {}
         args.id = brain.id
         sendClientCommand(player, 'Commands', 'BanditRemove', args)
-        BanditBrain.Remove(zombie)
+        BanditBrain.Remove(bandit)
+
+        local bx, by = bandit:getX(), bandit:getY()
+        local zombieList = BanditZombie.CacheLightZ
+        for id, zombie in pairs(zombieList) do
+            local dist = math.abs(bx - zombie.x) + math.abs(by - zombie.y)
+            if dist < 10 then
+                local zombie = BanditZombie.Cache[id]
+                if zombie then
+                    zombie:setEatBodyTarget(bandit, true)
+                end
+            end
+        end
     end
 
     -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
