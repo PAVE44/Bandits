@@ -14,7 +14,7 @@ function PlayerDamageModel.BulletHit(shooter, item, player)
         UpperLeg_L = {prob = 6, dmg=5},
         Groin = {prob = 7, dmg=10},
         Neck = {prob = 1, dmg=10},
-        Head = {prob = 2, dmg=100},
+        Head = {prob = 2, dmg=75},
         Torso_Lower = {prob = 18, dmg=10},
         Torso_Upper = {prob = 28, dmg=10},
         UpperArm_R = {prob = 5, dmg=5},
