@@ -446,15 +446,6 @@ local function ManageSpeechCooldown(brain)
     end
 end
 
--- reduces cooldown for bandit sounds
-local function ManageSoundCoolDown(brain)
-    if brain.sound and brain.sound > 0 then
-        brain.sound = brain.sound - 0.001
-        if brain.sound < 0 then brain.sound = 0 end
-        -- BanditBrain.Update(bandit, brain)
-    end
-end
-
 -- applies tweaks based on bandit action state
 local function ManageActionState(bandit)
     local asn = bandit:getActionStateName()
@@ -1868,9 +1859,6 @@ local function OnBanditUpdate(zombie)
 
     -- MANAGE BANDIT SPEECH COOLDOWN
     ManageSpeechCooldown(brain)
-
-    -- MANAGE BANDIT SOUND COOLDOWN
-    ManageSoundCoolDown(brain)
 
     -- ACTION STATE TWEAKS
     local continue = ManageActionState(bandit)

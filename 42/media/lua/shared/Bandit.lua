@@ -1005,7 +1005,6 @@ function Bandit.Say(zombie, phrase, force)
 
                 brain.speech = length
 
-                addSound(getSpecificPlayer(0), zombie:getX(), zombie:getY(), zombie:getZ(), 5, 50)
             end
         end
     end

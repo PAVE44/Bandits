@@ -61,9 +61,23 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local long = emitter:playSound(swingSound)
     -- emitter:setParameterValueByName(long, "CameraZoom", 1.0)
 
-    if not brainShooter.sound or brainShooter.sound == 0 then
-        addSound(getSpecificPlayer(0), sx, sy, sz, 40, 100)
-        brainShooter.sound = 1
+    --[[
+    local wsm = getWorldSoundManager()
+    local radius = weaponItem:getSoundRadius()
+    local volume = weaponItem:getSoundVolume()
+    wsm:addSound(zombie, math.floor(sx), math.floor(sy), math.floor(sz), radius, volume, false)]]
+
+    local radius = weaponItem:getSoundRadius()
+    local volume = weaponItem:getSoundVolume()
+    local zombieList = BanditZombie.CacheLightZ
+    for id, zombie in pairs(zombieList) do
+        local dist = math.abs(sx - zombie.x) + math.abs(sy - zombie.y)
+        if dist < radius then
+            local zombie = BanditZombie.Cache[id]
+            if zombie then
+                zombie:pathToLocationF(sx, sy, sz)
+            end
+        end
     end
 
     -- manage line of fire damage to characters and objects

@@ -285,6 +285,9 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
             local hitSound = "ZSHit" .. tostring(1 + ZombRand(3))
             victim:playSound(hitSound)
 
+            PlayerDamageModel.BulletHit(shooter, item, victim)
+            --[[
+
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             victim:setHitFromBehind(shooter:isBehind(victim))
             victim:Hit(item, fakeZombie, damageSplit, false, 1, false)
@@ -306,6 +309,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                 victim:setBumpFall(true)
                 victim:setBumpFallType("pushedBehind")
             end
+            ]]
 
         elseif instanceof(victim, "IsoZombie") and not victim:isOnKillDone() then
             local brainVictim = BanditBrain.Get(victim)
