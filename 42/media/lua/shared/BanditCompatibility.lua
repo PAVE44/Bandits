@@ -178,6 +178,14 @@ BanditCompatibility.IsReanimatedForGrappleOnly = function(zombie)
     end
 end
 
+BanditCompatibility.IsRagdoll = function(zombie)
+    if getGameVersion() >= 42 then
+        return zombie:isRagdoll()
+    else
+        return false
+    end
+end
+
 BanditCompatibility.AddZombiesInOutfit = function(x, y, z, outfit, femaleChance, crawler, isFallOnFront, isFakeDead, knockedDown, isInvulnerable, isSitting, health)
     local zombieList
     if getGameVersion() >= 42 then

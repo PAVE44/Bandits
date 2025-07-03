@@ -1126,7 +1126,7 @@ local function ManageCombat(bandit)
                                         if prone then fix = -0.2 end
 
                                         if dist <= maxRangeMelee + fix then
-                                            shove = dist < 0.5 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown"
+                                            shove = dist < 0.5 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown" and not BanditCompatibility.IsRagdoll(potentialEnemy)
                                             combat = not shove
                                         end
                                     else
@@ -1756,6 +1756,8 @@ local function OnBanditUpdate(zombie)
 
     if BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then return end
 
+    if BanditCompatibility.IsRagdoll(zombie) then return end
+
     local id = BanditUtils.GetZombieID(zombie)
     local zx = zombie:getX()
     local zy = zombie:getY()
@@ -1906,7 +1908,7 @@ local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
 
     BanditPlayer.CheckFriendlyFire(bandit, attacker)
 
-    if handWeapon:isRanged() then
+    if handWeapon:isRanged() and instanceof(attacker, "IsoPlayer") then
         local bodyPartTypes = {
             Foot_R = {},
             Foot_L = {},

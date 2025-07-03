@@ -403,8 +403,19 @@ local function Hit(attacker, item, victim)
                 local brainAttacker = BanditBrain.Get(attacker)
                 local strengthBoost = brainAttacker.strengthBoost or 1
                 dmg = dmg * strengthBoost
-                -- print ("DMG: " .. dmg)
-                victim:Hit(item, fakeZombie, dmg, false, 1, false)
+                print ("DMG: " .. dmg)
+
+                -- method 1
+                -- local vehicle = BaseVehicle.new(getCell())
+                -- local dmg = victim:Hit(vehicle, dmg, behind, attacker:getX(), attacker:getY())
+
+                -- method 2
+                -- victim:Hit(item, fakeZombie, dmg, false, 1, false)
+
+                -- method 2
+                local fakeItem = BanditCompatibility.InstanceItem("Base.Pistol")
+                victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
+
 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)
