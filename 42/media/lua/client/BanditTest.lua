@@ -7,7 +7,7 @@ BanditTest.Check = function()
     -- sound test
     local volume = getSoundManager():getSoundVolume()
     if volume < 0.8 then
-        table.insert(problems, "Sound volume is too low. As a result, mod sounds will be too loud compared to other sounds. Consider rising sound volume above 80% and then decrease your operating system volume to compensate.")
+        table.insert(problems, "Sound volume is too low. As a result, mod sounds will be too loud compared to original game sounds. Consider rising sound volume to 90% or 100% and then decrease your operating system volume to compensate.")
     end
 
     -- square access test

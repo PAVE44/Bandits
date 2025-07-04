@@ -382,7 +382,13 @@ local function Hit(attacker, item, victim)
             victim:setHitFromBehind(behind)
             victim:setAttackedBy(attacker)
 
+            local dmg = item:getMaxDamage()
+            local brainAttacker = BanditBrain.Get(attacker)
+            local strengthBoost = brainAttacker.strengthBoost or 1
+            dmg = dmg * strengthBoost
+
             if instanceof(victim, "IsoZombie") then
+                dmg = dmg * 1.25
                 victim:setHitAngle(attacker:getForwardDirection())
                 victim:setPlayerAttackPosition(victim:testDotSide(attacker))
                 victim:setHitHeadWhileOnFloor(0)
@@ -390,54 +396,26 @@ local function Hit(attacker, item, victim)
                 if BanditRandom.Get() % 4 == 0 then
                     addStuckItem(attacker, victim, behind, item)
                 end
-            end
 
-            if item:getFullType() == "Base.BareHands" and instanceof(victim, "IsoPlayer") then
-                PlayerDamageModel.BareHandHit(attacker, victim)
-            else
-                -- victim:setBumpDone(true)
-                local dmg = item:getMaxDamage()
-                if instanceof(victim, "IsoZombie") then
-                    dmg = dmg * 1.25
-                end
-                local brainAttacker = BanditBrain.Get(attacker)
-                local strengthBoost = brainAttacker.strengthBoost or 1
-                dmg = dmg * strengthBoost
-                print ("DMG: " .. dmg)
-
-                -- method 1
-                -- local vehicle = BaseVehicle.new(getCell())
-                -- local dmg = victim:Hit(vehicle, dmg, behind, attacker:getX(), attacker:getY())
-
-                -- method 2
-                -- victim:Hit(item, fakeZombie, dmg, false, 1, false)
-
-                -- method 2
                 local fakeItem = BanditCompatibility.InstanceItem("Base.Pistol")
                 victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
-
+                victim:playSound(item:getZombieHitSound())
 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)
                 local args={id=id, h=h}
                 sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
-            end
-
-            victim:playSound(item:getZombieHitSound())
-
-            -- addBlood(victim, 100)
-            -- addBlood(attacker, 30)
-
-            BanditCompatibility.Splash(victim, item, fakeZombie)
-
-            if instanceof(victim, "IsoPlayer") then
+            else
+                if item:getFullType() == "Base.BareHands" then
+                    PlayerDamageModel.BareHandHit(attacker, victim)
+                else
+                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
+                end
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
 
-            if victim:getHealth() <= 0 then 
-                -- victim:setKnifeDeath(true)
-                -- :Kill(getCell():getFakeZombieForHit(), true) 
-            end
+            BanditCompatibility.Splash(victim, item, fakeZombie)
+
         end
 
         -- addSound(getPlayer(), victim:getX(), victim:getY(), victim:getZ(), 4, 50)
