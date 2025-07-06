@@ -77,6 +77,17 @@ local UpdateZombieCache = function(numberTicks)
                 if zombie:getVariableBoolean("Bandit")  then
                     light.isBandit = true
                     light.brain = BanditBrain.Get(zombie)
+
+                    light.rid = nil
+                    local room = zombie:getSquare():getRoom()
+                    if room then
+                        local roomDef = room:getRoomDef()
+                        if roomDef then
+                            light.rid = roomDef:getIDString()
+                            -- print ("RID: " .. light.rid)
+                        end
+                    end
+
                     cacheLightB[id] = light
 
                     -- zombies in hitreaction state are not processed by onzombieupdate
@@ -84,6 +95,7 @@ local UpdateZombieCache = function(numberTicks)
                     -- logically this does not fit here, should be a separate process
                     -- but it's here due to performance optimization to avoid additional iteration
                     -- over zombieList
+                    --[[
                     if math.abs(px - zx) < 12 and math.abs(py - zy) < 12 then
                         local asn = zombie:getActionStateName()
                         for _, ss in pairs(silenceStates) do
@@ -100,6 +112,7 @@ local UpdateZombieCache = function(numberTicks)
                             end
                         end
                     end
+                    ]]
                 else
                     light.isBandit = false
                     cacheLightZ[id] = light
