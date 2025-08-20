@@ -599,7 +599,7 @@ local function ManageCollisions(bandit)
 
     if Bandit.HasActionTask(bandit) then return {} end
 
-    bandit:setCollidable(true)
+    -- bandit:setCollidable(true)
 
     if not bandit:isCollidedThisFrame() then return {} end
 
@@ -1126,10 +1126,10 @@ local function ManageCombat(bandit)
                                         if prone then fix = -0.2 end
 
                                         if dist <= maxRangeMelee + fix then
-                                            shove = dist < 0.5 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown" and not BanditCompatibility.IsRagdoll(potentialEnemy)
+                                            shove = dist < 0.0 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown" and not BanditCompatibility.IsRagdoll(potentialEnemy)
                                             combat = not shove
                                         end
-                                    else
+                                    elseif isOutOfAmmo or not weapons.primary.name or not weapons.secondary.name then
                                         switch = true
                                         switchTo = weapons.melee
                                         -- bandit:addLineChatElement("Melee" .. dist, 0.8, 0.8, 0.1)
@@ -1138,7 +1138,7 @@ local function ManageCombat(bandit)
                             end
 
                             --determine if bandit will be in shooting mode
-                            if not isOutOfAmmo and dist > meleeDist + 1 and not combat and not shove then
+                            if not isOutOfAmmo and not combat and not shove then
                                 if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                     if not maxRangeRifle then
                                         local item = BanditCompatibility.InstanceItem(weapons.primary.name)
@@ -1574,7 +1574,7 @@ local function UpdateZombies(zombie)
                         end
 
                         if zombie:getBumpType() ~= "Bite" and zombie:getBumpType() ~= "BiteLow" and asn ~= "staggerback" then
-                            -- prevents zombie into entering real attack state (we want simulate out own attack)
+                            -- prevents zombie into entering real attack state (we want simulate our own attack)
                             -- zombie:setVariable("bAttack", false)
                             bandit:setZombiesDontAttack(true)
                             if bandit:isProne() or bandit:isCrawling() then
@@ -1891,6 +1891,7 @@ local function OnBanditUpdate(zombie)
 end
 
 local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
+    
     if not zombie:getVariableBoolean("Bandit") then return end
 
     local bandit = zombie
@@ -2073,41 +2074,42 @@ local function OnZombieDead(bandit)
 
     -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
     -- and copies most of the properties to look as the original 
-    -- 42.8.1 seems to be fixed
-    if false and BanditCompatibility.GetGameVersion() >= 42 then
+    if SandboxVars.Bandits.General_CorpseSwapper and BanditCompatibility.GetGameVersion() >= 42 then
         local isSeen = false
         local playerList = BanditPlayer.GetPlayers()
         for i=0, playerList:size()-1 do
             local player = playerList:get(i)
-            if player and player:CanSee(zombie) and zombie:getSquare():isCanSee(0) then
-                isSeen = true
+            if player then
+                if  player:CanSee(bandit) then
+                    if bandit:getSquare():isCanSee(0) then
+                        isSeen = true
+                    end
+                end
             end
         end
 
-        if not isSeen then
-            local zombie2 = createZombie(zombie:getX(), zombie:getY(), zombie:getZ(), nil, 0, IsoDirections.S)
-            
-            local hv = zombie:getHumanVisual()
-            local hv2 = zombie2:getHumanVisual()
-            local inv = zombie:getInventory()
+        if not isSeen and not bandit:getVariableBoolean("BanditBecomingCorpse") then
+            bandit:setVariable("BanditBecomingCorpse", true)
+            local wornItems = bandit:getWornItems()
+            local inv = bandit:getInventory()
+            local hv = bandit:getHumanVisual()
             local arrItems = ArrayList.new()
             inv:getAllEvalRecurse(predicateAll, arrItems)
 
-            zombie2:setFemale(zombie:isFemale())
+            
+            local bandit2 = createZombie(bandit:getX(), bandit:getY(), bandit:getZ(), nil, 0, IsoDirections.fromAngle(bandit:getForwardDirection()))
+            local hv2 = bandit2:getHumanVisual()
+            bandit2:setFemale(bandit:isFemale())
             hv2:setSkinTextureName(hv:getSkinTexture())
             hv2:setHairModel(hv:getHairModel())
             hv2:setBeardModel(hv:getHairModel())
             hv2:setHairColor(hv:getHairColor()) 
             hv2:setBeardColor(hv:getBeardColor())
+            
+            bandit2:setWornItems(wornItems)
+            bandit2:setAttachedItems(bandit:getAttachedItems())
 
-            local wornItems = zombie:getWornItems()
-            zombie2:setWornItems(wornItems)
-            zombie2:setAttachedItems(zombie:getAttachedItems())
-
-            zombie:removeFromWorld()
-            zombie:removeFromSquare()
-
-            local body = IsoDeadBody.new(zombie2, false);
+            local body = IsoDeadBody.new(bandit2, false);
             inv2 = body:getContainer()
             for i = 0, wornItems:size() - 1 do
                 local wornItem = wornItems:get(i)
@@ -2119,6 +2121,13 @@ local function OnZombieDead(bandit)
                 local item = arrItems:get(i)
                 inv2:AddItem(item)
             end
+
+            bandit:removeFromSquare()
+            bandit:removeFromWorld()
+            
+            bandit2:removeFromWorld()
+            bandit2:removeFromSquare()
+            print ("----- CORPSE SWAPPED ------")
         end
     end
 

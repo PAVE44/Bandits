@@ -59,7 +59,7 @@ local UpdateZombieCache = function(numberTicks)
 
         local zombie = zombieList:get(i)
 
-        if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then
+        if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) and not zombie:isRagdoll() then
 
             local id = BanditUtils.GetZombieID(zombie)
 

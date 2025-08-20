@@ -55,6 +55,7 @@ Sandbox_EN = {
     Sandbox_Bandits.DefenderMaxOccupants = "Maximum number of bandit defenders in a buidling"
     Sandbox_Bandits.BaseSpawnHourlyChance = "Bandit base/camp hourly spawn chance (if location allows) [%]"
     Sandbox_Bandits.DefenderLootAmount = "Defender/Base loot amount"
+    Sandbox_Bandits.CorpseSwapper = "Attempt to remove frozen standing corpses"
 
     /***** WAVES *****/
     Sandbox_Bandits = "Bandits"

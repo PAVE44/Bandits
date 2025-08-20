@@ -217,6 +217,43 @@ local locationBlood = {
     ["Knife Stomach"] = {"Torso_Lower", "Back"}
 }
 
+local a2hr = {
+    ["Attack2HFloor"] = "Floor",
+    ["Attack2HStamp"] = "Floor",
+    ["HighKick"] = "HeadLeft",
+    ["FrontKick"] = "HeadLeft",
+    ["AttackBareHands1"] = "HeadLeft",
+    ["AttackBareHands2"] = "HeadLeft",
+    ["AttackBareHands3"] = "HeadRight",
+    ["AttackBareHands4"] = "HeadRight",
+    ["AttackBareHands5"] = "Uppercut",
+    ["AttackBareHands6"] = "Uppercut",
+    ["AttackBareHands2Bwd"] = "HeadLeft",
+    ["AttackBareHands4Bwd"] = "HeadRight",
+    ["Attack2H1"] = "HeadLeft",
+    ["Attack2H2"] = "HeadLeft",
+    ["Attack2H3"] = "HeadTop",
+    ["Attack2H4"] = "Uppercut",
+    ["Attack2H1Bwd"] = "HeadLeft",
+    ["Attack2H2Bwd"] = "HeadLeft",
+    ["Attack2H3Bwd"] = "Uppercut",
+    ["Attack1H1"] = "HeadLeft",
+    ["Attack1H2"] = "HeadLeft",
+    ["Attack1H3"] = "HeadLeft",
+    ["Attack1H4"] = "HeadTop",
+    ["Attack1H5"] = "HeadLeft",
+    ["Attack1H1Bwd"] = "HeadLeft",
+    ["Attack1H2Bwd"] = "HeadTop",
+    ["Attack1H3Bwd"] = "HeadLeft",
+    ["AttackS1"] = "HeadLeft",
+    ["AttackS2"] = "HeaqdRight",
+    ["AttackS1Bwd"] = "HeadLeft",
+    ["AttackS2Bwd"] = "HeadLeft",
+    ["AttackChainsaw1"] = "HeadLeft",
+    ["AttackChainsaw2"] = "HeadLeft",
+    ["AttackKnifeBwd"] = "HeadLeft",
+}
+
 local function getStuckLocations (behind, searchItemType)
     local ret = {}
     local locations = stuckItemLocations["Front"]
@@ -325,9 +362,8 @@ local function Bite(attacker, victim)
     end
 end
 
-local function Hit(attacker, item, victim)
+local function Hit(attacker, item, victim, hr)
     -- Clone the attacker to create a temporary IsoPlayer
-    -- local tempAttacker = BanditUtils.CloneIsoPlayer(attacker)
     local fakeZombie = getCell():getFakeZombieForHit()
 
     -- Calculate distance between attacker and victim
@@ -398,9 +434,13 @@ local function Hit(attacker, item, victim)
                 end
 
                 local fakeItem = BanditCompatibility.InstanceItem("Base.Pistol")
-                victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
+                -- victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false) -- ragdoll hit
+                if hr then
+                    fakeZombie:setVariable("ZombieHitReaction", hr)
+                end
+                victim:Hit(item, fakeZombie, dmg, false, 1, false) -- no-ragdoll hit
                 victim:playSound(item:getZombieHitSound())
-
+                
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)
                 local args={id=id, h=h}
@@ -518,6 +558,7 @@ ZombieActions.Smack.onStart = function(bandit, task)
 
     if anim then
         task.anim = anim
+        task.hr = a2hr[anim]
         -- Bandit.UpdateTask(bandit, task)
         bandit:setBumpType(anim)
     else
@@ -550,7 +591,7 @@ ZombieActions.Smack.onWorking = function(bandit, task)
             local brainEnemy = BanditBrain.Get(enemy)
             if BanditUtils.AreEnemies(brainEnemy, brainBandit) then
             -- if not brainEnemy or not brainEnemy.clan or brainBandit.clan ~= brainEnemy.clan or (brainBandit.hostile and not brainEnemy.hostile) then 
-                Hit (bandit, item, enemy)
+                Hit (bandit, item, enemy, task.hr)
             end
         end
 

@@ -948,28 +948,58 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     return task
 end
 
-function BanditUtils.CloneIsoPlayer(originalCharacter)
-    -- Create a new temporary IsoPlayer at the same position as the original player
-    local tempPlayer = IsoPlayer.new(nil, nil, originalCharacter:getX(), originalCharacter:getY(), originalCharacter:getZ())
+BanditUtils.HasAccessSquare = function(gridSquare)
+    local testSquares = {
+        gridSquare:getAdjacentSquare(IsoDirections.W),
+        gridSquare:getAdjacentSquare(IsoDirections.E),
+        gridSquare:getAdjacentSquare(IsoDirections.N),
+        gridSquare:getAdjacentSquare(IsoDirections.S),
+        gridSquare:getAdjacentSquare(IsoDirections.NW),
+        gridSquare:getAdjacentSquare(IsoDirections.NE),
+        gridSquare:getAdjacentSquare(IsoDirections.SW),
+        gridSquare:getAdjacentSquare(IsoDirections.SE),
+    }
 
-    -- Copy relevant properties from the original player to the temporary player
-    -- tempPlayer:setForname(originalCharacter:getForname())
-    -- tempPlayer:setSurname(originalCharacter:getSurname())
-    tempPlayer:setGhostMode(true) -- Ensure the temp player is not interactable
-    tempPlayer:setGodMod(true)    -- Ensure the temp player cannot die
-    tempPlayer:setPrimaryHandItem(originalCharacter:getPrimaryHandItem())
-    tempPlayer:setSecondaryHandItem(originalCharacter:getSecondaryHandItem())
-    tempPlayer:setSceneCulled(false)
-    tempPlayer:setNPC(true)
-    --[[
-    tempPlayer:setX(originalCharacter:getX())
-    tempPlayer:setY(originalCharacter:getY())
-    tempPlayer:setZ(originalCharacter:getZ())
-]]
+    for _, testSquare in pairs(testSquares) do
+        -- if AdjacentFreeTileFinder.privTrySquare(gridSquare, testSquare, {}) and testSquare:canReachTo(gridSquare) then return true end
+        if testSquare:isFree(false) and not gridSquare:isWallTo(testSquare) then return true end
+    end
+end
 
-    -- You can copy more properties as needed, depending on what you need for the Hit function
+BanditUtils.GetAccessSquare = function(gridSquare, bandit)
+    local choices = {}
+    local testSquares = {
+        gridSquare:getAdjacentSquare(IsoDirections.W),
+        gridSquare:getAdjacentSquare(IsoDirections.E),
+        gridSquare:getAdjacentSquare(IsoDirections.N),
+        gridSquare:getAdjacentSquare(IsoDirections.S),
+        gridSquare:getAdjacentSquare(IsoDirections.NW),
+        gridSquare:getAdjacentSquare(IsoDirections.NE),
+        gridSquare:getAdjacentSquare(IsoDirections.SW),
+        gridSquare:getAdjacentSquare(IsoDirections.SE),
+    }
 
-    return tempPlayer
+    for _, testSquare in pairs(testSquares) do
+        -- if AdjacentFreeTileFinder.privTrySquare(gridSquare, testSquare, {}) and testSquare:canReachTo(gridSquare) then return true end
+        if testSquare:isFree(false) and not gridSquare:isWallTo(testSquare) then 
+            table.insert(choices, testSquare)
+        end
+    end
+
+    if #choices > 0 then
+        local lowestdist = math.huge
+        local bestSquare
+ 
+        for i, square in ipairs(choices) do
+           local dist = square:DistToProper(bandit)
+           if dist < lowestdist then
+               lowestdist = dist
+               bestSquare = square
+           end
+        end
+ 
+         return bestSquare
+     end
 end
 
 function BanditUtils.GetNumNearbyBuildings()

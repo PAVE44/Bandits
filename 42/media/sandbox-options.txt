@@ -146,3 +146,8 @@ option Bandits.General_DefenderLootAmount = {
     type = enum, numValues=7, default = 5,
     page = Bandits_General, translation = Bandits.DefenderLootAmount, valueTranslation=Rarity,
 }
+
+option Bandits.General_CorpseSwapper = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.CorpseSwapper,
+}

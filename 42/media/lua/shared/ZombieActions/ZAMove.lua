@@ -3,13 +3,16 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
-    if not zombie:getSquare():isFree(false) then
-        local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)
-        if asquare then
-            zombie:setX(asquare:getX() + 0.5)
-            zombie:setY(asquare:getY() + 0.5)
+    local square = zombie:getSquare()
+    if not square:isFree(false) then
+        if BanditUtils.HasAccessSquare(square) then
+            local fd = zombie:getForwardDirection()
+            fd:setLength(0.025)
+            zombie:setX(zombie:getX() + fd:getX())
+            zombie:setY(zombie:getY() + fd:getY())
         end
     end
+
 
     zombie:setVariable("BanditWalkType", task.walkType)
 

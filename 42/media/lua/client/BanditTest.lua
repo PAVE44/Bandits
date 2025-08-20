@@ -11,6 +11,7 @@ BanditTest.Check = function()
     end
 
     -- square access test
+    --[[
     local cell = getCell()
     local player = getSpecificPlayer(0)
     local sqs = {
@@ -25,7 +26,7 @@ BanditTest.Check = function()
             table.insert(problems, "There is no access to a places located 70 squares away from player. As a result, bandits spawning may not occur and other features might also be affected. This may be inflicted by other mods such as betterFPS that limit access to distant squares. ")
             break
         end
-    end
+    end]]
 
     -- disabled zombies
     --[[

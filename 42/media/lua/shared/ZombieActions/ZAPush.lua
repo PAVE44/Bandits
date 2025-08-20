@@ -25,7 +25,7 @@ local function ShoveZombie (attacker, zombie)
         -- zombie:setBumpType("ZombiePushedFront")
         zombie:setStaggerBack(true)
         zombie:setKnockedDown(true)
-        zombie:setHitReaction("")
+        zombie:setHitReaction("ShotBelly")
     else
         zombie:setBumpType("ZombiePushedBack")
     end
