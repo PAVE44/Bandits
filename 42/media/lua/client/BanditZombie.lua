@@ -62,6 +62,9 @@ local UpdateZombieCache = function(numberTicks)
         if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) and not zombie:isRagdoll() then
 
             local id = BanditUtils.GetZombieID(zombie)
+            if id == 0 then -- reanimated zombie
+                zombie:setPersistentOutfitID(100000 + ZombRand(10000))
+            end
 
             if cache[id] and id ~= 0 then
                 -- print ("DUPLICATE ID " .. id)

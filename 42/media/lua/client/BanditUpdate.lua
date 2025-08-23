@@ -662,7 +662,7 @@ local function ManageCollisions(bandit)
 
                     -- WINDOW COLLISIONS
                     if instanceof(object, "IsoWindow") then
-                        if object:isInvincible() or (object:getSprite() and properties:Is("WindowLocked")) then
+                        if (object:isInvincible() or (object:getSprite() and properties:Is("WindowLocked"))) and (not brain.hostile and brain.program.name ~= "Civilian") then
                             RemoveWindowFromPathing(bandit, square)
                             
                         elseif bandit:isFacingObject(object, 0.5) then
@@ -728,7 +728,7 @@ local function ManageCollisions(bandit)
                                 end
 
                             elseif not object:IsOpen() and not object:isSmashed() then
-                                if SandboxVars.Bandits.General_SmashWindow and brain.hostile then
+                                if SandboxVars.Bandits.General_SmashWindow and (brain.hostile or brain.program.name == "Civilian") then
                                     local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                     table.insert(tasks, task)
                                 elseif not object:isPermaLocked() then
@@ -1091,6 +1091,7 @@ local function ManageCombat(bandit)
                 -- load real instance here
                 local potentialEnemy = cache[id]
                 if potentialEnemy:isAlive() and potentialEnemy:getHealth() > 0 and bandit:CanSee(potentialEnemy) then
+                --- if true then
                     local pesq = potentialEnemy:getSquare()
                     if pesq and pesq:getLightLevel(0) > 0.31 and not bandit:getSquare():isSomethingTo(pesq) then
                         local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
@@ -1129,7 +1130,7 @@ local function ManageCombat(bandit)
                                             shove = dist < 0.0 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown" and not BanditCompatibility.IsRagdoll(potentialEnemy)
                                             combat = not shove
                                         end
-                                    elseif isOutOfAmmo or not weapons.primary.name or not weapons.secondary.name then
+                                    else
                                         switch = true
                                         switchTo = weapons.melee
                                         -- bandit:addLineChatElement("Melee" .. dist, 0.8, 0.8, 0.1)
@@ -1138,7 +1139,7 @@ local function ManageCombat(bandit)
                             end
 
                             --determine if bandit will be in shooting mode
-                            if not isOutOfAmmo and not combat and not shove then
+                            if not isOutOfAmmo and dist > meleeDist + 1 and not combat and not shove then
                                 if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                     if not maxRangeRifle then
                                         local item = BanditCompatibility.InstanceItem(weapons.primary.name)
@@ -2053,6 +2054,7 @@ local function OnZombieDead(bandit)
         bandit:setPrimaryHandItem(nil)
         bandit:clearAttachedItems()
         bandit:resetEquippedHandsModels()
+        bandit:getModData().isDeadBandit = true
 
         args = {}
         args.id = brain.id
@@ -2090,6 +2092,7 @@ local function OnZombieDead(bandit)
 
         if not isSeen and not bandit:getVariableBoolean("BanditBecomingCorpse") then
             bandit:setVariable("BanditBecomingCorpse", true)
+            bandit:getModData().isDeadBandit = false
             local wornItems = bandit:getWornItems()
             local inv = bandit:getInventory()
             local hv = bandit:getHumanVisual()
@@ -2108,6 +2111,7 @@ local function OnZombieDead(bandit)
             
             bandit2:setWornItems(wornItems)
             bandit2:setAttachedItems(bandit:getAttachedItems())
+            bandit2:getModData().isDeadBandit = false
 
             local body = IsoDeadBody.new(bandit2, false);
             inv2 = body:getContainer()
@@ -2133,11 +2137,33 @@ local function OnZombieDead(bandit)
 
 end
 
+local function OnDeadBodySpawn(body)
+    --[[
+    local hv = body:getHumanVisual()
+    local skin = hv:getSkinTexture()
+    if skin:find("^FemaleBody") or skin:find("^MaleBody") then
+        local age = getGameTime():getWorldAgeHours()
+        body:setReanimateTime(age + ZombRandFloat(0.1, 0.7))
+    end
+    ]]
+    local md = body:getModData()
+    if body:getModData().isDeadBandit then
+        if body:getModData().isDeadBandit == true then
+            body:getModData().isDeadBandit = false
+            local age = getGameTime():getWorldAgeHours()
+            body:setReanimateTime(age + ZombRandFloat(0.1, 0.8))
+        end
+    end
+end
+
 Events.OnZombieUpdate.Remove(OnBanditUpdate)
 Events.OnZombieUpdate.Add(OnBanditUpdate)
 
 Events.OnHitZombie.Remove(OnHitZombie)
 Events.OnHitZombie.Add(OnHitZombie)
 
+Events.OnZombieDead.Remove(OnZombieDead)
 Events.OnZombieDead.Add(OnZombieDead)
-Events.OnZombieDead.Add(OnZombieDead)
+
+Events.OnDeadBodySpawn.Remove(OnDeadBodySpawn)
+Events.OnDeadBodySpawn.Add(OnDeadBodySpawn)
