@@ -137,6 +137,9 @@ local function Banditize(zombie, brain)
     -- wrongly refers to moodles, which zombie object does not have
     zombie:setVariable("ZombieHitReaction", "Chainsaw")
 
+    -- prevents the bandit from being the target of a lunge attack
+    zombie:setVariable("NoLungeTarget", true)
+
     -- stfu
     zombie:getEmitter():stopAll()
 
@@ -177,6 +180,7 @@ local function ApplyVisuals(bandit, brain)
 
     local skin = banditVisuals:getSkinTexture()
     if not skin or skin:find("^FemaleBody") or skin:find("^MaleBody") then return end
+    --if not skin or skin:find("^MaleCustom") then return end
 
     local itemVisuals = bandit:getItemVisuals()
 
@@ -192,6 +196,7 @@ local function ApplyVisuals(bandit, brain)
 
         if brain.skin then
             banditVisuals:setSkinTextureName(Bandit.GetSkinTexture(brain.female, brain.skin))
+            --banditVisuals:setSkinTextureName("MaleCustom")
         end
 
         if brain.hairType then
@@ -1410,7 +1415,12 @@ local biteTab = {}
 -- manages zombie behavior towards bandits
 local function UpdateZombies(zombie)
 
-    zombie:setVariable("NoLungeAttack", true)
+    local target = zombie:getTarget()
+    if target and target:getVariableBoolean("Bandit") then
+        zombie:setVariable("NoLungeAttack", true)
+    else
+        zombie:setVariable("NoLungeAttack", false) -- Re-enable lunge for zombies targeting players
+    end
     
     if zombie:getVariableBoolean("Bandit") then return end
 
@@ -1759,6 +1769,28 @@ local function OnBanditUpdate(zombie)
 
     if BanditCompatibility.IsRagdoll(zombie) then return end
 
+    local target = zombie:getTarget()
+    if target and instanceof(target, "IsoPlayer") and not target:getVariableBoolean("Bandit") then
+        -- If zombie is on the ground (crawling) and close enough to the player
+        if zombie:isCrawling() then
+            local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+            local px, py, pz = target:getX(), target:getY(), target:getZ()
+            local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py)))
+
+            if dist < 0.80 and math.abs(zz - pz) < 0.3 and zombie:CanSee(target) then
+                -- Check if there is no wall between zombie and player
+                local isWallTo = zombie:getSquare():isSomethingTo(target:getSquare())
+                if not isWallTo and zombie:isFacingObject(target, 0.3) then
+                    -- Enable lunging for players
+                    zombie:changeState(LungeState.instance())
+                    zombie:getPathFindBehavior2():cancel()
+                    zombie:setPath2(nil)
+                    return -- Important: Exit the function to avoid further processing
+                end
+            end
+        end
+    end
+    
     local id = BanditUtils.GetZombieID(zombie)
     local zx = zombie:getX()
     local zy = zombie:getY()
@@ -1893,6 +1925,50 @@ end
 
 local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
     
+    --[[
+    local visuals = zombie:getHumanVisual()
+    local femaleChance = zombie:isFemale() and 100 or 0
+    local hairModel = visuals:getHairModel()
+    local hairColor = visuals:getHairColor()
+    local beardModel
+    local beardColor
+    if femaleChance == 0 then
+        beardModel = visuals:getBeardModel()
+        beardColor = visuals:getBeardColor()
+    end
+    
+    visuals:setSkinTextureName("MaleBody01_Headless")
+    visuals:setHairModel("Bald")
+    zombie:resetModel()
+
+    local outfit = "Naked" .. (1 + ZombRand(101))
+    local zombieList = BanditCompatibility.AddZombiesInOutfit(zombie:getX(), zombie:getY(), zombie:getZ(), outfit, femaleChance, 
+                                                              false, false, false, 
+                                                              false, false, false,
+                                                              1)
+
+    if zombieList:size() > 0 then
+        local head = zombieList:get(0)
+        -- local head = createZombie(zombie:getX(), zombie:getY(), zombie:getZ(), nil, femaleChance, IsoDirections.fromAngle(zombie:getForwardDirection()))
+        local headVisuals = head:getHumanVisual()
+        local headItemVisuals = head:getItemVisuals()
+        headItemVisuals:clear()
+        head:dressInNamedOutfit("Naked1")
+        headVisuals:setSkinTextureName("MaleBody01_Head")
+        headVisuals:setHairModel(hairModel)
+        headVisuals:setHairColor(hairColor)
+        if femaleChance == 0 then
+            headVisuals:setBeardModel(beardModel)
+            headVisuals:setBeardColor(beardColor)
+        end
+        head:resetModel()
+        head:resetModelNextFrame()
+        head:setHealth(0)
+    end
+    ]]
+
+
+
     if not zombie:getVariableBoolean("Bandit") then return end
 
     local bandit = zombie
@@ -2147,11 +2223,17 @@ local function OnDeadBodySpawn(body)
     end
     ]]
     local md = body:getModData()
-    if body:getModData().isDeadBandit then
-        if body:getModData().isDeadBandit == true then
-            body:getModData().isDeadBandit = false
-            local age = getGameTime():getWorldAgeHours()
-            body:setReanimateTime(age + ZombRandFloat(0.1, 0.8))
+    if md.isDeadBandit then
+        if md.isDeadBandit == true then
+            md.isDeadBandit = false
+
+            local age
+            if md.reanimateAge then
+                age = md.reanimateAge
+            else
+                age = getGameTime():getWorldAgeHours() + ZombRandFloat(0.1, 0.8)
+            end
+            body:setReanimateTime(age)
         end
     end
 end

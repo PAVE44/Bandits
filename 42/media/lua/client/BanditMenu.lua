@@ -198,6 +198,10 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         end
     end
 
+    if zombie then
+        print ("zombieid" .. BanditUtils.GetZombieID(zombie))
+    end
+
     -- Player options
     if zombie and zombie:getVariableBoolean("Bandit") then
         local brain = BanditBrain.Get(zombie)
@@ -213,7 +217,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
                 banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
             end
         end
-        context:addOption("[DGB] Test action", player, BanditMenu.TestAction, square, zombie)
     end
 
     -- Debug options
