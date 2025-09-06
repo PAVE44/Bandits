@@ -1421,7 +1421,7 @@ local function UpdateZombies(zombie)
     else
         zombie:setVariable("NoLungeAttack", false) -- Re-enable lunge for zombies targeting players
     end
-    
+
     if zombie:getVariableBoolean("Bandit") then return end
 
     local asn = zombie:getActionStateName()
@@ -2137,6 +2137,7 @@ local function OnZombieDead(bandit)
         sendClientCommand(player, 'Commands', 'BanditRemove', args)
         BanditBrain.Remove(bandit)
 
+        --[[
         local bx, by = bandit:getX(), bandit:getY()
         local zombieList = BanditZombie.CacheLightZ
         for id, zombie in pairs(zombieList) do
@@ -2148,6 +2149,7 @@ local function OnZombieDead(bandit)
                 end
             end
         end
+        ]]
     end
 
     -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
