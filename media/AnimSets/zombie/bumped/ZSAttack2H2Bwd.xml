@@ -6,7 +6,7 @@
 	<m_Looped>false</m_Looped>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 	<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
-	<m_SpeedScale>1.00</m_SpeedScale>
+	<m_SpeedScale>0.9</m_SpeedScale>
 	<m_BlendTime>0.40</m_BlendTime>
 	<m_Conditions>
 		<m_Name>BumpType</m_Name>

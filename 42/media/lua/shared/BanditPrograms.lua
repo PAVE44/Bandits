@@ -442,7 +442,7 @@ BanditPrograms.Weapon.Resupply = function(bandit)
             table.insert(tasks, task)
             return tasks
         else
-            local task = {action="LootWeapons", anim="LootLow", time=250, x=lx, y=ly, z=lz}
+            local task = {action="LootWeapons", anim="LootLow", time=100, x=lx, y=ly, z=lz}
             table.insert(tasks, task)
             return tasks
         end

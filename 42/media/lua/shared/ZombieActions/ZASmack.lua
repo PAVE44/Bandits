@@ -481,7 +481,7 @@ ZombieActions.Smack.onStart = function(bandit, task)
 
     local soundSwing = meleeItem:getSwingSound()
     
-    task.attackTime = 50
+    task.attackTime = 56
 
     if prone then
         task.prone = true

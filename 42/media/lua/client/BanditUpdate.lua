@@ -149,7 +149,7 @@ local function Banditize(zombie, brain)
     zombie:clearAttachedItems()
 
     -- makes bandit unstuck after spawns
-    zombie:setTurnAlertedValues(-5, 5)
+    -- zombie:setTurnAlertedValues(-5, 5)
 
     local desc = zombie:getDescriptor()
     -- local test = desc:getVoicePrefix()
@@ -286,7 +286,6 @@ local function ApplyVisuals(bandit, brain)
             end
             -- bandit:setWornItem(item:canBeEquipped(), item)
         end
-        
     else
         if brain.skinTexture then 
             banditVisuals:setSkinTextureName(brain.skinTexture)
@@ -317,7 +316,7 @@ local function ApplyVisuals(bandit, brain)
     end
 
     -- Cleanup item visuals
-    
+
     for i = 0, itemVisuals:size() - 1 do
         local item = itemVisuals:get(i)
         if item then
@@ -1468,7 +1467,25 @@ local function UpdateZombies(zombie)
         return
     end
 
-    if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" then
+
+    local stuckTime = zombie:getModData().stuckTime or 0
+
+    --[[
+    if ans == "turnalerted" then
+        stuckTime = stuckTime + 1
+        zombie:getModData().stuckTime = stuckTime
+
+        -- If the zombie stays in turnalerted for too long (≈5 seconds)
+        if stuckTime > 300 then
+            zombie:getModData().stuckTime = 0
+            zombie:setActionStateName("idle")
+            zombie:setTurnDelta(0)
+            zombie:setTurnAlertedValues(0, 0)
+            zombie:resetModelNextFrame()
+        end
+    end]]
+
+    if asn == "bumped" or asn == "onground" or asn == "climbfence" or asn == "getup" or asn == "turnalerted" then
         return
     end
     if zombie:isProne() then return end
