@@ -464,6 +464,10 @@ local function Hit(attacker, item, victim, hr)
     -- Clean up the temporary player after use
     -- tempAttacker:removeFromWorld()
     -- tempAttacker = nil
+
+    if victim:getHealth() <= 1 then
+        Bandit.Say(attacker, "DEATH", true)
+    end
 end
 
 ZombieActions.Smack = {}

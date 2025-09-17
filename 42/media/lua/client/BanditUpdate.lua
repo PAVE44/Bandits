@@ -149,7 +149,7 @@ local function Banditize(zombie, brain)
     zombie:clearAttachedItems()
 
     -- makes bandit unstuck after spawns
-    -- zombie:setTurnAlertedValues(-5, 5)
+    zombie:setTurnAlertedValues(-5, 5)
 
     local desc = zombie:getDescriptor()
     -- local test = desc:getVoicePrefix()

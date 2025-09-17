@@ -361,6 +361,10 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
         victim:getSquare():playSound(missSound)
     end
 
+    if victim:getHealth() <= 1 then
+        Bandit.Say(shooter, "DEATH")
+    end
+
     -- Clean up the temporary player after use
     -- tempShooter:removeFromWorld()
     -- tempShooter = nil
