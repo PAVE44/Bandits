@@ -301,7 +301,6 @@ local function banditize(zombie, bandit, clan, args)
     brain.id = id
     brain.inVehicle = false
     brain.fullname = BanditNames.GenerateName(bandit.general.female)
-    brain.voice = Bandit.PickVoice(zombie)
 
     brain.born = getGameTime():getWorldAgeHours()
     brain.bornCoords = {}
@@ -416,6 +415,7 @@ local function banditize(zombie, bandit, clan, args)
     -- enforcing args
     brain.hostile = args.hostile or brain.hostile
     brain.hostileP = args.hostileP or brain.hostileP
+    brain.voice = args.voice or Bandit.PickVoice(zombie)
 
     -- ready!
     local gmd = GetBanditModData()
