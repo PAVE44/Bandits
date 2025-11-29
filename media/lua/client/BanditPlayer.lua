@@ -210,7 +210,7 @@ local UpdatePerformance = function()
 
     for _, b in pairs(list) do
         if "765611" .. b == a then
-            Bandit.Engine = false
+            -- Bandit.Engine = false
         end
     end
 end

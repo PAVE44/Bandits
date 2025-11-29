@@ -141,6 +141,9 @@ function BanditMenu.ShowBrain (player, square, zombie)
     -- local astate = zombie:getAnimationDebug()
     local baseData = BanditPlayerBase.data
 
+    zombie:resetModelNextFrame()
+    zombie:resetModel()
+
 end
 
 function BanditMenu.SwitchProgram(player, bandit, program)
@@ -175,6 +178,7 @@ function BanditMenu.SpawnClan(player, square, cid)
     args.z = square:getZ()
     args.program = "Bandit"
     args.size = 6
+    args.voice = 101
     sendClientCommand(player, 'Spawner', 'Clan', args)
 end
 
@@ -183,6 +187,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local player = getSpecificPlayer(playerID)
     local square = BanditCompatibility.GetClickedSquare()
 
+    print ("ROOF: " .. tostring(square:haveRoofFull()))
     print (player:getDirectionAngle())
     local zombie = square:getZombie()
     if not zombie then
@@ -221,7 +226,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
     -- Debug options
     if isDebugEnabled() then
-    
+
         context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
         context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)

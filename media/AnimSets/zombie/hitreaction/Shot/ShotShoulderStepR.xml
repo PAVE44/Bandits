@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="../ShotDefault.xml">
+	<m_Name>ShotShoulderStepR</m_Name>
+	<m_AnimName>Zombie_ShotShoulderStep_R</m_AnimName>
+	<m_BlendTime>0.20</m_BlendTime>
+	<m_Conditions x_name="0cee3750-13be-4d0f-ade3-ce56a98d44f1">
+		<m_Value>ShotShoulderStepR</m_Value>
+	</m_Conditions>
+</animNode>

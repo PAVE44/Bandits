@@ -40,7 +40,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
         for i=0, lsList:size()-1 do
             local ls = lsList:get(i)
             local square = ls:getSquare()
-            if not ls:isActivated() and square:isFree(false) then
+            if not ls:isActivated() and square:isFree(false) and (square:haveElectricity() or getWorld():isHydroPowerOn()) then
                 local tx, ty, tz = square:getX() + 0.5, square:getY() + 0.5, square:getZ()
                 local dist = BanditUtils.DistTo(bx, by, tx, ty)
                 if dist < distBest then
@@ -218,7 +218,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
 
         local walkType = Bandit.GetCombatWalktype(bandit, enemy, target.dist)
 
-        table.insert(tasks, BanditUtils.GetMoveTask(endurance, tx, ty, tz, walkType, target.dist))
+        table.insert(tasks, BanditUtils.GetMoveTaskTarget(endurance, tx, ty, tz, target.id, target.player, walkType, target.dist))
         return {status=true, next="Main", tasks=tasks}
     end
 

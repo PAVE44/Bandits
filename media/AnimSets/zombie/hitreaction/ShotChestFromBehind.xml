@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ShotChest.xml">
+	<m_Name>ShotChestFromBehind</m_Name>
+	<m_AnimName>Zombie_ShotChestLBehind</m_AnimName>
+	<m_Conditions x_name="7625ba38-ea49-4d1d-bc49-ce2edbf0d953">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

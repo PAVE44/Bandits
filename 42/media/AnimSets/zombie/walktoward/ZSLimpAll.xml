@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSLimpAll</m_Name>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_SpeedScale>LimpSpeed</m_SpeedScale>
+	<m_BlendTime>0.20</m_BlendTime>
+</animNode>

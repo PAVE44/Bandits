@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="OnKnees.xml">
+	<m_Name>OnKnees_RAG</m_Name>
+	<m_Priority>4</m_Priority>
+	<m_isRagdoll>true</m_isRagdoll>
+	<m_ragdollStartTimeMin>0.1</m_ragdollStartTimeMin>
+	<m_ragdollStartTimeMax>0.2</m_ragdollStartTimeMax>
+	<m_deferredBoneAxis>Z</m_deferredBoneAxis>
+	<m_Conditions x_name="6ad28cbc-fdff-437e-b689-463242905997">
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

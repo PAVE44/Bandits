@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="HeadRight.xml">
+	<m_Name>HeadRightBehind</m_Name>
+	<m_AnimName>Zombie_HitReact_HeadRBehind</m_AnimName>
+	<m_Conditions x_name="38e81fd0-ecd9-40c8-b796-f5791e4b1920">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

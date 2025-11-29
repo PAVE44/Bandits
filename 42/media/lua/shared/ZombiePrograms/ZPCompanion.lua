@@ -414,7 +414,7 @@ ZombiePrograms.Companion.Main = function(bandit)
 
     local distTarget = BanditUtils.DistTo(bandit:getX(), bandit:getY(), dx, dy)
 
-    if distTarget > 1 then
+    if distTarget > 1 or math.abs(dz - bandit:getZ()) >= 1 then
         table.insert(tasks, BanditUtils.GetMoveTask(endurance, dx, dy, dz, walkType, distTarget, false))
         return {status=true, next="Main", tasks=tasks}
     else

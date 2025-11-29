@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="Uppercut.xml">
+	<m_Name>UppercutBehind</m_Name>
+	<m_AnimName>Zombie_HitReact_UppercutBehind</m_AnimName>
+	<m_Conditions x_name="9f46be88-6f1b-4c4e-ad9b-676328c8fcd5">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

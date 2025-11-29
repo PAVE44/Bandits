@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ShotLegL.xml">
+	<m_Name>ShotLegBehindL</m_Name>
+	<m_AnimName>Zombie_ShotLegHard_L</m_AnimName>
+	<m_Conditions x_name="60f1f89c-44fd-4b80-8a35-7a63be0cf63f">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

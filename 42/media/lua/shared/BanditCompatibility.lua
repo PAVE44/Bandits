@@ -161,8 +161,8 @@ end
 BanditCompatibility.StartMuzzleFlash = function(shooter)
     if getGameVersion() >= 42 then
         local square = shooter:getSquare()
-        shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is how to do this now:
-        shooter:setMuzzleFlashDuration(getTimestampMs())
+        -- shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is how to do this now:
+        -- shooter:setMuzzleFlashDuration(getTimestampMs())
         local lightSource = IsoLightSource.new(square:getX(), square:getY(), square:getZ(), 0.8, 0.8, 0.7, 18, 2)
         getCell():addLamppost(lightSource)
     else
@@ -365,11 +365,11 @@ BanditCompatibility.GetBodyLocationsOrdered = function()
             "Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye",
             "Neck", "Necklace", "Gorget", "Scarf",
             "TankTop", "Tshirt", "ShortSleeveShirt", "Shirt",
-            "VestTexture", "Sweater", "SweaterHat", "TorsoExtraVest", "TorsoExtraVestBullet", "Cuirass", "TorsoExtra",
+            "VestTexture", "Sweater", "SweaterHat", "TorsoExtraVest", "Cuirass", "TorsoExtra",
             "Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop",
             "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger", "Hands", "HandsRight", "HandsLeft",
             "Pants", "PantsExtra", "ShortPants", "ShortsShort", "LongSkirt", "Skirt", "Dress", "LongDress",
-            "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit", "Tail",
+            "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit", "Tail", "TorsoExtraVestBullet",
             "ShoulderpadRight", "ShoulderpadLeft", "Elbow_Right", "Elbow_Left", "ForeArm_Right", "ForeArm_Left",
             "Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left",
             "FannyPackFront", "FannyPackBack", "Webbing",

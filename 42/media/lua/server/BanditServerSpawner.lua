@@ -413,8 +413,8 @@ local function banditize(zombie, bandit, clan, args)
     brain.key = args.key
 
     -- enforcing args
-    brain.hostile = args.hostile or brain.hostile
-    brain.hostileP = args.hostileP or brain.hostileP
+    if args.hostile ~= nil then brain.hostile = args.hostile end
+    if args.hostileP ~= nil then brain.hostileP = args.hostileP end
     brain.voice = args.voice or Bandit.PickVoice(zombie)
 
     -- ready!

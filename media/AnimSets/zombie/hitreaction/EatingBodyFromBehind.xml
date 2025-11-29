@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="EatingBody.xml">
+	<m_Name>EatingBodyFromBehind</m_Name>
+	<m_AnimName>Zombie_EatingToIdle_FloorFront</m_AnimName>
+	<m_Conditions x_name="9d8fbc9a-ed68-49f4-96ef-3283619177ae">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+	<m_Events x_name="798e7f93-f590-4406-ac66-30ef3ab26861">
+		<m_ParameterValue>true</m_ParameterValue>
+	</m_Events>
+</animNode>

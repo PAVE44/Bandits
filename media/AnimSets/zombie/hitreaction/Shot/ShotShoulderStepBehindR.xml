@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ShotShoulderStepR.xml">
+	<m_Name>ShotShoulderStepBehindR</m_Name>
+	<m_AnimName>Zombie_ShotShoulderStep_RBehind</m_AnimName>
+	<m_Conditions x_name="c662baa0-c3a2-43e5-8ce3-7b14151b7f51">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

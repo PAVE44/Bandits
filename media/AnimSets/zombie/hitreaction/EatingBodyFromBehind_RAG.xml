@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="EatingBodyFromBehind.xml">
+	<m_Name>EatingBodyFromBehind_RAG</m_Name>
+	<m_Priority>4</m_Priority>
+	<m_isRagdoll>true</m_isRagdoll>
+	<m_ragdollStartTimeMin>0.23</m_ragdollStartTimeMin>
+	<m_ragdollStartTimeMax>0.33</m_ragdollStartTimeMax>
+	<m_deferredBoneAxis>Z</m_deferredBoneAxis>
+	<m_Conditions x_name="49c8f33a-a8c1-4d3c-972e-ab54803306db">
+		<m_Name>canRagdoll</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

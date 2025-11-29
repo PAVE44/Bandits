@@ -325,33 +325,45 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                     end
                 end
 
-                if true then
-
-                    local dmg = item:getMaxDamage()
-                    if instanceof(victim, "IsoZombie") then
-                        dmg = dmg * 2
+                local isSeen = false
+                local playerList = BanditPlayer.GetPlayers()
+                for i=0, playerList:size()-1 do
+                    local player = playerList:get(i)
+                    if player then
+                        if  player:CanSee(victim) then
+                            if victim:getSquare():isCanSee(0) then
+                                isSeen = true
+                            end
+                        end
                     end
-
-                    victim:setBumpDone(true)
-                    victim:setHitFromBehind(shooter:isBehind(victim))
-                    victim:setHitAngle(shooter:getForwardDirection())
-                    victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-                    victim:setHitReaction("ShotBelly")
-                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
-                    victim:setAttackedBy(shooter)
-                    BanditUtils.AddHole(victim)
-                    BanditCompatibility.Splash(victim, item, fakeZombie)
-
-                    local h = victim:getHealth()
-                    local id = BanditUtils.GetCharacterID(bandit)
-                    local args = {id=id, h=h}
-                    sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
-
-                else
-                    --victim:changeState(ZombieOnGroundState.instance())
-                    victim:removeFromSquare()
-                    victim:removeFromWorld()
                 end
+
+                local dmg = item:getMaxDamage()
+                if instanceof(victim, "IsoZombie") then
+                    dmg = dmg * 2
+                end
+
+                victim:setBumpDone(true)
+                victim:setHitFromBehind(shooter:isBehind(victim))
+                victim:setHitAngle(shooter:getForwardDirection())
+                victim:setPlayerAttackPosition(victim:testDotSide(shooter))
+                victim:setHitReaction("ShotBelly")
+
+                if isSeen then
+                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
+                else
+                    local fakeItem = BanditCompatibility.InstanceItem("Base.Katana")
+                    victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
+                end
+                victim:setAttackedBy(shooter)
+                BanditUtils.AddHole(victim)
+                BanditCompatibility.Splash(victim, item, fakeZombie)
+
+                local h = victim:getHealth()
+                local id = BanditUtils.GetCharacterID(bandit)
+                local args = {id=id, h=h}
+                sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
+
             end
         end
 
@@ -491,31 +503,34 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
                 -- manage vehicle obstacle
                 local vehicle = square:getVehicleContainer()
                 if vehicle then
-                    local partRandom = ZombRand(30)
-                    local vehiclePart
-                    local dmg
-                    if vp[partRandom] then
-                        vehiclePart = vehicle:getPartById(vp[partRandom].name)
-                        if vehiclePart and vehiclePart:getInventoryItem() then
+                    local hasArmor = vehicle:getPartById("Armor")
+                    if not hasArmor then
+                        local partRandom = ZombRand(30)
+                        local vehiclePart
+                        local dmg
+                        if vp[partRandom] then
+                            vehiclePart = vehicle:getPartById(vp[partRandom].name)
+                            if vehiclePart and vehiclePart:getInventoryItem() then
 
-                            local vehiclePartId = vehiclePart:getId()
+                                local vehiclePartId = vehiclePart:getId()
 
-                            local dmg = vp[partRandom].dmg
-                            vehiclePart:damage(dmg)
+                                local dmg = vp[partRandom].dmg
+                                vehiclePart:damage(dmg)
 
-                            if vehiclePart:getCondition() <= 0 then
-                                vehiclePart:setInventoryItem(nil)
-                                square:playSound(vp[partRandom].sndDest)
-                            else
-                                square:playSound(vp[partRandom].sndHit)
-                                return false
+                                if vehiclePart:getCondition() <= 0 then
+                                    vehiclePart:setInventoryItem(nil)
+                                    square:playSound(vp[partRandom].sndDest)
+                                else
+                                    square:playSound(vp[partRandom].sndHit)
+                                    return false
+                                end
+
+                                vehicle:updatePartStats()
+
+                                local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                                sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
+
                             end
-
-                            vehicle:updatePartStats()
-
-                            local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
-                            sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
-
                         end
                     end
                 end
@@ -528,9 +543,17 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
                     local chr = chrs:get(i)
                     if instanceof(chr, "IsoZombie") or instanceof(chr, "IsoPlayer") then
                         if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(chr) then 
-                            BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
-                            if incendiary then
-                                chr:setOnFire(true)
+                            
+                            local hasArmor = false
+                            local vehicle = chr:getVehicle()
+                            if vehicle and vehicle:getPartById("Armor") then
+                                hasArmor = true
+                            end
+                            if not hasArmor then
+                                BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
+                                if incendiary then
+                                    chr:setOnFire(true)
+                                end
                             end
                             wasHit = true
                             if i + 1 >= projectiles then break end
@@ -780,31 +803,35 @@ function BanditUtils.GetClosestPlayerLocation(character, config)
     result.z = false
     result.id = false
 
+    if not config then config = {} end
+
     local mustSee = config.mustSee or true
     local hearDist = config.hearDist or 7
 
-    local cx, cy = character:getX(), character:getY()
+    local cx, cy, cz = character:getX(), character:getY(), character:getZ()
     local playerList = BanditPlayer.GetPlayers()
 
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then
-            local px, py = player:getX(), player:getY()
+            local px, py, pz = player:getX(), player:getY(), player:getZ()
             local dist = BanditUtils.DistTo(cx, cy, px, py)
-            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < hearDist)) then
+            local levelDiff = math.abs(pz - cz)
+            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < hearDist))and (not config.levelDiff or levelDiff <= config.levelDiff) then
                 result.dist = dist
                 result.x = player:getX()
                 result.y = player:getY()
                 result.z = player:getZ()
                 result.d = player:getDirectionAngle()
                 result.id = BanditUtils.GetCharacterID(player)
+                result.player = true
             end
         end
     end
     return result
 end
 
-function BanditUtils.GetClosestZombieLocation(character)
+function BanditUtils.GetClosestZombieLocation(character, config)
     local result = {}
     result.dist = math.huge
     result.x = false
@@ -812,12 +839,15 @@ function BanditUtils.GetClosestZombieLocation(character)
     result.z = false
     result.id = false
 
-    local cx, cy = character:getX(), character:getY()
+    if not config then config = {} end
+
+    local cx, cy, cz = character:getX(), character:getY(), character:getZ()
 
     local zombieList = BanditZombie.CacheLightZ
     for id, zombie in pairs(zombieList) do
         local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
-        if dist < result.dist then
+        local levelDiff = math.abs(zombie.z - cz)
+        if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
             result.dist = dist
             result.x = zombie.x
             result.y = zombie.y
@@ -829,7 +859,7 @@ function BanditUtils.GetClosestZombieLocation(character)
     return result
 end
 
-function BanditUtils.GetClosestBanditLocation(character)
+function BanditUtils.GetClosestBanditLocation(character, config)
     local result = {}
     local cid = BanditUtils.GetCharacterID(character)
 
@@ -839,12 +869,15 @@ function BanditUtils.GetClosestBanditLocation(character)
     result.z = false
     result.id = false
 
-    local cx, cy = character:getX(), character:getY()
+    if not config then config = {} end
+
+    local cx, cy, cz = character:getX(), character:getY(), character:getZ()
 
     local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
         local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
-        if dist < result.dist and cid ~= id then
+        local levelDiff = math.abs(zombie.z - cz)
+        if dist < result.dist and cid ~= id and (not config.levelDiff or levelDiff <= config.levelDiff) then
             result.dist = dist
             result.x = zombie.x
             result.y = zombie.y
@@ -857,7 +890,7 @@ function BanditUtils.GetClosestBanditLocation(character)
     return result
 end
 
-function BanditUtils.GetClosestEnemyBanditLocation(character)
+function BanditUtils.GetClosestEnemyBanditLocation(character, config)
     local result = {}
     result.dist = math.huge
     result.x = false
@@ -865,7 +898,9 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
     result.z = false
     result.id = false
 
-    local cx, cy = character:getX(), character:getY()
+    if not config then config = {} end
+
+    local cx, cy, cz = character:getX(), character:getY(), character:getZ()
 
     local banditList = BanditZombie.CacheLightB
     if instanceof(character, "IsoZombie") then
@@ -874,7 +909,8 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
             if BanditUtils.AreEnemies(brain, otherBandit.brain) then
             -- if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
                 local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
-                if dist < result.dist then
+                local levelDiff = math.abs(otherBandit.z - cz)
+                if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
                     result.dist = dist
                     result.x = otherBandit.x
                     result.y = otherBandit.y
@@ -887,7 +923,8 @@ function BanditUtils.GetClosestEnemyBanditLocation(character)
         for id, otherBandit in pairs(banditList) do
             if otherBandit.brain.hostile or otherBandit.brain.hostileP then
                 local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
-                if dist < result.dist then
+                local levelDiff = math.abs(otherBandit.z - cz)
+                if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
                     result.dist = dist
                     result.x = otherBandit.x
                     result.y = otherBandit.y
@@ -902,8 +939,10 @@ end
 
 function BanditUtils.GetTarget(character, config)
 
-    local closestZombie = BanditUtils.GetClosestZombieLocation(character)
-    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(character)
+    if not config then config = {} end
+
+    local closestZombie = BanditUtils.GetClosestZombieLocation(character, config)
+    local closestBandit = BanditUtils.GetClosestEnemyBanditLocation(character, config)
     local closestPlayer = BanditUtils.GetClosestPlayerLocation(character, config)
 
     local target = closestZombie
@@ -948,6 +987,27 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
         end
     else
         task = {action="Move", time=20, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
+    end
+    return task
+end
+
+function BanditUtils.GetMoveTaskTarget(endurance, x, y, z, tid, isPlayer, walkType, dist)
+    -- Move and GoTo generally do the same thing with a different method
+    -- GoTo uses one-time move order, provides better synchronization in multiplayer, not perfect on larger distance
+    -- Move uses constant updatating, it a better algorithm but introduces desync in multiplayer
+    if dist < 0.5 then
+        -- print ("SMALL DIST")
+    end
+    local gamemode = getWorld():getGameMode()
+    local task
+    if gamemode == "Multiplayer" then
+        if dist > 30 then
+            task = {action="Move", time=35, endurance=endurance, x=x, y=y, z=z, tid=tid, isPlayer=isPlayer, walkType=walkType}
+        else
+            task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, tid=tid, isPlayer=isPlayer, walkType=walkType}
+        end
+    else
+        task = {action="Move", time=20, endurance=endurance, x=x, y=y, z=z, tid=tid, isPlayer=isPlayer, walkType=walkType}
     end
     return task
 end

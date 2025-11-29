@@ -41,6 +41,8 @@ end
 -- checks if the line of fire is clear from friendlies
 local function IsShotClear (shooter, enemy)
 
+    if true then return true end
+
     local cell = getCell()
 
     local x0 = math.floor(shooter:getX())
@@ -123,6 +125,9 @@ local function Banditize(zombie, brain)
 
     -- used to determine if zombie is a bandit, can be used by other mods
     zombie:setVariable("Bandit", true)
+    zombie:setVariable("LimpSpeed", 0.80)
+    zombie:setVariable("RunSpeed", 0.65 + ZombRandFloat(0, 0.15))
+    zombie:setVariable("WalkSpeed", 1.04)
 
     -- bandit primary and secondary hand items
     zombie:setVariable("BanditPrimary", "")
@@ -173,233 +178,48 @@ local function Zombify(bandit)
     BanditBrain.Remove(bandit)
 end
 
--- applies human look for a banditized zaombie
-local function ApplyVisuals(bandit, brain)
-    local banditVisuals = bandit:getHumanVisual()
-    if not banditVisuals then return end
-
-    local skin = banditVisuals:getSkinTexture()
-    if not skin or skin:find("^FemaleBody") or skin:find("^MaleBody") then return end
-    --if not skin or skin:find("^MaleCustom") then return end
-
-    local itemVisuals = bandit:getItemVisuals()
-
-    if brain.cid then
-
-        if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
-            bandit:setVariable("MovementSpeed", 1.00)
-        else
-            bandit:setVariable("MovementSpeed", 0.70)
-        end
-
-        bandit:setHealth(brain.health)
-
-        if brain.skin then
-            banditVisuals:setSkinTextureName(Bandit.GetSkinTexture(brain.female, brain.skin))
-            --banditVisuals:setSkinTextureName("MaleCustom")
-        end
-
-        if brain.hairType then
-            banditVisuals:setHairModel(Bandit.GetHairStyle(brain.female, brain.hairType)) 
-        end
-
-        if not bandit:isFemale() and brain.beardType then
-            local beardModel = Bandit.GetBeardStyle(brain.female, brain.beardType)
-            if beardModel then
-                banditVisuals:setBeardModel(beardModel) 
-            end
-        end
-
-        if brain.hairColor then
-            local hairColor = Bandit.GetHairColor(brain.hairColor)
-            local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
-            banditVisuals:setHairColor(icolor) 
-            banditVisuals:setBeardColor(icolor) 
-        end
-
-        -- items must be applied in a good order, hence the double loop
-        for _, bodyLocationDef in pairs(BanditCompatibility.GetBodyLocationsOrdered()) do
-            for bodyLocation, itemType in pairs(brain.clothing) do
-                if bodyLocation == bodyLocationDef then
-                    local item = BanditCompatibility.InstanceItem(itemType)
-                    if item then
-                        --[[
-                        local clothingItem = item:getClothingItem()
-                        if clothingItem then
-                            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
-                        end]]
-                        local itemVisual = ItemVisual.new()
-                        itemVisual:setItemType(itemType)
-                        itemVisual:setClothingItemName(itemType)
-
-                        if brain.tint[bodyLocation] then
-                            local color = BanditUtils.dec2rgb(brain.tint[bodyLocation])
-                            local immutableColor = ImmutableColor.new(color.r, color.g, color.b, 1)
-                            itemVisual:setTint(immutableColor)
-                        end
-
-                        itemVisuals:add(itemVisual)
-                    end
-                end
-            end
-        end
-
-        for _, slot in pairs({"primary", "secondary", "melee"}) do
-
-            if brain.weapons[slot].name then
-                local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
-
-                if weapon then
-                    weapon = BanditUtils.ModifyWeapon(weapon, brain)
-
-                    local attachmentType = weapon:getAttachmentType()
-
-                    for _, def in pairs(ISHotbarAttachDefinition) do
-                        if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
-                            if def.attachments then
-                                for k, v in pairs(def.attachments) do
-                                    if k == attachmentType then
-                                        bandit:setAttachedItem(v, weapon)
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        if brain.bag and brain.bag.name then
-            local item = BanditCompatibility.InstanceItem(brain.bag.name)
-            if item then
-                --[[
-                local clothingItem = item:getClothingItem()
-                local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)]]
-
-                local itemVisual = ItemVisual.new()
-                itemVisual:setItemType(brain.bag.name)
-                itemVisual:setClothingItemName(brain.bag.name)
-                local immutableColor = ImmutableColor.new(0.1, 0.1, 0.1, 1)
-                itemVisual:setTint(immutableColor)
-                itemVisuals:add(itemVisual)
-            end
-            -- bandit:setWornItem(item:canBeEquipped(), item)
-        end
-    else
-        if brain.skinTexture then 
-            banditVisuals:setSkinTextureName(brain.skinTexture)
-        end
-        if brain.hairStyle then 
-            banditVisuals:setHairModel(brain.hairStyle) 
-        end
-        if brain.hairColor then
-            banditVisuals:setHairColor(ImmutableColor.new(brain.hairColor.r, brain.hairColor.g, brain.hairColor.b))
-        end
-        if brain.beardStyle then 
-            banditVisuals:setBeardModel(brain.beardStyle)
-        end
-        if brain.beardColor then
-            banditVisuals:setBeardColor(ImmutableColor.new(brain.beardColor.r, brain.beardColor.g, brain.beardColor.b))
-        end
-    end
-
-    banditVisuals:randomDirt()
-    banditVisuals:removeBlood()
-
-    -- Cleanup blood/dirt
-    local maxIndex = BloodBodyPartType.MAX:index()
-    for i = 0, maxIndex - 1 do
-        local part = BloodBodyPartType.FromIndex(i)
-        banditVisuals:setBlood(part, 0)
-        banditVisuals:setDirt(part, 0)
-    end
-
-    -- Cleanup item visuals
-
-    for i = 0, itemVisuals:size() - 1 do
-        local item = itemVisuals:get(i)
-        if item then
-            for j = 0, maxIndex - 1 do
-                local part = BloodBodyPartType.FromIndex(j)
-                item:removeHole(j)
-                item:setBlood(part, 0)
-                item:setDirt(part, 0)
-            end
-            item:setInventoryItem(nil)
-        end
-    end
-
-    -- Remove bandit-specific body visuals
-    local bodyVisuals = banditVisuals:getBodyVisuals()
-    local toRemove, toRemoveCount = {}, 0
-    for i = 0, bodyVisuals:size() - 1 do
-        local item = bodyVisuals:get(i)
-        if item and BanditUtils.ItemVisuals[item:getItemType()] then
-            toRemoveCount = toRemoveCount + 1
-            toRemove[toRemoveCount] = item:getItemType()
-        end
-    end
-    for i = 1, toRemoveCount do
-        banditVisuals:removeBodyVisualFromItemType(toRemove[i])
-    end
-
-    --[[
-    local clothing = BanditCustom.GetClothing("bandit1")
-
-    for i=1, #clothing do
-        local item = BanditCompatibility.InstanceItem(clothing[i])
-        local clothingItem = item:getClothingItem()
-        local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
-    end]]
-
-    -- Reset model to apply changes
-    bandit:resetModelNextFrame()
-    bandit:resetModel()
-
-    Bandit.UpdateItemsToSpawnAtDeath(bandit)
-end
-
 -- updates bandit torches light
-local function ManageTorch(bandit)
+local function ManageTorch(bandit, brain)
     if not SandboxVars.Bandits.General_CarryTorches then return end
+    if not brain.torch then return end
 
-    local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+    local zx, zy, zz = math.floor(bandit:getX()), math.floor(bandit:getY()), math.floor(bandit:getZ())
     local vehicle = bandit:getVehicle()
     local cell = getCell()
 
     if vehicle then return end
     
-    local colors = {r = 1, g = 1, b = 0.8}
+    local colors = {r = 0.5, g = 0.5, b = 0.5}
+    local lss = {}
 
-    local md = bandit:getModData()
-    if not md.torch then md.torch = {} end
 
     if bandit:isProne() then
-        --[[
-        local lightSource = IsoLightSource.new(zx, zy, zz, colors.r, colors.g, colors.b, 2, 2)
+
+        --[[local lightSource = IsoLightSource.new(zx, zy, zz, colors.r, colors.g, colors.b, 2, 20)
         if lightSource then
             getCell():addLamppost(lightSource)
         end]]
     else
         local theta = bandit:getDirectionAngle() * 0.0174533  -- Convert degrees to radians
-        for i = 2, 14 do
-            local fadeFactor = i * 0.05
-            local lx = math.floor(zx + (i * math.cos(theta)))
-            local ly = math.floor(zy + (i * math.sin(theta)))
-            local lz = zz + 32
+        local lss = {
+            {d=1, r=1, c={r = 0.5, g = 0.5, b = 0.5}},
+            {d=3, r=3, c={r = 1, g = 1, b = 1}},
+            {d=6, r=4, c={r = 1, g = 1, b = 1}},
+            {d=9, r=4, c={r = 0.5, g = 0.5, b = 0.5}}
+        }
+        for _, ld in ipairs(lss) do
+            local lx = math.floor(zx + (ld.d * math.cos(theta)))
+            local ly = math.floor(zy + (ld.d * math.sin(theta)))
+            local lz = zz
 
-            if md.torch[i] then
-                md.torch[i]:setActive(false)
-                -- print ("REM: x: ".. md.torch[i]:getX() .. " y:" .. md.torch[i]:getY() .. " z:" .. md.torch[i]:getZ() .. " i:" .. i)
-                cell:removeLamppost(md.torch[i])
+            local square = cell:getGridSquare(lx, ly, zz)
+            if square and square:getChunk()  then
+                ls = IsoLightSource.new(lx, ly, zz, ld.c.r, ld.c.g, ld.c.b, ld.r, 4)
+                if ls then
+                    cell:addLamppost(ls)
+                    IsoGridSquare.setRecalcLightTime(-1.0)
+                end
             end
-
-            -- print ("ADD x: ".. lx .. " y:" .. ly .. " z:" .. lz .. " i:" .. i)
-            ls = IsoLightSource.new(lx, ly, zz, colors.r, colors.g, colors.b, i * 0.5, 20)
-            md.torch[i] = ls
-            cell:addLamppost(md.torch[i])
-            
         end
     end
 end
@@ -644,6 +464,10 @@ local function ManageCollisions(bandit)
                             if endx and endy then
                                 bandit:changeState(ClimbOverFenceState.instance())
                                 bandit:setBumpType("ClimbFenceEnd")
+                                
+                                --[[local task = {action="ClimbFence", anim="ClimbFenceEnd", lock=true}
+                                table.insert(tasks, task)
+                                return tasks]]                                
                             end
                         else
                             bandit:faceThisObject(object)
@@ -745,7 +569,9 @@ local function ManageCollisions(bandit)
                                 ClimbThroughWindowState.instance():setParams(bandit, object)
                                 bandit:changeState(ClimbThroughWindowState.instance())
                                 bandit:setBumpType("ClimbWindow")
-                                return tasks
+                                --[[local task = {action="ClimbFence", anim="ClimbWindow", lock=true}
+                                table.insert(tasks, task)]]
+                                return tasks      
                             end
                         end
                     end
@@ -1297,7 +1123,6 @@ local function ManageCombat(bandit)
 
     elseif firing then
         if not BanditBrain.HasTaskTypes(brain, {"Shoot", "Turn", "Aim", "Rack", "Equip", "Unequip", "Load", "Unload"}) then 
-
             Bandit.ClearTasks(bandit)
             if enemyCharacter:isAlive() then
                 
@@ -1526,6 +1351,14 @@ local function UpdateZombies(zombie)
 
     -- Fetch zombie coordinates and closest bandit location
     local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
+
+    local player = getSpecificPlayer(0)
+    local px, py, pz = player:getX(), player:getY(), player:getZ()
+    local distPlayer = math.sqrt(((px - zx) * (px - zx)) + ((py - zy) * (py - zy)))
+    if distPlayer < 2 and math.abs(pz - zz) < 0.3 then
+        return
+    end
+
     local enemy = BanditUtils.GetClosestBanditLocation(zombie)
 
     -- If bandit is in range, proceed
@@ -1540,8 +1373,10 @@ local function UpdateZombies(zombie)
         local dist = math.sqrt(((bx - zx) * (bx - zx)) + ((by - zy) * (by - zy)))
 
         -- Standard movement if bandit is far
+
         if dist > 3 then
             -- zombie:addLineChatElement(tostring(ZombRand(100)) .. " far", 0.6, 0.6, 1)
+            --
             if zombie:CanSee(bandit) then
                 zombie:pathToCharacter(bandit)
             end
@@ -1549,7 +1384,7 @@ local function UpdateZombies(zombie)
         -- Approach bandit if in range
         else
             -- zombie:addLineChatElement(string.format("mid %.2f", enemy.dist), 0.6, 0.6, 1)
-            local player = getSpecificPlayer(0)
+            
             -- local tempTarget = BanditUtils.CloneIsoPlayer(bandit)
             -- if zombie:CanSee(bandit) and zombie:CanSee(player) then
                 -- if BanditCompatibility.GetGameVersion() >= 42 then
@@ -1560,9 +1395,10 @@ local function UpdateZombies(zombie)
                     -- zombie:changeState(LungeState.instance())
                     -- zombie:getPathFindBehavior2():cancel()
                     -- zombie:setPath2(nil)
-                    zombie:spotted(player, true)
-                    zombie:setTarget(bandit)
-                    zombie:setAttackedBy(bandit)
+
+                        zombie:spotted(bandit, true)
+                        zombie:setTarget(bandit)
+                        zombie:setAttackedBy(bandit)
                     
                     
                     --tempTarget:removeFromWorld()
@@ -1638,8 +1474,6 @@ local function ProcessTask(bandit, task)
         end
 
         if task.action ~= "Move" and task.action ~= "GoTo" then
-            bandit:getPathFindBehavior2():cancel()
-            bandit:setPath2(nil)
             if Bandit.IsMoving(bandit) then
                 Bandit.SetMoving(bandit, false)
             end
@@ -1886,6 +1720,7 @@ local function OnBanditUpdate(zombie)
     -- WALKTYPE
     -- we do it this way, if walktype get overwritten by game engine we force our animations
     bandit:setWalkType(bandit:getVariableString("BanditWalkType"))
+    -- bandit:addLineChatElement(bandit:getVariableString("BanditWalkType"))
     bandit:setSpeedMod(1)
 
     -- NO ZOMBIE SOUNDS
@@ -1897,13 +1732,13 @@ local function OnBanditUpdate(zombie)
     end
     
     -- ADJUST HUMAN VISUALS
-    ApplyVisuals(bandit, brain)
+    Bandit.ApplyVisuals(bandit, brain)
 
     -- MANAGE BANDIT TORCH
-    --[[
+    --
     if uTick == 1 then
-        ManageTorch(bandit)
-    end]]
+        ManageTorch(bandit, brain)
+    end
 
     -- MANAGE BANDIT CHAINSAW
     -- ManageChainsaw(bandit)
@@ -2144,6 +1979,9 @@ local function OnZombieDead(bandit)
         bandit:setUseless(false)
         bandit:setReanim(false)
         bandit:setVariable("Bandit", false)
+        bandit:setVariable("LimpSpeed", 0.3)
+        bandit:setVariable("RunSpeed", 0.3)
+        bandit:setVariable("WalkSpeed", 0.3)
         bandit:setPrimaryHandItem(nil)
         bandit:clearAttachedItems()
         bandit:resetEquippedHandsModels()
@@ -2203,6 +2041,19 @@ local function OnZombieDead(bandit)
             hv2:setBeardModel(hv:getHairModel())
             hv2:setHairColor(hv:getHairColor()) 
             hv2:setBeardColor(hv:getBeardColor())
+
+            for it, _ in pairs(BanditUtils.ItemVisuals) do
+                if ZombRand(3) == 0 and it:embodies("ZedDmg") then
+                    hv2:addBodyVisualFromItemType(it)
+                end
+            end
+    
+            local maxIndex = BloodBodyPartType.MAX:index()
+            for i = 0, maxIndex - 1 do
+                local part = BloodBodyPartType.FromIndex(i)
+                hv2:setBlood(part, 1)
+                hv2:setDirt(part, 1)
+            end
             
             bandit2:setWornItems(wornItems)
             bandit2:setAttachedItems(bandit:getAttachedItems())

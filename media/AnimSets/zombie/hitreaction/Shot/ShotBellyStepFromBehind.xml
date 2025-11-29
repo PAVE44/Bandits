@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ShotBellyStep.xml">
+	<m_Name>ShotBellyStepFromBehind</m_Name>
+	<m_AnimName>Zombie_ShotBellyStepBehind</m_AnimName>
+	<m_BlendTime>0.10</m_BlendTime>
+	<m_BlendOutTime>0.20</m_BlendOutTime>
+	<m_SpeedScale>1.00</m_SpeedScale>
+	<m_Conditions x_name="749cdede-ee49-4de6-946d-c9b04931e9be">
+		<m_Name>FromBehind</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+</animNode>

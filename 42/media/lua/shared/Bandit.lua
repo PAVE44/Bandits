@@ -75,6 +75,202 @@ function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getSpecificPlayer(0), 'Commands', 'BanditUpdatePart', syncData)
 end
 
+-- applies human look for a banditized zaombie
+function Bandit.ApplyVisuals(bandit, brain)
+    local banditVisuals = bandit:getHumanVisual()
+    if not banditVisuals then return end
+
+    local skin = banditVisuals:getSkinTexture()
+    if not skin or skin:find("^FemaleBody") or skin:find("^MaleBody") then return end
+    --if not skin or skin:find("^MaleCustom") then return end
+
+    local itemVisuals = bandit:getItemVisuals()
+    itemVisuals:clear()
+
+    if brain.cid then
+
+        if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
+            bandit:setVariable("MovementSpeed", 1.00)
+        else
+            bandit:setVariable("MovementSpeed", 0.70)
+        end
+
+        bandit:setHealth(brain.health)
+
+        if brain.skin then
+            banditVisuals:setSkinTextureName(Bandit.GetSkinTexture(brain.female, brain.skin))
+            --banditVisuals:setSkinTextureName("MaleCustom")
+        end
+
+        if brain.hairType then
+            banditVisuals:setHairModel(Bandit.GetHairStyle(brain.female, brain.hairType)) 
+        end
+
+        if not bandit:isFemale() and brain.beardType then
+            local beardModel = Bandit.GetBeardStyle(brain.female, brain.beardType)
+            if beardModel then
+                banditVisuals:setBeardModel(beardModel) 
+            end
+        end
+
+        if brain.hairColor then
+            local hairColor = Bandit.GetHairColor(brain.hairColor)
+            local icolor = ImmutableColor.new(hairColor.r, hairColor.g, hairColor.b)
+            banditVisuals:setHairColor(icolor) 
+            banditVisuals:setBeardColor(icolor) 
+        end
+
+        -- items must be applied in a good order, hence the double loop
+        for _, bodyLocationDef in pairs(BanditCompatibility.GetBodyLocationsOrdered()) do
+            for bodyLocation, itemType in pairs(brain.clothing) do
+                if bodyLocation == bodyLocationDef then
+                    local item = BanditCompatibility.InstanceItem(itemType)
+                    if item then
+                        --[[
+                        local clothingItem = item:getClothingItem()
+                        if clothingItem then
+                            local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+                        end]]
+                        local itemVisual = ItemVisual.new()
+                        itemVisual:setItemType(itemType)
+                        itemVisual:setClothingItemName(itemType)
+
+                        if brain.tint[bodyLocation] then
+                            local color = BanditUtils.dec2rgb(brain.tint[bodyLocation])
+                            local immutableColor = ImmutableColor.new(color.r, color.g, color.b, 1)
+                            itemVisual:setTint(immutableColor)
+                        end
+
+                        itemVisuals:add(itemVisual)
+                    end
+                end
+            end
+        end
+
+        for _, slot in pairs({"primary", "secondary", "melee"}) do
+
+            if brain.weapons[slot].name then
+                local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
+
+                if weapon then
+                    weapon = BanditUtils.ModifyWeapon(weapon, brain)
+
+                    local attachmentType = weapon:getAttachmentType()
+
+                    for _, def in pairs(ISHotbarAttachDefinition) do
+                        if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
+                            if def.attachments then
+                                for k, v in pairs(def.attachments) do
+                                    if k == attachmentType then
+                                        bandit:setAttachedItem(v, weapon)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        if brain.bag and brain.bag.name then
+            local item = BanditCompatibility.InstanceItem(brain.bag.name)
+            if item then
+                --[[
+                local clothingItem = item:getClothingItem()
+                local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)]]
+
+                local itemVisual = ItemVisual.new()
+                itemVisual:setItemType(brain.bag.name)
+                itemVisual:setClothingItemName(brain.bag.name)
+                local immutableColor = ImmutableColor.new(0.1, 0.1, 0.1, 1)
+                itemVisual:setTint(immutableColor)
+                itemVisuals:add(itemVisual)
+            end
+            -- bandit:setWornItem(item:canBeEquipped(), item)
+        end
+    else
+        if brain.skinTexture then 
+            banditVisuals:setSkinTextureName(brain.skinTexture)
+        end
+        if brain.hairStyle then 
+            banditVisuals:setHairModel(brain.hairStyle) 
+        end
+        if brain.hairColor then
+            banditVisuals:setHairColor(ImmutableColor.new(brain.hairColor.r, brain.hairColor.g, brain.hairColor.b))
+        end
+        if brain.beardStyle then 
+            banditVisuals:setBeardModel(brain.beardStyle)
+        end
+        if brain.beardColor then
+            banditVisuals:setBeardColor(ImmutableColor.new(brain.beardColor.r, brain.beardColor.g, brain.beardColor.b))
+        end
+    end
+
+    banditVisuals:randomDirt()
+    banditVisuals:removeBlood()
+
+    -- Cleanup blood/dirt
+    local maxIndex = BloodBodyPartType.MAX:index()
+    for i = 0, maxIndex - 1 do
+        local part = BloodBodyPartType.FromIndex(i)
+        banditVisuals:setBlood(part, 0)
+        banditVisuals:setDirt(part, 0)
+    end
+
+    -- Cleanup item visuals
+    for i = 0, itemVisuals:size() - 1 do
+        local item = itemVisuals:get(i)
+        if item then
+            for j = 0, maxIndex - 1 do
+                local part = BloodBodyPartType.FromIndex(j)
+                item:removeHole(j)
+                item:setBlood(part, 0)
+                item:setDirt(part, 0)
+            end
+            item:setInventoryItem(nil)
+        end
+    end
+
+    -- Cleanup stuck items
+    local attachedItems = bandit:getAttachedItems()
+    for i = attachedItems:size() - 1, 0, -1 do
+        local item = attachedItems:get(i):getItem()
+        if item then
+            bandit:removeAttachedItem(item)
+        end
+    end
+
+    -- Remove bandit-specific body visuals
+    local bodyVisuals = banditVisuals:getBodyVisuals()
+    local toRemove, toRemoveCount = {}, 0
+    for i = 0, bodyVisuals:size() - 1 do
+        local item = bodyVisuals:get(i)
+        if item and BanditUtils.ItemVisuals[item:getItemType()] then
+            toRemoveCount = toRemoveCount + 1
+            toRemove[toRemoveCount] = item:getItemType()
+        end
+    end
+    for i = 1, toRemoveCount do
+        banditVisuals:removeBodyVisualFromItemType(toRemove[i])
+    end
+
+    --[[
+    local clothing = BanditCustom.GetClothing("bandit1")
+
+    for i=1, #clothing do
+        local item = BanditCompatibility.InstanceItem(clothing[i])
+        local clothingItem = item:getClothingItem()
+        local itemVisual = banditVisuals:addClothingItem(itemVisuals, clothingItem)
+    end]]
+
+    -- Reset model to apply changes
+    bandit:resetModelNextFrame()
+    bandit:resetModel()
+
+    Bandit.UpdateItemsToSpawnAtDeath(bandit)
+end
+
 function Bandit.AddTask(zombie, task)
     local brain = BanditBrain.Get(zombie)
     if brain then

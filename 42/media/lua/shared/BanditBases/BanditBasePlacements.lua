@@ -127,15 +127,18 @@ function BanditBasePlacements.IsoThumpable (sprite, x, y, z)
     obj:transmitCompleteItemToServer()
 end
 
-function BanditBasePlacements.IsoDoor (sprite, x, y, z)
+function BanditBasePlacements.IsoDoor (sprite, x, y, z, north)
     local cell = getCell()
     local square = GetOrCreateSquare(x, y, z)
     if not square then return end
     
     for s, number in string.gmatch(sprite, "(.+)_(%d+)") do
-        local north = true
-        if (number % 2 == 0) then
-            north = false
+
+        if not north then
+            north = true
+            if (number % 2 == 0) then
+                north = false
+            end
         end
 
         obj = IsoDoor.new(cell, square, sprite, north)

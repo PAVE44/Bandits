@@ -2,6 +2,6 @@
 <animNode>
 	<m_Name>ZSslow</m_Name>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
-	<m_SpeedScale>MovementSpeed</m_SpeedScale>
+	<m_SpeedScale>0.9</m_SpeedScale>
 	<m_BlendTime>0.20</m_BlendTime>
 </animNode>
