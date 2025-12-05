@@ -18,10 +18,15 @@ end
 function BanditBrain.IsOutOfAmmo(brain)
     local weapons = brain.weapons
     if weapons.primary.bulletsLeft <= 0 and 
-        ((weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
-            (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0))
+        (
+            not weapons.primary.type or
+            (weapons.primary.type == "mag" and weapons.primary.magCount <= 0) or
+            (weapons.primary.type == "nomag" and weapons.primary.ammoCount <= 0)
+        )
         and weapons.secondary.bulletsLeft <= 0 and 
-        ((weapons.secondary.type == "mag" and weapons.secondary.magCount <= 0) or 
+        (
+            not weapons.secondary.type or
+            (weapons.secondary.type == "mag" and weapons.secondary.magCount <= 0) or 
             (weapons.secondary.type == "nomag" and weapons.secondary.ammoCount <= 0)) then
         return true
     end

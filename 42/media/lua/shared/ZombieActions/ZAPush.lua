@@ -21,14 +21,22 @@ end
 
 local function ShoveZombie (attacker, zombie)
     local facing = zombie:isFacingObject(attacker, 0.5)
+    zombie:setOnFloor(true)
     if facing then
         -- zombie:setBumpType("ZombiePushedFront")
+        --[[
         zombie:setStaggerBack(true)
         zombie:setKnockedDown(true)
         zombie:setHitReaction("ShotBelly")
+        ]]
+        
+        
+        zombie:setFallOnFront(false)
     else
-        zombie:setBumpType("ZombiePushedBack")
+        zombie:setFallOnFront(true)
+        -- zombie:setBumpType("ZombiePushedBack")
     end
+    zombie:setKnockedDown(true)
 end
 
 ZombieActions.Push = {}
@@ -38,7 +46,6 @@ ZombieActions.Push.onStart = function(bandit, task)
 
     if anim then
         task.anim = anim
-        Bandit.UpdateTask(bandit, task)
         bandit:setBumpType(anim)
     else
         return false

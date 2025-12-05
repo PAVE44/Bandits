@@ -783,7 +783,7 @@ local function ManageCombat(bandit)
     local bestDist = 40
     local enemyCharacter, switchTo
     local healing, reload, resupply = false, false, false
-    local combat, switch, firing, shove, escape = false, false, false, false, false
+    local combat, switch, firing, stomp, shove, escape = false, false, false, false, false, false
     local maxRangeMelee, maxRangePistol, maxRangeRifle
     local friendlies, friendliesBwd, enemies, enemiesBwd = 0, 0, 0, 0
     local sx, sy = 0, 0
@@ -913,7 +913,8 @@ local function ManageCombat(bandit)
 
         -- quick manhattan check for performance boost
         -- if BanditUtils.DistToManhattan(potentialEnemy.x, potentialEnemy.y, zx, zy) < 36 then
-        if math.abs(potentialEnemy.x - zx) + math.abs(potentialEnemy.y - zy) < 57 then
+        local distManhattan = math.abs(potentialEnemy.x - zx) + math.abs(potentialEnemy.y - zy)
+        if distManhattan < 57 then
 
             if BanditUtils.AreEnemies(potentialEnemy.brain, brain) then
             -- if not potentialEnemy.brain or (brain.clan ~= potentialEnemy.brain.clan and (brain.hostile or potentialEnemy.brain.hostile)) then
@@ -923,7 +924,7 @@ local function ManageCombat(bandit)
                 if potentialEnemy:isAlive() and potentialEnemy:getHealth() > 0 and bandit:CanSee(potentialEnemy) then
                 --- if true then
                     local pesq = potentialEnemy:getSquare()
-                    if pesq and pesq:getLightLevel(0) > 0.31 and not bandit:getSquare():isSomethingTo(pesq) then
+                    if pesq and pesq:getLightLevel(0) > 0.28 and not bandit:getSquare():isSomethingTo(pesq) then
                         local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
                         -- local dist = BanditUtils.DistTo(zx, zy, potentialEnemy:getX(), potentialEnemy:getY())
                         local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py)))
@@ -940,36 +941,19 @@ local function ManageCombat(bandit)
                             bestDist, enemyCharacter = dist, potentialEnemy
 
                             --reset action flags, only one can be true
-                            combat, switch, firing, shove, escape = false, false, false, false, false
+                            combat, switch, firing, shove, stomp, escape = false, false, false, false, false, false
                             
                             local asn = enemyCharacter:getActionStateName()
 
-                            --determine if bandit will be in combat mode
-                            if weapons.melee and math.abs(zz - pz) < 0.5 and asn ~= "falldown" then
-                                if dist <= meleeDist then
-                                    if bandit:isPrimaryEquipped(weapons.melee) then
-
-                                        if not maxRangeMelee then
-                                            maxRangeMelee = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
-                                        end
-                                        local prone = enemyCharacter:isProne()
-                                        local fix = 0.1
-                                        if prone then fix = -0.2 end
-
-                                        if dist <= maxRangeMelee + fix then
-                                            shove = dist < 0.0 and not prone and asn ~= "onground" and asn ~= "climbfence" and asn ~= "bumped" and asn ~= "getup" and asn ~= "falldown" and not BanditCompatibility.IsRagdoll(potentialEnemy)
-                                            combat = not shove
-                                        end
-                                    else
-                                        switch = true
-                                        switchTo = weapons.melee
-                                        -- bandit:addLineChatElement("Melee" .. dist, 0.8, 0.8, 0.1)
-                                    end
+                            bandit:faceThisObject(enemyCharacter)
+                            --determine attack mode
+                            if dist <= 1 and math.abs(zz - pz) < 0.8 then
+                                if enemyCharacter:isProne() or ans == "onground" then
+                                    stomp = true
+                                else
+                                    shove = true
                                 end
-                            end
-
-                            --determine if bandit will be in shooting mode
-                            if not isOutOfAmmo and dist > meleeDist + 1 and not combat and not shove then
+                            elseif not isOutOfAmmo then
                                 if weapons.primary.name and weapons.primary.bulletsLeft > 0 then
                                     if not maxRangeRifle then
                                         local item = BanditCompatibility.InstanceItem(weapons.primary.name)
@@ -1006,6 +990,21 @@ local function ManageCombat(bandit)
                                             -- bandit:addLineChatElement("Secondary" .. dist, 0.8, 0.8, 0.1)
                                         end
                                     end
+                                end
+                            elseif dist <= meleeDist then
+                                if bandit:isPrimaryEquipped(weapons.melee) then
+                                    if not maxRangeMelee then
+                                        maxRangeMelee = BanditCompatibility.InstanceItem(weapons.melee):getMaxRange()
+                                    end
+                                    local fix = 0.1
+
+                                    if dist <= maxRangeMelee + fix then
+                                        combat = true
+                                    end
+                                else
+                                    switch = true
+                                    switchTo = weapons.melee
+                                    -- bandit:addLineChatElement("Melee" .. dist, 0.8, 0.8, 0.1)
                                 end
                             end
                         end
@@ -1047,7 +1046,7 @@ local function ManageCombat(bandit)
         end
 
     elseif shove then
-        if not BanditBrain.HasTaskType(brain, "Shove") then
+        if not BanditBrain.HasTaskType(brain, "Push") then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
             if veh then Bandit.Say(bandit, "CAR") end
@@ -1059,6 +1058,15 @@ local function ManageCombat(bandit)
             else
                 bandit:faceThisObject(enemyCharacter)
             end
+        end
+
+    elseif stomp then
+        if not BanditBrain.HasTaskTypes(brain, {"Smack"}) then 
+            Bandit.ClearTasks(bandit)
+
+            local eid = BanditUtils.GetCharacterID(enemyCharacter)
+            local task = {action="Smack", time=65, endurance=-0.03, shm=false, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+            table.insert(tasks, task)
         end
 
     elseif switch then

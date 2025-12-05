@@ -138,6 +138,7 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local target = zombie:getTarget()
     local animator = zombie:getAdvancedAnimator()
     local inventory = zombie:getInventory()
+    local ragdoll = zombie:isRagdoll()
     -- local astate = zombie:getAnimationDebug()
     local baseData = BanditPlayerBase.data
 

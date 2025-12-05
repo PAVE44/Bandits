@@ -241,6 +241,9 @@ end
 function BanditUtils.Hit(shooter, item, victim, damageSplit)
     local fakeZombie = getCell():getFakeZombieForHit()
 
+    -- determines if the bullet landed (either hit target or miss) but not if friendly
+    local landed = false
+
     -- Calculate the distance between the shooter and the victim
     local dist = BanditUtils.DistTo(victim:getX(), victim:getY(), shooter:getX(), shooter:getY())
 
@@ -286,6 +289,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
             victim:playSound(hitSound)
 
             PlayerDamageModel.BulletHit(shooter, item, victim)
+            landed = true
             --[[
 
             BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
@@ -311,7 +315,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
             end
             ]]
 
-        elseif instanceof(victim, "IsoZombie") and not victim:isOnKillDone() then
+        elseif instanceof(victim, "IsoZombie") then
             local brainVictim = BanditBrain.Get(victim)
             if BanditUtils.AreEnemies(brainVictim, brainShooter) then
             -- if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
@@ -363,7 +367,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                 local id = BanditUtils.GetCharacterID(bandit)
                 local args = {id=id, h=h}
                 sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)
-
+                landed = true
             end
         end
 
@@ -371,6 +375,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
     else
         local missSound = "ZSMiss".. tostring(1 + ZombRand(8))
         victim:getSquare():playSound(missSound)
+        landed = true
     end
 
     if victim:getHealth() <= 1 then
@@ -381,7 +386,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
     -- tempShooter:removeFromWorld()
     -- tempShooter = nil
 
-    return true
+    return landed
 end
 
 function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, incendiary)
@@ -537,7 +542,7 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
 
                 -- manage character "obstacles"
                 local chrs = square:getMovingObjects()
-                local wasHit = false
+                local landed = false
                 --for i=0, math.min(chrs:size()-1, projectiles) do
                 for i=0, chrs:size()-1 do
                     local chr = chrs:get(i)
@@ -550,17 +555,16 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
                                 hasArmor = true
                             end
                             if not hasArmor then
-                                BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
+                                landed = BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
                                 if incendiary then
                                     chr:setOnFire(true)
                                 end
                             end
-                            wasHit = true
-                            if i + 1 >= projectiles then break end
+                            if i + 1 >= projectiles and landed then break end
                         end
                     end
                 end
-                if not piercing and wasHit then return false end
+                if not piercing and landed then return false end
 
             end
         end

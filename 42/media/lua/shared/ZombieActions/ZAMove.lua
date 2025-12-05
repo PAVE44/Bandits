@@ -14,6 +14,9 @@ ZombieActions.Move.onStart = function(zombie, task)
     end
 
     zombie:setVariable("BanditWalkType", task.walkType)
+    zombie:getPathFindBehavior2():reset()
+    zombie:getPathFindBehavior2():cancel()
+    zombie:setPath2(nil)
 
     if not Bandit.IsMoving(zombie) then
         local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), task.x, task.y)
@@ -48,27 +51,12 @@ ZombieActions.Move.onStart = function(zombie, task)
         end
     end
 
-    if BanditUtils.IsController(zombie) then
-        zombie:getPathFindBehavior2():reset()
-        zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
-        zombie:getPathFindBehavior2():cancel()
-        zombie:setPath2(nil)
-    end
-
-    if task.tid then
-        if task.isPlayer then
-            local player = getPlayer()
-            if BanditUtils.GetCharacterID(player) == task.tid then
-                zombie:pathToCharacter(player)
-            end
-        else
-            local target = BanditZombie.Cache[task.tid]
-            if target then
-                zombie:pathToCharacter(target)
-            end
+    if not task.tid then
+        if BanditUtils.IsController(zombie) then
+            zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
+            zombie:getPathFindBehavior2():cancel()
+            zombie:setPath2(nil)
         end
-    else
-        zombie:getPathFindBehavior2():pathToLocationF(task.x, task.y, task.z)
     end
 
     return true
@@ -93,18 +81,28 @@ ZombieActions.Move.onWorking = function(zombie, task)
             if task.isPlayer then
                 local player = getPlayer()
                 if BanditUtils.GetCharacterID(player) == task.tid then
+                    if player:getZ() == zombie:getZ() then
+                        zombie:faceThisObject(player)
+                    end
                     zombie:pathToCharacter(player)
-                    zombie:faceThisObject(player)
                 end
             else
                 local target = BanditZombie.Cache[task.tid]
                 if target then
+                    if target:getZ() == zombie:getZ() then
+                        zombie:faceThisObject(player)
+                    end
                     zombie:pathToCharacter(target)
-                    zombie:faceThisObject(player)
                 end
             end
         else
-            zombie:pathToLocationF(task.x, task.y, task.z) 
+            local result = zombie:getPathFindBehavior2():update()
+            if result == BehaviorResult.Failed then
+                return true
+            end
+            if result == BehaviorResult.Succeeded then
+                return true
+            end
         end
     end
 
