@@ -49,10 +49,10 @@ function BanditMenu.MakeProcedure (player, square)
                             local spriteName = object:getSprite():getName()
                             local spriteProps = object:getSprite():getProperties()
 
-                            local isSolidFloor = spriteProps:Is(IsoFlagType.solidfloor)
-                            local isAttachedFloor = spriteProps:Is(IsoFlagType.attachedFloor)
-                            local isExterior = spriteProps:Is(IsoFlagType.exterior)
-                            local isCanBeRemoved = spriteProps:Is(IsoFlagType.canBeRemoved)
+                            local isSolidFloor = spriteProps:has(IsoFlagType.solidfloor)
+                            local isAttachedFloor = spriteProps:has(IsoFlagType.attachedFloor)
+                            local isExterior = spriteProps:has(IsoFlagType.exterior)
+                            local isCanBeRemoved = spriteProps:has(IsoFlagType.canBeRemoved)
                             
                             if spriteName then
                                 --[[if isSolidFloor and isExterior and not isAttachedFloor then

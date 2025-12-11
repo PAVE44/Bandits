@@ -30,7 +30,7 @@ ZombieActions.BuildFloor.onComplete = function(zombie, task)
             local object = objects:get(i)
             local properties = object:getProperties()
             if properties then
-                local water = properties:Is(IsoFlagType.water)
+                local water = properties:has(IsoFlagType.water)
                 if water then
 
                     local floor = IsoObject.new(square, "carpentry_02_56", "")

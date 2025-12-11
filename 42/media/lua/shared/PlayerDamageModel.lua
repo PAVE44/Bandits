@@ -74,10 +74,14 @@ function PlayerDamageModel.BulletHit(shooter, item, player)
     -- PLAYER FALL ON LEG HIT
     if hitPart == "Foot_R" or hitPart == "Foot_L" or hitPart == "LowerLeg_R" or hitPart == "LowerLeg_L" then
         if player:isRunning() or player:isSprinting() then
+
+
+            player:setVariable("BumpDone", false)
             player:clearVariable("BumpFallType")
-            player:setBumpType("stagger")
+            player:setBumpType("trippingFromSprint")
             player:setBumpFall(true)
             player:setBumpFallType("pushedBehind")
+            -- player:getActionContext():reportEvent("wasBumped")
         end
     end
 

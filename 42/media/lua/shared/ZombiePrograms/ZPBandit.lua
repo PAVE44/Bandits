@@ -65,7 +65,9 @@ ZombiePrograms.Bandit.Main = function(bandit)
         end
     end
 
-    if SandboxVars.Bandits.General_GeneratorCutoff or SandboxVars.Bandits.General_SabotageVehicles then 
+    local isElectrician = Bandit.HasExpertise(bandit, Bandit.Expertise.Electrician)
+    local isMechanic = Bandit.HasExpertise(bandit, Bandit.Expertise.Mechanic)
+    if (isElectrician and SandboxVars.Bandits.General_GeneratorCutoff) or (isMechanic and SandboxVars.Bandits.General_SabotageVehicles) then 
         for z=0, 1 do
             for y=-10, 10 do
                 for x=-10, 10 do
@@ -74,7 +76,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
                     if square then
 
                         -- only if outside to prevent defenders shuting down their own genny
-                        if SandboxVars.Bandits.General_GeneratorCutoff and Bandit.HasExpertise(bandit, Bandit.Expertise.Electrician) and bandit:isOutside() then
+                        if isElectrician and bandit:isOutside() then
                             local gen = square:getGenerator()
                             if gen and gen:isActivated() then
                                 local dist = BanditUtils.DistTo(bx, by, tx, ty)
@@ -90,7 +92,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
                         end
 
                         -- SandboxVars.Bandits.General_SabotageVehicles and
-                        if Bandit.HasExpertise(bandit, Bandit.Expertise.Mechanic) then
+                        if isMechanic then
                             local vehicle = square:getVehicleContainer()
                             if vehicle and vehicle:isHotwired() then
                                 local vx, vy, vz = vehicle:getX(), vehicle:getY(), vehicle:getZ()

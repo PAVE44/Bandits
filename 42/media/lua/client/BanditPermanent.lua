@@ -25,4 +25,3 @@ BanditPermanent.Check = function()
     end
 end
 
-Events.EveryOneMinute.Add(BanditPermanent.Check)

@@ -1,33 +1,33 @@
 ZombieActions = ZombieActions or {}
 
 ZombieActions.Shoot = {}
-ZombieActions.Shoot.onStart = function(zombie, task)
-    zombie:setBumpType(task.anim)
+ZombieActions.Shoot.onStart = function(bandit, task)
+    bandit:setBumpType(task.anim)
     return true
 end
 
-ZombieActions.Shoot.onWorking = function(zombie, task)
+ZombieActions.Shoot.onWorking = function(bandit, task)
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)
     if not enemy then return true end
-    zombie:faceLocationF(enemy:getX(), enemy:getY())
+    bandit:faceLocationF(enemy:getX(), enemy:getY())
 
     if task.time <= 0 then
         return true
     end
 
-    if zombie:getBumpType() ~= task.anim then 
-        zombie:setBumpType(task.anim)
+    if bandit:getBumpType() ~= task.anim then 
+        bandit:setBumpType(task.anim)
     end
 
     return false
 end
 
-ZombieActions.Shoot.onComplete = function(zombie, task)
+ZombieActions.Shoot.onComplete = function(bandit, task)
 
-    local bumpType = zombie:getBumpType()
+    local bumpType = bandit:getBumpType()
     if bumpType ~= task.anim then return true end
 
-    local shooter = zombie
+    local shooter = bandit
     local sx, sy, sz, sd = shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle()
     local brainShooter = BanditBrain.Get(shooter)
     local weapon = brainShooter.weapons[task.slot]
@@ -55,7 +55,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
 
     -- handle real and "world" sound 
     -- local emitter = getWorld():getFreeEmitter(sx, sy, sz)
-    local emitter = zombie:getEmitter()
+    local emitter = shooter:getEmitter()
     local swingSound = weaponItem:getSwingSound()
     -- emitter:stopAll()
     local long = emitter:playSound(swingSound)
@@ -67,6 +67,7 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
     local volume = weaponItem:getSoundVolume()
     wsm:addSound(zombie, math.floor(sx), math.floor(sy), math.floor(sz), radius, volume, false)]]
 
+    -- alert nearby zombies
     local radius = weaponItem:getSoundRadius()
     local volume = weaponItem:getSoundVolume()
     local zombieList = BanditZombie.CacheLightZ
@@ -74,8 +75,13 @@ ZombieActions.Shoot.onComplete = function(zombie, task)
         local dist = math.abs(sx - zombie.x) + math.abs(sy - zombie.y)
         if dist < radius then
             local zombie = BanditZombie.Cache[id]
-            if zombie then
-                zombie:pathToLocationF(sx, sy, sz)
+            if zombie and not zombie:isMoving() then
+                local asn = zombie:getActionStateName()
+                if asn == "idle" then
+                    
+                    zombie:spottedNew(shooter, true)
+                    -- zombie:pathToLocationF(sx, sy, sz)
+                end
             end
         end
     end

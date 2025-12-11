@@ -263,7 +263,7 @@ BanditPlayerBase.Regenerate = function(baseId)
             --[[elseif object:getWaterAmount() > 10 then -- or (props and props:Is("waterPiped"))
                 local xx = object:getWaterAmount()
                 addObject(baseId, x, y, z, "waterSources")]]
-            elseif spriteProps and spriteProps:Is("IsTrashCan") then
+            elseif spriteProps and spriteProps:has("IsTrashCan") then
                 addObject(baseId, x, y, z, "trashcans")
             elseif container then
 
@@ -621,7 +621,7 @@ BanditPlayerBase.GetTrashcan = function(character)
                     if sprite then
                         local props = sprite:getProperties()
                         if props then
-                            if sprite:getProperties():Is("IsTrashCan") then
+                            if sprite:getProperties():has("IsTrashCan") then
                                 -- BanditPlayerBase.UpdateTrashcan(object)
                                 bestTrashcan = object
                                 bestDist = dist

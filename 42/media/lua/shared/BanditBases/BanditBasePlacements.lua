@@ -65,8 +65,8 @@ function BanditBasePlacements.Matress(x, y, z)
                         end
                     end
                     local spriteProps = sprite:getProperties()
-                    local test = spriteProps:Is("BlocksPlacement")
-                    if spriteProps:Is("BlocksPlacement") then
+                    local test = spriteProps:has("BlocksPlacement")
+                    if spriteProps:has("BlocksPlacement") then
                         can = false
                     end
                 end

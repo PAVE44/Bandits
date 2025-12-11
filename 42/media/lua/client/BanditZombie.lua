@@ -1,4 +1,4 @@
--- Zombie cache
+-- keep your globals exactly as before
 BanditZombie = BanditZombie or {}
 
 -- consists of IsoZombie instances
@@ -14,124 +14,126 @@ BanditZombie.CacheLightZ = BanditZombie.CacheLightZ or {}
 -- this cache has all bandit without zombies
 BanditZombie.CacheLightB = BanditZombie.CacheLightB or {}
 
--- used for adaptive perofmance
-BanditZombie.LastSize = 0
+-- localize frequently-used globals for speed
+local GetZombieID = BanditUtils.GetZombieID
+local IsReanimated = BanditCompatibility.IsReanimatedForGrappleOnly
+local GetBrain = BanditBrain.Get
 
--- rebuids cache
-local UpdateZombieCache = function(numberTicks)
-    -- if true then return end 
+-- local references to the cache tables (fast)
+local Cache        = BanditZombie.Cache
+local CacheLight   = BanditZombie.CacheLight
+local CacheLightZ  = BanditZombie.CacheLightZ
+local CacheLightB  = BanditZombie.CacheLightB
+
+local sum = 0
+local invocations = 0
+
+local function removeZombieFromCaches(id)
+    Cache[id] = nil
+    CacheLight[id] = nil
+    CacheLightB[id] = nil
+    CacheLightZ[id] = nil
+end
+
+local function getRoomId(zombie)
+    local room = zombie:getSquare():getRoom()
+    if room then
+        local roomDef = room:getRoomDef()
+        if roomDef then
+            return roomDef:getIDString()
+        end
+    end
+end
+
+local function onZombieUpdate(zombie)
     if isServer() then return end
+    local ts = getTimestampMs()
+    -- cheap early-outs first
+    if IsReanimated(zombie) or zombie:isRagdoll() or not zombie:isAlive() then
+        local id = GetZombieID(zombie)
+        if Cache[id] then removeZombieFromCaches(id) end
+        return
+    end
 
-    if not Bandit.Engine then return end
+    local id = GetZombieID(zombie)
 
-    -- ts = getTimestampMs()
-    -- if not numberTicks % 4 == 1 then return end
+    -- always store the raw zombie reference
+    Cache[id] = zombie
 
-    local silenceStates = {"hitreaction", "hitreaction-hit", "hitreaction-gettingup", "hitreaction-knockeddown", "climbfence", "climbwindow"}
+    -- reuse existing light table to avoid allocating each tick
+    local light = CacheLight[id]
+    if not light then
+        light = {}
+        CacheLight[id] = light
+    end
 
-    -- adaptive pefrormance
-    -- local skip = math.floor(BanditZombie.LastSize / 200) + 1
-    local skip = 4
-    if numberTicks % skip ~= 0 then return end
+    -- update only what changed (optional micro-optimization)
+    light.id = id
+    light.x = zombie:getX()
+    light.y = zombie:getY()
+    light.z = zombie:getZ()
+    light.d = zombie:getDirectionAngle()
 
-    -- local ts = getTimestampMs()
-    local cell = getCell()
-    local zombieList = cell:getZombieList()
-    local zombieListSize = zombieList:size()
+    local isBandit = zombie:getVariableBoolean("Bandit")
+    light.isBandit = isBandit
 
-    -- limit zombie map to player surrondings, helps performance
-    -- local mr = 40
-    local mr = math.ceil(100 - (zombieListSize / 4))
-    if mr < 60 then mr = 60 end
-    -- print ("MR: " .. mr)
-    local player = getSpecificPlayer(0)
-    if not player then return end
-    local px = player:getX()
-    local py = player:getY()
+    if isBandit then
+        -- if GetBrain is expensive, consider caching it on enter-bandit only
+        light.brain = GetBrain(zombie)
+        light.rid = getRoomId(zombie)
+        CacheLightB[id] = light
+        CacheLightZ[id] = nil
+    else
+        light.brain = nil
+        CacheLightZ[id] = light
+        CacheLightB[id] = nil
+    end
+    sum = sum + (getTimestampMs() - ts)
+    invocations = invocations + 1
+end
+
+local function onZombieDead(zombie)
+    if isServer() then return end
+    local id = GetZombieID(zombie)
+    if Cache[id] then removeZombieFromCaches(id) end
+end
+
+local function flush()
+    if isServer() then return end
 
     -- prepare local cache vars
     local cache = {}
     local cacheLight = {}
     local cacheLightB = {}
     local cacheLightZ = {}
-    local d = 0
-    for i = 0, zombieListSize - 1 do
 
+    local cell = getCell()
+    local zombieList = cell:getZombieList()
+    local zombieListSize = zombieList:size()
+
+    for i = 0, zombieListSize - 1 do
         local zombie = zombieList:get(i)
 
         if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) and not zombie:isRagdoll() then
 
             local id = BanditUtils.GetZombieID(zombie)
 
-            --[[
-            if id == 0 then -- reanimated zombie
-                -- zombie:setPersistentOutfitID(100000 + ZombRand(10000))
-                local test = zombie:isReanim()
-                local test2 = zombie:isReanimate()
-                if test or test2 then
-                    print ("should set id")
-                end
-                
-                -- outfitID = ZombiesZoneDefinition.pickPersistentOutfit(square);
-            end]]
-
-            if cache[id] and id ~= 0 then
-                -- print ("DUPLICATE ID " .. id)
-            end
-
             cache[id] = zombie
 
             local zx, zy, zz, zd = zombie:getX(), zombie:getY(), zombie:getZ(), zombie:getDirectionAngle()
 
-            if math.abs(px - zx) < mr and math.abs(py - zy) < mr then
-                local light = {id = id, x = zx, y = zy, z = zz, d = zd}
+            local light = {id = id, x = zx, y = zy, z = zz, d = zd}
 
-                if zombie:getVariableBoolean("Bandit")  then
-                    light.isBandit = true
-                    light.brain = BanditBrain.Get(zombie)
-
-                    light.rid = nil
-                    local room = zombie:getSquare():getRoom()
-                    if room then
-                        local roomDef = room:getRoomDef()
-                        if roomDef then
-                            light.rid = roomDef:getIDString()
-                            -- print ("RID: " .. light.rid)
-                        end
-                    end
-
-                    cacheLightB[id] = light
-
-                    -- zombies in hitreaction state are not processed by onzombieupdate
-                    -- so we need to make them shut their zombie sound here too
-                    -- logically this does not fit here, should be a separate process
-                    -- but it's here due to performance optimization to avoid additional iteration
-                    -- over zombieList
-                    --[[
-                    if math.abs(px - zx) < 12 and math.abs(py - zy) < 12 then
-                        local asn = zombie:getActionStateName()
-                        for _, ss in pairs(silenceStates) do
-                            if asn == ss then
-                                Bandit.SurpressZombieSounds(zombie)
-                                break
-                            end
-                        end
-
-                        if asn == "bumped" then
-                            local btype = zombie:getBumpType()
-                            if btype and (btype == "ClimbWindow" or btype == "ClimbFence" or btype == "ClimbFenceEnd") then
-                                Bandit.SurpressZombieSounds(zombie)
-                            end
-                        end
-                    end
-                    ]]
-                else
-                    light.isBandit = false
-                    cacheLightZ[id] = light
-                end
-
-                cacheLight[id] = light
+            local isBandit = zombie:getVariableBoolean("Bandit")
+            light.isBandit = isBandit
+            if isBandit  then
+                light.brain = BanditBrain.Get(zombie)
+                light.rid = getRoomId(zombie)
+                cacheLightB[id] = light
+            else
+                cacheLightZ[id] = light
             end
+            cacheLight[id] = light
         end
 
     end
@@ -141,10 +143,9 @@ local UpdateZombieCache = function(numberTicks)
     BanditZombie.CacheLight = cacheLight
     BanditZombie.CacheLightB = cacheLightB
     BanditZombie.CacheLightZ = cacheLightZ
-    BanditZombie.LastSize = zombieListSize
 
-    -- print ("BZ:" .. (getTimestampMs() - ts))
-end 
+    BanditPermanent.Check()
+end
 
 -- returns IsoZombie by id
 BanditZombie.GetInstanceById = function(id)
@@ -174,4 +175,11 @@ BanditZombie.GetAllCnt = function()
     return BanditZombie.LastSize
 end
 
-Events.OnTick.Add(UpdateZombieCache)
+Events.OnZombieUpdate.Remove(onZombieUpdate)
+Events.OnZombieUpdate.Add(onZombieUpdate)
+
+Events.OnZombieDead.Remove(onZombieDead)
+Events.OnZombieDead.Add(onZombieDead)
+
+Events.EveryOneMinute.Remove(flush)
+Events.EveryOneMinute.Add(flush)

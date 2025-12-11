@@ -624,17 +624,17 @@ local function checkSpace (player, x, y, w, h)
                             local sn = sprite:getName()
                             local props = sprite:getProperties()
                             if sn ~= "" then
-                                local naturefloor = props:Val("natureFloor")
-                                local floor = props:Is(IsoFlagType.solidfloor)
-                                local canBeRemoved = props:Is(IsoFlagType.canBeRemoved)
-                                local vegi = props:Is(IsoFlagType.vegitation)
-                                local stone = props:Is("CustomName") and (props:Val("CustomName"):embodies("Stone") or props:Val("CustomName"):embodies("Stump"))
-                                local tree = props:Val("tree")
+                                local naturefloor = props:get("natureFloor")
+                                local floor = props:has(IsoFlagType.solidfloor)
+                                local canBeRemoved = props:has(IsoFlagType.canBeRemoved)
+                                local vegi = props:has(IsoFlagType.vegitation)
+                                local stone = props:has("CustomName") and (props:get("CustomName"):embodies("Stone") or props:get("CustomName"):embodies("Stump"))
+                                local tree = props:get("tree")
                                 if naturefloor or canBeRemoved or vegi or tree or stone then
                                     good = true
                                 else
                                     local sn = sprite:getName()
-                                    local test = props:Val("CustomName")
+                                    local test = props:get("CustomName")
                                     -- print ("bad")
                                 end
                             end

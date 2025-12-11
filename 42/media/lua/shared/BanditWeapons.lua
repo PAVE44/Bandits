@@ -19,7 +19,7 @@ BanditWeapons.Make = function(itemType, boxCount)
 
     -- for now, harcoded
     local box2ammo = {}
-    box2ammo["Base.ShotgunShellsBox"] = 25
+    box2ammo["Base.ShotgunShells"] = 25
     box2ammo["Base.556Bullets"] = 50
     box2ammo["Base.223Bullets"] = 50
     box2ammo["Base.308Bullets"] = 20
@@ -31,7 +31,7 @@ BanditWeapons.Make = function(itemType, boxCount)
     local weapon = BanditCompatibility.InstanceItem(itemType)
     if not weapon then return end
 
-    local ammoType = weapon:getAmmoType()
+    local ammoType = weapon:getAmmoType():getItemKey()
     if not ammoType then return end 
 
     local boxSize = 20
@@ -46,11 +46,11 @@ BanditWeapons.Make = function(itemType, boxCount)
     ret.name = BanditCompatibility.GetLegacyItem(itemType)
     ret.racked = false
 
-    -- getAmmoBox returns type, not fullType
+    -- getAmmoBox returns some stupid format, not fullType
     -- so we need to fix this
     -- assume that ammo box type is from the same module as the ammo
-    local mod = ammoType:match("([^%.]+)")
-    ammoBoxType = mod .. "." .. ammoBoxType
+    -- local mod = ammoType:match("([^%.]+)")
+    --ammoBoxType = mod .. "." .. ammoBoxType
 
     if BanditCompatibility.UsesExternalMagazine(weapon) then
         local magazineType = weapon:getMagazineType()

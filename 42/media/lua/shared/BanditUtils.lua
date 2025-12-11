@@ -349,7 +349,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
 
                 victim:setBumpDone(true)
                 victim:setHitFromBehind(shooter:isBehind(victim))
-                victim:setHitAngle(shooter:getForwardDirection())
+                -- victim:setHitAngle(shooter:getForwardDirection())
                 victim:setPlayerAttackPosition(victim:testDotSide(shooter))
                 victim:setHitReaction("ShotBelly")
 
@@ -436,11 +436,13 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
             if i > 1 and square then
                 -- manage wall obstacle
                 local props = square:getProperties()
+                local names = props:getPropertyNames()
+
                 if props then
                     -- square:playSound("BulletImpact")
-                    local matName = props:Val("Material")
+                    local matName = props:get("Material")
                     if not matName then
-                        matName = props:Val("MaterialType")
+                        matName = props:get("MaterialType")
                     end
                     if matName then
                         -- print (matName)
@@ -493,8 +495,8 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
                         if ZombRand(10) > 1 then 
                             local sprite = door:getSprite()
                             local props = sprite:getProperties()
-                            if props:Is("DoorSound") then
-                                doorSound = props:Val("DoorSound")
+                            if props:has("DoorSound") then
+                                doorSound = props:get("DoorSound")
                                 if snds[doorSound] then
                                     square:playSound(snds[doorSound])
                                 end
@@ -1161,7 +1163,7 @@ function BanditUtils.IsWater(square)
         local object = objects:get(i)
         local properties = object:getProperties()
         if properties then
-            local water = properties:Is(IsoFlagType.water)
+            local water = properties:has(IsoFlagType.water)
             if water then
                 return true
             end

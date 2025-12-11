@@ -1,3 +1,12 @@
+require "BanditZombie"
+
+local sum1 = 0
+local sum2 = 0
+local sum3 = 0
+local iter1 = 0
+local iter2 = 0
+local iter3 = 0
+
 local function predicateRemovable(item)
     if not item:getModData().preserve and not instanceof(item, "Clothing") then
         return true
@@ -23,7 +32,7 @@ local function CalcSpottedScore(player, dist)
         for i = 0, objects:size() - 1 do
             local object = objects:get(i)
             local props = object and object:getProperties()
-            if props and props:Is(IsoFlagType.vegitation) and props:Is(IsoFlagType.canBeCut) then
+            if props and props:has(IsoFlagType.vegitation) and props:has(IsoFlagType.canBeCut) then
                 spottedScore = spottedScore - 0.15
                 break
             end
@@ -395,17 +404,17 @@ local function RemoveWindowFromPathing (bandit, square)
         local properties = object:getProperties()
 
         if properties then
-            if properties:Is(IsoFlagType.canPathN) then
-                properties:UnSet(IsoFlagType.canPathN)
+            if properties:has(IsoFlagType.canPathN) then
+                properties:unset(IsoFlagType.canPathN)
                 recalc = true
             end
-            if properties:Is(IsoFlagType.canPathW) then
-                properties:UnSet(IsoFlagType.canPathW)
+            if properties:has(IsoFlagType.canPathW) then
+                properties:unset(IsoFlagType.canPathW)
                 recalc = true
             end
 
-            -- properties:UnSet(IsoFlagType.WindowN)
-            -- properties:UnSet(IsoFlagType.WindowW)
+            -- properties:unset(IsoFlagType.WindowN)
+            -- properties:unset(IsoFlagType.WindowW)
         end
     end
 
@@ -450,7 +459,7 @@ local function ManageCollisions(bandit)
                 local properties = object:getProperties()
 
                 if properties then
-                    local lowFence = properties:Val("FenceTypeLow")
+                    local lowFence = properties:get("FenceTypeLow")
                     local hoppable = object:isHoppable()
 
                     -- LOW FENCE COLLISION
@@ -476,7 +485,7 @@ local function ManageCollisions(bandit)
                     end
 
                     -- TALL FENCE COLLISION
-                    local tallFence = properties:Val("FenceTypeHigh")
+                    local tallFence = properties:get("FenceTypeHigh")
                     local tallHoppable = object:isTallHoppable()
                     if tallFence or tallHoppable then
                         bandit:setCollidable(false)
@@ -490,7 +499,7 @@ local function ManageCollisions(bandit)
 
                     -- WINDOW COLLISIONS
                     if instanceof(object, "IsoWindow") then
-                        if (object:isInvincible() or (object:getSprite() and properties:Is("WindowLocked"))) and (not brain.hostile and brain.program.name ~= "Civilian") then
+                        if (object:isInvincible() or (object:getSprite() and properties:has("WindowLocked"))) and (not brain.hostile and brain.program.name ~= "Civilian") then
                             RemoveWindowFromPathing(bandit, square)
                             
                         elseif bandit:isFacingObject(object, 0.5) then
@@ -500,7 +509,7 @@ local function ManageCollisions(bandit)
                                     if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
                                     local fx, fy
                                     if barricade then
-                                        if properties:Is(IsoFlagType.WindowN) then
+                                        if properties:has(IsoFlagType.WindowN) then
                                             fx = barricade:getX()
                                             fy = barricade:getY() - 0.5
                                         else
@@ -510,7 +519,7 @@ local function ManageCollisions(bandit)
 
                                     else
                                         barricade = object:getBarricadeOnOppositeSquare()
-                                        if properties:Is(IsoFlagType.WindowN) then
+                                        if properties:has(IsoFlagType.WindowN) then
                                             fx = barricade:getX()
                                             fy = barricade:getY() + 0.5
                                         else
@@ -584,7 +593,7 @@ local function ManageCollisions(bandit)
                                 local barricade = object:getBarricadeOnSameSquare()
                                 local fx, fy
                                 if barricade then
-                                    if properties:Is(IsoFlagType.doorN) then
+                                    if properties:has(IsoFlagType.doorN) then
                                         fx = barricade:getX()
                                         fy = barricade:getY() - 1
                                     else
@@ -594,7 +603,7 @@ local function ManageCollisions(bandit)
 
                                 else
                                     barricade = object:getBarricadeOnOppositeSquare()
-                                    if properties:Is(IsoFlagType.doorN) then
+                                    if properties:has(IsoFlagType.doorN) then
                                         fx = barricade:getX()
                                         fy = barricade:getY() + 1
                                     else
@@ -643,14 +652,14 @@ local function ManageCollisions(bandit)
                                         end
                                     else
                                         IsoDoor.toggleDoubleDoor(object, true)
-                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
                                         doorSound = doorSound .. "Open"
                                         bandit:playSound(doorSound)
                                     end
 
                                 elseif IsoDoor.getGarageDoorIndex(object) > -1 then
                                 
-                                    local exterior = bandit:getCurrentSquare():Is(IsoFlagType.exterior)
+                                    local exterior = bandit:getCurrentSquare():has(IsoFlagType.exterior)
                                     if exterior and (object:isLocked() or object:isLockedByKey()) then
                                         if bandit:isPrimaryEquipped(weapons.melee) then
                                             Bandit.Say(bandit, "BREACH")
@@ -663,14 +672,14 @@ local function ManageCollisions(bandit)
                                         end
                                     else
                                         IsoDoor.toggleGarageDoor(object, true)
-                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
                                         doorSound = doorSound .. "Open"
                                         bandit:playSound(doorSound)
                                     end
                                 else
 
                                     -- door locks are complicated... 
-                                    if ((object:isLocked() or object:isLockedByKey()) and (not bandit:getCurrentSquare():getRoom() or object:getProperties():Is("forceLocked"))) or object:isObstructed() then
+                                    if ((object:isLocked() or object:isLockedByKey()) and (not bandit:getCurrentSquare():getRoom() or object:getProperties():has("forceLocked"))) or object:isObstructed() then
                                         if bandit:isPrimaryEquipped(weapons.melee) then
                                             Bandit.Say(bandit, "BREACH")
                                             local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
@@ -730,7 +739,7 @@ local function ManageCollisions(bandit)
                                             end
                                         end
                                         ]]
-                                        local doorSound = properties:Is("DoorSound") and properties:Val("DoorSound") or "WoodDoor"
+                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
                                         doorSound = doorSound .. "Open"
                                         bandit:playSound(doorSound)
                                     end
@@ -742,7 +751,7 @@ local function ManageCollisions(bandit)
                     end
 
                     -- THUMPABLE COLLISIONS
-                    if SandboxVars.Bandits.General_DestroyThumpable and instanceof(object, "IsoThumpable") and not properties:Val("FenceTypeLow") and brain.hostile then
+                    if SandboxVars.Bandits.General_DestroyThumpable and instanceof(object, "IsoThumpable") and not properties:get("FenceTypeLow") and brain.hostile then
                         local isWallTo = bandit:getSquare():isSomethingTo(object:getSquare())
                         if not isWallTo then
                             if bandit:isPrimaryEquipped(weapons.melee) then
@@ -1275,7 +1284,7 @@ local function UpdateZombies(zombie)
                 bandit:setHitFromBehind(zombie:isBehind(bandit))
         
                 if instanceof(bandit, "IsoZombie") then
-                    bandit:setHitAngle(zombie:getForwardDirection())
+                    -- bandit:setHitAngle(zombie:getForwardDirection())
                     bandit:setPlayerAttackPosition(bandit:testDotSide(zombie))
                 end
         
@@ -1555,14 +1564,25 @@ local function GenerateTask(bandit, uTick)
     local tasks = {}
     
     -- MANAGE BANDIT ENDURANCE LOSS
+    -- local ts = getTimestampMs()
     local enduranceTasks = ManageEndurance(bandit)
+    -- local elapsed = getTimestampMs() - ts
+    -- if elapsed > 1 then
+    --     print ("ManageEndurance: " .. elapsed)
+    -- end
     if #enduranceTasks > 0 then
         for _, t in pairs(enduranceTasks) do table.insert(tasks, t) end
     end
     
     -- MANAGE BLEEDING AND HEALING
     if #tasks == 0 then
+        -- local ts = getTimestampMs()
         local healingTasks = ManageHealth(bandit)
+        -- local elapsed = getTimestampMs() - ts
+        -- if elapsed > 1 then
+        --    print ("ManageHealth: " .. elapsed)
+        --end
+        
         if #healingTasks > 0 then
             for _, t in pairs(healingTasks) do table.insert(tasks, t) end
         end
@@ -1570,7 +1590,12 @@ local function GenerateTask(bandit, uTick)
 
     -- MANAGE MELEE / SHOOTING TASKS
     if #tasks == 0  then
+        -- local ts = getTimestampMs()
         local combatTasks = ManageCombat(bandit)
+        -- local elapsed = getTimestampMs() - ts
+        -- if elapsed > 1 then
+        --     print ("ManageCombat: " .. elapsed)
+        -- end
         if #combatTasks > 0 then
             for _, t in pairs(combatTasks) do table.insert(tasks, t) end
         end
@@ -1578,7 +1603,12 @@ local function GenerateTask(bandit, uTick)
 
     -- MANAGE COLLISION TASKS
     if #tasks == 0  and uTick % 2 then
+        -- local ts = getTimestampMs()
         local colissionTasks = ManageCollisions(bandit)
+        -- local elapsed = getTimestampMs() - ts
+        -- if elapsed > 1 then
+        --     print ("ManageCollisions: " .. elapsed)
+        -- end
         if #colissionTasks > 0 then
             for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
         end
@@ -1590,7 +1620,10 @@ local function GenerateTask(bandit, uTick)
         if program and program.name and program.stage  then
             -- local ts = getTimestampMs()
             local res = ZombiePrograms[program.name][program.stage](bandit)
-            -- print ("AT: " .. program.name .. "." .. program.stage .. " " .. (getTimestampMs() - ts))
+            -- local elapsed = getTimestampMs() - ts
+            -- if elapsed > 1 then
+            --     print ("CustomProgram: " .. program.name .. " " .. program.stage .. " ".. elapsed)
+            -- end
             if res.status and res.next then
                 Bandit.SetProgramStage(bandit, res.next)
                 for _, task in pairs(res.tasks) do
@@ -1602,6 +1635,7 @@ local function GenerateTask(bandit, uTick)
             end
         end
     end
+    
 
     if #tasks > 0 then
         local brain = BanditBrain.Get(bandit)
@@ -1721,9 +1755,10 @@ local function OnBanditUpdate(zombie)
     end
 
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
+    --[[
     if bandit:isTeleporting() then
         return
-    end
+    end]]
 
     -- WALKTYPE
     -- we do it this way, if walktype get overwritten by game engine we force our animations
@@ -1760,11 +1795,22 @@ local function OnBanditUpdate(zombie)
     ManageSpeechCooldown(brain)
 
     -- ACTION STATE TWEAKS
+    -- local ts = getTimestampMs()
     local continue = ManageActionState(bandit)
+    -- local elapsed = getTimestampMs() - ts
+    -- if elapsed > 1 then
+    --    print ("ManageActionState: " .. elapsed)
+    -- end
+
     if not continue then return end
     
     -- COMPANION SOCIAL DISTANCE HACK
+    -- local ts = getTimestampMs()
     ManageSocialDistance(bandit)
+    -- local elapsed = getTimestampMs() - ts
+    -- if elapsed > 1 then
+    --     print ("ManageSocialDistance: " .. elapsed)
+    -- end
 
     -- CRAWLERS SCREAM OCASSINALLY
     if bandit:isCrawling() then
@@ -1775,12 +1821,28 @@ local function OnBanditUpdate(zombie)
 
     local task = Bandit.GetTask(bandit)
     if task then
+            
+        -- local ts = getTimestampMs()
         ProcessTask(bandit, task)
+        -- local elapsed = getTimestampMs() - ts
+        -- if elapsed > 1 then
+        --     print ("ProcessTask " .. task.action .. "(" .. task.state .. "): " .. elapsed)
+        -- end
     end
 
     uTick = uTick + 1
 
     local elapsed = getTimestampMs() - ts
+    if elapsed < 1 then 
+        iter1 = iter1 + 1 
+        sum1 = sum1 + elapsed
+    elseif elapsed < 5 then 
+        iter2 = iter2 + 1
+        sum2 = sum2 + elapsed
+    else
+        iter3 = iter3 + 1
+        sum3 = sum3 + elapsed
+    end
 end
 
 local function OnHitZombie(zombie, attacker, bodyPartType, handWeapon)
@@ -2085,7 +2147,7 @@ local function OnZombieDead(bandit)
             
             bandit2:removeFromWorld()
             bandit2:removeFromSquare()
-            print ("----- CORPSE SWAPPED ------")
+            -- print ("----- CORPSE SWAPPED ------")
         end
     end
 
@@ -2116,6 +2178,16 @@ local function OnDeadBodySpawn(body)
     end
 end
 
+local function perf()
+    print ("BANDIT UPDATE REPORT: invocations: " .. "short: " .. iter1 .. "( " .. sum1.. "), medium: " .. iter2 .. "(" .. sum2 .. "), long: " .. iter3 .. "(" .. sum3.. ")")
+    iter1 = 0
+    iter2 = 0
+    iter3 = 0
+    sum1 = 0
+    sum2 = 0
+    sum3 = 0
+end
+
 Events.OnZombieUpdate.Remove(OnBanditUpdate)
 Events.OnZombieUpdate.Add(OnBanditUpdate)
 
@@ -2127,3 +2199,6 @@ Events.OnZombieDead.Add(OnZombieDead)
 
 Events.OnDeadBodySpawn.Remove(OnDeadBodySpawn)
 Events.OnDeadBodySpawn.Add(OnDeadBodySpawn)
+
+-- Events.EveryOneMinute.Remove(perf)
+-- Events.EveryOneMinute.Add(perf)
