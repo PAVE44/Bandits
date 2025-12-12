@@ -58,7 +58,7 @@ local function lootContainer(zombie, container, task)
                     newWeapon.magCount = math.floor(bullets / magSize)
                     newWeapon.bulletsLeft = 1
                 else
-                    local ammoType = weaponItem:getAmmoType()
+                    local ammoType = weaponItem:getAmmoType():getItemKey()
                     local ammoCount = 0
 
                     for j=0, items:size()-1 do

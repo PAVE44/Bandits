@@ -406,7 +406,7 @@ BanditPrograms.Weapon.Resupply = function(bandit)
                                             end
                                         end
                                     else
-                                        local ammoType = weaponItem:getAmmoType()
+                                        local ammoType = weaponItem:getAmmoType():getItemKey()
                                         for j=0, items:size()-1 do
                                             local item = items:get(j)
                                             if item:getFullType() == ammoType then
