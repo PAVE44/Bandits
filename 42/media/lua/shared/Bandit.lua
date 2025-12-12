@@ -649,23 +649,23 @@ function Bandit.SetHands(zombie, itemType)
     if primaryItem:IsWeapon() then
         local primaryItemType = WeaponType.getWeaponType(primaryItem)
 
-        if primaryItemType == WeaponType.barehand then
+        if primaryItemType == WeaponType.UNARMED then
             hands = "barehand"
-        elseif primaryItemType == WeaponType.firearm then
+        elseif primaryItemType == WeaponType.FIREARM then
             hands = "rifle"
-        elseif primaryItemType == WeaponType.handgun then
+        elseif primaryItemType == WeaponType.HANDGUN then
             hands = "handgun"
-        elseif primaryItemType == WeaponType.heavy then
+        elseif primaryItemType == WeaponType.HEAVY then
             hands = "twohanded"
-        elseif primaryItemType == WeaponType.onehanded then
+        elseif primaryItemType == WeaponType.ONE_HANDED then
             hands = "onehanded"
-        elseif primaryItemType == WeaponType.spear then
+        elseif primaryItemType == WeaponType.SPEAR then
             hands = "spear"
-        elseif primaryItemType == WeaponType.twohanded then
+        elseif primaryItemType == WeaponType.TWO_HANDED then
             hands = "twohanded"
-        elseif primaryItemType == WeaponType.throwing then
+        elseif primaryItemType == WeaponType.THROWING then
             hands = "throwing"
-        elseif primaryItemType == WeaponType.chainsaw then
+        elseif primaryItemType == WeaponType.CHAINSAW then
             hands = "chainsaw"
         else
             hands = "onehanded"
@@ -1241,7 +1241,7 @@ function Bandit.AddVisualDamage(bandit, handWeapon)
     if handWeapon then
         local itemVisual
         local weaponType = WeaponType.getWeaponType(handWeapon)
-        if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+        if weaponType == WeaponType.FIREARM or weaponType == WeaponType.HANDGUN then
             itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Gun)
         else
             itemVisual = BanditUtils.Choice(Bandit.VisualDamage.Melee)
@@ -1278,7 +1278,7 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
             local enemyWeapon = enemy:getPrimaryHandItem()
             if enemyWeapon and enemyWeapon:IsWeapon() then
                 local weaponType = WeaponType.getWeaponType(enemyWeapon)
-                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                if weaponType == WeaponType.FIREARM or weaponType == WeaponType.HANDGUN then
                     walkType = "Run"
                 end
             end
@@ -1286,7 +1286,7 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
             local banditWeapon = bandit:getPrimaryHandItem()
             if banditWeapon and banditWeapon:IsWeapon() then
                 local weaponType = WeaponType.getWeaponType(banditWeapon)
-                if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+                if weaponType == WeaponType.FIREARM or weaponType == WeaponType.HANDGUN then
                     local wrange = BanditCompatibility.GetMaxRange(banditWeapon)
 
                     if dist > wrange + 10 then

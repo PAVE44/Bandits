@@ -20,7 +20,7 @@ end
 local function predicateMelee(item)
     if item:IsWeapon() then
         local weaponType = WeaponType.getWeaponType(item)
-        if weaponType ~= WeaponType.firearm and weaponType ~= WeaponType.handgun then
+        if weaponType ~= WeaponType.FIREARM and weaponType ~= WeaponType.HANDGUN then
             return true
         end
     end
@@ -393,8 +393,8 @@ BanditPrograms.Weapon.Resupply = function(bandit)
                                 local weaponItem = item
                                 local weaponType = WeaponType.getWeaponType(weaponItem)
 
-                                if (needPrimary and weaponType == WeaponType.firearm) or
-                                    (needSecondary and weaponType == WeaponType.handgun) then
+                                if (needPrimary and weaponType == WeaponType.FIREARM) or
+                                    (needSecondary and weaponType == WeaponType.HANDGUN) then
                                     
                                     if BanditCompatibility.UsesExternalMagazine(weaponItem) then
                                         local magazineType = weaponItem:getMagazineType()

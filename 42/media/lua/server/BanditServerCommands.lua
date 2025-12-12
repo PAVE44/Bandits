@@ -234,6 +234,44 @@ BanditServer.Commands.UpdateVisitedBuilding = function(player, args)
     gmd.VisitedBuildings[args.bid] = args.wah 
 end
 
+BanditServer.Commands.PlayerDamage = function(player, args)
+    local bodyDamage = player:getBodyDamage()
+    local health = bodyDamage:getOverallBodyHealth()
+
+    if args.healthDrop then
+        bodyDamage:ReduceGeneralHealth(args.healthDrop)
+    end
+
+    if args.bodyPartIndex then
+        local bodyPart = bodyDamage:getBodyParts():get(args.bodyPartIndex)
+        local bloodBodyPart = BloodBodyPartType.FromIndex(args.bodyPartIndex)
+        
+        if args.scratched then
+            bodyPart:setScratched(true, true)
+        end
+
+        if args.cut then
+            bodyPart:setCut(true)
+        end
+
+        if args.deepWound then
+            bodyPart:generateDeepWound()
+        end
+
+        if args.bullet then
+            bodyPart:setHaveBullet(true, 1)
+        end
+
+        if args.blood then
+            player:addBlood(bloodBodyPart, false, true, false)
+        end
+
+        if args.hole and args.holeAllLayers then
+            player:addHole(bloodBodyPart, args.holeAllLayers)
+        end
+    end
+end
+
 local onClientCommand = function(module, command, player, args)
     if module == "Commands" and BanditServer[module] and BanditServer[module][command] then
         local argStr = ""

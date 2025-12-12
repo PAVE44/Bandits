@@ -449,7 +449,7 @@ local function Hit(attacker, item, victim, hr)
                 if item:getFullType() == "Base.BareHands" then
                     PlayerDamageModel.BareHandHit(attacker, victim)
                 else
-                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
+                    PlayerDamageModel.MeleeHit(attacker, victim, item)
                 end
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
             end
@@ -500,31 +500,31 @@ ZombieActions.Smack.onStart = function(bandit, task)
 
         local attacks
         soundVoice = female and "VoiceFemaleMeleeAttack" or "VoiceMaleMeleeAttack"
-        if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.barehand then
+        if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.UNARMED then
             attacks = {"HighKick", "FrontKick", "AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
             if task.shm then
                 attacks = {"AttackBareHands2Bwd", "AttackBareHands4Bwd"}
             end
-        elseif meleeItemType == WeaponType.twohanded then
+        elseif meleeItemType == WeaponType.TWO_HANDED then
             attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
             if task.shm then
                 attacks = {"Attack2H1Bwd", "Attack2H2Bwd", "Attack2H3Bwd"}
             end
         -- elseif meleeItemType == WeaponType.heavy then
         --    attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
-        elseif meleeItemType == WeaponType.onehanded then
+        elseif meleeItemType == WeaponType.ONE_HANDED then
             attacks = {"Attack1H1", "Attack1H2", "Attack1H3", "Attack1H4", "Attack1H5"}
             if task.shm then
                 attacks = {"Attack1H1Bwd", "Attack1H2Bwd", "Attack1H3Bwd"}
             end
-        elseif meleeItemType == WeaponType.spear then
+        elseif meleeItemType == WeaponType.SPEAR then
             attacks = {"AttackS1", "AttackS2"}
             if task.shm then
                 attacks = {"AttackS1Bwd", "AttackS2Bwd"}
             end
-        elseif meleeItemType == WeaponType.chainsaw then
+        elseif meleeItemType == WeaponType.CHAINSAW then
             attacks = {"AttackChainsaw1", "AttackChainsaw2"}
-        elseif meleeItemType == WeaponType.knife then
+        elseif meleeItemType == WeaponType.KNIFE then
             soundVoice = female and "VoiceFemaleMeleeStab" or "VoiceMaleMeleeStab"
             attacks = {"AttackKnife"} -- , "AttackKnifeMiss"
             if task.shm then

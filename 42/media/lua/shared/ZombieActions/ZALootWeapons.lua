@@ -18,13 +18,13 @@ local function lootContainer(zombie, container, task)
         local item = items:get(i)
         if item:IsWeapon() then
             local weaponType = WeaponType.getWeaponType(item)
-            if weaponType == WeaponType.firearm or weaponType == WeaponType.handgun then
+            if weaponType == WeaponType.FIREARM or weaponType == WeaponType.HANDGUN then
                 local weaponItem = item
 
                 local slot
-                if weaponType == WeaponType.firearm then
+                if weaponType == WeaponType.FIREARM then
                     slot = "primary"
-                elseif weaponType == WeaponType.handgun then
+                elseif weaponType == WeaponType.HANDGUN then
                     slot = "secondary"
                 end
 

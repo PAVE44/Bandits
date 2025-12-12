@@ -104,6 +104,15 @@ end
 
 BanditCompatibility.InstanceItem = function(itemFullType)
     local item
+    if not itemFullType then
+        print ("[WARN] Instance item no item type specified!")
+        return
+    end
+
+    if itemFullType == "Base.Pistol" then
+        print ("gotit")
+    end
+
     if getGameVersion() >= 42 then
         item = instanceItem(itemFullType)
     else
