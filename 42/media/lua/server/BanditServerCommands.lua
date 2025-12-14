@@ -23,6 +23,7 @@ BanditServer.Commands.PostToggle = function(player, args)
     else
         gmd.Posts[id] = args
     end
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.PostUpdate = function(player, args)
@@ -31,6 +32,7 @@ BanditServer.Commands.PostUpdate = function(player, args)
 
     local id = args.x .. "-" .. args.y .. "-" .. args.z
     gmd.Posts[id] = args
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.BaseUpdate = function(player, args)
@@ -39,40 +41,45 @@ BanditServer.Commands.BaseUpdate = function(player, args)
 
     local id = args.x .. "-" .. args.y
     gmd.Bases[id] = args
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.BanditRemove  = function(player, args)
-    local gmd = GetBanditModData()
     local id = args.id
-    if gmd.Queue[id] then
-        gmd.Queue[id] = nil
-        -- print ("[INFO] Bandit removed: " .. id)
+    if id then
+        local gmd = GetBanditClusterData(id)
+        if gmd[id] then
+            gmd[id] = nil
+            -- print ("[INFO] Bandit removed: " .. id)
+        end
+        TransmitBanditCluster(id)
     end
 end
 
 BanditServer.Commands.BanditFlush  = function(player, args)
     local gmd = GetBanditModData()
-    gmd.Queue = {}
     gmd.VisitedBuildings = {}
     gmd.Posts = {}
     gmd.Bases = {}
+    TransmitBanditModData()
     print ("[INFO] All bandits removed!!!")
 end
 
 BanditServer.Commands.BanditUpdatePart = function(player, args)
-    local gmd = GetBanditModData()
     local id = args.id
-    if id and gmd.Queue[id] then
+    if id then
+        local gmd = GetBanditClusterData(id)
+        if gmd[id] then
+            local brain = gmd[id]
+            for k, v in pairs(args) do
+                brain[k] = v
+                print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
+            end
 
-        local brain = gmd.Queue[id]
-        for k, v in pairs(args) do
-            brain[k] = v
-            -- print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
+            gmd[id] = brain
+            TransmitBanditCluster(id)
+            --sendServerCommand('Commands', 'UpdateBanditPart', args)
         end
-
-        gmd.Queue[id] = brain
-
-        sendServerCommand('Commands', 'UpdateBanditPart', args)
     end
 end
 
@@ -219,6 +226,7 @@ BanditServer.Commands.IncrementBanditKills = function(player, args)
     else
         gmd.Kills[id] = 1
     end
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.ResetBanditKills = function(player, args)
@@ -227,11 +235,13 @@ BanditServer.Commands.ResetBanditKills = function(player, args)
     if gmd.Kills[id] then
         gmd.Kills[id] = 0
     end
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.UpdateVisitedBuilding = function(player, args)
     local gmd = GetBanditModData()
-    gmd.VisitedBuildings[args.bid] = args.wah 
+    gmd.VisitedBuildings[args.bid] = args.wah
+    TransmitBanditModData()
 end
 
 BanditServer.Commands.PlayerDamage = function(player, args)
@@ -280,8 +290,6 @@ local onClientCommand = function(module, command, player, args)
         end
         -- print ("received " .. module .. "." .. command .. " "  .. argStr)
         BanditServer[module][command](player, args)
-
-        TransmitBanditModData()
     end
 end
 

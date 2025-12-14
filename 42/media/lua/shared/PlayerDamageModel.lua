@@ -46,7 +46,7 @@ function PlayerDamageModel.BulletHit(shooter, item, player)
     -- HELMET FALL FOR HEAD SHOT
 
     if hitPart == "Head" then
-        local hat = player:getWornItem("Hat")
+        local hat = player:getWornItem(ItemBodyLocation.HAT)
         if hat then
             hat:setChanceToFall(100)
             player:helmetFall(true)
@@ -58,7 +58,7 @@ function PlayerDamageModel.BulletHit(shooter, item, player)
         for i=1, #list do
             local dmgitem = BanditCompatibility.InstanceItem(list[i])
             if dmgitem then
-                player:setWornItem("ZedDmg", dmgitem)
+                player:setWornItem(ItemBodyLocation.ZED_DMG, dmgitem)
             end
         end
     end

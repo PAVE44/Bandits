@@ -418,8 +418,10 @@ local function banditize(zombie, bandit, clan, args)
     brain.voice = args.voice or Bandit.PickVoice(zombie)
 
     -- ready!
-    local gmd = GetBanditModData()
-    gmd.Queue[id] = brain
+
+    local gmd = GetBanditClusterData(id)
+    gmd[id] = brain
+    TransmitBanditCluster(id)
 
     if LogLevel >= 3 then print ("[BANDITS] banditize finished id " .. id) end
 
@@ -528,8 +530,9 @@ local function spawnRestore(brain)
     banditize(zombie, bandit, clan, args)
 
     -- remove old one
-    local gmd = GetBanditModData()
-    gmd.Queue[oldId] = nil
+    local gmd = GetBanditClusterData(oldId)
+    gmd[oldId] = nil
+    TransmitBanditCluster(oldId)
 
 end
 

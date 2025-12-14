@@ -5,6 +5,8 @@ BanditPermanent = BanditPermanent or {}
 -- should the player decide to come back to the cell where they were born.
 
 BanditPermanent.Check = function()
+    if true then return end
+
     local gmd = GetBanditModData()
     if not gmd.Queue then return end
 

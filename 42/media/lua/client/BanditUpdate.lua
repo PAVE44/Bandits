@@ -1695,18 +1695,16 @@ local function OnBanditUpdate(zombie)
     local brain = BanditBrain.Get(zombie)
     
     -- BANDITIZE ZOMBIES SPAWNED AND ENQUEUED BY SERVER
-    -- OR ZOMBIFY IF QUEUE HAS BEEN REMOVED
-    local gmd = GetBanditModData()
-    if gmd.Queue then
-        if gmd.Queue[id] then -- and id ~= 0
-            if not zombie:getVariableBoolean("Bandit") then
-                brain = gmd.Queue[id]
-                Banditize(zombie, brain)
-            end
-        else
-            if zombie:getVariableBoolean("Bandit") then
-                Zombify(zombie)
-            end
+    -- OR ZOMBIFY IF HAS BEEN REMOVED FROM CLUSTER
+    local gmd = GetBanditClusterData(id)
+    if gmd and gmd[id] then
+        if not zombie:getVariableBoolean("Bandit") then
+            brain = gmd[id]
+            Banditize(zombie, brain)
+        end
+    else
+        if zombie:getVariableBoolean("Bandit") then
+            Zombify(zombie)
         end
     end
     
@@ -2057,7 +2055,7 @@ local function OnZombieDead(bandit)
         bandit:resetEquippedHandsModels()
         bandit:getModData().isDeadBandit = true
 
-        args = {}
+        local args = {}
         args.id = brain.id
         sendClientCommand(player, 'Commands', 'BanditRemove', args)
         BanditBrain.Remove(bandit)

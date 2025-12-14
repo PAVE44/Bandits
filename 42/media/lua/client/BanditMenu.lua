@@ -106,17 +106,12 @@ function BanditMenu.MakeProcedure (player, square)
 end
 
 function BanditMenu.ShowBrain (player, square, zombie)
-    local gmd = GetBanditModData()
-
-    local bcnt = 0
-    for k, v in pairs(gmd.Queue) do
-        bcnt = bcnt + 1
-    end
+    local id = BanditUtils.GetCharacterID(zombie)
 
     -- add breakpoint below to see data
     local brain = BanditBrain.Get(zombie)
     local moddata = zombie:getModData()
-    local id = BanditUtils.GetCharacterID(zombie)
+    
     local isUseless = zombie:isUseless()
     local isBandit = zombie:getVariableBoolean("Bandit")
     local walktype = zombie:getVariableString("zombieWalkType")
