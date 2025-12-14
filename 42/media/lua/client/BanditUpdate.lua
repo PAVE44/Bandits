@@ -456,311 +456,313 @@ local function ManageCollisions(bandit)
             local objects = square:getObjects()
             for i = 0, objects:size() - 1 do
                 local object = objects:get(i)
-                local properties = object:getProperties()
+                if object then
+                    local properties = object:getProperties()
 
-                if properties then
-                    local lowFence = properties:get("FenceTypeLow")
-                    local hoppable = object:isHoppable()
+                    if properties then
+                        local lowFence = properties:get("FenceTypeLow")
+                        local hoppable = object:isHoppable()
 
-                    -- LOW FENCE COLLISION
-                    if lowFence or hoppable then
-                        if bandit:isFacingObject(object, 0.5) then
-                            local params = bandit:getStateMachineParams(ClimbOverFenceState.instance())
-                            local raw = KahluaUtil.rawTostring2(params) -- ugly but works
-                            local endx = string.match(raw, "3=(%d+)")
-                            local endy = string.match(raw, "4=(%d+)")
+                        -- LOW FENCE COLLISION
+                        if lowFence or hoppable then
+                            if bandit:isFacingObject(object, 0.5) then
+                                local params = bandit:getStateMachineParams(ClimbOverFenceState.instance())
+                                local raw = KahluaUtil.rawTostring2(params) -- ugly but works
+                                local endx = string.match(raw, "3=(%d+)")
+                                local endy = string.match(raw, "4=(%d+)")
 
-                            if endx and endy then
-                                bandit:changeState(ClimbOverFenceState.instance())
-                                bandit:setBumpType("ClimbFenceEnd")
-                                
-                                --[[local task = {action="ClimbFence", anim="ClimbFenceEnd", lock=true}
-                                table.insert(tasks, task)
-                                return tasks]]                                
+                                if endx and endy then
+                                    bandit:changeState(ClimbOverFenceState.instance())
+                                    bandit:setBumpType("ClimbFenceEnd")
+                                    
+                                    --[[local task = {action="ClimbFence", anim="ClimbFenceEnd", lock=true}
+                                    table.insert(tasks, task)
+                                    return tasks]]                                
+                                end
+                            else
+                                bandit:faceThisObject(object)
                             end
-                        else
-                            bandit:faceThisObject(object)
+                            return tasks
                         end
-                        return tasks
-                    end
 
-                    -- TALL FENCE COLLISION
-                    local tallFence = properties:get("FenceTypeHigh")
-                    local tallHoppable = object:isTallHoppable()
-                    if tallFence or tallHoppable then
-                        bandit:setCollidable(false)
-                        if bandit:isFacingObject(object, 0.5) then
-                            bandit:setBumpType("ClimbFenceTall")
-                        else
-                            bandit:faceThisObject(object)
+                        -- TALL FENCE COLLISION
+                        local tallFence = properties:get("FenceTypeHigh")
+                        local tallHoppable = object:isTallHoppable()
+                        if tallFence or tallHoppable then
+                            bandit:setCollidable(false)
+                            if bandit:isFacingObject(object, 0.5) then
+                                bandit:setBumpType("ClimbFenceTall")
+                            else
+                                bandit:faceThisObject(object)
+                            end
+                            return tasks
                         end
-                        return tasks
-                    end
 
-                    -- WINDOW COLLISIONS
-                    if instanceof(object, "IsoWindow") then
-                        if (object:isInvincible() or (object:getSprite() and properties:has("WindowLocked"))) and (not brain.hostile and brain.program.name ~= "Civilian") then
-                            RemoveWindowFromPathing(bandit, square)
-                            
-                        elseif bandit:isFacingObject(object, 0.5) then
-                            if object:isBarricaded() then
-                                if brain.hostile then
+                        -- WINDOW COLLISIONS
+                        if instanceof(object, "IsoWindow") then
+                            if (object:isInvincible() or (object:getSprite() and properties:has("WindowLocked"))) and (not brain.hostile and brain.program.name ~= "Civilian") then
+                                RemoveWindowFromPathing(bandit, square)
+                                
+                            elseif bandit:isFacingObject(object, 0.5) then
+                                if object:isBarricaded() then
+                                    if brain.hostile then
+                                        local barricade = object:getBarricadeOnSameSquare()
+                                        if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
+                                        local fx, fy
+                                        if barricade then
+                                            if properties:has(IsoFlagType.WindowN) then
+                                                fx = barricade:getX()
+                                                fy = barricade:getY() - 0.5
+                                            else
+                                                fx = barricade:getX() - 0.5
+                                                fy = barricade:getY()
+                                            end
+
+                                        else
+                                            barricade = object:getBarricadeOnOppositeSquare()
+                                            if properties:has(IsoFlagType.WindowN) then
+                                                fx = barricade:getX()
+                                                fy = barricade:getY() + 0.5
+                                            else
+                                                fx = barricade:getX() + 0.5
+                                                fy = barricade:getY()
+                                            end
+                                        end
+
+                                        if SandboxVars.Bandits.General_RemoveBarricade and Bandit.HasExpertise(bandit, Bandit.Expertise.Breaker) then
+                                            if barricade:isMetal() or barricade:isMetalBar() then
+                                                if not bandit:isPrimaryEquipped("Bandits.PropaneTorch") then
+                                                    local stasks = BanditPrograms.Weapon.Switch(bandit, "Bandits.PropaneTorch")
+                                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                                end
+                                                local task = {action="UnbarricadeMetal", anim="BlowtorchHigh", time=500, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                                table.insert(tasks, task)
+                                                return tasks
+                                            else
+                                                anim = "RemoveBarricadeCrowbarMid"
+                                                local planks = barricade:getNumPlanks()
+                                                if planks == 2 or planks == 4 then
+                                                    anim = "RemoveBarricadeCrowbarHigh"
+                                                end
+                                                if not bandit:isPrimaryEquipped("Base.Crowbar") then
+                                                    local stasks = BanditPrograms.Weapon.Switch(bandit, "Base.Crowbar")
+                                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                                end
+                                                local task = {action="Unbarricade", anim=anim, time=300, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                                table.insert(tasks, task)
+                                                return tasks
+                                            end
+                                        else
+                                            if not bandit:isPrimaryEquipped(weapons.melee) then
+                                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                            end
+                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                            table.insert(tasks, task)
+                                            return tasks
+                                        end
+                                    else
+                                        RemoveWindowFromPathing(bandit, square)
+                                    end
+
+                                elseif not object:IsOpen() and not object:isSmashed() then
+                                    if SandboxVars.Bandits.General_SmashWindow and (brain.hostile or brain.program.name == "Civilian") then
+                                        local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        table.insert(tasks, task)
+                                    elseif not object:isPermaLocked() then
+                                        local task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        table.insert(tasks, task)
+                                        return tasks
+                                    end
+
+                                elseif object:canClimbThrough(bandit) then
+                                    ClimbThroughWindowState.instance():setParams(bandit, object)
+                                    bandit:changeState(ClimbThroughWindowState.instance())
+                                    bandit:setBumpType("ClimbWindow")
+                                    --[[local task = {action="ClimbFence", anim="ClimbWindow", lock=true}
+                                    table.insert(tasks, task)]]
+                                    return tasks      
+                                end
+                            end
+                        end
+
+                        -- DOOR COLLISIONS
+                        if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
+                            if bandit:isFacingObject(object, 0.5) then
+
+                                if object:isBarricaded() then
                                     local barricade = object:getBarricadeOnSameSquare()
-                                    if not barricade then barricade = object:getBarricadeOnOppositeSquare() end
                                     local fx, fy
                                     if barricade then
-                                        if properties:has(IsoFlagType.WindowN) then
+                                        if properties:has(IsoFlagType.doorN) then
                                             fx = barricade:getX()
-                                            fy = barricade:getY() - 0.5
+                                            fy = barricade:getY() - 1
                                         else
-                                            fx = barricade:getX() - 0.5
+                                            fx = barricade:getX() - 1
                                             fy = barricade:getY()
                                         end
 
                                     else
                                         barricade = object:getBarricadeOnOppositeSquare()
-                                        if properties:has(IsoFlagType.WindowN) then
+                                        if properties:has(IsoFlagType.doorN) then
                                             fx = barricade:getX()
-                                            fy = barricade:getY() + 0.5
+                                            fy = barricade:getY() + 1
                                         else
-                                            fx = barricade:getX() + 0.5
+                                            fx = barricade:getX() + 1
                                             fy = barricade:getY()
                                         end
                                     end
+                                    local sameSide = barricade:getSquare():getX() == bandit:getSquare():getX() and barricade:getSquare():getY() == bandit:getSquare():getY()
 
-                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.HasExpertise(bandit, Bandit.Expertise.Breaker) then
-                                        if barricade:isMetal() or barricade:isMetalBar() then
-                                            if not bandit:isPrimaryEquipped("Bandits.PropaneTorch") then
-                                                local stasks = BanditPrograms.Weapon.Switch(bandit, "Bandits.PropaneTorch")
-                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                            end
-                                            local task = {action="UnbarricadeMetal", anim="BlowtorchHigh", time=500, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                            table.insert(tasks, task)
-                                            return tasks
-                                        else
-                                            anim = "RemoveBarricadeCrowbarMid"
-                                            local planks = barricade:getNumPlanks()
-                                            if planks == 2 or planks == 4 then
-                                                anim = "RemoveBarricadeCrowbarHigh"
-                                            end
-                                            if not bandit:isPrimaryEquipped("Base.Crowbar") then
-                                                local stasks = BanditPrograms.Weapon.Switch(bandit, "Base.Crowbar")
-                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                            end
-                                            local task = {action="Unbarricade", anim=anim, time=300, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                            table.insert(tasks, task)
-                                            return tasks
+                                    if SandboxVars.Bandits.General_RemoveBarricade and Bandit.HasExpertise(bandit, Bandit.Expertise.Breaker) and sameSide then
+                                        anim = "RemoveBarricadeCrowbarMid"
+                                        local planks = barricade:getNumPlanks()
+                                        if planks == 2 or planks == 4 then
+                                            anim = "RemoveBarricadeCrowbarHigh"
                                         end
+                                        if not bandit:isPrimaryEquipped("Base.Crowbar") then
+                                            local stasks = BanditPrograms.Weapon.Switch(bandit, "Base.Crowbar")
+                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                        end
+                                        Bandit.Say(bandit, "BREACH")
+                                        local task = {action="Unbarricade", anim=anim, time=300, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                        table.insert(tasks, task)
+                                        return tasks
                                     else
                                         if not bandit:isPrimaryEquipped(weapons.melee) then
                                             local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
                                             for _, t in pairs(stasks) do table.insert(tasks, t) end
                                         end
+                                        Bandit.Say(bandit, "BREACH")
                                         local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
                                         table.insert(tasks, task)
                                         return tasks
                                     end
-                                else
-                                    RemoveWindowFromPathing(bandit, square)
-                                end
 
-                            elseif not object:IsOpen() and not object:isSmashed() then
-                                if SandboxVars.Bandits.General_SmashWindow and (brain.hostile or brain.program.name == "Civilian") then
-                                    local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task)
-                                elseif not object:isPermaLocked() then
-                                    local task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
-                                    table.insert(tasks, task)
-                                    return tasks
-                                end
+                                elseif not object:IsOpen() then
+                                    if IsoDoor.getDoubleDoorIndex(object) > -1 then
 
-                            elseif object:canClimbThrough(bandit) then
-                                ClimbThroughWindowState.instance():setParams(bandit, object)
-                                bandit:changeState(ClimbThroughWindowState.instance())
-                                bandit:setBumpType("ClimbWindow")
-                                --[[local task = {action="ClimbFence", anim="ClimbWindow", lock=true}
-                                table.insert(tasks, task)]]
-                                return tasks      
-                            end
-                        end
-                    end
-
-                    -- DOOR COLLISIONS
-                    if instanceof(object, "IsoDoor") or (instanceof(object, 'IsoThumpable') and object:isDoor() == true) then
-                        if bandit:isFacingObject(object, 0.5) then
-
-                            if object:isBarricaded() then
-                                local barricade = object:getBarricadeOnSameSquare()
-                                local fx, fy
-                                if barricade then
-                                    if properties:has(IsoFlagType.doorN) then
-                                        fx = barricade:getX()
-                                        fy = barricade:getY() - 1
-                                    else
-                                        fx = barricade:getX() - 1
-                                        fy = barricade:getY()
-                                    end
-
-                                else
-                                    barricade = object:getBarricadeOnOppositeSquare()
-                                    if properties:has(IsoFlagType.doorN) then
-                                        fx = barricade:getX()
-                                        fy = barricade:getY() + 1
-                                    else
-                                        fx = barricade:getX() + 1
-                                        fy = barricade:getY()
-                                    end
-                                end
-                                local sameSide = barricade:getSquare():getX() == bandit:getSquare():getX() and barricade:getSquare():getY() == bandit:getSquare():getY()
-
-                                if SandboxVars.Bandits.General_RemoveBarricade and Bandit.HasExpertise(bandit, Bandit.Expertise.Breaker) and sameSide then
-                                    anim = "RemoveBarricadeCrowbarMid"
-                                    local planks = barricade:getNumPlanks()
-                                    if planks == 2 or planks == 4 then
-                                        anim = "RemoveBarricadeCrowbarHigh"
-                                    end
-                                    if not bandit:isPrimaryEquipped("Base.Crowbar") then
-                                        local stasks = BanditPrograms.Weapon.Switch(bandit, "Base.Crowbar")
-                                        for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                    end
-                                    Bandit.Say(bandit, "BREACH")
-                                    local task = {action="Unbarricade", anim=anim, time=300, fx=fx, fy=fy, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task)
-                                    return tasks
-                                else
-                                    if not bandit:isPrimaryEquipped(weapons.melee) then
-                                        local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                        for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                    end
-                                    Bandit.Say(bandit, "BREACH")
-                                    local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                    table.insert(tasks, task)
-                                    return tasks
-                                end
-
-                            elseif not object:IsOpen() then
-                                if IsoDoor.getDoubleDoorIndex(object) > -1 then
-
-                                    if object:isLocked() or object:isLockedByKey() or object:isObstructed() then
-                                        if bandit:isPrimaryEquipped(weapons.melee) then
-                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                            table.insert(tasks, task)
-                                        else
-                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                            return tasks
-                                        end
-                                    else
-                                        IsoDoor.toggleDoubleDoor(object, true)
-                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
-                                        doorSound = doorSound .. "Open"
-                                        bandit:playSound(doorSound)
-                                    end
-
-                                elseif IsoDoor.getGarageDoorIndex(object) > -1 then
-                                
-                                    local exterior = bandit:getCurrentSquare():has(IsoFlagType.exterior)
-                                    if exterior and (object:isLocked() or object:isLockedByKey()) then
-                                        if bandit:isPrimaryEquipped(weapons.melee) then
-                                            Bandit.Say(bandit, "BREACH")
-                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                            table.insert(tasks, task)
-                                        else
-                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                            return tasks
-                                        end
-                                    else
-                                        IsoDoor.toggleGarageDoor(object, true)
-                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
-                                        doorSound = doorSound .. "Open"
-                                        bandit:playSound(doorSound)
-                                    end
-                                else
-
-                                    -- door locks are complicated... 
-                                    if ((object:isLocked() or object:isLockedByKey()) and (not bandit:getCurrentSquare():getRoom() or object:getProperties():has("forceLocked"))) or object:isObstructed() then
-                                        if bandit:isPrimaryEquipped(weapons.melee) then
-                                            Bandit.Say(bandit, "BREACH")
-                                            local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
-                                            table.insert(tasks, task)
-                                        else
-                                            local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                            for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                            return tasks
-                                        end
-                                    else
-                                        object:DirtySlice()
-                                        IsoGridSquare.RecalcLightTime = -1.0
-                                        square:InvalidateSpecialObjectPaths()
-                                        object:ToggleDoorSilent()
-                                        square:RecalcProperties()
-                                        object:syncIsoObject(false, 1, nil, nil)
-                                        LuaEventManager.triggerEvent("OnContainerUpdate")
-                                        if BanditCompatibility.GetGameVersion() >= 42 then
-                                            object:invalidateRenderChunkLevel(FBORenderChunk.DIRTY_OBJECT_MODIFY)
-                                        end
-
-                                        --[[
-                                        local args = {
-                                            x = object:getSquare():getX(),
-                                            y = object:getSquare():getY(),
-                                            z = object:getSquare():getZ(),
-                                            index = object:getObjectIndex()
-                                        }
-                                        sendClientCommand(getSpecificPlayer(0), 'Commands', 'OpenDoor', args)
-
-                                        -- Get the square of the object
-                                        local square = getSpecificPlayer(0):getSquare()
-
-                                        -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
-                                        local radius = 5
-                                        for dx = -radius, radius do
-                                            for dy = -radius, radius do
-                                                -- if dx ~= 0 and dy ~= 0 then
-                                                    local surroundingSquare = cell:getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
-                                                    --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
-                                                    if surroundingSquare then
-                                                        
-                                                        --
-                                                        square:ReCalculateCollide(surroundingSquare)
-                                                        square:ReCalculatePathFind(surroundingSquare)
-                                                        square:ReCalculateVisionBlocked(surroundingSquare)
-                                                        surroundingSquare:ReCalculateCollide(square)
-                                                        surroundingSquare:ReCalculatePathFind(square)
-                                                        surroundingSquare:ReCalculateVisionBlocked(square)
-                                                        --
-                                                        
-                                                        surroundingSquare:InvalidateSpecialObjectPaths()
-                                                        surroundingSquare:RecalcProperties()
-                                                        surroundingSquare:RecalcAllWithNeighbours(true)
-                                                    end
-                                                -- end
+                                        if object:isLocked() or object:isLockedByKey() or object:isObstructed() then
+                                            if bandit:isPrimaryEquipped(weapons.melee) then
+                                                local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                                table.insert(tasks, task)
+                                            else
+                                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                                return tasks
                                             end
+                                        else
+                                            IsoDoor.toggleDoubleDoor(object, true)
+                                            local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
+                                            doorSound = doorSound .. "Open"
+                                            bandit:playSound(doorSound)
                                         end
-                                        ]]
-                                        local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
-                                        doorSound = doorSound .. "Open"
-                                        bandit:playSound(doorSound)
+
+                                    elseif IsoDoor.getGarageDoorIndex(object) > -1 then
+                                    
+                                        local exterior = bandit:getCurrentSquare():has(IsoFlagType.exterior)
+                                        if exterior and (object:isLocked() or object:isLockedByKey()) then
+                                            if bandit:isPrimaryEquipped(weapons.melee) then
+                                                Bandit.Say(bandit, "BREACH")
+                                                local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                                table.insert(tasks, task)
+                                            else
+                                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                                return tasks
+                                            end
+                                        else
+                                            IsoDoor.toggleGarageDoor(object, true)
+                                            local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
+                                            doorSound = doorSound .. "Open"
+                                            bandit:playSound(doorSound)
+                                        end
+                                    else
+
+                                        -- door locks are complicated... 
+                                        if ((object:isLocked() or object:isLockedByKey()) and (not bandit:getCurrentSquare():getRoom() or object:getProperties():has("forceLocked"))) or object:isObstructed() then
+                                            if bandit:isPrimaryEquipped(weapons.melee) then
+                                                Bandit.Say(bandit, "BREACH")
+                                                local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), idx=object:getObjectIndex()}
+                                                table.insert(tasks, task)
+                                            else
+                                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                                for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                                return tasks
+                                            end
+                                        else
+                                            object:DirtySlice()
+                                            IsoGridSquare.RecalcLightTime = -1.0
+                                            square:InvalidateSpecialObjectPaths()
+                                            object:ToggleDoorSilent()
+                                            square:RecalcProperties()
+                                            object:syncIsoObject(false, 1, nil, nil)
+                                            LuaEventManager.triggerEvent("OnContainerUpdate")
+                                            if BanditCompatibility.GetGameVersion() >= 42 then
+                                                object:invalidateRenderChunkLevel(FBORenderChunk.DIRTY_OBJECT_MODIFY)
+                                            end
+
+                                            --[[
+                                            local args = {
+                                                x = object:getSquare():getX(),
+                                                y = object:getSquare():getY(),
+                                                z = object:getSquare():getZ(),
+                                                index = object:getObjectIndex()
+                                            }
+                                            sendClientCommand(getSpecificPlayer(0), 'Commands', 'OpenDoor', args)
+
+                                            -- Get the square of the object
+                                            local square = getSpecificPlayer(0):getSquare()
+
+                                            -- Recalculate vision blocked for the surrounding tiles in a r-tile radius
+                                            local radius = 5
+                                            for dx = -radius, radius do
+                                                for dy = -radius, radius do
+                                                    -- if dx ~= 0 and dy ~= 0 then
+                                                        local surroundingSquare = cell:getGridSquare(square:getX() + dx, square:getY() + dy, square:getZ())
+                                                        --local surroundingSquare = getCell():getGridSquare(square:getX(), square:getY() + 1, square:getZ())
+                                                        if surroundingSquare then
+                                                            
+                                                            --
+                                                            square:ReCalculateCollide(surroundingSquare)
+                                                            square:ReCalculatePathFind(surroundingSquare)
+                                                            square:ReCalculateVisionBlocked(surroundingSquare)
+                                                            surroundingSquare:ReCalculateCollide(square)
+                                                            surroundingSquare:ReCalculatePathFind(square)
+                                                            surroundingSquare:ReCalculateVisionBlocked(square)
+                                                            --
+                                                            
+                                                            surroundingSquare:InvalidateSpecialObjectPaths()
+                                                            surroundingSquare:RecalcProperties()
+                                                            surroundingSquare:RecalcAllWithNeighbours(true)
+                                                        end
+                                                    -- end
+                                                end
+                                            end
+                                            ]]
+                                            local doorSound = properties:has("DoorSound") and properties:get("DoorSound") or "WoodDoor"
+                                            doorSound = doorSound .. "Open"
+                                            bandit:playSound(doorSound)
+                                        end
                                     end
                                 end
-                            end
-                        else
-                            bandit:faceThisObject(object)
-                        end
-                    end
-
-                    -- THUMPABLE COLLISIONS
-                    if SandboxVars.Bandits.General_DestroyThumpable and instanceof(object, "IsoThumpable") and not properties:get("FenceTypeLow") and brain.hostile then
-                        local isWallTo = bandit:getSquare():isSomethingTo(object:getSquare())
-                        if not isWallTo then
-                            if bandit:isPrimaryEquipped(weapons.melee) then
-                                local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), soundEnd=object:getThumpSound(), time=80}
-                                table.insert(tasks, task)
                             else
-                                local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
-                                for _, t in pairs(stasks) do table.insert(tasks, t) end
-                                return tasks
+                                bandit:faceThisObject(object)
+                            end
+                        end
+
+                        -- THUMPABLE COLLISIONS
+                        if SandboxVars.Bandits.General_DestroyThumpable and instanceof(object, "IsoThumpable") and not properties:get("FenceTypeLow") and brain.hostile then
+                            local isWallTo = bandit:getSquare():isSomethingTo(object:getSquare())
+                            if not isWallTo then
+                                if bandit:isPrimaryEquipped(weapons.melee) then
+                                    local task = {action="Destroy", anim="ChopTree", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), soundEnd=object:getThumpSound(), time=80}
+                                    table.insert(tasks, task)
+                                else
+                                    local stasks = BanditPrograms.Weapon.Switch(bandit, weapons.melee)
+                                    for _, t in pairs(stasks) do table.insert(tasks, t) end
+                                    return tasks
+                                end
                             end
                         end
                     end
@@ -937,12 +939,12 @@ local function ManageCombat(bandit)
                         local px, py, pz = potentialEnemy:getX(), potentialEnemy:getY(), potentialEnemy:getZ()
                         -- local dist = BanditUtils.DistTo(zx, zy, potentialEnemy:getX(), potentialEnemy:getY())
                         local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py)))
-                        if dist < escapeDist then
+                        if dist < escapeDist and potentialEnemy:isAlive() and not potentialEnemy:isProne() then
                             local rad = math.rad(potentialEnemy:getDirectionAngle())
                             sx = sx + math.cos(rad)
                             sy = sy + math.sin(rad)
                             enemies = enemies + 1
-                            if dist < bwdDist then
+                            if dist < bwdDist  then
                                 enemiesBwd = enemiesBwd + 1
                             end
                         end
@@ -1031,7 +1033,7 @@ local function ManageCombat(bandit)
         end
     end
     
-    if enemies >= friendlies + 3 then
+    if enemies >= friendlies + 13 then
         if not BanditBrain.HasMoveTask(brain) then
             local l = 4
             local time = 80
@@ -1049,9 +1051,10 @@ local function ManageCombat(bandit)
             local nbz = zz
             local task = BanditUtils.GetMoveTask(0.01, nbx, nby, nbz, "Run", 12, false)
             task.time = time
-            task.lock = true
+            -- task.lock = true
             task.backwards = false
             table.insert(tasks, task)
+            -- bandit:addLineChatElement("ESCAPE", 0.8, 0.8, 0.1)
         end
 
     elseif shove then
