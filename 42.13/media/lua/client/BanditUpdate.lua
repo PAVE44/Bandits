@@ -2078,6 +2078,7 @@ local function OnZombieDead(bandit)
         ]]
     end
 
+    --[[
     -- stale corpse removal hack fro b42, it replaces the dying zombie with a deadbody
     -- and copies most of the properties to look as the original 
     if SandboxVars.Bandits.General_CorpseSwapper and BanditCompatibility.GetGameVersion() >= 42 then
@@ -2094,6 +2095,7 @@ local function OnZombieDead(bandit)
             end
         end
 
+        --[[
         if not isSeen and not bandit:getVariableBoolean("BanditBecomingCorpse") then
             bandit:setVariable("BanditBecomingCorpse", true)
             bandit:getModData().isDeadBandit = false
@@ -2151,6 +2153,7 @@ local function OnZombieDead(bandit)
             -- print ("----- CORPSE SWAPPED ------")
         end
     end
+    ]]
 
 end
 
