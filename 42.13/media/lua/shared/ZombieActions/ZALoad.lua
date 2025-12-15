@@ -35,7 +35,5 @@ ZombieActions.Load.onComplete = function(zombie, task)
         end
     end
 
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
-
     return true
 end

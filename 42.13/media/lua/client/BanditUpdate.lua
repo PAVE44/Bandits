@@ -1259,6 +1259,9 @@ local biteTab = {}
 -- manages zombie behavior towards bandits
 local function UpdateZombies(zombie)
 
+    local player = getSpecificPlayer(0)
+    if not player then return end
+
     local target = zombie:getTarget()
     if target and target:getVariableBoolean("Bandit") then
         zombie:setVariable("NoLungeAttack", true)
@@ -1372,7 +1375,6 @@ local function UpdateZombies(zombie)
     -- Fetch zombie coordinates and closest bandit location
     local zx, zy, zz = zombie:getX(), zombie:getY(), zombie:getZ()
 
-    local player = getSpecificPlayer(0)
     local px, py, pz = player:getX(), player:getY(), player:getZ()
     local distPlayer = math.sqrt(((px - zx) * (px - zx)) + ((py - zy) * (py - zy)))
     if distPlayer < 2 and math.abs(pz - zz) < 0.3 then
@@ -2025,7 +2027,7 @@ local function OnZombieDead(bandit)
             item:setKeyId(brain.key)
             item:setName("Building Key")
             inventory:AddItem(item)
-            Bandit.UpdateItemsToSpawnAtDeath(bandit)
+            Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
         end
 
         Bandit.Say(bandit, "DEAD", true)

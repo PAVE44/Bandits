@@ -417,11 +417,14 @@ local function banditize(zombie, bandit, clan, args)
     if args.hostileP ~= nil then brain.hostileP = args.hostileP end
     brain.voice = args.voice or Bandit.PickVoice(zombie)
 
+    Bandit.ApplyVisuals(zombie, brain)
     -- ready!
 
     local gmd = GetBanditClusterData(id)
     gmd[id] = brain
     TransmitBanditCluster(id)
+
+    
 
     if LogLevel >= 3 then print ("[BANDITS] banditize finished id " .. id) end
 
@@ -1033,13 +1036,17 @@ local function checkEvent()
 
     if gamemode == "Multiplayer" then
         local playerList = getOnlinePlayers()
-        local pid = ZombRand(playerList:size())
-        player = playerList:get(pid)
-        day = player:getHoursSurvived() / 24
+        if playerList:size() > 0 then
+            local pid = ZombRand(playerList:size())
+            player = playerList:get(pid)
+            day = player:getHoursSurvived() / 24
+        end
     else
         day = getWorldAge()
         player = getSpecificPlayer(0)
     end
+
+    if not player then return end
 
     local clanData = BanditCustom.ClanGetAll()
     local densityScore = 1

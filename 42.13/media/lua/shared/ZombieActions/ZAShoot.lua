@@ -45,7 +45,7 @@ ZombieActions.Shoot.onComplete = function(bandit, task)
 
     -- deplete round
     weapon.bulletsLeft = weapon.bulletsLeft - 1
-    Bandit.UpdateItemsToSpawnAtDeath(shooter)
+    Bandit.UpdateItemsToSpawnAtDeath(shooter, brainShooter)
 
     -- handle flash and projectile
     BanditCompatibility.StartMuzzleFlash(shooter)

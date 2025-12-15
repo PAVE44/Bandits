@@ -190,6 +190,8 @@ end
 local UpdateVisitedBuildings = function()
     if isServer() then return end
     local player = getSpecificPlayer(0)
+    if not player then return end
+
     local building = player:getBuilding()
     if building then
         local buildingDef = building:getDef()

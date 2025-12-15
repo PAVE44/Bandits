@@ -30,7 +30,6 @@ ZombieActions.PutInContainer.onComplete = function(zombie, task)
                 container:addItemOnServer(item)
             end
             inventory:Remove(item)
-            Bandit.UpdateItemsToSpawnAtDeath(zombie)
             break
         end
     end

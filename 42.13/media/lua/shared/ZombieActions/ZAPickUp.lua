@@ -30,7 +30,6 @@ ZombieActions.PickUp.onComplete = function(zombie, task)
                 local test1 = item:getFullType()
                 zinventory:AddItem(item)
                 zinventory:setDrawDirty(true)
-                Bandit.UpdateItemsToSpawnAtDeath(zombie)
                 table.insert(toRemove, object)
                 cnt = cnt + 1
                 if cnt >= task.cnt then break end

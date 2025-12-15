@@ -9,7 +9,6 @@ ZombieActions.CleanBlood.onStart = function(zombie, task)
         zombie:setVariable("BanditPrimary", task.itemType)
         zombie:setVariable("BanditPrimaryType", "twohanded")
         inventory:Remove(item)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
         zombie:playSound("CleanBloodScrub")
     end
     return true

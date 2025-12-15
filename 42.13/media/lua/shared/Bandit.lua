@@ -147,23 +147,25 @@ function Bandit.ApplyVisuals(bandit, brain)
             end
         end
 
-        for _, slot in pairs({"primary", "secondary", "melee"}) do
+        if not isServer() then
+            for _, slot in pairs({"primary", "secondary", "melee"}) do
 
-            if brain.weapons[slot].name then
-                local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
+                if brain.weapons[slot].name then
+                    local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
 
-                if weapon then
-                    weapon = BanditUtils.ModifyWeapon(weapon, brain)
+                    if weapon then
+                        weapon = BanditUtils.ModifyWeapon(weapon, brain)
 
-                    local attachmentType = weapon:getAttachmentType()
+                        local attachmentType = weapon:getAttachmentType()
 
-                    for _, def in pairs(ISHotbarAttachDefinition) do
-                        if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
-                            if def.attachments then
-                                for k, v in pairs(def.attachments) do
-                                    if k == attachmentType then
-                                        bandit:setAttachedItem(v, weapon)
-                                        break
+                        for _, def in pairs(ISHotbarAttachDefinition) do
+                            if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
+                                if def.attachments then
+                                    for k, v in pairs(def.attachments) do
+                                        if k == attachmentType then
+                                            bandit:setAttachedItem(v, weapon)
+                                            break
+                                        end
                                     end
                                 end
                             end
@@ -268,7 +270,7 @@ function Bandit.ApplyVisuals(bandit, brain)
     bandit:resetModelNextFrame()
     bandit:resetModel()
 
-    Bandit.UpdateItemsToSpawnAtDeath(bandit)
+    Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
 end
 
 function Bandit.AddTask(zombie, task)
@@ -689,16 +691,15 @@ function Bandit.SetWeapons(zombie, weapons)
     if brain then
         brain.weapons = weapons
         -- BanditBrain.Update(zombie, brain)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
+        Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
     end
 end
 
 -- This translates weapons, loot, inventory to actual items to be
 -- spawned at bandit death
-function Bandit.UpdateItemsToSpawnAtDeath(zombie)
+function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     
-    local brain = BanditBrain.Get(zombie)
     local weapons = brain.weapons
     --zombie:setPrimaryHandItem(nil)
     --zombie:resetEquippedHandsModels()

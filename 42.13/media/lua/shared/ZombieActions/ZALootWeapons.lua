@@ -102,7 +102,7 @@ local function lootContainer(zombie, container, task)
     syncData.id = brain.id
     syncData.weapons = weapons
     Bandit.ForceSyncPart(zombie, syncData)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
 
     --[[
     local success = false

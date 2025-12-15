@@ -37,7 +37,7 @@ ZombieActions.Fishing.onWorking = function(zombie, task)
             local fishItem = BanditCompatibility.InstanceItem(fishType)
             local inventory = zombie:getInventory()
             inventory:AddItem(fishItem)
-            Bandit.UpdateItemsToSpawnAtDeath(zombie)
+
 
             --[[if item then
                 zombie:getSquare():AddWorldInventoryItem(fishItem, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)

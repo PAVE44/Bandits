@@ -39,7 +39,6 @@ ZombieActions.PlaceItem.onComplete = function(zombie, task)
     squareSurfaceOffset = squareSurfaceOffset / 96
 
     inventory:Remove(item)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     square:AddWorldInventoryItem(item, ZombRandFloat(0.35, 0.65), ZombRandFloat(0.35, 0.65), squareSurfaceOffset)
 
