@@ -32,5 +32,5 @@ BanditPatches.TheStar = function()
     end
 end
 
-Events.OnGameStart.Add(BanditPatches.TheStar)
+-- Events.OnGameStart.Add(BanditPatches.TheStar)
 

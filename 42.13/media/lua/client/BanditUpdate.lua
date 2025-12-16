@@ -1033,7 +1033,7 @@ local function ManageCombat(bandit)
         end
     end
     
-    if enemies >= friendlies + 13 then
+    if enemies >= friendlies + 2 then
         if not BanditBrain.HasMoveTask(brain) then
             local l = 4
             local time = 80

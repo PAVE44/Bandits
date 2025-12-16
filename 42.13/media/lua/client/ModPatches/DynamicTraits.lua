@@ -13,5 +13,5 @@ BanditPatches.DynamicTraits = function()
     end
 end
 
-Events.OnGameStart.Add(BanditPatches.DynamicTraits)
+-- Events.OnGameStart.Add(BanditPatches.DynamicTraits)
 

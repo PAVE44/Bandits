@@ -7,6 +7,6 @@ BanditPatches.ImprovedProjectile = function()
     end
 end
 
-Events.OnGameStart.Add(BanditPatches.ImprovedProjectile)
+-- Events.OnGameStart.Add(BanditPatches.ImprovedProjectile)
 
 

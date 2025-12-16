@@ -699,4 +699,4 @@ BanditPlayerBase.GetDeadbody = function(character)
     return bestDeadbody
 end
 
-Events.OnTick.Add(BanditPlayerBase.Update)
+-- Events.OnTick.Add(BanditPlayerBase.Update)
