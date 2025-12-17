@@ -63,7 +63,7 @@ local function loadBanditModData(key, globalData)
             elseif key == "BanditPlayers" then
                 BanditGlobalDataPlayers = globalData
             end
-            for i = 1, BanditClusterCount do
+            for i = 0, BanditClusterCount - 1 do
                 if key == getClusterName(i) then
                     BanditClusters[i] = globalData
                 end

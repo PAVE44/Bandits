@@ -1,7 +1,7 @@
 ZombieActions = ZombieActions or {}
 
 local function ShovePlayer (attacker, player)
-    local facing = player:isFacingObject(attacker, 0.5)
+    local facing = player:isBehind(attacker)
 
     player:clearVariable("BumpFallType")
     player:setBumpType("stagger")
@@ -20,23 +20,15 @@ local function ShovePlayer (attacker, player)
 end
 
 local function ShoveZombie (attacker, zombie)
-    local facing = zombie:isFacingObject(attacker, 0.5)
-    zombie:setOnFloor(true)
-    if facing then
-        -- zombie:setBumpType("ZombiePushedFront")
-        --[[
-        zombie:setStaggerBack(true)
-        zombie:setKnockedDown(true)
-        zombie:setHitReaction("ShotBelly")
-        ]]
-        
-        
-        zombie:setFallOnFront(false)
-    else
-        zombie:setFallOnFront(true)
-        -- zombie:setBumpType("ZombiePushedBack")
-    end
+    local behind = attacker:isBehind(zombie)
+
+    zombie:setHitFromBehind(attacker:isBehind(zombie))
+    zombie:setPlayerAttackPosition(zombie:testDotSide(attacker))
+    zombie:setHitForce(1)
+    --zombie:setStaggerBack(true)
     zombie:setKnockedDown(true)
+    --zombie:setOnFloor(true)
+    
 end
 
 ZombieActions.Push = {}

@@ -174,7 +174,7 @@ function BanditMenu.SpawnClan(player, square, cid)
     args.z = square:getZ()
     args.program = "Bandit"
     args.size = 6
-    args.voice = 101
+    -- args.voice = 101
     sendClientCommand(player, 'Spawner', 'Clan', args)
 end
 

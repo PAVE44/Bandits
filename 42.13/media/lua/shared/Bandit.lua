@@ -95,6 +95,8 @@ function Bandit.ApplyVisuals(bandit, brain)
             bandit:setVariable("MovementSpeed", 0.70)
         end
 
+        bandit:setFemaleEtc(brain.female)
+
         bandit:setHealth(brain.health)
 
         if brain.skin then

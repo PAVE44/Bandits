@@ -1036,7 +1036,7 @@ local function ManageCombat(bandit)
     if enemies >= friendlies + 2 then
         if not BanditBrain.HasMoveTask(brain) then
             local l = 4
-            local time = 80
+            local time = 110
             if firing then 
                 l = 20
                 time = 400
@@ -1128,11 +1128,6 @@ local function ManageCombat(bandit)
             task.lock = false
             table.insert(tasks, task)
 
-            --[[
-            local eid = BanditUtils.GetCharacterID(enemyCharacter)
-            local task = {action="Shove", anim="Shove", sound="AttackShove", time=60, endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
-            -- local task = {action="Hit", time=65, endurance=-0.03, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
-            table.insert(tasks, task)]]
         end
 
     elseif healing then
@@ -1195,7 +1190,7 @@ local function ManageCombat(bandit)
             end
 
         end
-    elseif reload then
+    elseif  reload then
         if not BanditBrain.HasActionTask(brain) then
             for _, slot in pairs({"primary", "secondary"}) do
                 if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
@@ -1206,7 +1201,7 @@ local function ManageCombat(bandit)
                 end
             end
         end
-    elseif resupply then
+    elseif  resupply then
         if not BanditBrain.HasTask(brain) then
             local stasks = BanditPrograms.Weapon.Resupply(bandit)
             for _, t in pairs(stasks) do table.insert(tasks, t) end
@@ -1417,10 +1412,11 @@ local function UpdateZombies(zombie)
                     -- zombie:changeState(LungeState.instance())
                     -- zombie:getPathFindBehavior2():cancel()
                     -- zombie:setPath2(nil)
-
+                    if zombie and bandit then
                         zombie:spotted(bandit, true)
                         zombie:setTarget(bandit)
                         zombie:setAttackedBy(bandit)
+                    end
                     
                     
                     --tempTarget:removeFromWorld()
@@ -1607,15 +1603,17 @@ local function GenerateTask(bandit, uTick)
     end
 
     -- MANAGE COLLISION TASKS
-    if #tasks == 0  and uTick % 2 then
-        -- local ts = getTimestampMs()
-        local colissionTasks = ManageCollisions(bandit)
-        -- local elapsed = getTimestampMs() - ts
-        -- if elapsed > 1 then
-        --     print ("ManageCollisions: " .. elapsed)
-        -- end
-        if #colissionTasks > 0 then
-            for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
+    if getWorld():getGameMode() ~= "Multiplayer" then
+        if #tasks == 0  and uTick % 2 then
+            -- local ts = getTimestampMs()
+            local colissionTasks = ManageCollisions(bandit)
+            -- local elapsed = getTimestampMs() - ts
+            -- if elapsed > 1 then
+            --     print ("ManageCollisions: " .. elapsed)
+            -- end
+            if #colissionTasks > 0 then
+                for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
+            end
         end
     end
     
