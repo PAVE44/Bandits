@@ -165,6 +165,8 @@ local function Banditize(zombie, brain)
     -- makes bandit unstuck after spawns
     zombie:setTurnAlertedValues(-5, 5)
 
+    zombie:getModData().brainId = brain.id
+
     local desc = zombie:getDescriptor()
     -- local test = desc:getVoicePrefix()
     desc:setVoicePrefix("Bandit")
@@ -184,6 +186,7 @@ local function Zombify(bandit)
     bandit:setSecondaryHandItem(nil)
     bandit:resetEquippedHandsModels()
     bandit:clearAttachedItems()
+    bandit:getModData().brainId = nil
     BanditBrain.Remove(bandit)
 end
 
@@ -2169,15 +2172,15 @@ local function OnDeadBodySpawn(body)
     local md = body:getModData()
     if md.isDeadBandit then
         if md.isDeadBandit == true then
+            player = getSpecificPlayer(0)
             md.isDeadBandit = false
-
-            local age
-            if md.reanimateAge then
-                age = md.reanimateAge
-            else
-                age = getGameTime():getWorldAgeHours() + ZombRandFloat(0.1, 0.8)
-            end
-            body:setReanimateTime(age)
+            local args = {
+                x = body:getX(),
+                y = body:getY(),
+                z = body:getZ(),
+                id = md.brainId
+            }
+            sendClientCommand(player, 'Commands', 'BanditCorpse', args)
         end
     end
 end

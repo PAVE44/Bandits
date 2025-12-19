@@ -83,6 +83,35 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
     end
 end
 
+BanditServer.Commands.BanditCorpse = function(player, args)
+
+    local cell = getCell()
+    local square = cell:getGridSquare(args.x, args.y, args.z)
+    local body
+    if square then
+        local objects = square:getStaticMovingObjects()
+        for i=0, objects:size()-1 do
+            print ("found static obj")
+            local object = objects:get(i)
+            if instanceof (object, "IsoDeadBody") then
+                print ("found dead body")
+                local md = object:getModData()
+                if md.brainId == args.id then
+                    print ("found the right dead body")
+                    body = object
+                    break
+                end
+            end
+        end
+    end
+
+    if body then
+        print ("SERVER FOUND DEAD BANDIT BODY")
+        body:sync()
+        
+    end
+end
+
 BanditServer.Commands.Unbarricade = function(player, args)
     local object = getBarricadeAble(args.x, args.y, args.z, args.index)
     if object then

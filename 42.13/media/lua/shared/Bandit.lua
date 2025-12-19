@@ -87,6 +87,9 @@ function Bandit.ApplyVisuals(bandit, brain)
     local itemVisuals = bandit:getItemVisuals()
     itemVisuals:clear()
 
+    -- we will apply out own clothes below
+    bandit:getWornItems():clear()
+
     if brain.cid then
 
         if Bandit.HasExpertise(bandit, Bandit.Expertise.Recon) then
