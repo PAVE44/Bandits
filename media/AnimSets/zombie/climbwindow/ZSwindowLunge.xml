@@ -101,11 +101,6 @@
 	</m_Events>
 	<m_Events>
 		<m_EventName>SetState</m_EventName>
-		<m_TimePc>0.25</m_TimePc>
-		<m_ParameterValue>Attack</m_ParameterValue>
-	</m_Events>
-	<m_Events>
-		<m_EventName>SetState</m_EventName>
 		<m_TimePc>0.55</m_TimePc>
 		<m_ParameterValue>GettingUp</m_ParameterValue>
 	</m_Events>

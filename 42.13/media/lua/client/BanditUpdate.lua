@@ -1662,17 +1662,15 @@ local function GenerateTask(bandit, uTick)
     end
 
     -- MANAGE COLLISION TASKS
-    if getWorld():getGameMode() ~= "Multiplayer" then
-        if #tasks == 0  and uTick % 2 then
-            -- local ts = getTimestampMs()
-            local colissionTasks = ManageCollisions(bandit)
-            -- local elapsed = getTimestampMs() - ts
-            -- if elapsed > 1 then
-            --     print ("ManageCollisions: " .. elapsed)
-            -- end
-            if #colissionTasks > 0 then
-                for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
-            end
+    if #tasks == 0  and uTick % 2 then
+        -- local ts = getTimestampMs()
+        local colissionTasks = ManageCollisions(bandit)
+        -- local elapsed = getTimestampMs() - ts
+        -- if elapsed > 1 then
+        --     print ("ManageCollisions: " .. elapsed)
+        -- end
+        if #colissionTasks > 0 then
+            for _, t in pairs(colissionTasks) do table.insert(tasks, t) end
         end
     end
     

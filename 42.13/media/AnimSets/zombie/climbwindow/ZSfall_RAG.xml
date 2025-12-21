@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSfall.xml">
+	<m_Name>ZSfall_RAG</m_Name>
+	<m_Priority>4</m_Priority>
+	<m_AnimName></m_AnimName>
+	<m_isRagdoll>true</m_isRagdoll>
+	<m_ragdollStartTimeMin>0.17</m_ragdollStartTimeMin>
+	<m_ragdollStartTimeMax>0.17</m_ragdollStartTimeMax>
+	<m_deferredBoneAxis>Z</m_deferredBoneAxis>
+	<m_Conditions x_name="7fcda92c-2825-4b2c-8c34-5dbb05f2728b">
+		<m_Value>true</m_Value>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+</animNode>
