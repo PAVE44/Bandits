@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="ZSDefault.xml">
+	<m_Name>ZSTurnR45</m_Name>
+	<m_AnimName>Bob_IdleAim1Hand_Turn45R</m_AnimName>
+	<m_Conditions x_name="27dc4ec0-1164-4368-82b4-da90efce30dc">
+		<m_Name>TurnAlertedValue</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_Value>45R</m_Value>
+	</m_Conditions>
+</animNode>

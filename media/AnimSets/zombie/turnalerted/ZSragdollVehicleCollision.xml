@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSragdollVehicleCollision</m_Name>
+	<m_Priority>6</m_Priority>
+	<m_ConditionPriority>10</m_ConditionPriority>
+	<m_isRagdoll>true</m_isRagdoll>
+	<m_deferredBoneAxis>Z</m_deferredBoneAxis>
+	<m_Looped>false</m_Looped>
+	<m_Conditions x_name="9893d84e-9b0d-4826-873f-782ac7ce9cda">
+		<m_Name>useRagdollVehicleCollison</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_Value>true</m_Value>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+</animNode>

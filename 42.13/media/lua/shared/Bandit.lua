@@ -649,6 +649,7 @@ function Bandit.SetHands(zombie, itemType)
     local brain = BanditBrain.Get(zombie)
     local primaryItem = BanditCompatibility.InstanceItem(itemType)
     primaryItem = BanditUtils.ModifyWeapon(primaryItem, brain)
+
     zombie:setPrimaryHandItem(primaryItem)
     zombie:setVariable("BanditPrimary", itemType)
 

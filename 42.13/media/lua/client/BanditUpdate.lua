@@ -47,6 +47,37 @@ local function CalcSpottedScore(player, dist)
     return spottedScore
 end
 
+local function IsWindowClose(bandit)
+    local i1 = bandit:getPrimaryHandItem()
+    local i2 = bandit:getSecondaryHandItem()
+    if true then
+        local sqs = {}
+        for x=-1, 1 do
+            for y=-1, 1 do
+                table.insert(sqs, {x = math.floor(bandit:getX() + x), y = math.floor(bandit:getY() + y), z = bandit:getZ()})
+            end
+        end
+
+        local cell = getCell()
+        for _, s in pairs(sqs) do
+            local square = cell:getGridSquare(s.x, s.y, s.z)
+            if square then
+                local objects = square:getObjects()
+                for i = 0, objects:size() - 1 do
+                    local object = objects:get(i)
+                    if object then
+                        if instanceof(object, "IsoWindow") or instanceof(object, "IsoWindowFrame") or instanceof(object, "IsoThumpable") then
+                            if object:canClimbThrough(bandit) then
+                                return true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 -- checks if the line of fire is clear from friendlies
 local function IsShotClear (shooter, enemy)
 
@@ -340,6 +371,26 @@ end
 
 -- manages endurance regain tasks 
 local function ManageEndurance(bandit)
+
+    if bandit:isMoving() then
+        if bandit:getVariableString("BanditWalkType") == "Run" then
+            local player = getSpecificPlayer(0)
+            local px, py, pz = player:getX(), player:getY(), player:getZ()
+            local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+            local dist = ((zx - px) * (zx - px)) + ((zy - py) * (zy - py))
+            if pz == zz and dist < 9 then
+                local volume = getSoundManager():getSoundVolume()
+                local emitter = bandit:getEmitter()
+                local sound = "ZSBreath_Male"
+                if bandit:isFemale() then sound = "ZSBreath_Female" end
+                if not emitter:isPlaying(sound) then
+                    local id = emitter:playSound(sound)
+                    emitter:setVolume(id, volume * 0.6)
+                end
+            end
+        end
+    end
+
     if not SandboxVars.Bandits.General_LimitedEndurance then
         return {}
     end
@@ -430,10 +481,12 @@ local function RemoveWindowFromPathing (bandit, square)
     end
 end
 
+
+
 -- manages collisions with doors, windows, fences and other objects
 local function ManageCollisions(bandit)
 
-    if Bandit.HasActionTask(bandit) then return {} end
+    -- if Bandit.HasActionTask(bandit) then return {} end
 
     -- bandit:setCollidable(true)
 
@@ -1035,6 +1088,16 @@ local function ManageCombat(bandit)
             end
         end
     end
+
+    if IsWindowClose(bandit) then
+        if bandit:getPrimaryHandItem() then
+            bandit:setPrimaryHandItem(nil)
+        end
+        if bandit:getSecondaryHandItem() then
+            bandit:setSecondaryHandItem(nil)
+        end
+        switch = false
+    end
     
     if enemies >= friendlies + 2 then
         if not BanditBrain.HasMoveTask(brain) then
@@ -1193,7 +1256,7 @@ local function ManageCombat(bandit)
             end
 
         end
-    elseif  reload then
+    elseif reload then
         if not BanditBrain.HasActionTask(brain) then
             for _, slot in pairs({"primary", "secondary"}) do
                 if weapons[slot].name and bandit:isPrimaryEquipped(weapons[slot].name) then
@@ -1204,7 +1267,7 @@ local function ManageCombat(bandit)
                 end
             end
         end
-    elseif  resupply then
+    elseif resupply then
         if not BanditBrain.HasTask(brain) then
             local stasks = BanditPrograms.Weapon.Resupply(bandit)
             for _, t in pairs(stasks) do table.insert(tasks, t) end
@@ -1219,7 +1282,7 @@ local function ManageSocialDistance(bandit)
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
     local brain = BanditBrain.Get(bandit)
     
-    if brain.program.name ~= "Companion" then return end
+    if brain.hostile or brain.hostileP then return end
 
     local playerList = BanditPlayer.GetPlayers()
 
@@ -1236,16 +1299,9 @@ local function ManageSocialDistance(bandit)
             -- local dist = BanditUtils.DistToManhattan(bx, by, px, py)
             local dist = math.sqrt(((bx - px) * (bx - px)) + ((by - py) * (by - py)))
             if bz == pz and dist < 3 and not veh and asn ~= "onground" then
-                -- Cache closest zombie and bandit locations
-                local closestZombie = BanditUtils.GetClosestZombieLocation(player)
-                local closestBandit = BanditUtils.GetClosestBanditLocation(player)
-
-                -- If both distances are greater than 10, switch to "CompanionGuard" program
-                if closestZombie.dist > 10 and closestBandit.dist > 10 then
-                    if Bandit.GetProgram(bandit).name ~= "CompanionGuard" then
-                        Bandit.SetProgram(bandit, "CompanionGuard", {})
-                    end
-                end
+                bandit:setUseless(true)
+            else
+                bandit:setUseless(false)
             end
         end
     end
@@ -1660,6 +1716,22 @@ local function OnBanditUpdate(zombie)
     
     if isServer() then return end
 
+    -- hack for multiplayer
+    if getWorld():getGameMode() == "Multiplayer" then
+        local i1 = zombie:getPrimaryHandItem()
+        local i2 = zombie:getSecondaryHandItem()
+        if (i1 or i2) and IsWindowClose(zombie) then
+            if i1 then
+                zombie:setPrimaryHandItem(nil)
+                zombie:setVariable("BanditPrimary", "")
+                zombie:setVariable("BanditPrimaryType", "")
+            end
+            if i2 then
+                zombie:setSecondaryHandItem(nil)
+            end
+        end
+    end
+
     if not Bandit.Engine then return end
 
     if uTick == 16 then uTick = 0 end
@@ -1758,6 +1830,17 @@ local function OnBanditUpdate(zombie)
         bandit:setAnimatingBackwards(false)
     end
 
+    local primaryItem = zombie:getPrimaryHandItem()
+    if primaryItem and zombie:isHeavyItem(primaryItem) then
+        print ("FOUND HEAVY ITEM" .. primaryItem:getFullType())
+    end
+
+    local secondaryItem = zombie:getSecondaryHandItem()
+    if secondaryItem and zombie:isHeavyItem(secondaryItem) then
+        print ("FOUND HEAVY ITEM" .. secondaryItem:getFullType())
+    end
+
+
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     --[[
     if bandit:isTeleporting() then
@@ -1810,7 +1893,9 @@ local function OnBanditUpdate(zombie)
     
     -- COMPANION SOCIAL DISTANCE HACK
     -- local ts = getTimestampMs()
-    ManageSocialDistance(bandit)
+    if getWorld():getGameMode() == "Multiplayer" then
+        ManageSocialDistance(bandit)
+    end
     -- local elapsed = getTimestampMs() - ts
     -- if elapsed > 1 then
     --     print ("ManageSocialDistance: " .. elapsed)
