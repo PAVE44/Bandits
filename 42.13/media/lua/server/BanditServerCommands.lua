@@ -275,10 +275,19 @@ end
 
 BanditServer.Commands.PlayerDamage = function(player, args)
     local bodyDamage = player:getBodyDamage()
+    local stats = player:getStats()
     local health = bodyDamage:getOverallBodyHealth()
 
     if args.healthDrop then
         bodyDamage:ReduceGeneralHealth(args.healthDrop)
+    end
+
+    if args.intoxication then
+        stats:set(CharacterStat.INTOXICATION, args.intoxication)
+    end
+
+    if args.sickness then
+        stats:set(CharacterStat.FOOD_SICKNESS, args.sickness)
     end
 
     if args.bodyPartIndex then
