@@ -1,0 +1,358 @@
+require "ISUI/ISPanel"
+
+BanditTickBox = ISPanel:derive("BanditTickBox");
+local UI_BORDER_SPACING = 10
+--************************************************************************--
+--** ISRadioOption:initialise
+--**
+--************************************************************************--
+
+function BanditTickBox:initialise()
+	ISPanel.initialise(self);
+end
+
+
+
+--************************************************************************--
+--** ISRadioOption:render
+--**
+--************************************************************************--
+function BanditTickBox:prerender()
+	if self.background then
+		self:drawRectStatic(0, 0, self.width, self.height, self.backgroundColor.a, self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b);
+	end
+end
+
+function BanditTickBox:setJoypadFocused(focused)
+    self.joypadFocused = focused;
+end
+
+function BanditTickBox:onJoypadDirUp(joypadData)
+	self.joypadIndex = self.joypadIndex - 1
+	if self.joypadIndex < 1 then
+		self.joypadIndex = #self.options
+	end
+end
+
+function BanditTickBox:onJoypadDirDown(joypadData)
+	self.joypadIndex = self.joypadIndex + 1
+	if self.joypadIndex > #self.options then
+		self.joypadIndex = 1
+	end
+end
+
+function BanditTickBox:forceClick()
+    if self.disabledOptions[self.optionsIndex[self.joypadIndex]] then
+        return
+    end
+    if self.onlyOnePossibility then
+        self.selected = {}
+    end
+
+    getSoundManager():playUISound("UIToggleTickBox")
+    self.selected[self.joypadIndex] = not self.selected[self.joypadIndex];
+
+    if self.changeOptionMethod ~= nil then
+        self.changeOptionMethod(self.changeOptionTarget, self.joypadIndex, self.selected[self.joypadIndex],
+            self.changeOptionArgs[1], self.changeOptionArgs[2], self);
+    end
+end
+
+function BanditTickBox:setSelected(index, selected)
+	local index = tonumber(index)
+	if not index or index < 1 or index > #self.options then error "invalid index" end
+	self.selected[index] = selected
+end
+
+function BanditTickBox:isSelected(index)
+	local index = tonumber(index)
+	if not index or index < 1 or index > #self.options then error "invalid index" end
+	return self.selected[index] == true
+end
+
+--************************************************************************--
+--** ISRadioOption:render
+--**
+--************************************************************************--
+function BanditTickBox:render()
+	local y = 0;
+	local c = 1;
+	local totalHgt = #self.options * (self.itemHgt + UI_BORDER_SPACING) - UI_BORDER_SPACING
+	y = y + (self.height - totalHgt) / 2
+	local textDY = (self.itemHgt - self.fontHgt) / 2
+	local boxDY = 0
+	self._textColor = self._textColor or { r = 1, g = 1, b = 1, a = 1 }
+    for i,v in ipairs(self.options) do
+		local disabled = false;
+		if self.disabledOptions[v] then
+			disabled = true;
+		end
+		if self:isMouseOver() and (self.mouseOverOption == c) and self.enable and not self.disabledOptions[self.optionsIndex[self.mouseOverOption]] then
+            self:drawRect(self.leftMargin, y+boxDY, self.boxSize, self.boxSize, 1.0, 0.3, 0.3, 0.3);
+		else
+			self:drawRectBorder(self.leftMargin, y+boxDY, self.boxSize, self.boxSize, self.borderColor.a, self.borderColor.r, self.borderColor.g, self.borderColor.b);
+        end
+
+        if self.joypadFocused and self.joypadIndex == c then
+            self:drawRectBorder(self.leftMargin - 2, y+boxDY - 2, self.width + 4, self.boxSize + 4, 1.0, 0.6, 0.6, 0.6);
+            self:drawRect(self.leftMargin, y+boxDY, self.boxSize, self.boxSize, 1.0, 0.3, 0.3, 0.3);
+        end
+
+
+
+      	if self.selected[c] == true then
+			self:drawTextureScaled(self.tickTexture, self.leftMargin + 2, y+boxDY+2, self.boxSize-4, self.boxSize-4, 1, getCore():getGoodHighlitedColor():getR(), getCore():getGoodHighlitedColor():getG(), getCore():getGoodHighlitedColor():getB());
+		end
+
+		local textColor = self._textColor
+		self:getTextColor(i, textColor)
+
+        if self.textures[i] then
+            local imgW = 20;
+            local imgH = 20;
+            if self.textures[i]:getWidth() < 32 then
+                imgW = imgW / (32/self.textures[i]:getWidth());
+            end
+            if self.textures[i]:getHeight() < 32 then
+                imgH = imgH / (32/self.textures[i]:getHeight());
+            end
+
+            self:drawTextureScaled(self.textures[i], self.leftMargin + self.boxSize + self.textGap, y+boxDY, self.boxSize-4,self.boxSize-4, 1, 1, 1, 1);
+			self:drawText(v, self.leftMargin + self.boxSize + self.textGap + 25, y+textDY, textColor.r, textColor.g, textColor.b, textColor.a, self.font);
+		else
+			self:drawText(v, self.leftMargin + self.boxSize + self.textGap, y+textDY, textColor.r, textColor.g, textColor.b, textColor.a, self.font);
+        end
+		y = y + self.itemHgt + UI_BORDER_SPACING;
+		c = c + 1;
+    end
+
+    if self:isMouseOver() and self.mouseOverOption and self.mouseOverOption ~= 0 and self.optionTooltips[self.mouseOverOption] then
+        -- local text = self.tooltip;
+		local text = self.optionTooltips[self.mouseOverOption]
+        if not self.tooltipUI then
+            self.tooltipUI = ISToolTip:new()
+            self.tooltipUI:setOwner(self)
+            self.tooltipUI:setVisible(false)
+            self.tooltipUI:setAlwaysOnTop(true)
+        end
+        if not self.tooltipUI:getIsVisible() then
+            if string.contains(text, "\n") then
+                self.tooltipUI.maxLineWidth = 1000 -- don't wrap the lines
+            else
+                self.tooltipUI.maxLineWidth = 300
+            end
+            self.tooltipUI:addToUIManager()
+            self.tooltipUI:setVisible(true)
+        end
+        self.tooltipUI.description = text
+        self.tooltipUI:setX(self:getMouseX() + 23)
+        self.tooltipUI:setY(self:getMouseY() + 23)
+    else
+        if self.tooltipUI and self.tooltipUI:getIsVisible() then
+            self.tooltipUI:setVisible(false)
+            self.tooltipUI:removeFromUIManager()
+        end
+    end
+end
+
+function BanditTickBox:getTextColor(index, color)
+	local text = self.optionsIndex[index]
+	if not self.enable or self.disabledOptions[text] then
+		color.r = 0.5
+		color.g = 0.5
+		color.b = 0.5
+		color.a = self.choicesColor.a
+	else
+		color.r = self.choicesColor.r
+		color.g = self.choicesColor.g
+		color.b = self.choicesColor.b
+		color.a = self.choicesColor.a
+	end
+end
+
+--************************************************************************--
+--** BanditTickBox:onMouseUp
+--**
+--************************************************************************--
+function BanditTickBox:onMouseUp(x, y)
+	local clickedOption = self.clickedOption
+	self.clickedOption = nil
+	if not clickedOption or (clickedOption ~= self.mouseOverOption) then
+		return false
+	end
+	if self.enable and self.mouseOverOption ~= nil and self.mouseOverOption > 0 and self.mouseOverOption < self.optionCount then
+		if self.disabledOptions[self.optionsIndex[self.mouseOverOption]] then
+			return;
+		end
+		getSoundManager():playUISound("UIToggleTickBox")
+        if self.onlyOnePossibility then
+           self.selected = {};
+        end
+		if self.selected[self.mouseOverOption] == nil then
+			self.selected[self.mouseOverOption] = true;
+		else
+			self.selected[self.mouseOverOption] = not self.selected[self.mouseOverOption];
+		end
+        if self.changeOptionMethod ~= nil then
+            self.changeOptionMethod(self.changeOptionTarget, self.mouseOverOption, self.selected[self.mouseOverOption],
+                self.changeOptionArgs[1], self.changeOptionArgs[2], self);
+        end
+	end
+
+	return false;
+end
+
+function BanditTickBox:onMouseUpOutside(x, y)
+	self.mouseDownOverOption = nil
+end
+
+function BanditTickBox:onMouseDown(x, y)
+	self.clickedOption = self.mouseOverOption
+	return false;
+end
+
+--************************************************************************--
+--** BanditTickBox:onMouseMove
+--**
+--************************************************************************--
+function BanditTickBox:onMouseMove(dx, dy)
+	local x = self:getMouseX();
+	local y = self:getMouseY();
+	if x >= 0 and y >= 0 and x<=self.width and y <= self.height then
+		--local totalHgt = #self.options * (self.itemHgt + UI_BORDER_SPACING)
+		if math.fmod(y, self.itemHgt+UI_BORDER_SPACING) >= self.itemHgt then
+			self.mouseOverOption = 0;
+		else
+			--y = y - (self.height - totalHgt) / 2
+			y = y / (self.itemHgt+UI_BORDER_SPACING);
+			y = math.floor(y + 1);
+			self.mouseOverOption = y;
+		end
+	else
+		self.mouseOverOption = 0;
+    end
+
+
+end
+
+--************************************************************************--
+--** ISRadioOption:onMouseMoveOutside
+--**
+--************************************************************************--
+function BanditTickBox:onMouseMoveOutside(dx, dy)
+	self.mouseOverOption = 0;
+end
+
+function BanditTickBox:disableOption(name, disable)
+	self.disabledOptions[name] = disable;
+end
+
+function BanditTickBox:clearOptions()
+	self.disabledOptions = {};
+	self.selected = {}
+	self.options = {};
+	self.optionsIndex = {};
+	self.textures = {};
+	self.optionData = {};
+	self.optionTooltips = {};
+	self.optionCount = 1;
+end
+
+function BanditTickBox:addOption(name, data, texture, tooptip)
+
+	table.insert(self.options, name);
+    self.textures[self.optionCount] = texture;
+	self.optionData[self.optionCount] = data;
+	self.optionTooltips[self.optionCount] = tooptip;
+	self.optionsIndex[self.optionCount] =  name;
+	self.optionCount = self.optionCount + 1;
+	self:setHeight(#self.options * (self.itemHgt + UI_BORDER_SPACING) - UI_BORDER_SPACING);
+	if self.autoWidth then
+		local w = self.leftMargin + self.boxSize
+		if name ~= nil and name ~= "" then
+			w = w + self.textGap + getTextManager():MeasureStringX(self.font, name)
+		end
+		if texture then
+			w = w + 32;
+		end
+		if w > self:getWidth() then
+			self:setWidth(w)
+		end
+	end
+	return self.optionCount - 1;
+end
+
+function BanditTickBox:getOptionCount()
+	return self.optionCount - 1;
+end
+
+function BanditTickBox:getOptionData(index)
+	if index < 1 or index > self:getOptionCount() then
+		error "invalid index"
+	end
+	return self.optionData[index];
+end
+
+function BanditTickBox:setFont(font)
+	self.font = font
+	self.fontHgt = getTextManager():getFontFromEnum(self.font):getLineHeight()
+end
+
+function BanditTickBox:setWidthToFit()
+	local textX = self.leftMargin + self.boxSize
+	local maxWid = 0
+	for i,option in ipairs(self.options) do
+		local wid = textX
+		if option ~= nil and option ~= "" then
+			wid = wid + self.textGap + getTextManager():MeasureStringX(self.font, option)
+		end
+		if self.textures[i] then
+			wid = wid + 32
+		end
+		maxWid = math.max(maxWid, wid)
+	end
+	self:setWidth(maxWid)
+end
+
+function BanditTickBox:new (x, y, width, height, name, changeOptionTarget, changeOptionMethod, changeOptionArg1, changeOptionArg2)
+	local o = {}
+	setmetatable(o, self)
+	self.__index = self
+	o.x = x;
+	o.y = y;
+	o.width = width;
+	o.height = height;
+	o.tickTexture = getTexture("media/ui/inventoryPanes/Tickbox_Tick.png");
+	o.borderColor = {r=1, g=1, b=1, a=0.2};
+	o.backgroundColor = {r=0, g=0, b=0, a=0.5};
+	o.choicesColor = {r=0.7, g=0.7, b=0.7, a=1};
+	o.anchorLeft = true;
+	o.anchorRight = false;
+	o.anchorTop = true;
+	o.anchorBottom = false;
+	o.name = name;
+	o.options = {}
+	o.optionCount = 1;
+	o.optionData = {}
+	o.optionTooltips = {}
+	o.selected = {}
+	o.leftMargin = 0;
+	o.boxSize = height
+	o.textGap = UI_BORDER_SPACING;
+    o.textures = {};
+	o.font = UIFont.Small
+    o.fontHgt = getTextManager():getFontHeight(o.font)
+	o.itemGap = 0;
+	o.itemHgt = math.max(o.boxSize, o.fontHgt) + o.itemGap
+    o.BanditTickBox = true;
+    o.tooltip = nil;
+	o.joypadIndex = 1;
+	o.changeOptionMethod = changeOptionMethod;
+	o.changeOptionTarget = changeOptionTarget;
+	o.changeOptionArgs = { changeOptionArg1, changeOptionArg2 }
+	o.enable = true;
+	o.disabledOptions = {};
+	o.optionsIndex = {};
+	return o
+end
+

@@ -67,7 +67,7 @@ end
 
 -- hostilizes friendlies that witnessed player attacking a friendly
 BanditPlayer.CheckFriendlyFire = function(bandit, attacker)
-    -- if ZombRand(6) ~= 0 then return end
+    if ZombRand(6) ~= 0 then return end
 
     if not attacker then return end
 
@@ -131,7 +131,6 @@ local originalPanicIncreaseValue = nil
 -- Function to check nearby entities and set panic increase value
 local PanicHandler = function(player)
     if isServer() then return end
-    if true then return end  -- Disabled for now
 
     -- Step 1: Store the original PanicIncreaseValue if it's the first time modifying it
     local bodyDamage = player:getBodyDamage()
@@ -167,9 +166,7 @@ local PanicHandler = function(player)
     -- Step 3: Adjust or restore panic increase value based on the proximity check
     if onlyFriendlies then
         bodyDamage:setPanicIncreaseValue(0.0)  -- Prevent panic increase
-        player:getStats():set(CharacterStat.PANIC, 0)  -- Set current panic level to 0
-        
-
+        player:getStats():setPanic(0)  -- Set current panic level to 0
     else
         bodyDamage:setPanicIncreaseValue(originalPanicIncreaseValue)  -- Restore the original panic increase
         originalPanicIncreaseValue = nil  -- Reset the stored value since we're done
@@ -190,8 +187,6 @@ end
 local UpdateVisitedBuildings = function()
     if isServer() then return end
     local player = getSpecificPlayer(0)
-    if not player then return end
-
     local building = player:getBuilding()
     if building then
         local buildingDef = building:getDef()
