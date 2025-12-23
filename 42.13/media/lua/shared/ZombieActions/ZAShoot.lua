@@ -79,7 +79,10 @@ ZombieActions.Shoot.onComplete = function(bandit, task)
                 local asn = zombie:getActionStateName()
                 if asn == "idle" then
                     
-                    zombie:spottedNew(shooter, true)
+                    zombie:spottedNew(getSpecificPlayer(0), true)
+                    zombie:addAggro(shooter, 1)
+                    zombie:setTarget(shooter)
+                    
                     -- zombie:pathToLocationF(sx, sy, sz)
                 end
             end

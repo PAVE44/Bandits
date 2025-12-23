@@ -1162,6 +1162,8 @@ function Bandit.Say(zombie, phrase, force)
     if force then zombie:getEmitter():stopAll() end
     
     local player = getSpecificPlayer(0)
+    if not player then return end
+
     local dist = BanditUtils.DistTo(player:getX(), player:getY(), zombie:getX(), zombie:getY())
     
     if dist <= 14 then

@@ -1472,9 +1472,16 @@ local function UpdateZombies(zombie)
                     -- zombie:getPathFindBehavior2():cancel()
                     -- zombie:setPath2(nil)
                     if zombie and bandit then
+                        zombie:spottedNew(player, true)
+                        zombie:addAggro(bandit, 1)
+                        zombie:setTarget(bandit)
+                        zombie:setAttackedBy(bandit)
+                    
+                        --[[
                         zombie:spotted(bandit, true)
                         zombie:setTarget(bandit)
                         zombie:setAttackedBy(bandit)
+                        ]]
                     end
                     
                     
