@@ -479,8 +479,8 @@
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Jacket = Base.Jacket_CoatArmy
 	clothing: Pants = Base.Trousers_ArmyService
-	clothing: Shoes = Base.Shoes_ArmyBoots
 	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: secondary = Base.Pistol2
 	weapons: melee = Base.SmallKnife
 	ammo: secondary = 1
@@ -4823,4 +4823,30 @@
 	weapons: melee = Base.BaseballBat_Nails
 	ammo: primary = 1
 	ammo: secondary = 2
+
+[b5c6d586-3b70-4763-ae88-5f7fa4c8d067]
+	general: modid = Bandits2
+	general: cid = d7ba1cc0-de47-4162-b5bd-6295c47b890d
+	general: name = Officer_04
+	general: female = true
+	general: skin = 3
+	general: hairType = 12
+	general: beardType = 1
+	general: hairColor = 1
+	general: health = 5
+	general: strength = 5
+	general: endurance = 5
+	general: sight = 5
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: Hat = Base.Hat_PeakedCapArmy
+	clothing: Shirt = Base.Shirt_FormalWhite
+	clothing: Jacket = Base.Jacket_CoatArmy
+	clothing: Pants = Base.Trousers_ArmyService
+	clothing: Socks = Base.Socks_Long
+	clothing: Shoes = Base.Shoes_ArmyBoots
+	weapons: secondary = Base.Pistol2
+	weapons: melee = Base.SmallKnife
+	ammo: secondary = 1
 

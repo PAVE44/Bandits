@@ -73,7 +73,7 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
             local brain = gmd[id]
             for k, v in pairs(args) do
                 brain[k] = v
-                print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
+                -- print ("[INFO] Bandit sync id: " .. id .. " key: " .. k)
             end
 
             gmd[id] = brain

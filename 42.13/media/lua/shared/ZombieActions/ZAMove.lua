@@ -3,21 +3,17 @@ ZombieActions = ZombieActions or {}
 ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
-    local square = zombie:getSquare()
-    if not square:isFree(false) then
-        if BanditUtils.HasAccessSquare(square) then
-            local fd = zombie:getForwardDirection()
-            fd:setLength(0.025)
-            zombie:setX(zombie:getX() + fd:getX())
-            zombie:setY(zombie:getY() + fd:getY())
+    if not zombie:getSquare():isFree(false) then
+        local asquare = AdjacentFreeTileFinder.Find(zombie:getSquare(), zombie)
+        if asquare then
+            zombie:setX(asquare:getX() + 0.5)
+            zombie:setY(asquare:getY() + 0.5)
         end
     end
 
     zombie:setVariable("BanditWalkType", task.walkType)
-    zombie:getPathFindBehavior2():reset()
-    zombie:getPathFindBehavior2():cancel()
-    zombie:setPath2(nil)
 
+    --[[
     if not Bandit.IsMoving(zombie) then
         local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), task.x, task.y)
         if dist > 2 then
@@ -50,13 +46,12 @@ ZombieActions.Move.onStart = function(zombie, task)
             zombie:setBumpType(bump)
         end
     end
+    ]]
 
-    if not task.tid then
-        if BanditUtils.IsController(zombie) then
-            zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
-            zombie:getPathFindBehavior2():cancel()
-            zombie:setPath2(nil)
-        end
+    if BanditUtils.IsController(zombie) then
+        zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
+        zombie:getPathFindBehavior2():cancel()
+        zombie:setPath2(nil)
     end
 
     return true
@@ -74,43 +69,28 @@ ZombieActions.Move.onWorking = function(zombie, task)
         end
     end
 
+    --[[
+    if zombie:getSquare():isFree(false) then
+        zombie:setCollidable(true)
+    else
+        zombie:setCollidable(false)
+    end]]
+    -- local finder = zombie:getFinder()
     if BanditUtils.IsController(zombie) then
         local cell = getCell()
 
-        if task.tid then
-            local target = nil
-            if task.isPlayer then
-                local player = getPlayer()
-                if BanditUtils.GetCharacterID(player) == task.tid then
-                    target = player
-                end
-            else
-                target = BanditZombie.Cache[task.tid]
-            end
+        --[[if ZombRand(1000) == 1 then
+            zombie:getPathFindBehavior2():pathToLocation(task.x+1, task.y+1, task.z)
+            zombie:getPathFindBehavior2():cancel()
+            zombie:setPath2(nil)
+        end]]
 
-            if target then
-                local zx, zy, tx, ty = zombie:getX(), zombie:getY(), target:getX(), target:getY()
-                local distSq = ((zx - tx) * (zx - tx)) + ((zy - ty) * (zy - ty))
-                if distSq < 2.24 then
-                    return true -- Task successfully finished
-                end
-
-                if target:getZ() == zombie:getZ() then
-                    zombie:faceThisObject(target)
-                end
-
-                zombie:pathToCharacter(target)
-            else
-                return true 
-            end
-        else
-            local result = zombie:getPathFindBehavior2():update()
-            if result == BehaviorResult.Failed then
-                return true
-            end
-            if result == BehaviorResult.Succeeded then
-                return true
-            end
+        local result = zombie:getPathFindBehavior2():update()
+        if result == BehaviorResult.Failed then
+            return true
+        end
+        if result == BehaviorResult.Succeeded then
+            return true
         end
     end
 
@@ -118,5 +98,12 @@ ZombieActions.Move.onWorking = function(zombie, task)
 end
 
 ZombieActions.Move.onComplete = function(zombie, task)
+    if BanditUtils.IsController(zombie) then
+        zombie:getPathFindBehavior2():cancel()
+        zombie:getPathFindBehavior2():reset()
+    end
     return true
 end
+
+
+

@@ -218,7 +218,7 @@ end
 BanditCompatibility.SurpressZombieSounds = function(bandit)
     if getGameVersion() >= 42 then
         local desc = bandit:getDescriptor()
-        desc:setVoicePrefix("Bandit")
+        desc:setVoicePrefix("NotAZombie")
     else
         bandit:getEmitter():stopSoundByName("MaleZombieCombined")
         bandit:getEmitter():stopSoundByName("FemaleZombieCombined")
@@ -325,19 +325,19 @@ BanditCompatibility.GetBodyLocations = function(weapon)
     local bodyLocations = {}
     if getGameVersion() >= 42 then
         bodyLocations = {
-            Head = {"Hat", "FullHat", "Ears", "EarTop", "Nose"},
+            Head = {"Hat", "FullHat", "SCBA", "Ears", "EarTop", "Nose"},
             Face = {"Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye"},
-            Neck = {"Neck", "Necklace", "Scarf", "Gorget"},
+            Neck = {"Neck", "Necklace", "Necklace_Long", "Scarf", "Gorget"},
             Suit = {"FullSuit", "FullSuitHead", "Boilersuit", "Torso1Legs1", "Dress", "LongDress", "BathRobe", "Tail"},
-            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Shirt"},
+            TopShirt = {"TankTop", "Tshirt", "ShortSleeveShirt", "Jersey", "Shirt"},
             TopJacket = {"Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop"},
             TopExtra = {"TorsoExtraVest", "VestTexture", "TorsoExtraVestBullet", "Cuirass", "Sweater", "SweaterHat", "TorsoExtra"},
-            Underwear = {"Underwear", "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2"},
+            Underwear = {"Underwear", "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Codpiece"},
             TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left", "Elbow_Right", "Elbow_Left"},
             Hands = {"Hands", "HandsRight", "HandsLeft", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
             Bags = {"FannyPackFront", "FannyPackBack", "Webbing"},
             Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
-            Bottom = {"Pants", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
+            Bottom = {"Pants", "Pants_Skinny", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
             BottomArmor = {"Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left"},
             Feet = {"Socks", "Shoes"}
         }
@@ -365,15 +365,15 @@ BanditCompatibility.GetBodyLocationsOrdered = function()
     local bodyLocations = {}
     if getGameVersion() >= 42 then
         bodyLocations = {
-            "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Underwear", "Torso1Legs1", "Legs1",
-            "Ears", "EarTop", "Nose", "Hat", "FullHat",
+            "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Underwear", "Codpiece", "Torso1Legs1", "Legs1",
+            "Ears", "EarTop", "Nose", "Hat", "FullHat", "SCBA",
             "Mask", "MaskEyes", "Eyes", "RightEye", "LeftEye",
-            "Neck", "Necklace", "Gorget", "Scarf",
-            "TankTop", "Tshirt", "ShortSleeveShirt", "Shirt",
+            "Neck", "Necklace", "Necklace_Long", "Gorget", "Scarf",
+            "TankTop", "Tshirt", "ShortSleeveShirt", "Shirt", "Jersey",
             "VestTexture", "Sweater", "SweaterHat", "TorsoExtraVest", "Cuirass", "TorsoExtra",
             "Jacket", "JacketHat", "Jacket_Down", "JacketHat_Bulky", "Jacket_Bulky", "JacketSuit", "FullTop",
             "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger", "Hands", "HandsRight", "HandsLeft",
-            "Pants", "PantsExtra", "ShortPants", "ShortsShort", "LongSkirt", "Skirt", "Dress", "LongDress",
+            "Pants", "Pants_Skinny", "PantsExtra", "ShortPants", "ShortsShort", "LongSkirt", "Skirt", "Dress", "LongDress",
             "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit", "Tail", "TorsoExtraVestBullet",
             "ShoulderpadRight", "ShoulderpadLeft", "Elbow_Right", "Elbow_Left", "ForeArm_Right", "ForeArm_Left",
             "Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left",

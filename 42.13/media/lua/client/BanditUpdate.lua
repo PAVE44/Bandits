@@ -339,7 +339,27 @@ local function ManageActionState(bandit)
             return true
         end,
 
-        ["pathfind"] = function() return false end,
+        ["pathfind"] = function() 
+            --[[
+            local brain = BanditBrain.Get(bandit)
+            if brain.blockPathToPlayer then
+                local target = bandit:getTarget()
+                if target and instanceof(target, "IsoPlayer") then
+                    local pfb = bandit:getPathFindBehavior2()
+                    if pfb:isGoalCharacter() then
+                        print ("has target player" .. asn)
+                        bandit:setTarget(nil)
+                        bandit:setTargetSeenTime(0)
+                        bandit:clearAggroList()
+                        -- bandit:getPathFindBehavior2():cancel()
+                        -- bandit:getPathFindBehavior2():reset()
+                        bandit:setPath2(nil)
+                        return true
+                    end
+                end
+            end]]
+            return false 
+        end,
 
         ["lunge"] = function()
             bandit:setUseless(true)
@@ -356,6 +376,7 @@ local function ManageActionState(bandit)
         ["staggerback-knockeddown"] = function() Bandit.ClearTasks(bandit); return false end,
     }
 
+    
     -- Execute the corresponding function if found in the hashmap
     if actions[asn] then
         return actions[asn]()
@@ -363,7 +384,7 @@ local function ManageActionState(bandit)
 
     -- Default behavior (for undefined states)
     bandit:setTarget(nil)
-    bandit:setTargetSeenTime(0)
+
     bandit:setUseless(getWorld():getGameMode() ~= "Multiplayer" or Bandit.IsForceStationary(bandit))
 
     return true
@@ -520,9 +541,10 @@ local function ManageCollisions(bandit)
                         local hoppable = object:isHoppable()
 
                         -- LOW FENCE COLLISION
+                        --[[
                         if lowFence or hoppable then
                             if bandit:isFacingObject(object, 0.5) then
-                                local params = bandit:getStateMachineParams(ClimbOverFenceState.instance())
+                                local params = bandit:getStateMachineParams(ClimbOverFenceState:instance():clear())
                                 local raw = KahluaUtil.rawTostring2(params) -- ugly but works
                                 local endx = string.match(raw, "3=(%d+)")
                                 local endy = string.match(raw, "4=(%d+)")
@@ -533,13 +555,13 @@ local function ManageCollisions(bandit)
                                     
                                     --[[local task = {action="ClimbFence", anim="ClimbFenceEnd", lock=true}
                                     table.insert(tasks, task)
-                                    return tasks]]                                
+                                    return tasks] ]                           
                                 end
                             else
                                 bandit:faceThisObject(object)
                             end
                             return tasks
-                        end
+                        end]]
 
                         -- TALL FENCE COLLISION
                         local tallFence = properties:get("FenceTypeHigh")
@@ -888,7 +910,7 @@ local function ManageCombat(bandit)
     local meleeDist = isOutside and 2.6 or 1.2
     local meleeDistPlayer = isOutside and 3.5 or 1.2
     local rifleDist = 5.5
-    local escapeDist = 5.2
+    local escapeDist = 10 -- 5.2
     local bwdDist = 2.8
 
     -- COMBAT AGAIST PLAYERS 
@@ -996,9 +1018,6 @@ local function ManageCombat(bandit)
                         -- local dist = BanditUtils.DistTo(zx, zy, potentialEnemy:getX(), potentialEnemy:getY())
                         local dist = math.sqrt(((zx - px) * (zx - px)) + ((zy - py) * (zy - py)))
                         if dist < escapeDist and potentialEnemy:isAlive() and not potentialEnemy:isProne() then
-                            local rad = math.rad(potentialEnemy:getDirectionAngle())
-                            sx = sx + math.cos(rad)
-                            sy = sy + math.sin(rad)
                             enemies = enemies + 1
                             if dist < bwdDist  then
                                 enemiesBwd = enemiesBwd + 1
@@ -1099,31 +1118,7 @@ local function ManageCombat(bandit)
         switch = false
     end
     
-    if enemies >= friendlies + 2 then
-        if not BanditBrain.HasMoveTask(brain) then
-            local l = 4
-            local time = 110
-            if firing then 
-                l = 20
-                time = 400
-            end
-            -- bandit:addLineChatElement("Escape", 0.8, 0.8, 0.1)
-            -- print ("E: " .. enemies .. " F: " .. friendlies)
-            Bandit.ClearTasks(bandit)
-            local mrad = math.atan2(sy, sx)
-            local mdeg = math.deg(mrad)
-            local nbx = zx + (l * math.cos(mrad))
-            local nby = zy + (l * math.sin(mrad))
-            local nbz = zz
-            local task = BanditUtils.GetMoveTask(0.01, nbx, nby, nbz, "Run", 12, false)
-            task.time = time
-            -- task.lock = true
-            task.backwards = false
-            table.insert(tasks, task)
-            -- bandit:addLineChatElement("ESCAPE", 0.8, 0.8, 0.1)
-        end
-
-    elseif shove then
+    if shove then
         if not BanditBrain.HasTaskType(brain, "Push") then
             Bandit.ClearTasks(bandit)
             local veh = enemyCharacter:getVehicle()
@@ -1177,6 +1172,142 @@ local function ManageCombat(bandit)
             local task = {action="Time", anim="Smoke", time=250}
             table.insert(tasks, task)
             Bandit.Say(bandit, "DEATH")
+        end
+
+    elseif enemies >= friendlies + 2 then
+        -- fixme: i need to refactror this
+        if not BanditBrain.HasMoveTask(brain) then
+
+            local sx, sy = 0, 0
+            local closestDistSq = math.huge
+            local closestDX, closestDY = 0, 0
+            local threatCount = 0
+            local escapeDistSq = escapeDist * escapeDist
+
+            -- =====================================
+            -- 1. BUILD DISTANCE-WEIGHTED REPULSION
+            -- =====================================
+
+            for id, enemyLight in pairs(potentialEnemyList) do
+
+                if BanditUtils.AreEnemies(enemyLight.brain, brain) then
+
+                    local dx = zx - enemyLight.x
+                    local dy = zy - enemyLight.y
+                    local distSq = dx*dx + dy*dy
+
+                    if distSq > 0.01 and distSq < escapeDistSq then
+
+                        threatCount = threatCount + 1
+
+                        -- track closest enemy (for fallback)
+                        if distSq < closestDistSq then
+                            closestDistSq = distSq
+                            closestDX = dx
+                            closestDY = dy
+                        end
+
+                        local dist = math.sqrt(distSq)
+
+                        -- normalize
+                        dx = dx / dist
+                        dy = dy / dist
+
+                        -- weight: closer enemies dominate strongly
+                        local weight = 1 / distSq
+
+                        sx = sx + dx * weight
+                        sy = sy + dy * weight
+                    end
+                end
+            end
+
+            -- =====================================
+            -- 2. BREAK PERFECT SYMMETRY
+            -- =====================================
+
+            if threatCount > 0 then
+                -- perpendicular bias to prevent cancellation
+                local perpX = -sy
+                local perpY = sx
+
+                sx = sx + perpX * 0.25
+                sy = sy + perpY * 0.25
+            end
+
+            -- =====================================
+            -- 3. NORMALIZE SAFELY
+            -- =====================================
+
+            local mag = math.sqrt(sx*sx + sy*sy)
+
+            if mag < 0.001 then
+                -- fallback: run opposite closest enemy
+                if closestDistSq < math.huge then
+                    local dist = math.sqrt(closestDistSq)
+                    sx = closestDX / dist
+                    sy = closestDY / dist
+                else
+                    -- absolute fallback (should never happen)
+                    local angle = ZombRandFloat(0, math.pi * 2)
+                    sx = math.cos(angle)
+                    sy = math.sin(angle)
+                end
+            else
+                sx = sx / mag
+                sy = sy / mag
+            end
+
+            -- =====================================
+            -- 4. SMOOTH DIRECTION (ANTI-JITTER)
+            -- =====================================
+
+            if brain.escapeX and brain.escapeY then
+                sx = sx * 0.7 + brain.escapeX * 0.3
+                sy = sy * 0.7 + brain.escapeY * 0.3
+
+                local smag = math.sqrt(sx*sx + sy*sy)
+                if smag > 0 then
+                    sx = sx / smag
+                    sy = sy / smag
+                end
+            end
+
+            brain.escapeX = sx
+            brain.escapeY = sy
+
+            -- =====================================
+            -- 5. COMPUTE TARGET (NO SQUARE SCAN)
+            -- =====================================
+
+            local baseDist = 6
+            local scale = math.min(threatCount, 5) * 1.5
+            local runDist = baseDist + scale
+
+            local nbx = zx + sx * runDist
+            local nby = zy + sy * runDist
+            local nbz = zz
+
+            -- =====================================
+            -- 6. ISSUE MOVE TASK
+            -- =====================================
+
+            Bandit.ClearTasks(bandit)
+
+            local task = BanditUtils.GetMoveTask(
+                0.01,
+                nbx,
+                nby,
+                nbz,
+                "Run",
+                12,
+                false
+            )
+
+            task.time = 140 + threatCount * 30
+            task.backwards = false
+
+            table.insert(tasks, task)
         end
 
     elseif BanditCompatibility.GetGameVersion() >= 42 and enemiesBwd >= 2 then
@@ -1329,7 +1460,7 @@ local function UpdateZombies(zombie)
     local zid = zombie:getModData().zid
     if zid and biteTab[zid] and (zombie:getBumpType() == "Bite" or zombie:getBumpType() == "BiteLow") and asn == "bumped" then
         local tick = biteTab[zid].tick
-        if tick == 9 then
+        if tick == 14 then
             local bandit = biteTab[zid].bandit
             local dist = BanditUtils.DistTo(zombie:getX(), zombie:getY(), bandit:getX(), bandit:getY())
             if dist < 0.8 then 
@@ -1402,7 +1533,9 @@ local function UpdateZombies(zombie)
     local phi = zombie:getPrimaryHandItem()
     if phi then zombie:setPrimaryHandItem(nil) end
     local shi = zombie:getSecondaryHandItem()
-    if shi then zombie:setSecondaryHandItem(nil) end
+    if shi then 
+        zombie:setSecondaryHandItem(nil) 
+    end
 
     -- Handle zombie target and teeth state
     local target = zombie:getTarget()
@@ -1835,6 +1968,7 @@ local function OnBanditUpdate(zombie)
         bandit:setAnimatingBackwards(false)
     end
 
+    --[[
     local primaryItem = zombie:getPrimaryHandItem()
     if primaryItem and zombie:isHeavyItem(primaryItem) then
         print ("FOUND HEAVY ITEM" .. primaryItem:getFullType())
@@ -1844,7 +1978,7 @@ local function OnBanditUpdate(zombie)
     if secondaryItem and zombie:isHeavyItem(secondaryItem) then
         print ("FOUND HEAVY ITEM" .. secondaryItem:getFullType())
     end
-
+    ]]
 
     -- IF TELEPORTING THEN THERE IS NO SENSE IN PROCEEDING
     --[[
@@ -2137,7 +2271,7 @@ local function OnZombieDead(bandit)
 
         -- warning: bwo overwrites CheckFriendlyFire
         local attacker = bandit:getAttackedBy()
-        BanditPlayer.CheckFriendlyFire(bandit, attacker)
+        -- BanditPlayer.CheckFriendlyFire(bandit, attacker)
 
         -- deprovision
         bandit:setUseless(false)

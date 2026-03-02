@@ -25,8 +25,8 @@ function BanditMenu.MakeProcedure (player, square)
     local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 7
-    local h = 7
+    local w = 20
+    local h = 22
 
     local lines = {}
 
@@ -36,7 +36,7 @@ function BanditMenu.MakeProcedure (player, square)
     
     for x = 0, w do
         for y = 0, h do
-            for z = 0, 4 do
+            for z = 0, 0 do
                 local square = cell:getGridSquare(sx + x, sy + y, sz + z)
                 if square then
                     local objects = square:getObjects()
@@ -92,7 +92,7 @@ function BanditMenu.MakeProcedure (player, square)
             end
         end
     end
-    local fileWriter = getFileWriter("test6.txt", true, true)
+    local fileWriter = getFileWriter("waitingroom2.txt", true, true)
     table.insert(lines, "end\n\n")
 
     local output = ""

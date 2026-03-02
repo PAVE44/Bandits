@@ -850,7 +850,6 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         bag = BanditCompatibility.InstanceItem(brain.bag.name)
         if bag then
             bag:getModData().preserve = true
-            zombie:addItemToSpawnAtDeath(bag)
         end
     end
 

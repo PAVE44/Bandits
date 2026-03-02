@@ -52,7 +52,7 @@ ZombieActions.Push.onWorking = function(bandit, task)
     local bumpType = bandit:getBumpType()
     if bumpType ~= task.anim then return false end
 
-    if not task.hit and task.time <= 40 then
+    if not task.hit and task.time <= 50 then
 
         task.hit = true
 
