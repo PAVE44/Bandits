@@ -1,0 +1,153 @@
+VERSION = 1,
+
+/***** GENERAL *****/
+
+option Bandits.General_KillCounter = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.KillCounter,
+}
+
+option Bandits.General_StunlockHitSpeed = {
+    type = double, min = 1, max = 5, default = 2.40,
+    page = Bandits_General, translation = Bandits.StunlockHitSpeed,
+}
+
+option Bandits.General_SpawnMultiplier = {
+    type = double, min = 0.25, max = 4, default = 1.00,
+    page = Bandits_General, translation = Bandits.SpawnMultiplier,
+}
+
+option Bandits.General_SizeMultiplier = {
+    type = double, min = 0.25, max = 4, default = 1.00,
+    page = Bandits_General, translation = Bandits.SizeMultiplier,
+}
+
+option Bandits.General_DensityScore = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DensityScore,
+}
+
+option Bandits.General_OriginalBandits = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.OriginalBandits,
+}
+
+option Bandits.General_Surrender = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Surrender,
+}
+
+option Bandits.General_BleedOut = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.BleedOut,
+}
+
+option Bandits.General_Infection = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Infection,
+}
+
+option Bandits.General_LimitedEndurance = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.LimitedEndurance,
+}
+
+option Bandits.General_RunAway = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.RunAway,
+}
+
+option Bandits.General_DestroyDoor = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DestroyDoor,
+}
+
+option Bandits.General_SmashWindow = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SmashWindow,
+}
+
+option Bandits.General_RemoveBarricade = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.RemoveBarricade,
+}
+
+option Bandits.General_DestroyThumpable = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.DestroyThumpable,
+}
+
+option Bandits.General_SabotageVehicles = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SabotageVehicles,
+}
+
+option Bandits.General_Theft = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Theft,
+}
+
+option Bandits.General_SabotageCrops = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SabotageCrops,
+}
+
+option Bandits.General_EnterVehicles = {
+    type = boolean, default = false,
+    page = Bandits_General, translation = Bandits.EnterVehicles,
+}
+
+option Bandits.General_GeneratorCutoff = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.GeneratorCutoff,
+}
+
+option Bandits.General_BuildBridge = {
+    type = boolean, default = false,
+    page = Bandits_General, translation = Bandits.BuildBridge,
+}
+
+option Bandits.General_BuildRoadblock = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.BuildRoadblock,
+}
+
+option Bandits.General_Speak = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Speak,
+}
+
+option Bandits.General_Captions = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.Captions,
+}
+
+option Bandits.General_SneakAtNight = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.SneakAtNight,
+}
+
+option Bandits.General_CarryTorches = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.CarryTorches,
+}
+
+option Bandits.General_ArrivalIcon = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.ArrivalIcon,
+}
+
+option Bandits.General_OverallAccuracy = {
+    type = enum, numValues=5, default = 3,
+    page = Bandits_General, translation = Bandits.OverallAccuracy, _tooltip=Bandits.OverallAccuracyTooltip, valueTranslation=Bandits.OverallAccuracy,
+}
+
+option Bandits.General_DefenderLootAmount = {
+    type = enum, numValues=7, default = 5,
+    page = Bandits_General, translation = Bandits.DefenderLootAmount, valueTranslation=Rarity,
+}
+
+option Bandits.General_CorpseSwapper = {
+    type = boolean, default = true,
+    page = Bandits_General, translation = Bandits.CorpseSwapper,
+}
