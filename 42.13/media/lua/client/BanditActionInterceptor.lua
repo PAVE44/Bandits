@@ -8,6 +8,7 @@ end
 -- and convert them to actual triggers
 
 LuaEventManager.AddEvent("OnTimedActionPerform")
+LuaEventManager.AddEvent("OnTransferItem")
 
 BanditActionInterceptor.Main = function(data)
     local character = data.character
