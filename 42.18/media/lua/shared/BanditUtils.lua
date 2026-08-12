@@ -992,7 +992,7 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
             task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
         end
     else
-        task = {action="Move", time=20, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
+        task = {action="Move", time=15+ZombRand(10), endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
     end
     return task
 end

@@ -148,12 +148,12 @@ local function flush()
 
     -- without this enforcement, bandits can only move and not do any other action while outside of player view
     -- but it tanks performance, so only enable if necessary 
-    if BanditZombie.CacheLightBCnt < 60 then
+    if BanditZombie.CacheLightBCnt < 50 and BanditZombie.CacheLightZCnt < 50 then
         getCore():setOptionTieredZombieUpdates(false)
-        print ("Tiered zombie updates disabled, bandit count: " .. BanditZombie.CacheLightBCnt)
+        print ("Tiered zombie updates disabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
     else
         getCore():setOptionTieredZombieUpdates(true)
-        print ("Tiered zombie updates enabled, bandit count: " .. BanditZombie.CacheLightBCnt)
+        print ("Tiered zombie updates enabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
     end
 
     BanditPermanent.Check()

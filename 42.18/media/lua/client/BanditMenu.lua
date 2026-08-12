@@ -21,22 +21,19 @@ end
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
-    local sx = square:getX() - 10
-    local sy = square:getY() - 10
+    local sx = square:getX()
+    local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 60
-    local h = 60
+    local w = 5
+    local h = 5
 
     local lines = {}
 
-    table.insert(lines, "require \"MysteryPlacements\"\n")
-    table.insert(lines, "\n")
-    table.insert(lines, "function ProcMedicalTent (sx, sy, sz)\n")
-    
+   
     for x = 0, w do
         for y = 0, h do
-            for z = 0, 0 do
+            for z = 0, 2 do
                 local square = cell:getGridSquare(sx + x, sy + y, sz + z)
                 if square then
                     local objects = square:getObjects()
@@ -55,7 +52,7 @@ function BanditMenu.MakeProcedure (player, square)
                             local isCanBeRemoved = spriteProps:has(IsoFlagType.canBeRemoved)
                             
                             if spriteName then
-                                --[[if isSolidFloor and isExterior and not isAttachedFloor then
+                                if isSolidFloor and isExterior and not isAttachedFloor then
                                     --nature floor - skip it
                                     print ("nature floor")
                                 elseif objectType == IsoObjectType.tree then
@@ -64,25 +61,24 @@ function BanditMenu.MakeProcedure (player, square)
                                 elseif isCanBeRemoved == true then
                                     print ("grass")
 
-                                elseif isSolidFloor or isAttachedFloor then
+                                elseif isExterior then
                                     --floors
-                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    -- table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
                                 
-                                elseif false and objectType == IsoObjectType.wall then
+                                elseif objectType == IsoObjectType.wall then
                                     -- walls 
-                                    table.insert(lines, "\tBanditBasePlacements.IsoThumpable (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
-                                ]]
-                                if instanceof(object, 'IsoDoor') then
+                                    table.insert(lines, "\tBanditBuildTools.Wall (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                elseif instanceof(object, 'IsoDoor') then
                                     -- door
-                                    table.insert(lines, "\tBanditBasePlacements.IsoDoor (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    table.insert(lines, "\tBanditBuildTools.IsoDoor (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
 
                                 elseif instanceof(object, 'IsoWindow') then
                                     -- window
-                                    table.insert(lines, "\tBanditBasePlacements.IsoWindow (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    table.insert(lines, "\tBanditBuildTools.IsoWindow (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
 
                                 else
                                     -- special objects?
-                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    table.insert(lines, "\tBanditBuildTools.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
                                     
                                 end
                             end
@@ -93,7 +89,6 @@ function BanditMenu.MakeProcedure (player, square)
         end
     end
     local fileWriter = getFileWriter("waitingroom2.txt", true, true)
-    table.insert(lines, "end\n\n")
 
     local output = ""
     for k, v in pairs(lines) do
@@ -103,6 +98,14 @@ function BanditMenu.MakeProcedure (player, square)
     fileWriter:write(output)
     fileWriter:close()
                             
+end
+
+function BanditMenu.ClearSpace (player, square)
+    local x, y = square:getX(), square:getY()
+    local z = square:getZ()
+    local w = 24
+    local h = 24
+    BanditBaseGroupPlacements.ClearSpace (x, y, z, w, h)
 end
 
 function BanditMenu.ShowBrain (player, square, zombie)
@@ -226,6 +229,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
 
         context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
         context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
+        context:addOption("[DGB] Clear", player, BanditMenu.ClearSpace, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
         if zombie then

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="ZSDefault.xml">
+<animNode x_extends="zsdefault.xml">
 	<m_Name>ZSTurnL45</m_Name>
 	<m_AnimName>Bob_IdleAim1Hand_Turn45L</m_AnimName>
 	<m_Conditions x_name="4c7ea829-521c-4449-9449-7be81f18b94d">

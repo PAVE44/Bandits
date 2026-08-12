@@ -17,7 +17,7 @@ ZombieActions.OpenWindow.onComplete = function(zombie, task)
     local square = cell:getGridSquare(task.x, task.y, task.z)
     if square then
         local window = square:getWindow()
-        if window then
+        if window and not window:IsOpen() then
             window:ToggleWindow(zombie)
             zombie:playSound("OpenWindow")
         end

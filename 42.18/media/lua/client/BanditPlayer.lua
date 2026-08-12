@@ -88,7 +88,7 @@ BanditPlayer.CheckFriendlyFire = function(bandit, attacker)
     if brain.hostile or brain.hostileP then return end
 
     -- attacker is not a real player
-    if not instanceof(attacker, "IsoPlayer") or attacker:isNPC() then return end
+    if not instanceof(attacker, "IsoPlayer") or attacker:isNpc() then return end
 
     -- attacked friendly, but also other friendlies who were near to witness what player did, should become hostile
     local attackerX, attackerY = attacker:getX(), attacker:getY()
@@ -139,7 +139,7 @@ local PanicHandler = function(player)
         originalPanicIncreaseValue = bodyDamage:getPanicIncreaseValue()
     end
 
-    if player:getStats():getPanic() < 3 then 
+    if player:getStats():get(CharacterStat.PANIC) < 3 then 
         bodyDamage:setPanicIncreaseValue(originalPanicIncreaseValue)
         return 
     end
@@ -228,6 +228,24 @@ local UpdatePerformance = function()
     end
 end
 
+local CharacterCollide = function(char1, char2)
+    if not char1 or not char2 then return end
+    if not instanceof(char1, "IsoPlayer") or not instanceof(char2, "IsoZombie") then return end
+    if not char2:getVariableBoolean("Bandit") then return end
+
+    local player = char1
+    local bandit = char2
+
+    if player:isSprinting() then 
+        bandit:setBumpType("trippingFromSprint")
+    elseif player:isRunning() and not bandit:CanSee(player) then
+        bandit:setBumpType("trippingFromSprint")
+    end
+
+    
+end
+
+Events.OnCharacterCollide.Add(CharacterCollide)
 Events.EveryOneMinute.Add(UpdatePlayersOnline)
 Events.OnPlayerUpdate.Add(PanicHandler)
 Events.OnPlayerUpdate.Add(StunlockRecalc)

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="ZSfall.xml">
+<animNode x_extends="zsfall.xml">
 	<m_Name>ZSfall_RAG</m_Name>
 	<m_Priority>4</m_Priority>
 	<m_AnimName></m_AnimName>

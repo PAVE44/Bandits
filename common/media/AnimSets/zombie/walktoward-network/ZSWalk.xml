@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="ZSWalkAll.xml">
+<animNode x_extends="zswalkall.xml">
 	<m_Name>ZSWalk</m_Name>
 	<m_AnimName>Bob_Walk</m_AnimName>
 	<m_Conditions>

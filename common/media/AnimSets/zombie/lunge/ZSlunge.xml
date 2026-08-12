@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="defaultLunge.xml">
+<animNode x_extends="defaultlunge.xml">
 	<m_Name>ZSlunge1</m_Name>
 	<m_AnimName>Bob_WalkSneak_Slow</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>

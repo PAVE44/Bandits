@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="ZSdefaultStaggerBack.xml">
+<animNode x_extends="zsdefaultstaggerback.xml">
 	<m_Name>ZSfrombehind</m_Name>
 	<m_AnimName>Bob_StaggerForward</m_AnimName>
 	<m_Conditions>

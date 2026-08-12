@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animNode x_extends="ZSRunAll.xml">
+<animNode x_extends="zsrunall.xml">
 	<m_Name>ZSRun2handed</m_Name>
 	<m_AnimName>Bob_RunBat</m_AnimName>
 	<m_Conditions>

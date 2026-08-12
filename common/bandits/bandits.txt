@@ -4149,7 +4149,7 @@
 	general: name = Wedding_02
 	general: female = false
 	general: skin = 2
-	general: hairType = 17
+	general: hairType = 15
 	general: beardType = 4
 	general: hairColor = 11
 	general: health = 6

@@ -210,6 +210,7 @@ function Bandit.ApplyVisuals(bandit, brain)
                         weapon = BanditUtils.ModifyWeapon(weapon, brain)
 
                         local attachmentType = weapon:getAttachmentType()
+                        local test = ISHotbarAttachDefinition
 
                         for _, def in pairs(ISHotbarAttachDefinition) do
                             if def.type == "HolsterRight" or def.type == "Back" or def.type == "SmallBeltLeft" then
