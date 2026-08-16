@@ -30,7 +30,10 @@ ZombieActions.Unbarricade.onComplete = function(zombie, task)
     if BanditUtils.IsController(zombie) then
         local item = BanditCompatibility.InstanceItem("Base.Plank")
         if item then
-            zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.3, 0.7), ZombRandFloat(0.3, 0.7), 0)
+            local square = zombie:getSquare()
+            if square then
+                square:AddWorldInventoryItem(item, ZombRandFloat(0.3, 0.7), ZombRandFloat(0.3, 0.7), 0)
+            end
         end
     end
 

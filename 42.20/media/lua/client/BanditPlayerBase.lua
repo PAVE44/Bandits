@@ -523,7 +523,7 @@ BanditPlayerBase.GetWaterSource = function(character)
             local source
             for i=0, objects:size()-1 do
                 local object = objects:get(i)
-                if object:getWaterAmount() > 10 then
+                if object:getFluidAmount() > 10 then
                     source = object
                     break
                 end

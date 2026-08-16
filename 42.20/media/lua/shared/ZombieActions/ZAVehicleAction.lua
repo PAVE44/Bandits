@@ -2,22 +2,28 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.VehicleAction = {}
 ZombieActions.VehicleAction.onStart = function(zombie, task)
-    local vehicle = getCell():getGridSquare(task.vx, task.vy, task.vz):getVehicleContainer()
-    if vehicle then
-        if task.partId == "TireRearLeft" or task.partId == "TireRearRight" or task.partId == "TireFrontLeft" or task.partId == "TireFrontRight" then
-            task.anim = "LootLow"
-            -- zombie:playSound("RepairWithWrench")
-        else
-            task.anim = "Loot"
-            zombie:playSound("VehicleHoodOpen")
+    local square = getCell():getGridSquare(task.vx, task.vy, task.vz)
+    if square then
+        local vehicle = square:getVehicleContainer()
+        if vehicle then
+            if task.partId == "TireRearLeft" or task.partId == "TireRearRight" or task.partId == "TireFrontLeft" or task.partId == "TireFrontRight" then
+                task.anim = "LootLow"
+                -- zombie:playSound("RepairWithWrench")
+            else
+                task.anim = "Loot"
+                zombie:playSound("VehicleHoodOpen")
+            end
+            zombie:setBumpType(task.anim)
         end
-        zombie:setBumpType(task.anim)
     end
     return true
 end
 
 ZombieActions.VehicleAction.onWorking = function(zombie, task)
-    local vehicle = getCell():getGridSquare(task.vx, task.vy, task.vz):getVehicleContainer()
+    local square = getCell():getGridSquare(task.vx, task.vy, task.vz)
+    if not square then return true end
+
+    local vehicle = square:getVehicleContainer()
     if not vehicle then return true end
 
     if task.fx and task.fy then
@@ -45,25 +51,28 @@ ZombieActions.VehicleAction.onComplete = function(zombie, task)
         emitter:stopSoundByName(task.sound)
     end
 
-    local vehicle = getCell():getGridSquare(task.vx, task.vy, task.vz):getVehicleContainer()
-    if vehicle then
-        local vehiclePart = vehicle:getPartById(task.partId)
-        if vehiclePart then
-            if task.subaction == "Uninstall" then
-                local item = vehiclePart:getInventoryItem()
-                if item then
-                    if BanditUtils.IsController(zombie) then
-                        zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
-                    end
+    local square = getCell():getGridSquare(task.vx, task.vy, task.vz)
+    if square then
+        local vehicle = square:getVehicleContainer()
+        if vehicle then
+            local vehiclePart = vehicle:getPartById(task.partId)
+            if vehiclePart then
+                if task.subaction == "Uninstall" then
+                    local item = vehiclePart:getInventoryItem()
+                    if item then
+                        if BanditUtils.IsController(zombie) then
+                            zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+                        end
 
-                    if task.partId == "TireRearLeft" or task.partId == "TireRearRight" or task.partId == "TireFrontLeft" or task.partId == "TireFrontRight" then
-                        vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
-                        vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
-                    end
-                    vehicle:updatePartStats()
+                        if task.partId == "TireRearLeft" or task.partId == "TireRearRight" or task.partId == "TireFrontLeft" or task.partId == "TireFrontRight" then
+                            vehiclePart:setModelVisible("InflatedTirePlusWheel", false)
+                            vehicle:setTireRemoved(vehiclePart:getWheelIndex(), true)
+                        end
+                        vehicle:updatePartStats()
 
-                    local args = {x=task.vx, y=task.vy, id=task.partId}
-                    sendClientCommand(getSpecificPlayer(0), 'Commands', 'VehiclePartRemove', args)
+                        local args = {x=task.vx, y=task.vy, id=task.partId}
+                        sendClientCommand(getSpecificPlayer(0), 'Commands', 'VehiclePartRemove', args)
+                    end
                 end
             end
         end

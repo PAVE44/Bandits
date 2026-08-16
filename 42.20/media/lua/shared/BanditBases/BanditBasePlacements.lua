@@ -288,8 +288,11 @@ function BanditBasePlacements.WaterContainer (sprite, x, y, z, items)
     if not square then return end
 
     obj = IsoThumpable.new(cell, square, sprite, false, {})
-    obj:setWaterAmount(100+ZombRand(260))
-    obj:setTaintedWater(true)
+    square:AddSpecialObject(obj)
+    if obj:getFluidContainer() then 
+        obj:addFluid(FluidType.TaintedWater, 100 + ZombRand(260)) 
+    end
+
     square:AddSpecialObject(obj)
 end
 
@@ -357,7 +360,12 @@ function BanditBasePlacements.Blood (x, y, z, q)
     for i=1, q do
         local bx = x + ZombRandFloat(0.1, 0.9)
         local by = y + ZombRandFloat(0.1, 0.9)
-        square:getChunk():addBloodSplat(bx, by, surfaceOffset, ZombRand(20))
+
+        local chunk = square:getChunk()
+        if chunk then 
+            chunk:addBloodSplat(bx, by, surfaceOffset, ZombRand(20))
+        end
+
         -- square:DoSplat
     end
 end

@@ -28,7 +28,10 @@ ZombieActions.Unload.onComplete = function(zombie, task)
         if BanditUtils.IsController(zombie) then
             local item = BanditCompatibility.InstanceItem(task.drop)
             if item then
-                zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+                local square = zombie:getSquare()
+                if square then
+                    square:AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+                end
             end
         end
     end

@@ -29,6 +29,7 @@ BanditActionInterceptor.Main = function(data)
             local object = container:getParent()
             local square = object:getSquare()
             local building = square:getBuilding()
+            if not building then return end
             local buildingDef = building:getDef()
             local x = buildingDef:getX()
             local y = buildingDef:getY()

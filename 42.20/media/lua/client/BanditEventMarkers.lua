@@ -310,7 +310,7 @@ function BanditEventMarker:update(posX,posY)
     end
 
     local HOUR = getGameTime():getHour()
-    if HOUR < 6 and HOUR > 22 then
+    if HOUR < 6 or HOUR > 22 then
         if self.player:HasTrait("NightVision") then
             self.radius = self.radius*1.1
         else

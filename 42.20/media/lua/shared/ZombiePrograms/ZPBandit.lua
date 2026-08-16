@@ -32,7 +32,8 @@ ZombiePrograms.Bandit.Main = function(bandit)
         return {status=true, next="Escape", tasks=tasks}
     end
 
-    local room = bandit:getSquare():getRoom()
+    local square = bandit:getSquare()
+    local room = square and square:getRoom()
     if room then
         local lsList = room:getLightSwitches()
         local distBest = math.huge

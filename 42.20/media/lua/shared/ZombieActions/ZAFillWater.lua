@@ -37,7 +37,7 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
     local waterAvailable
     for i=0, objects:size()-1 do
         local object = objects:get(i)
-        local waterAmount = object:getWaterAmount()
+        local waterAmount = object:getFluidAmount()
         if waterAmount > 0 then
             source = object
             waterAvailable = waterAmount

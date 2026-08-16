@@ -16,7 +16,10 @@ ZombieActions.Drop.onComplete = function(zombie, task)
         local brain = BanditBrain.Get(zombie)
         if item then
             item = BanditUtils.ModifyWeapon(item, brain)
-            zombie:getSquare():AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+            local square = zombie:getSquare()
+            if square then 
+                square:AddWorldInventoryItem(item, ZombRandFloat(0.2, 0.8), ZombRandFloat(0.2, 0.8), 0)
+            end
         end
     end
     return true

@@ -460,7 +460,12 @@ local function ManageHealth(bandit)
             if ZombRand(16) == 0 then
                 local bx = zx - 0.5 + ZombRandFloat(0.1, 0.9)
                 local by = zy - 0.5 + ZombRandFloat(0.1, 0.9)
-                bandit:getChunk():addBloodSplat(bx, by, 0, ZombRand(20))
+                
+                local chunk = bandit:getChunk()
+                if chunk then 
+                    chunk:addBloodSplat(bx, by, 0, ZombRand(20))
+                end
+
             end
             bandit:setHealth(health - 0.00005)
         end

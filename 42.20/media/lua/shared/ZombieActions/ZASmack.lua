@@ -388,7 +388,8 @@ local function Hit(attacker, item, victim, hr)
                 local window = vehiclePart:getWindow()
                 if window and not window:isOpen() then
                     local vehiclePartId = vehiclePart:getId()
-                    vehiclePart:damage(20)
+                    local windowDmg = 22
+                    vehiclePart:damage(windowDmg)
 
                     if vehiclePart:getCondition() <= 0 then
                         vehiclePart:setInventoryItem(nil)
@@ -400,7 +401,8 @@ local function Hit(attacker, item, victim, hr)
 
                     vehicle:updatePartStats()
 
-                    local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=dmg}
+                    local player = getSpecificPlayer(0)
+                    local args = {x=square:getX(), y=square:getY(), id=vehiclePartId, dmg=windowDmg}
                     sendClientCommand(player, 'Commands', 'VehiclePartDamage', args)
                 end
             end
