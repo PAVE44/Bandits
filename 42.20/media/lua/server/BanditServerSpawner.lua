@@ -953,6 +953,12 @@ local function spawnType(player, args)
 
     if LogLevel >= 3 then print ("[BANDITS] spawnType has cid " .. cid) end
     local clan = BanditCustom.ClanGet(cid).spawn
+
+    -- wanderers spawner is external now
+    if clan.wanderer then
+        return
+    end
+
     local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
     groupSize = math.floor(groupSize * SandboxVars.Bandits.General_SpawnMultiplier + 0.5)
     local spawnPoints = {}
@@ -973,16 +979,10 @@ local function spawnType(player, args)
     args.pid = pid
     args.cid = cid
     args.permanent = false
-    args.program = "Looter"
+    args.program = "Bandit"
     -- args.key = false
 
-    if clan.wanderer and clan.assault then
-        args.program = BanditUtils.Choice({"Looter", "Bandit"})
-    elseif clan.wanderer then
-        args.program = "Looter"
-    elseif clan.assault then
-        args.program = "Bandit"
-    elseif clan.companion then
+    if clan.companion then
         args.program = "Companion"
     end
 
@@ -1077,7 +1077,7 @@ local function checkEvent()
                     print ("[BANDITS] Scheduler is spawning bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
                     local args = {}
                     args.cid = cid
-                    args.dist = 55 + ZombRand(10)
+                    args.dist = 60 + ZombRand(15)
                     spawnType(player, args)
                     TransmitBanditModData()
                     print ("[BANDITS] Data transmitted.")

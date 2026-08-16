@@ -8,6 +8,43 @@
 
 BanditMenu = BanditMenu or {}
 
+function BanditMenu.AddWandererGroup(player, square)
+
+    local cids = {
+        "2681ecf5-d0d9-481d-b769-7c4fb626eb81",
+        "a2dec2f0-c76d-4640-8a71-733a547a1ebc",
+        "bf5985eb-7cb0-44ba-8392-f656ffe421f4",
+    }
+    local group = {}
+    group.x = square:getX()
+    group.y = square:getY()
+    group.z = square:getZ()
+    group.cid = BanditUtils.Choice(cids)
+    group.size = 1 + ZombRand(5)
+    BanditServer.Wanderers.AddGroup(group)
+end
+
+function BanditMenu.Tent(player, square)
+    local sx = square:getX()
+    local sy = square:getY()
+    local sz = square:getZ()
+
+    BanditBasePlacements.Tent(sx, sy, sz)
+end
+
+
+function BanditMenu.Map(player)
+    if BanditMenu.mapInstance then
+        BanditMenu.mapInstance:removeFromUIManager()
+        BanditMenu.mapInstance = nil
+    else
+        local map = BanditMap:new(200, 200, 800, 800, nil, "Bandit Map")
+        map:initialise()
+        map:addToUIManager()
+        BanditMenu.mapInstance = map
+    end
+end
+
 function BanditMenu.BanditTest (player)
     BanditTest.Check()
 end
@@ -225,6 +262,10 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     -- Debug options
     if isDebugEnabled() then
 
+        
+        context:addOption("[DGB] Tent", player, BanditMenu.Tent, square)
+        context:addOption("[DGB] Bandit Map", player, BanditMenu.Map)
+        context:addOption("[DGB] Add Wanderer Group", player, BanditMenu.AddWandererGroup, square)
         context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
         context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)

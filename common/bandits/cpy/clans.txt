@@ -137,7 +137,7 @@
 	spawn: roadblock = true
 	spawn: dayStart = 0
 	spawn: dayEnd = 13
-	spawn: spawnChance = 2.5
+	spawn: spawnChance = 90
 	spawn: groupMin = 1
 	spawn: groupMax = 3
 	spawn: zone = 0
@@ -239,7 +239,7 @@
 	spawn: zone = 0
 
 [f9e0dc17-95a0-4cb9-97f1-b04bfc448c96]
-	general: name = 00_Hunters
+	general: name = W_05_LonelyHunter
 	spawn: friendly = false
 	spawn: companion = false
 	spawn: defenders = false
@@ -248,11 +248,11 @@
 	spawn: wanderer = true
 	spawn: roadblock = false
 	spawn: dayStart = 15
-	spawn: dayEnd = 365
-	spawn: spawnChance = 1
+	spawn: dayEnd = 200
+	spawn: spawnChance = 4
 	spawn: groupMin = 1
 	spawn: groupMax = 1
-	spawn: zone = 2
+	spawn: zone = 0
 
 [c5c7f769-e5e8-44bb-ada6-cdf00ee2c234]
 	general: name = Baseball
@@ -364,5 +364,213 @@
 	spawn: spawnChance = 2.2
 	spawn: groupMin = 3
 	spawn: groupMax = 5
+	spawn: zone = 0
+
+[71314b9f-107c-4711-b74e-f120bdecc66b]
+	general: name = W_02_Scavengers
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 3
+	spawn: dayEnd = 100
+	spawn: spawnChance = 5
+	spawn: groupMin = 5
+	spawn: groupMax = 30
+	spawn: zone = 0
+
+[dc35fa7f-9e01-489b-aa3b-db9541c4b02d]
+	general: name = W_06_Supremacists
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 20
+	spawn: dayEnd = 150
+	spawn: spawnChance = 5
+	spawn: groupMin = 5
+	spawn: groupMax = 8
+	spawn: zone = 0
+
+[ecdda5e3-9b82-43ab-83dd-af3e660a6f50]
+	general: name = W_01_Rednecks
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = false
+	spawn: roadblock = false
+	spawn: dayStart = 0
+	spawn: dayEnd = 30
+	spawn: spawnChance = 5
+	spawn: groupMin = 5
+	spawn: groupMax = 16
+	spawn: zone = 0
+
+[326693ab-1055-46c9-91b5-24606731f0a4]
+	general: name = W_03_Travellers
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 7
+	spawn: dayEnd = 110
+	spawn: spawnChance = 5
+	spawn: groupMin = 4
+	spawn: groupMax = 6
+	spawn: zone = 0
+
+[06c00108-0ac9-47ee-b2ac-248651a9d5dc]
+	general: name = W_04_Convicts
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 12
+	spawn: dayEnd = 120
+	spawn: spawnChance = 5
+	spawn: groupMin = 3
+	spawn: groupMax = 6
+	spawn: zone = 0
+
+[a8fb46ad-7093-4711-9a85-aa353d19b084]
+	general: name = W_06_BlackDogs
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 14
+	spawn: dayEnd = 140
+	spawn: spawnChance = 5
+	spawn: groupMin = 4
+	spawn: groupMax = 7
+	spawn: zone = 0
+
+[53d4bf5d-79f6-47ce-b93f-d1c4a994a080]
+	general: name = W_07_ExCops
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 25
+	spawn: dayEnd = 160
+	spawn: spawnChance = 5
+	spawn: groupMin = 4
+	spawn: groupMax = 5
+	spawn: zone = 0
+
+[e670119f-dabf-4de6-ac6c-848a3afda4c8]
+	general: name = W_09_Deserters
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 40
+	spawn: dayEnd = 170
+	spawn: spawnChance = 5
+	spawn: groupMin = 6
+	spawn: groupMax = 9
+	spawn: zone = 0
+
+[e4e34bd7-3e03-49d7-a284-5af9ef9bb7e3]
+	general: name = W_10_Sweepers
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 55
+	spawn: dayEnd = 180
+	spawn: spawnChance = 5
+	spawn: groupMin = 4
+	spawn: groupMax = 8
+	spawn: zone = 0
+
+[dcdb53b1-f557-40ae-a3b6-bad5648a3815]
+	general: name = W_13_Tribe
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 130
+	spawn: dayEnd = 10000
+	spawn: spawnChance = 5
+	spawn: groupMin = 10
+	spawn: groupMax = 14
+	spawn: zone = 0
+
+[2c6dd733-c855-418f-89b5-4a3de79ab0ee]
+	general: name = W_14_Hermits
+	spawn: friendly = true
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 140
+	spawn: dayEnd = 10000
+	spawn: spawnChance = 5
+	spawn: groupMin = 15
+	spawn: groupMax = 25
+	spawn: zone = 0
+
+[1d18984f-f78c-4854-963a-ef3fdb371d83]
+	general: name = W_11_Bandits
+	spawn: friendly = false
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 40
+	spawn: dayEnd = 250
+	spawn: spawnChance = 5
+	spawn: groupMin = 4
+	spawn: groupMax = 6
+	spawn: zone = 0
+
+[ffc9362a-04d6-44c0-a739-f3457dc73ca7]
+	general: name = W_00_Civs
+	spawn: friendly = true
+	spawn: companion = false
+	spawn: defenders = false
+	spawn: campers = false
+	spawn: assault = false
+	spawn: wanderer = true
+	spawn: roadblock = false
+	spawn: dayStart = 0
+	spawn: dayEnd = 1
+	spawn: spawnChance = 30
+	spawn: groupMin = 4
+	spawn: groupMax = 14
 	spawn: zone = 0
 

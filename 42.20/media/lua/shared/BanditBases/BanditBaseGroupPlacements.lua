@@ -85,6 +85,7 @@ function BanditBaseGroupPlacements.ClearSpace (x, y, z, w, h)
                             sledgeDestroy(obj);
                         else
                             square:transmitRemoveItemFromSquare(obj)
+                            square:transmitRemoveItemFromSquareOnClients(obj)
                         end
                     end
                 end

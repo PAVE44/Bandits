@@ -32,6 +32,7 @@ local function initBanditModData(isNewGame)
     if not globalData.Bases then globalData.Bases = {} end
     if not globalData.Kills then globalData.Kills = {} end
     if not globalData.VisitedBuildings then globalData.VisitedBuildings = {} end
+    if not globalData.Wanderers then globalData.Wanderers = {} end
     BanditGlobalData = globalData
 
     -- BANDIT PLAYERS GLOBAL MODDATA
