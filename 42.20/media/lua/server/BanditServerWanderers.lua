@@ -474,23 +474,23 @@ local updateGroups = function()
                     args.program = "Dead"
                 end
 
-                for i = 1, group.size do
-                    args.x = group.x - 5 + ZombRand(10)
-                    args.y = group.y - 5 + ZombRand(10)
-                    BanditServer.Spawner.Clan(playerSelected, args)
-                end
-
                 local zombieList = cell:getZombieList()
-                local zombieListSize = zombieList:size()
-                for i = 0, zombieListSize - 1 do
-                    local zombie = zombieList:get(i)
+                for j = zombieList:size() -1, 0 do
+                    local zombie = zombieList:get(j)
                     if zombie and isInCircle(zombie:getX(), zombie:getY(), group.x, group.y, 30) then
                         zombie:setHealth(0)
                         zombie:clearAttachedItems()
                         zombie:changeState(ZombieOnGroundState.instance())
                         zombie:setAttackedBy(cell:getFakeZombieForHit())
                         zombie:die()
+                        print ("[WANDERERS] Removed zombie at (" .. zombie:getX() .. ", " .. zombie:getY() .. ")")
                     end
+                end
+
+                for i = 1, group.size do
+                    args.x = group.x - 5 + ZombRand(10)
+                    args.y = group.y - 5 + ZombRand(10)
+                    BanditServer.Spawner.Clan(playerSelected, args)
                 end
 
                 local zone = square:getZone()
