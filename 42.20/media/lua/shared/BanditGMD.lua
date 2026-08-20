@@ -114,7 +114,7 @@ local function everyTenMinutes()
         for _, _ in pairs(globalData) do
             cnt = cnt + 1
         end
-        print ("[GMD] Cluster " .. i .. " is " .. cnt .. " long.")
+        -- print ("[GMD] Cluster " .. i .. " is " .. cnt .. " long.")
     end
 end
 

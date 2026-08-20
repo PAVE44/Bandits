@@ -311,15 +311,15 @@ function BanditEventMarker:update(posX,posY)
 
     local HOUR = getGameTime():getHour()
     if HOUR < 6 or HOUR > 22 then
-        if self.player:HasTrait("NightVision") then
-            self.radius = self.radius*1.1
+        if self.player:hasTrait(CharacterTrait.NIGHT_VISION) then
+            self.radius = self.radius * 1.1
         else
-            self.radius = self.radius*0.75
+            self.radius = self.radius * 0.75
         end
     end
 
     if not self.player:isOutside() then
-        self.radius = self.radius*0.33
+        self.radius = self.radius * 0.33
     end
 
     self.radius = math.max(BanditEventMarker.maxRange/3, math.min(self.radius,BanditEventMarker.maxRange))

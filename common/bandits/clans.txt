@@ -569,7 +569,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 0
 	spawn: dayEnd = 7
-	spawn: spawnChance = 80
+	spawn: spawnChance = 100
 	spawn: groupMin = 4
 	spawn: groupMax = 14
 	spawn: zone = 0

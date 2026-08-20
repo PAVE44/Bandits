@@ -9,6 +9,12 @@ BanditServer.Wanderers.destinations = {
         z = 0
     },
     {
+        name = "March Ridge Bunker",
+        x = 9923, 
+        y = 12624,
+        z = 0
+    },
+    {
         name = "March Ridge Center Gas Station",
         x = 10144,
         y = 12802,
@@ -147,6 +153,12 @@ BanditServer.Wanderers.destinations = {
         z = 0
     },
     {
+        name = "Fallas Church",
+        x = 7220, 
+        y = 8536,
+        z = 0
+    },
+    {
         name = "Rosewood Police",
         x = 8071,
         y = 11727,
@@ -177,6 +189,12 @@ BanditServer.Wanderers.destinations = {
         z = 0
     },
     {
+        name = "Rosewood Prison",
+        x = 7666, 
+        y = 11793,
+        z = 0
+    },
+    {
         name = "Echo Creek Center",
         x = 3579,
         y = 10913,
@@ -188,7 +206,90 @@ BanditServer.Wanderers.destinations = {
         y = 10922,
         z = 0
     },
-
+    {
+        name = "Ekron Industrial Area",
+        x = 1917,
+        y = 10773,
+        z = 0
+    },
+    {
+        name = "Ekron Community College",
+        x = 790,  
+        y = 9835,
+        z = 0
+    },
+    {
+        name = "Sanatorium",
+        x = 4065, 
+        y = 6522,
+        z = 0
+    },
+    {
+        name = "Coalfield",
+        x = 3455,
+        y = 8194,
+        z = 0
+    },
+    {
+        name = "Louisville Border Camp",
+        x = 12512, 
+        y = 4267,
+        z = 0
+    },
+    {
+        name = "Crossroads Mall",
+        x = 13943, 
+        y = 5830,
+        z = 0
+    },
+    {
+        name = "Irvington Speedway",
+        x = 911, 
+        y = 13043,
+        z = 0
+    },
+    {
+        name = "Irvington Town Hall",
+        x = 2457, 
+        y = 14078,
+        z = 0
+    },
+    {
+        name = "Irvington Gun Club",
+        x = 1856, 
+        y = 14164,
+        z = 0
+    },
+    {
+        name = "Brandenburg Mansion",
+        x = 1264, 
+        y = 7381,
+        z = 0
+    },
+    {
+        name = "Brandenburg P.S. Delilah",
+        x = 2046, 
+        y = 5688,
+        z = 0
+    },
+    {
+        name = "Brandenburg Community Center",
+        x = 1848, 
+        y = 5943,
+        z = 0
+    },
+    {
+        name = "Brandenburg Airfield",
+        x = 941,
+        y = 6115,
+        z = 0
+    },
+    {
+        name = "Military Research Facility",
+        x = 5558,  
+        y = 12480,
+        z = 0
+    }
 }
 
 BanditServer.Wanderers.speed = 4
@@ -376,6 +477,7 @@ local updateGroups = function()
     local destinations = BanditServer.Wanderers.destinations
     local speed = BanditServer.Wanderers.speed
     local contactRange2 = BanditServer.Wanderers.contactRange * BanditServer.Wanderers.contactRange
+    local playerList = getPlayers()
 
     local first = true
     for i, group in ipairs(wanderers) do
@@ -387,8 +489,8 @@ local updateGroups = function()
                 if otherGroup ~= group and otherGroup.alive then
                     local dist2 = ((otherGroup.x - group.x) * (otherGroup.x - group.x)) + ((otherGroup.y - group.y) * (otherGroup.y - group.y))
                     if dist2 <= contactRange2 then
-                        print ("[WANDERERS] Group " .. group.cid .. " is in contact with group " .. otherGroup.cid)
                         if group.cid ~= otherGroup.cid then
+                            print ("[WANDERERS] Group " .. group.cid .. " is in contact with group " .. otherGroup.cid)
                             local groupSize = group.size
                             local otherGroupSize = otherGroup.size
 
@@ -430,6 +532,7 @@ local updateGroups = function()
 
                 -- print ("[WANDERERS] Group " .. group.cid .. " moved to (" .. group.x .. ", " .. group.y .. ") towards " .. group.destination.name .. " distance: " .. distance)
 
+                --[[
                 if false and first then
                     local player = getPlayer()
                     player:setX(group.x)
@@ -437,6 +540,7 @@ local updateGroups = function()
                     player:setZ(group.z)
                     first = false
                 end
+                ]]
             else
                 -- Reached destination, choose a new one
                 group.destination = BanditUtils.Choice(destinations)
@@ -449,7 +553,6 @@ local updateGroups = function()
         if square and not square:isWaterSquare() then
 
             local playerSelected
-            local playerList = getPlayers()
             for i=0, playerList:size()-1 do
                 local player = playerList:get(i)
                 if player and not isGhost(player) then
@@ -475,7 +578,7 @@ local updateGroups = function()
                 end
 
                 local zombieList = cell:getZombieList()
-                for j = zombieList:size() -1, 0 do
+                for j = zombieList:size() -1, 0, -1 do
                     local zombie = zombieList:get(j)
                     if zombie and isInCircle(zombie:getX(), zombie:getY(), group.x, group.y, 30) then
                         zombie:setHealth(0)
@@ -483,7 +586,7 @@ local updateGroups = function()
                         zombie:changeState(ZombieOnGroundState.instance())
                         zombie:setAttackedBy(cell:getFakeZombieForHit())
                         zombie:die()
-                        print ("[WANDERERS] Removed zombie at (" .. zombie:getX() .. ", " .. zombie:getY() .. ")")
+                        -- print ("[WANDERERS] Removed zombie at (" .. zombie:getX() .. ", " .. zombie:getY() .. ")")
                     end
                 end
 
@@ -516,10 +619,10 @@ local updateGroups = function()
                     local icon, color, desc = getIconDataByProgram("Looter", clan.spawn.friendly)
                     if icon and color and desc then
                         if isServer() then
-                            local args = {icon=icon, time=1800, x=args.x, y=args.y, color=color, desc=desc}
+                            local args = {icon=icon, time=1800, x=group.x, y=group.y, color=color, desc=desc}
                             sendServerCommand('Commands', 'SetMarker', args)
                         else
-                            BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, args.x, args.y, color, desc)
+                            BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, group.x, group.y, color, desc)
                         end
                     end
                 end
@@ -566,14 +669,14 @@ local orchestrator = function()
         spawnConfig.groupMin = tonumber(spawnConfig.groupMin)
         spawnConfig.groupMax = tonumber(spawnConfig.groupMax)
 
-        print ("[BANDITS] Orchestrator checking clan " .. cid .. " for spawn. Day: " .. day)
+        -- print ("[BANDITS] Orchestrator checking clan " .. cid .. " for spawn. Day: " .. day)
 
         if spawnConfig and spawnConfig.wanderer and spawnConfig.dayStart and spawnConfig.dayEnd then
-            if day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
+            if day and day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
                 local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
 
                 local spawnRandom = ZombRandFloat(0, 100)
-                print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
+                -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
 
                 if spawnRandom < spawnChance then
                     print ("[BANDITS] Wanderer scheduler is adding bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
@@ -603,5 +706,3 @@ end
 
 Events.EveryOneMinute.Add(updateGroups)
 Events.EveryTenMinutes.Add(orchestrator)
-
-Events.OnServerCommand.Add(onServerCommand)

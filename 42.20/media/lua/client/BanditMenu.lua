@@ -263,11 +263,11 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     if isDebugEnabled() then
 
         
-        context:addOption("[DGB] Tent", player, BanditMenu.Tent, square)
+        -- context:addOption("[DGB] Tent", player, BanditMenu.Tent, square)
         context:addOption("[DGB] Bandit Map", player, BanditMenu.Map)
-        context:addOption("[DGB] Add Wanderer Group", player, BanditMenu.AddWandererGroup, square)
-        context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
-        context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
+        -- context:addOption("[DGB] Add Wanderer Group", player, BanditMenu.AddWandererGroup, square)
+        -- context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
+        -- context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
         if zombie then

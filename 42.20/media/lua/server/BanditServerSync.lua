@@ -15,7 +15,7 @@ BanditServer.Sync.Health  = function(player, args)
                 print ("BECOME CORPSE")
                 zombie:changeState(ZombieOnGroundState.instance())
                 zombie:setAttackedBy(getCell():getFakeZombieForHit())
-                zombie:die  ()
+                zombie:die()
             end
 
         end

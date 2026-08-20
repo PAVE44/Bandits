@@ -150,10 +150,10 @@ local function flush()
     -- but it tanks performance, so only enable if necessary 
     if BanditZombie.CacheLightBCnt < 50 and BanditZombie.CacheLightZCnt < 50 then
         getCore():setOptionTieredZombieUpdates(false)
-        print ("Tiered zombie updates disabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
+        -- print ("Tiered zombie updates disabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
     else
         getCore():setOptionTieredZombieUpdates(true)
-        print ("Tiered zombie updates enabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
+        -- print ("Tiered zombie updates enabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
     end
 
     BanditPermanent.Check()

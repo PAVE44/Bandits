@@ -4863,7 +4863,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 9
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_RagBandanaMask
@@ -5033,7 +5033,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 7
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Bandana
@@ -5118,7 +5118,7 @@
 	general: endurance = 5
 	general: sight = 6
 	general: exp1 = 3
-	general: exp2 = 0
+	general: exp2 = 7
 	general: exp3 = 0
 	clothing: Tshirt = Base.Tshirt_Rock2
 	clothing: Jacket = Base.Jacket_LeatherBarrelDogs
@@ -5189,7 +5189,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
@@ -5352,7 +5352,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCapKY_Reverse
@@ -5727,7 +5727,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
@@ -5753,7 +5753,7 @@
 	general: sight = 5
 	general: exp1 = 2
 	general: exp2 = 11
-	general: exp3 = 0
+	general: exp3 = 10
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Socks = Base.Socks_Ankle
@@ -5777,7 +5777,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: RightEye = Base.Glasses_Eyepatch_Right
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
@@ -5802,7 +5802,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
@@ -5828,8 +5828,8 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
-	general: exp3 = 0
+	general: exp2 = 12
+	general: exp3 = 10
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Socks = Base.Socks_Ankle
@@ -5852,8 +5852,8 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
-	general: exp3 = 0
+	general: exp2 = 12
+	general: exp3 = 10
 	clothing: Nose = Base.NoseRing_Gold
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
@@ -5877,7 +5877,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: Nose = Base.NoseRing_Gold
 	clothing: Boilersuit = Base.Boilersuit_Prisoner
@@ -5926,8 +5926,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 2
+	general: exp2 = 12
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Beany
 	clothing: Mask = Base.Hat_BalaclavaFull
@@ -5958,7 +5958,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 12
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_Beany
 	clothing: Mask = Base.Hat_BalaclavaFace
@@ -5989,7 +5989,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 2
-	general: exp2 = 0
+	general: exp2 = 9
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BalaclavaFace
 	clothing: Scarf = Base.ShemaghScarf_Green
@@ -6017,8 +6017,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 2
+	general: exp2 = 8
 	general: exp3 = 0
 	clothing: Mask = Base.Hat_BalaclavaFull
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
@@ -6172,7 +6172,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 4
-	general: exp2 = 0
+	general: exp2 = 12
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_CrashHelmet_Police
 	clothing: Mask = Base.Hat_BalaclavaFull
@@ -6204,7 +6204,7 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
+	general: exp1 = 12
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_CrashHelmet_Police
@@ -6319,7 +6319,7 @@
 	general: endurance = 5
 	general: sight = 5
 	general: exp1 = 8
-	general: exp2 = 0
+	general: exp2 = 12
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BaseballCap_Police_Reverse
 	clothing: Mask = Base.ShemaghScarfFace_Green
@@ -6399,8 +6399,8 @@
 	general: health = 5
 	general: strength = 5
 	general: endurance = 5
-	general: sight = 5
-	general: exp1 = 0
+	general: sight = 6
+	general: exp1 = 12
 	general: exp2 = 0
 	general: exp3 = 0
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
@@ -6431,8 +6431,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 5
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 12
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
@@ -6460,8 +6460,8 @@
 	general: strength = 5
 	general: endurance = 5
 	general: sight = 6
-	general: exp1 = 0
-	general: exp2 = 0
+	general: exp1 = 9
+	general: exp2 = 10
 	general: exp3 = 0
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Tshirt = Base.Tshirt_ArmyGreen
@@ -6658,7 +6658,7 @@
 	general: endurance = 5
 	general: sight = 9
 	general: exp1 = 4
-	general: exp2 = 0
+	general: exp2 = 9
 	general: exp3 = 0
 	clothing: Hat = Base.Hat_BandanaTiedTINT
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
@@ -7462,11 +7462,11 @@
 	general: exp1 = 2
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 2023f23b-0ff4-4c5a-b7c7-e78ef734217a
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Pants = Base.TrousersMesh_DenimLight
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.Crowbar
+	bag: name = Base.Bag_Schoolbag
 
 [bfccbf4f-45bf-4828-abeb-82c2c1dfe9c0]
 	general: modid = Bandits2
@@ -7507,12 +7507,12 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 06eb0481-2c9f-4346-951d-6474ed5d366c
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Shirt = Base.Shirt_Workman
 	clothing: Pants = Base.Trousers_Black
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.BallPeenHammer
+	bag: name = Base.Bag_Schoolbag_Patches
 
 [9c17c2e2-b26f-48d6-bd1d-f69b9b4505c3]
 	general: modid = Bandits2
@@ -7555,13 +7555,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 84f4a1ee-b2fd-4876-8e14-efab9628c9fd
 	clothing: Eyes = Base.Glasses_Normal_HornRimmed
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Shirt = Base.Shirt_Denim
 	clothing: Pants = Base.TrousersMesh_DenimLight
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.BallPeenHammer
+	bag: name = Base.Bag_HideSlingBag
 
 [41223f6e-a647-4da7-b2b8-b33d90b47b3c]
 	general: modid = Bandits2
@@ -7602,11 +7602,11 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 310101e3-2c61-441a-87c1-cc26880b4245
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Jacket = Base.Jacket_WhiteTINT
 	clothing: Pants = Base.Trousers
 	clothing: Shoes = Base.Shoes_Brown
+	bag: name = Base.Bag_SheetSlingBag
 
 [0bc9be6f-0a27-494c-ad8c-5fbc85543a26]
 	general: modid = Bandits2
@@ -7670,12 +7670,12 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = b31a5b9b-c2f5-4a6f-a6c6-a10623ee4594
 	clothing: Hat = Base.Hat_BandanaTied
 	clothing: TankTop = Base.Vest_DefaultTEXTURE_TINT
 	clothing: Pants = Base.Trousers_Shellsuit_Black
 	clothing: Shoes = Base.Shoes_Brown
 	weapons: melee = Base.BaseballBat
+	bag: name = Base.Bag_Schoolbag_Kids
 
 [ed45ad0d-060e-4119-9734-9d92a374ac62]
 	general: modid = Bandits2
@@ -8008,13 +8008,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = cdb2150a-f693-4379-a5d9-dbb64ed94de2
 	clothing: Hat = Base.Hat_BandanaTiedTINT
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: ShortPants = Base.Shorts_CamoGreenLong
 	clothing: Socks = Base.Socks_Ankle_Black
 	clothing: Shoes = Base.Shoes_ArmyBoots
 	weapons: melee = Base.HuntingKnife
+	bag: name = Base.Bag_Schoolbag_Kids
 
 [3507d42d-1555-4dc7-af11-363f816164e4]
 	general: modid = Bandits2
@@ -8055,11 +8055,11 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 399dd51d-239f-4087-9d07-caef2f803ea3
 	clothing: Tshirt = Base.Tshirt_Rock2
 	clothing: ShortPants = Base.Shorts_LongDenim_Punk
 	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.FightingKnife
+	bag: name = Base.Bag_FoodCanned
 
 [db5de383-2a8a-4573-802f-c9c8da0b996a]
 	general: modid = Bandits2
@@ -8100,13 +8100,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = c2e81f54-e9f2-467e-a740-8c7259d3045b
 	clothing: TankTop = Base.Vest_DefaultTEXTURE
 	clothing: Jacket_Bulky = Base.Jacket_Shellsuit_TINT
 	clothing: Pants = Base.Trousers_Shellsuit_TINT
 	clothing: Shoes = Base.Shoes_Black
 	tint: Jacket_Bulky = 6710886
 	tint: Pants = 6710886
+	bag: name = Base.Bag_Schoolbag_Travel
 
 [485ac9f5-67ed-49b4-835a-db5825f5b52f]
 	general: modid = Bandits2
@@ -8192,13 +8192,13 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
-	general: bid = 1f417ffc-6479-45aa-8687-f79af0737b86
 	clothing: Neck = Base.Tie_Worn
 	clothing: Shirt = Base.Shirt_FormalWhite
 	clothing: Sweater = Base.Jumper_TankTopDiamondTINT
 	clothing: Pants = Base.Trousers_Suit
 	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.Pencil
+	bag: name = Base.Bag_Schoolbag_Travel
 
 [321d02a8-1cb3-473c-9f66-6a2c7b7d0421]
 	general: modid = Bandits2

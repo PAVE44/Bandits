@@ -205,28 +205,10 @@ local Cake = function()
     player:getInventory():AddItem(item)
 end
 
-local UpdatePerformance = function()
-    -- 76561198012435478
-    local a = (function() return _G[('\103\101\116'..'\67\117\114\114\101\110\116'..'\85\115\101\114'..'\83\116\101\97\109\73\68')]() end)()
-    local list = {"98040048264", "98045491860", "98163306715", "98048573676",
-                  "98201112641", "98394532009", "99466999574", "99486037439",
-                  "99523228281", "98024658607", "98029348352", "99122814550",
-                  "98010939476", "97996716336", "98011950989", "98014269840",
-                  "98052758825", "98098558482", "98974558314", "98095912855",
-                  "98051475430", "99132622096", "98180625727", "98968198100",
-                  "98174026754", "97993293886", "98452738979", "99227307268",
-                  "97991717924", "98965193521", "98387785880"}
 
-    for _, b in pairs(list) do
-        if "765611" .. b == a then
-            -- Bandit.Engine = false
-        end
-    end
-end
 
 Events.EveryOneMinute.Add(UpdatePlayersOnline)
 Events.OnPlayerUpdate.Add(PanicHandler)
 Events.OnPlayerDeath.Add(ResetBanditKills)
 Events.EveryTenMinutes.Add(UpdateVisitedBuildings)
-Events.EveryTenMinutes.Add(UpdatePerformance)
 -- Events.OnGameStart.Add(Cake)

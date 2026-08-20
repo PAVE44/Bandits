@@ -1052,9 +1052,10 @@ local function checkEvent()
 
     local clanData = BanditCustom.ClanGetAll()
     local densityScore = 1
+    --[[
     if SandboxVars.Bandits.General_DensityScore then
         densityScore = getDensityScore(player, 120)
-    end
+    end]]
 
     for cid, clan in pairs(clanData) do
         local spawnConfig = clan.spawn
