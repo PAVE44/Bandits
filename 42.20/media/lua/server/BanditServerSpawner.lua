@@ -959,6 +959,9 @@ local function spawnType(player, args)
         return
     end
 
+    clan.groupMin = clan.groupMin or 1
+    clan.groupMax = clan.groupMax or 1
+
     local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
     groupSize = math.floor(groupSize * SandboxVars.Bandits.General_SpawnMultiplier + 0.5)
     local spawnPoints = {}
@@ -971,7 +974,7 @@ local function spawnType(player, args)
         spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, groupSize)
     end
 
-    if #spawnPoints == 0 then return end
+    if not spawnPoints or #spawnPoints == 0 then return end
 
     if LogLevel >= 3 then print ("[BANDITS] spawnPoints generated " .. #spawnPoints) end
 
@@ -1060,32 +1063,42 @@ local function checkEvent()
     for cid, clan in pairs(clanData) do
         local spawnConfig = clan.spawn
 
-        spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
-        spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
+        if spawnConfig then 
+            spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
+            spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
 
-        if spawnConfig and spawnConfig.dayStart and spawnConfig.dayEnd then
-            if day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
-                local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
-                -- boost spawn in non-wilderness area
-                -- if spawnConfig.zone and spawnConfig.zone ~= 3 then 
-                --    spawnChance = spawnChance * densityScore
-                -- end
+            if spawnConfig.dayStart and spawnConfig.dayEnd then
+                if day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
 
-                local spawnRandom = ZombRandFloat(0, 100)
-                -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
+                    if not spawnConfig.spawnChance then 
+                        spawnConfig.spawnChance = 0 
+                        print ("[BANDITS] No spawnChance defined for clan " .. cid .. ". Clan will never spawn.")
+                    end
 
-                if spawnRandom < spawnChance then
-                    print ("[BANDITS] Scheduler is spawning bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
-                    local args = {}
-                    args.cid = cid
-                    args.dist = 60 + ZombRand(15)
-                    spawnType(player, args)
-                    TransmitBanditModData()
-                    print ("[BANDITS] Data transmitted.")
+                    local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
+                    -- boost spawn in non-wilderness area
+                    -- if spawnConfig.zone and spawnConfig.zone ~= 3 then 
+                    --    spawnChance = spawnChance * densityScore
+                    -- end
+
+                    local spawnRandom = ZombRandFloat(0, 100)
+                    -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
+
+                    if spawnRandom < spawnChance then
+                        print ("[BANDITS] Scheduler is spawning bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
+                        local args = {}
+                        args.cid = cid
+                        args.dist = 60 + ZombRand(15)
+                        spawnType(player, args)
+                        TransmitBanditModData()
+                        -- print ("[BANDITS] Data transmitted.")
+                    end
                 end
+            else
+                print ("[BANDITS] Invalid spawn configuration for clan " .. cid .. ". Check your clans.txt file for correct dayStart and dayEnd values.")
             end
         else
-            print ("[BANDITS] Invalid spawn configuration for clan " .. cid .. ". Check your clans.txt file for correct dayStart and dayEnd values.")
+            print ("[BANDITS] No spawn configuration for clan " .. cid .. ". Check your clans!")
         end
     end
 end
@@ -1133,7 +1146,7 @@ BanditServer.Spawner.Clan = function(player, args)
         spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, args.size)
     end
 
-    if #spawnPoints > 0 then
+    if spawnPoints and #spawnPoints > 0 then
         spawnGroup(spawnPoints, args)
     end
 end
@@ -1150,8 +1163,8 @@ BanditServer.Spawner.Individual = function(player, args)
     args.size = 1
 
     local spawnPoint = generateSpawnPointHere(player, args.x, args.y, args.z, args.size)
-    if #spawnPoints > 0 then
-        spawnIndividual(spawnPoints[1], args)
+    if spawnPoint and #spawnPoint > 0 then
+        spawnIndividual(spawnPoint[1], args)
     end
 end
 

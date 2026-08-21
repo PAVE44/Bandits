@@ -448,6 +448,7 @@ local updateGroups = function()
 
     local function updateCombatGroups(winner, loser)
         -- winner group gets casualties
+        local worldAge = getWorldAge()
         local casualties = math.floor(math.floor(winner.size * 0.25))
         winner.size = math.max(1, winner.size - casualties)
 
@@ -461,13 +462,15 @@ local updateGroups = function()
                 y = loser.y,
                 z = loser.z,
                 destination = winner.destination,
-                alive = false
+                alive = false,
+                deadDay = worldAge
             }
             table.insert(gmd.Wanderers, casualtiesGroup)
         end
 
         -- loser group is marked as dead
         loser.alive = false
+        loser.deadDay = worldAge
     end
 
     local cell = getCell()
@@ -478,6 +481,7 @@ local updateGroups = function()
     local speed = BanditServer.Wanderers.speed
     local contactRange2 = BanditServer.Wanderers.contactRange * BanditServer.Wanderers.contactRange
     local playerList = getPlayers()
+    local worldAge = getWorldAge()
 
     local first = true
     for i, group in ipairs(wanderers) do
@@ -636,6 +640,18 @@ local updateGroups = function()
         table.remove(wanderers, toRemove[i])
     end
 
+    -- time purge of dead groups
+    for i = #wanderers, 1, -1 do
+        local g = wanderers[i]
+        if not g.alive then
+            if not g.deadDay then
+                g.deadDay = worldAge
+            elseif worldAge - g.deadDay >= 14 then
+                table.remove(wanderers, i)
+            end
+        end
+    end
+
     TransmitBanditModData()
 end
 
@@ -664,42 +680,48 @@ local orchestrator = function()
     for cid, clan in pairs(clanData) do
         local spawnConfig = clan.spawn
 
-        spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
-        spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
-        spawnConfig.groupMin = tonumber(spawnConfig.groupMin)
-        spawnConfig.groupMax = tonumber(spawnConfig.groupMax)
+        if spawnConfig then
+            spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
+            spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
+            spawnConfig.groupMin = tonumber(spawnConfig.groupMin)
+            spawnConfig.groupMax = tonumber(spawnConfig.groupMax)
 
-        -- print ("[BANDITS] Orchestrator checking clan " .. cid .. " for spawn. Day: " .. day)
+            -- print ("[BANDITS] Orchestrator checking clan " .. cid .. " for spawn. Day: " .. day)
 
-        if spawnConfig and spawnConfig.wanderer and spawnConfig.dayStart and spawnConfig.dayEnd then
-            if day and day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
-                local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
+            if spawnConfig.wanderer and spawnConfig.dayStart and spawnConfig.dayEnd then
+                if day and day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
+                    local spawnChance = spawnConfig.spawnChance * SandboxVars.Bandits.General_SpawnMultiplier / 6
 
-                local spawnRandom = ZombRandFloat(0, 100)
-                -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
+                    local spawnRandom = ZombRandFloat(0, 100)
+                    -- print (cid .. ": " .. spawnRandom .. " / " .. spawnChance)
 
-                if spawnRandom < spawnChance then
-                    print ("[BANDITS] Wanderer scheduler is adding bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
+                    if spawnRandom < spawnChance then
+                        print ("[BANDITS] Wanderer scheduler is adding bandits now." .. " day=" .. day .. " chance=" .. spawnChance .. " random=" .. spawnRandom)
 
-                    local did = getRandomDestination()
+                        local did = getRandomDestination()
 
-                    if did then
+                        if did then
 
-                        local destination = BanditServer.Wanderers.destinations[did]
-                       
-                        local group = {
-                            cid = cid,
-                            z = 0,
-                            size = spawnConfig.groupMin + ZombRand(spawnConfig.groupMax - spawnConfig.groupMin + 1),
-                            alive = true,
-                            x = destination.x,
-                            y = destination.y,
-                        }
-                        BanditServer.Wanderers.AddGroup(group)
-                        TransmitBanditModData()
+                            local destination = BanditServer.Wanderers.destinations[did]
+                        
+                            local group = {
+                                cid = cid,
+                                z = 0,
+                                size = spawnConfig.groupMin + ZombRand(spawnConfig.groupMax - spawnConfig.groupMin + 1),
+                                alive = true,
+                                x = destination.x,
+                                y = destination.y,
+                            }
+                            BanditServer.Wanderers.AddGroup(group)
+                            TransmitBanditModData()
+                        end
                     end
                 end
+            else
+                print ("[BANDITS] Invalid wanderer spawn configuration for clan " .. cid .. ". Correct dayStart and dayEnd values.")
             end
+        else
+            print ("[BANDITS] No wanderer spawn configuration for clan " .. cid .. ". Check your clan configuration!")
         end
     end
 end

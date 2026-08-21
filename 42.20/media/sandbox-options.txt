@@ -12,11 +12,6 @@ option Bandits.General_SpawnMultiplier = {
     page = Bandits_General, translation = Bandits.SpawnMultiplier,
 }
 
-option Bandits.General_SizeMultiplier = {
-    type = double, min = 0.25, max = 4, default = 1.00,
-    page = Bandits_General, translation = Bandits.SizeMultiplier,
-}
-
 option Bandits.General_DensityScore = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.DensityScore,
@@ -25,11 +20,6 @@ option Bandits.General_DensityScore = {
 option Bandits.General_OriginalBandits = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.OriginalBandits,
-}
-
-option Bandits.General_Surrender = {
-    type = boolean, default = true,
-    page = Bandits_General, translation = Bandits.Surrender,
 }
 
 option Bandits.General_BleedOut = {
@@ -50,11 +40,6 @@ option Bandits.General_LimitedEndurance = {
 option Bandits.General_RunAway = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.RunAway,
-}
-
-option Bandits.General_DestroyDoor = {
-    type = boolean, default = true,
-    page = Bandits_General, translation = Bandits.DestroyDoor,
 }
 
 option Bandits.General_SmashWindow = {
@@ -95,16 +80,6 @@ option Bandits.General_EnterVehicles = {
 option Bandits.General_GeneratorCutoff = {
     type = boolean, default = true,
     page = Bandits_General, translation = Bandits.GeneratorCutoff,
-}
-
-option Bandits.General_BuildBridge = {
-    type = boolean, default = false,
-    page = Bandits_General, translation = Bandits.BuildBridge,
-}
-
-option Bandits.General_BuildRoadblock = {
-    type = boolean, default = true,
-    page = Bandits_General, translation = Bandits.BuildRoadblock,
 }
 
 option Bandits.General_Speak = {

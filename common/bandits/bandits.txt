@@ -7240,8 +7240,8 @@
 	general: name = W_He_01
 	general: female = false
 	general: skin = 1
-	general: hairType = 1
-	general: beardType = 1
+	general: hairType = 21
+	general: beardType = 10
 	general: hairColor = 1
 	general: health = 9
 	general: strength = 9
@@ -7250,6 +7250,9 @@
 	general: exp1 = 0
 	general: exp2 = 0
 	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
 
 [35009b11-60dc-4f77-b8fd-9bd86b7d9295]
 	general: modid = Bandits2
@@ -8223,4 +8226,164 @@
 	clothing: Pants = Base.Trousers_Suit
 	clothing: Shoes = Base.Shoes_Black
 	weapons: melee = Base.FightingKnife
+
+[41bb9e2d-1a41-42ee-b85d-f105dc8cc203]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_02
+	general: female = false
+	general: skin = 2
+	general: hairType = 18
+	general: beardType = 10
+	general: hairColor = 3
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[7f4b48fd-2e55-4c1b-9571-27d8570c9e89]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_03
+	general: female = false
+	general: skin = 2
+	general: hairType = 29
+	general: beardType = 10
+	general: hairColor = 13
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[8e6e6e4f-ef4e-4ba1-aa1c-e095fee7b7b9]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_04
+	general: female = false
+	general: skin = 4
+	general: hairType = 11
+	general: beardType = 7
+	general: hairColor = 12
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[36db37eb-8b3f-41f9-9a89-82e55dff5e5c]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_05
+	general: female = false
+	general: skin = 2
+	general: hairType = 11
+	general: beardType = 10
+	general: hairColor = 1
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[243fe329-d7cc-4c15-9c40-beb8b7c24c5e]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_06
+	general: female = true
+	general: skin = 2
+	general: hairType = 22
+	general: beardType = 10
+	general: hairColor = 1
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[dc0f65fe-b760-4c1a-a06a-5e2f863f9aa1]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_07
+	general: female = true
+	general: skin = 2
+	general: hairType = 22
+	general: beardType = 10
+	general: hairColor = 2
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[0f1f1a4e-fcec-43de-9a9c-b80688e1c532]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_08
+	general: female = true
+	general: skin = 3
+	general: hairType = 23
+	general: beardType = 10
+	general: hairColor = 4
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
+
+[405b1856-a323-43f3-8ed0-f3217b15dcf6]
+	general: modid = Bandits2
+	general: cid = 2c6dd733-c855-418f-89b5-4a3de79ab0ee
+	general: name = W_He_09
+	general: female = true
+	general: skin = 5
+	general: hairType = 20
+	general: beardType = 10
+	general: hairColor = 12
+	general: health = 9
+	general: strength = 9
+	general: endurance = 9
+	general: sight = 9
+	general: exp1 = 0
+	general: exp2 = 0
+	general: exp3 = 0
+	clothing: LongDress = Base.Dress_Long_Crafted_Cotton
+	clothing: Shoes = Base.Shoes_Sandals
+	weapons: melee = Base.SpearCrafted
 

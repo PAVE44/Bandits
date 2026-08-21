@@ -249,7 +249,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 15
 	spawn: dayEnd = 200
-	spawn: spawnChance = 4
+	spawn: spawnChance = 6
 	spawn: groupMin = 1
 	spawn: groupMax = 1
 	spawn: zone = 0
@@ -521,7 +521,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 130
 	spawn: dayEnd = 10000
-	spawn: spawnChance = 5
+	spawn: spawnChance = 7
 	spawn: groupMin = 10
 	spawn: groupMax = 14
 	spawn: zone = 0
@@ -553,7 +553,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 40
 	spawn: dayEnd = 250
-	spawn: spawnChance = 5
+	spawn: spawnChance = 6
 	spawn: groupMin = 4
 	spawn: groupMax = 6
 	spawn: zone = 0
@@ -569,7 +569,7 @@
 	spawn: roadblock = false
 	spawn: dayStart = 0
 	spawn: dayEnd = 7
-	spawn: spawnChance = 15
+	spawn: spawnChance = 12
 	spawn: groupMin = 4
 	spawn: groupMax = 14
 	spawn: zone = 0

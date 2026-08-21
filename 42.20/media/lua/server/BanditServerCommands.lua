@@ -79,10 +79,11 @@ BanditServer.Commands.BanditUpdatePart = function(player, args)
             gmd[id] = brain
             TransmitBanditCluster(id)
 
+            --[[
             local zombie = BanditZombie.GetInstanceById(id)
             if zombie then
                 Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
-            end
+            end]]
             --sendServerCommand('Commands', 'UpdateBanditPart', args)
         end
     end
