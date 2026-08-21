@@ -870,38 +870,6 @@ local function spawnHouse(player, spawnPoint)
                                     end
                                 end
                             end
-
-                            --[[
-                            local lootAmount = SandboxVars.Bandits.General_DefenderLootAmount - 1
-                            local roomCnt = building:getRoomsNumber()
-                            if lootAmount > 0 and roomCnt > 2 and c < maxc then
-                                local fridge = object:getContainerByType("fridge")
-                                if fridge then
-                                    BanditLoot.FillContainer(fridge, BanditLoot.FreshFoodItems, lootAmount)
-                                    c = c + 1
-                                end
-
-                                local freezer = object:getContainerByType("freezer")
-                                if freezer then
-                                    BanditLoot.FillContainer(freezer, BanditLoot.FreshFoodItems, lootAmount)
-                                    c = c + 1
-                                end
-
-                                if ZombRand(10) == 1 then
-                                    local counter = object:getContainerByType("counter")
-                                    if counter then
-                                        BanditLoot.FillContainer(counter, BanditLoot.CannedFoodItems, lootAmount)
-                                        c = c + 1
-                                    end
-
-                                    local crate = object:getContainerByType("crate")
-                                    if crate then
-                                        BanditLoot.FillContainer(crate, BanditLoot.CannedFoodItems, lootAmount)
-                                        c = c + 1
-                                    end
-                                end
-                            end
-                            ]]
                         end
                     end
                 end

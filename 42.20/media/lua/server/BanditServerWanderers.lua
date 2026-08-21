@@ -717,8 +717,6 @@ local orchestrator = function()
                         end
                     end
                 end
-            else
-                print ("[BANDITS] Invalid wanderer spawn configuration for clan " .. cid .. ". Correct dayStart and dayEnd values.")
             end
         else
             print ("[BANDITS] No wanderer spawn configuration for clan " .. cid .. ". Check your clan configuration!")

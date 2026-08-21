@@ -462,6 +462,24 @@ BanditCustom.Get = function(bid)
     return BanditCustom.banditData[bid]
 end
 
+BanditCustom.GetStats = function()
+    local clanData = BanditCustom.clanData
+    local clanCount = 0
+    for cid, clan in pairs(clanData) do
+        clanCount = clanCount + 1
+    end
+
+    local banditData = BanditCustom.banditData
+    local banditCount = 0
+    for bid, bandit in pairs(banditData) do
+        banditCount = banditCount + 1
+    end
+
+    local stats = {}
+    stats.clanCount = clanCount
+    stats.banditCount = banditCount
+    return stats
+end
 
 local function onGameStart()
     BanditCustom.Load()

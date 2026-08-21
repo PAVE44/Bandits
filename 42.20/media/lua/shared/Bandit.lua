@@ -863,26 +863,26 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     -- update loot
 
     -- essential loot
-    table.insert(loot, {itemType="Base.WaterBottle", chance=100, n=1})
-    table.insert(loot, {itemType="Base.HandTorch", chance=40, n=1})
+    table.insert(loot, {itemType="Base.WaterBottle", chance=12, n=1})
+    table.insert(loot, {itemType="Base.HandTorch", chance=33, n=1})
     table.insert(loot, {itemType="Base.Soap2", chance=40, n=1})
 
-    table.insert(lootBag, {itemType="Base.TinnedBeans", chance=5, n=4})
-    table.insert(lootBag, {itemType="Base.CannedCarrots2", chance=6, n=4})
-    table.insert(lootBag, {itemType="Base.CannedChili", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedCorn", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedCornedBeef", chance=4, n=4})
-    table.insert(lootBag, {itemType="Base.CannedFruitCocktail", chance=5, n=4})
-    table.insert(lootBag, {itemType="Base.CannedMushroomSoup", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedPeaches", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedPeas", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedPineapple", chance=2, n=4})
-    table.insert(lootBag, {itemType="Base.CannedPotato2", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedSardines", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.TinnedSoup", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedBolognese", chance=7, n=4})
-    table.insert(lootBag, {itemType="Base.CannedTomato2", chance=5, n=4})
-    table.insert(lootBag, {itemType="Base.TinOpener", chance=85, n=1})
+    table.insert(lootBag, {itemType="Base.TinnedBeans", chance=3, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCarrots2", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.CannedChili", chance=5, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCorn", chance=5, n=4})
+    table.insert(lootBag, {itemType="Base.CannedCornedBeef", chance=2, n=4})
+    table.insert(lootBag, {itemType="Base.CannedFruitCocktail", chance=2, n=4})
+    table.insert(lootBag, {itemType="Base.CannedMushroomSoup", chance=3, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPeaches", chance=3, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPeas", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPineapple", chance=1, n=4})
+    table.insert(lootBag, {itemType="Base.CannedPotato2", chance=3, n=4})
+    table.insert(lootBag, {itemType="Base.CannedSardines", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.TinnedSoup", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.CannedBolognese", chance=4, n=4})
+    table.insert(lootBag, {itemType="Base.CannedTomato2", chance=3, n=4})
+    table.insert(lootBag, {itemType="Base.TinOpener", chance=25, n=1})
     table.insert(lootBag, {itemType="Base.WaterBottle", chance=20, n=2})
     table.insert(lootBag, {itemType="Base.Book", chance=10, n=2})
     
@@ -896,6 +896,15 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         table.insert (loot, {itemType="Base.WeldingMask", chance=100, n=1})
         table.insert (lootBag, {itemType="Base.Sledgehammer", chance=1, n=1})
         table.insert (lootBag, {itemType="Base.PropaneTank", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookMetalWelding1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookMetalWelding2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookMetalWelding3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookMetalWelding4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookMetalWelding5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.MetalworkMag1", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.MetalworkMag2", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.MetalworkMag3", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.MetalworkMag4", chance=3, n=1})
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Electrician) then
@@ -932,11 +941,17 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         table.insert (lootBag, {itemType="Base.BookCooking3", chance=6, n=1})
         table.insert (lootBag, {itemType="Base.BookCooking4", chance=4, n=1})
         table.insert (lootBag, {itemType="Base.BookCooking5", chance=2, n=1})
+        table.insert (lootBag, {itemType="Base.BookButchering1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookButchering2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookButchering3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookButchering4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookButchering5", chance=2, n=1})
         table.insert (lootBag, {itemType="Base.CookingMag1", chance=3, n=1})
         table.insert (lootBag, {itemType="Base.CookingMag2", chance=3, n=1})
         table.insert (lootBag, {itemType="Base.CookingMag3", chance=3, n=1})
         table.insert (lootBag, {itemType="Base.CookingMag4", chance=3, n=1})
         table.insert (lootBag, {itemType="Base.CookingMag5", chance=3, n=1})
+        table.insert (lootBag, {itemType="Base.CookingMag6", chance=3, n=1})
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Goblin) then
@@ -949,7 +964,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         table.insert (loot, {itemType="Base.Wrench", chance=100, n=1})
         table.insert (loot, {itemType="Base.LugWrench", chance=100, n=1})
         table.insert (loot, {itemType="Base.Jack", chance=100, n=1})
-        table.insert (loot, {itemType="Base.PetrolCan", chance=100, n=1})
+        table.insert (loot, {itemType="Base.PetrolCan", chance=20, n=1})
         table.insert (lootBag, {itemType="Base.ScrewsBox", chance=7, n=1})
         table.insert (lootBag, {itemType="Base.BookMechanic1", chance=10, n=1})
         table.insert (lootBag, {itemType="Base.BookMechanic2", chance=8, n=1})
@@ -964,17 +979,17 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Medic) then
         table.insert (loot, {itemType="Base.Bandage", chance=100, n=2})
         table.insert (lootBag, {itemType="Base.SutureNeedle", chance=50, n=1})
-        table.insert (lootBag, {itemType="Base.AlcoholBandage", chance=12, n=10})
-        table.insert (lootBag, {itemType="Base.BandageBox", chance=10, n=1})
-        table.insert (lootBag, {itemType="Base.SutureNeedle", chance=50, n=3})
+        table.insert (lootBag, {itemType="Base.AlcoholBandage", chance=7, n=10})
+        table.insert (lootBag, {itemType="Base.BandageBox", chance=7, n=1})
+        table.insert (lootBag, {itemType="Base.SutureNeedle", chance=30, n=3})
         table.insert (lootBag, {itemType="Base.SutureNeedleBox", chance=10, n=1})
-        table.insert (lootBag, {itemType="Base.SutureNeedleHolder", chance=50, n=1})
-        table.insert (lootBag, {itemType="Base.Tweezers", chance=50, n=1})
-        table.insert (lootBag, {itemType="Base.Stethoscope", chance=30, n=1})
-        table.insert (lootBag, {itemType="Base.Antibiotics", chance=10, n=3})
+        table.insert (lootBag, {itemType="Base.SutureNeedleHolder", chance=33, n=1})
+        table.insert (lootBag, {itemType="Base.Tweezers", chance=33, n=1})
+        table.insert (lootBag, {itemType="Base.Stethoscope", chance=17, n=1})
+        table.insert (lootBag, {itemType="Base.Antibiotics", chance=9, n=3})
         table.insert (lootBag, {itemType="Base.Disinfectant", chance=20, n=1})
         table.insert (lootBag, {itemType="Base.Pills", chance=80, n=2})
-        table.insert (lootBag, {itemType="Base.AlcoholWipes", chance=50, n=2})
+        table.insert (lootBag, {itemType="Base.AlcoholWipes", chance=33, n=2})
         table.insert (lootBag, {itemType="Base.BookFirstAid1", chance=10, n=1})
         table.insert (lootBag, {itemType="Base.BookFirstAid2", chance=8, n=1})
         table.insert (lootBag, {itemType="Base.BookFirstAid3", chance=6, n=1})
@@ -1030,6 +1045,11 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         end
         table.insert (loot, {itemType="Base.Pencil", chance=100, n=1})
         table.insert (loot, {itemType="Base.Eraser", chance=20, n=1})
+        table.insert (lootBag, {itemType="Base.BookTracking1", chance=10, n=1})
+        table.insert (lootBag, {itemType="Base.BookTracking2", chance=8, n=1})
+        table.insert (lootBag, {itemType="Base.BookTracking3", chance=6, n=1})
+        table.insert (lootBag, {itemType="Base.BookTracking4", chance=4, n=1})
+        table.insert (lootBag, {itemType="Base.BookTracking5", chance=2, n=1})
     end
 
     if Bandit.HasExpertise(zombie, Bandit.Expertise.Trapper) then
@@ -1055,14 +1075,14 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     -- idea: add personal story letters
     local personality = brain.personality or {}
     if personality.alcoholic then
-        table.insert(loot, {itemType="Base.Vodka", chance=50, n=5})
-        table.insert(loot, {itemType="Base.Whiskey", chance=40, n=4})
-        table.insert(loot, {itemType="Base.Gin", chance=30, n=3})
+        table.insert(loot, {itemType="Base.Vodka", chance=50, n=3})
+        table.insert(loot, {itemType="Base.Whiskey", chance=40, n=2})
+        table.insert(loot, {itemType="Base.Gin", chance=30, n=1})
     end
 
     if personality.smoker then
-        table.insert(loot, {itemType="Base.CigaretteSingle", chance=50, n=20})
-        table.insert(loot, {itemType="Base.Lighter", chance=100, n=1})
+        table.insert(loot, {itemType="Base.CigaretteSingle", chance=15, n=20})
+        table.insert(loot, {itemType="Base.Lighter", chance=30, n=1})
     end
 
     if personality.compulsiveCleaner then
@@ -1075,7 +1095,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     end
 
     if personality.gameCollector then
-        table.insert(lootBag, {itemType="Base.VideoGame", chance=50, n=20})
+        table.insert(lootBag, {itemType="Base.VideoGame", chance=50, n=7})
     end
 
     if personality.hottieCollector then
@@ -1117,6 +1137,8 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
                 if item then
                     item:getModData().preserve = true
                     zombie:addItemToSpawnAtDeath(item)
+                else
+                    print ("[WARN] Unknown item: " .. tab.itemType)
                 end
             end
         end

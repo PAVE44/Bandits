@@ -426,7 +426,7 @@ local function Hit(attacker, item, victim, hr)
             dmg = dmg * strengthBoost
 
             if instanceof(victim, "IsoZombie") then
-                dmg = dmg * 1.25
+                dmg = dmg * 2.60
                 -- victim:setHitAngle(attacker:getForwardDirection())
                 victim:setPlayerAttackPosition(victim:testDotSide(attacker))
                 victim:setHitHeadWhileOnFloor(0)

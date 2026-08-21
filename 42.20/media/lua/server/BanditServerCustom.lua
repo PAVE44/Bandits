@@ -1,19 +1,17 @@
 BanditServer = BanditServer or {}
 BanditServer.Custom = {}
 
-BanditServer.Custom.SendToClients  = function(player, argsOld)
-    BanditCustom.Load()
-    local args = {}
-    args.banditData = BanditCustom.banditData
-    args.clanData = BanditCustom.clanData
-    -- sendServerCommand('Commands', 'SendCustomToClients', args)
+BanditServer.Custom.SendStats = function()
+    local stats = BanditCustom.GetStats()
+    sendServerCommand('Custom', 'SendCustomStatsToClient', stats)
 end
 
 BanditServer.Custom.ReceiveFromClient  = function(player, args)
+    print("[BANDITS] Received Custom Bandits data from client.")
     BanditCustom.banditData = args.banditData
     BanditCustom.clanData = args.clanData
     BanditCustom.Save()
-    -- sendServerCommand('Commands', 'SendCustomToClients', args)
+    BanditServer.Custom.SendStats()
 end
 
 local function onClientCommand(module, command, player, args)
@@ -29,7 +27,7 @@ end
 
 local function onServerStarted()
     BanditCustom.Load()
-    print "[BANDITS] Custom Bandits loaded successfully."
+    print("[BANDITS] Custom Bandits loaded successfully.")
 end
 
 Events.OnClientCommand.Add(onClientCommand)
