@@ -9,6 +9,132 @@ BanditCustom.filePath = BanditCompatibility.GetConfigPath()
 BanditCustom.clanFile = "clans.txt"
 BanditCustom.banditFile = "bandits.txt"
 
+BanditCustom.clanAdjectives =
+{
+    "Ruthless",
+    "Savage",
+    "Vicious",
+    "Feral",
+    "Brutal",
+    "Merciless",
+    "Bloodthirsty",
+    "Relentless",
+    "Fierce",
+    "Deadly",
+    "Broken",
+    "Black",
+    "Red",
+    "Grey",
+    "Dead",
+    "Silent",
+    "Wild",
+    "Lost",
+    "Burned",
+    "Cold",
+    "Dark",
+    "Bleeding",
+    "Hungry",
+    "Fallen",
+    "Forsaken",
+    "Savage",
+    "Brutal",
+    "Ruthless",
+    "Restless",
+    "Desperate",
+    "Vicious",
+    "Feral",
+    "Cruel",
+    "Angry",
+    "Mad",
+    "Scarred",
+    "Wounded",
+    "Bitter",
+    "Lonely",
+    "Dying",
+    "Rotten",
+    "Ashen",
+    "Dusty",
+    "Iron",
+    "Bloody",
+    "Grim",
+    "Hollow",
+    "Shattered",
+    "Forgotten",
+    "Wandering",
+}
+
+BanditCustom.clanNouns =
+{
+    "Bandits",
+    "Raiders",
+    "Outlaws",
+    "Marauders",
+    "Scavengers",
+    "Wanderers",
+    "Vagabonds",
+    "Nomads",
+    "Rogues",
+    "Thieves",
+    "Brigands",
+    "Reavers",
+    "Prowlers",
+    "Lurkers",
+    "Predators",
+    "Assassins",
+    "Hunters",
+    "Stalkers",
+    "Vultures",
+    "Wolves",
+    "Hounds",
+    "Crows",
+    "Ravens",
+    "Vultures",
+    "Rats",
+    "Snakes",
+    "Jackals",
+    "Dogs",
+    "Bears",
+    "Boars",
+    "Hawks",
+    "Rangers",
+    "Raiders",
+    "Hunters",
+    "Killers",
+    "Butchers",
+    "Thieves",
+    "Scavengers",
+    "Marauders",
+    "Outcasts",
+    "Drifters",
+    "Wanderers",
+    "Strays",
+    "Nomads",
+    "Survivors",
+    "Holdouts",
+    "Runaways",
+    "Exiles",
+    "Rebels",
+    "Deserters",
+    "Renegades",
+    "Vagabonds",
+    "Highwaymen",
+    "Outlaws",
+    "Bandits",
+    "Robbers",
+    "Looters",
+    "Rogues",
+    "Misfits",
+    "Fugitives",
+    "Strangers",
+    "Ghosts",
+    "Shadows",
+    "Deadmen",
+    "Ashwalkers",
+    "Bloodhands",
+    "Roadmen",
+    "Wastrels",
+}
+
 local saveFile = function()
     local mods = BanditCustom.GetMods()
     table.insert(mods, "LOCAL")
@@ -200,12 +326,24 @@ BanditCustom.Save = function()
 end
 
 -- clan methods
-
 BanditCustom.ClanCreate = function(cid)
     local data = {}
     data.general = {}
-    data.general.name = "Untitled"
-
+    data.general.name = BanditUtils.Choice(BanditCustom.clanAdjectives) .. "_" .. BanditUtils.Choice(BanditCustom.clanNouns)
+	data.spawn = {}
+	data.spawn.friendly = false
+	data.spawn.companion = false
+	data.spawn.defenders = false
+	data.spawn.campers = false
+	data.spawn.assault = true
+	data.spawn.wanderer = false
+	data.spawn.roadblock = false
+	data.spawn.dayStart = 0
+	data.spawn.dayEnd = 10000
+	data.spawn.spawnChance = 1
+	data.spawn.groupMin = 1
+	data.spawn.groupMax = 10
+	data.spawn.zone = 0
     BanditCustom.clanData[cid] = data
     return BanditCustom.clanData[cid]
 end
@@ -244,6 +382,7 @@ end
 BanditCustom.Create = function(bid)
     local data = {}
     data.general = {}
+    data.general.name = "Bandit_" .. ZombRand(1000000)
     data.general.female = false
     data.general.skin = 1
     data.general.hairType = 1
