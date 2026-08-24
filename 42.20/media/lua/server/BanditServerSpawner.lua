@@ -913,10 +913,10 @@ local function getIconDataByProgram(program, friendly)
     return icon, color, desc
 end
 
-local function spawnType(player, args)
+local function spawnType(player, opts)
 
     local pid = BanditUtils.GetCharacterID(player)
-    local cid = args.cid
+    local cid = opts.cid
     if not cid then return end
 
     if LogLevel >= 3 then print ("[BANDITS] spawnType has cid " .. cid) end
@@ -932,29 +932,26 @@ local function spawnType(player, args)
 
     local groupSize = clan.groupMin + ZombRand(clan.groupMax - clan.groupMin + 1)
     groupSize = math.floor(groupSize * SandboxVars.Bandits.General_SpawnMultiplier + 0.5)
-    local spawnPoints = {}
-
     if LogLevel >= 3 then print ("[BANDITS] groupSize is " .. groupSize) end
 
-    if args.dist then
-        spawnPoints = generateSpawnPointUniform(player, args.dist, groupSize)
-    elseif args.x and args.y and args.z then
-        spawnPoints = generateSpawnPointHere(player, args.x, args.y, args.z, groupSize)
+    local spawnPoints = {}
+    if opts.dist then
+        spawnPoints = generateSpawnPointUniform(player, opts.dist, groupSize)
+    elseif opts.x and opts.y and opts.z then
+        spawnPoints = generateSpawnPointHere(player, opts.x, opts.y, opts.z, groupSize)
     end
 
-    if not spawnPoints or #spawnPoints == 0 then return end
-
-    if LogLevel >= 3 then print ("[BANDITS] spawnPoints generated " .. #spawnPoints) end
+    if not spawnPoints or #spawnPoints == 0 then
+        print ("[BANDITS] No valid spawn points available. Wave will not be spawned.")
+        return
+    end
 
     local args = {}
     args.pid = pid
     args.cid = cid
-    args.permanent = false
-    args.program = "Bandit"
-    -- args.key = false
 
-    if clan.companion then
-        args.program = "Companion"
+    if clan.assault then
+        args.program = "Bandit"
     end
 
     if clan.roadblock then
@@ -979,19 +976,24 @@ local function spawnType(player, args)
         end
     end
 
-    if LogLevel >= 3 then print ("[BANDITS] AI program is " .. args.program) end
+    if clan.companion then
+        args.program = "Companion"
+    end
 
-    if #spawnPoints > 0 then
-        local cnt = spawnGroup(spawnPoints, args)
-        if SandboxVars.Bandits.General_ArrivalIcon and cnt > 0 then
-            local icon, color, desc = getIconDataByProgram(args.program, clan.friendly)
-            if icon and color and desc then
-                local x, y = spawnPoints[1].x, spawnPoints[1].y
-                if isServer() then
-                    local args = {icon=icon, time=1800, x=x, y=y, color=color, desc=desc}
-                    sendServerCommand('Commands', 'SetMarker', args)
-                else
-                    BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, x, y, color, desc)
+    if args.program then
+        if LogLevel >= 3 then print ("[BANDITS] AI program is " .. args.program) end
+        if #spawnPoints > 0 then
+            local cnt = spawnGroup(spawnPoints, args)
+            if SandboxVars.Bandits.General_ArrivalIcon and cnt > 0 then
+                local icon, color, desc = getIconDataByProgram(args.program, clan.friendly)
+                if icon and color and desc then
+                    local x, y = spawnPoints[1].x, spawnPoints[1].y
+                    if isServer() then
+                        local args = {icon=icon, time=1800, x=x, y=y, color=color, desc=desc}
+                        sendServerCommand('Commands', 'SetMarker', args)
+                    else
+                        BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, x, y, color, desc)
+                    end
                 end
             end
         end

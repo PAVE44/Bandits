@@ -405,20 +405,23 @@ end
 -- manages endurance regain tasks 
 local function ManageEndurance(bandit)
 
-    if bandit:isMoving() then
-        if bandit:getVariableString("BanditWalkType") == "Run" then
-            local player = getSpecificPlayer(0)
-            local px, py, pz = player:getX(), player:getY(), player:getZ()
-            local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
-            local dist = ((zx - px) * (zx - px)) + ((zy - py) * (zy - py))
-            if pz == zz and dist < 9 then
-                local volume = getSoundManager():getSoundVolume()
-                local emitter = bandit:getEmitter()
-                local sound = "ZSBreath_Male"
-                if bandit:isFemale() then sound = "ZSBreath_Female" end
-                if not emitter:isPlaying(sound) then
-                    local id = emitter:playSound(sound)
-                    emitter:setVolume(id, volume * 0.6)
+    local player = getSpecificPlayer(0)
+    if player then
+        if bandit:isMoving() then
+            if bandit:getVariableString("BanditWalkType") == "Run" then
+                
+                local px, py, pz = player:getX(), player:getY(), player:getZ()
+                local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
+                local dist = ((zx - px) * (zx - px)) + ((zy - py) * (zy - py))
+                if pz == zz and dist < 9 then
+                    local volume = getSoundManager():getSoundVolume()
+                    local emitter = bandit:getEmitter()
+                    local sound = "ZSBreath_Male"
+                    if bandit:isFemale() then sound = "ZSBreath_Female" end
+                    if not emitter:isPlaying(sound) then
+                        local id = emitter:playSound(sound)
+                        emitter:setVolume(id, volume * 0.6)
+                    end
                 end
             end
         end
@@ -1772,22 +1775,23 @@ local function ProcessTask(bandit, task)
         end
 
         if task.sound then
-            local play = true
-            if task.soundDistMax then
-                local player = getSpecificPlayer(0)
-                local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), player:getX(), player:getY())
-                if dist > task.soundDistMax then
-                    play = false
+            local player = getSpecificPlayer(0)
+            if player then
+                local play = true
+                if task.soundDistMax then
+                    local dist = BanditUtils.DistTo(bandit:getX(), bandit:getY(), player:getX(), player:getY())
+                    if dist > task.soundDistMax then
+                        play = false
+                    end
                 end
-            end
 
-            if play then
-                local emitter = bandit:getEmitter()
-                if not emitter:isPlaying(task.sound) then
-                    emitter:playSound(task.sound)
+                if play then
+                    local emitter = bandit:getEmitter()
+                    if not emitter:isPlaying(task.sound) then
+                        emitter:playSound(task.sound)
+                    end
                 end
             end
-            -- bandit:playSound(task.sound)
         end
 
         if task.anim then

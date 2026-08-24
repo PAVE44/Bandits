@@ -55,14 +55,27 @@ end
 -- A function to wake up all players on the server.
 -- We always need to wake up all players to avoid time pardoxes
 BanditPlayer.WakeEveryone = function()
+    local localPlayer = getSpecificPlayer(0)
+
+    -- Multiplayer: ask server to wake all players, and wake local player immediately.
+    if isClient() then
+        if localPlayer then
+            localPlayer:forceAwake()
+            setGameSpeed(1)
+            sendClientCommand(localPlayer, 'Commands', 'WakeEveryone', {})
+        end
+        return
+    end
+
+    -- Singleplayer fallback.
     local playerList = BanditPlayer.GetPlayers()
     for i=0, playerList:size()-1 do
         local player = playerList:get(i)
         if player then
             player:forceAwake()
-            -- setGameSpeed(1)
         end
     end
+    setGameSpeed(1)
 end
 
 -- hostilizes friendlies that witnessed player attacking a friendly

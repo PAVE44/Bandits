@@ -605,7 +605,7 @@ local updateGroups = function()
                 if zone then
                     local zoneType = zone:getType()
                     if zoneType then
-                        if zoneType == "OrganicForest" or zoneType == "Forest" or zoneType == "PRForest" or zoneType == "BirchForest" or zoneType == "DeepForest" then
+                        if zoneType == "DeepForest" then
                             local x1 = group.x - 7
                             local y1 = group.y - 7
                             BanditBaseGroupPlacements.ClearSpace (x1, y1, 0, 14, 14)

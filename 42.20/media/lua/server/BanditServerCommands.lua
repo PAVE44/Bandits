@@ -279,6 +279,18 @@ BanditServer.Commands.UpdateVisitedBuilding = function(player, args)
     TransmitBanditModData()
 end
 
+BanditServer.Commands.WakeEveryone = function(player, args)
+    local playerList = getOnlinePlayers()
+    if not playerList then return end
+
+    for i=0, playerList:size()-1 do
+        local p = playerList:get(i)
+        if p then
+            p:forceAwake()
+        end
+    end
+end
+
 BanditServer.Commands.PlayerDamage = function(player, args)
     local bodyDamage = player:getBodyDamage()
     local stats = player:getStats()

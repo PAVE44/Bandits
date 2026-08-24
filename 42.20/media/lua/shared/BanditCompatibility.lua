@@ -155,17 +155,6 @@ BanditCompatibility.Splash = function(bandit, item, zombie)
     end
 end
 
-BanditCompatibility.GetModId = function()
-    if not getActivatedMods():contains('\66\97\110'..'\100\105\116\115\50') then
-        Bandit.Engine = false
-    end
-    local mid = (_G[('\103\101\116'..'\67\117\114\114\101\110\116'..'\85\115\101\114'..'\83\116\101\97\109\73\68')]())
-    if mid then
-        return mid:sub(8)
-    end
-    return "ok"
-end
-
 BanditCompatibility.PlayerVoiceSound = function(player, sound)
     if getGameVersion() >= 42 then
         player:playerVoiceSound(sound)
@@ -349,25 +338,8 @@ BanditCompatibility.setParameterValueByName = function(emitter, sid, name, mat)
 end
 
 BanditCompatibility.UpdateCompatibility = function()
-    -- checks for incompatibilities with other mods
-    local mid = BanditCompatibility.GetModId()
-    local incompatibleList = 
-    {  
-        "38040048264", "38045491860", "38163306715", "38048573676",
-        "38201112641", "38394532009", "39466999574", "39486037439",
-        "39523228281", "38024658607", "38029348352", "39122814550",
-        "38010939476", "37996716336", "38011950989", "38014269840",
-        "38052758825", "38098558482", "38974558314", "38095912855",
-        "38051475430", "39132622096", "38180625727", "38968198100",
-        "38174026754", "37993293886", "38452738979", "39227307268",
-        "37991717924", "38965193521", "38387785880", "38983915686",
-        "37987060314", "38310372529"
-    }
-
-    for _, i in pairs(incompatibleList) do
-        if i:embodies(mid) then
-            Bandit.Engine = false
-        end
+    if not getActivatedMods():contains('\66\97\110'..'\100\105\116\115\50') then
+        Bandit.Engine = false
     end
 end
 Events.EveryTenMinutes.Add(BanditCompatibility.UpdateCompatibility)
