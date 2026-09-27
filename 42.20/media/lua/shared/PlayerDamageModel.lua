@@ -204,7 +204,6 @@ function PlayerDamageModel.MeleeHit(shooter, player, item)
     local minDamage = item:getMinDamage()
     local maxDamage = item:getMaxDamage()
     local hitDmg = ZombRandFloat(minDamage, maxDamage) * 10
-    print (hitDmg)
 
     local scratch = false
     local cut = false

@@ -336,13 +336,13 @@ BanditPrograms.Weapon.Resupply = function(bandit)
     local isBareHands = Bandit.IsBareHands(bandit)
     local needPrimary = Bandit.NeedResupplySlot(bandit, "primary")
     local needSecondary = Bandit.NeedResupplySlot(bandit, "secondary")
-    local objectList = {}
     local bestDist = 100
     local destObject
     for y=-3, 3 do
         for x=-3, 3 do
             local square = cell:getGridSquare(zx + x, zy + y, zz)
             if square then
+                local objectList = {}
 
                 -- loot bodies
                 if square:getDeadBody() then
@@ -400,7 +400,7 @@ BanditPrograms.Weapon.Resupply = function(bandit)
                                         local magazineType = weaponItem:getMagazineType()
                                         for j=0, items:size()-1 do
                                             local item = items:get(j)
-                                            if item:getFullType() == magazineType and item:getCurrentAmmoCount() > 0 then
+                                            if dist < bestDist and item:getFullType() == magazineType and item:getCurrentAmmoCount() > 0 then
                                                 bestDist = dist
                                                 destObject = object
                                             end
@@ -409,7 +409,7 @@ BanditPrograms.Weapon.Resupply = function(bandit)
                                         local ammoType = weaponItem:getAmmoType():getItemKey()
                                         for j=0, items:size()-1 do
                                             local item = items:get(j)
-                                            if item:getFullType() == ammoType then
+                                            if dist < bestDist and item:getFullType() == ammoType then
                                                 bestDist = dist
                                                 destObject = object
                                             end

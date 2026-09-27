@@ -105,7 +105,7 @@ end
 BanditCompatibility.InstanceItem = function(itemFullType)
     local item
     if not itemFullType then
-        print ("[WARN] Instance item no item type specified!")
+        print ("[BANDITS][WARN] Instance item no item type specified!")
         return
     end
 
@@ -119,7 +119,7 @@ BanditCompatibility.InstanceItem = function(itemFullType)
     if item then
         return item
     else
-        print ("[WARN] Item " .. itemFullType .. " not found!")
+        print ("[BANDITS][WARN] Item " .. itemFullType .. " not found!")
     end
 end
 

@@ -21,4 +21,8 @@
 		<m_Time>End</m_Time>
 		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
 	</m_Events>
+	<m_Transitions>
+		<m_Target>ZSIdle2handed</m_Target>
+		<m_AnimName>Bob_AimToIdle_Bat</m_AnimName>
+	</m_Transitions>
 </animNode>

@@ -16,4 +16,12 @@
 		<m_Type>STRING</m_Type>
 		<m_StringValue>handgun</m_StringValue>
 	</m_Conditions>
+	<m_Transitions>
+		<m_Target>ZSWalkHandgun</m_Target>
+		<m_AnimName>Bob_IdleToWalk_Handgun</m_AnimName>
+	</m_Transitions>
+	<m_Transitions>
+		<m_Target>ZSRunHandgun</m_Target>
+		<m_AnimName>Bob_IdleToRun_Handgun</m_AnimName>
+	</m_Transitions>
 </animNode>

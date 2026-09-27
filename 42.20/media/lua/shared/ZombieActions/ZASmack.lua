@@ -442,6 +442,8 @@ local function Hit(attacker, item, victim, hr)
                 end
                 victim:Hit(item, fakeZombie, dmg, false, 1, false) -- no-ragdoll hit
                 victim:playSound(item:getZombieHitSound())
+
+                BanditUtils.AddHole(victim)
                 
                 local h = victim:getHealth()
                 local id = BanditUtils.GetCharacterID(victim)
@@ -454,6 +456,7 @@ local function Hit(attacker, item, victim, hr)
                     PlayerDamageModel.MeleeHit(attacker, victim, item)
                 end
                 BanditCompatibility.PlayerVoiceSound(victim, "PainFromFallHigh")
+                victim:playSound(item:getZombieHitSound())
             end
 
             BanditCompatibility.Splash(victim, item, fakeZombie)
@@ -489,70 +492,78 @@ ZombieActions.Smack.onStart = function(bandit, task)
     
     task.attackTime = 56
 
-    if prone then
-        task.prone = true
-        if ZombRand(2) == 0 and task.weapon ~= "Base.BareHands" then
-            anim = "Attack2HFloor"
-        else
-            anim = "Attack2HStamp"
+    local attacks
+    soundVoice = female and "VoiceFemaleMeleeAttack" or "VoiceMaleMeleeAttack"
+    if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.UNARMED then
+        attacks = {"HighKick", "FrontKick", "AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
+        if task.shm then
+            attacks = {"AttackBareHands2Bwd", "AttackBareHands4Bwd"}
+        end
+        if prone then
+            attacks = {"Attack2HStamp"}
             soundSwing = "AttackStomp"
-            soundVoice = female and "VoiceFemaleMeleeStomp" or "VoiceMaleMeleeStomp"
         end
-    else
+    elseif meleeItemType == WeaponType.TWO_HANDED then
+        attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
+        if task.shm then
+            attacks = {"Attack2H1Bwd", "Attack2H2Bwd", "Attack2H3Bwd"}
+        end
+        if prone then
+            attacks = {"Attack2HFloor"}
+        end
+    -- elseif meleeItemType == WeaponType.heavy then
+    --    attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
+    elseif meleeItemType == WeaponType.ONE_HANDED then
+        attacks = {"Attack1H1", "Attack1H2", "Attack1H3", "Attack1H4", "Attack1H5"}
+        if task.shm then
+            attacks = {"Attack1H1Bwd", "Attack1H2Bwd", "Attack1H3Bwd"}
+        end
+        if prone then
+            attacks = {"Attack1HFloor"}
+        end
+    elseif meleeItemType == WeaponType.SPEAR then
+        attacks = {"AttackS1", "AttackS2"}
+        if task.shm then
+            attacks = {"AttackS1Bwd", "AttackS2Bwd"}
+        end
+        if prone then
+            attacks = {"AttackS1Floor"}
+        end
+    elseif meleeItemType == WeaponType.CHAINSAW then
+        attacks = {"AttackChainsaw1", "AttackChainsaw2"}
+    elseif meleeItemType == WeaponType.KNIFE then
+        soundVoice = female and "VoiceFemaleMeleeStab" or "VoiceMaleMeleeStab"
+        attacks = {"AttackKnife"} -- , "AttackKnifeMiss"
+        if task.shm then
+            attacks = {"AttackKnifeBwd"}
+        end
+        if prone then
+            attacks = {"AttackKnifeFloor"}
+        end
+    else -- fallback
+        attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
+        if task.shm then
+            attacks = {"Attack2H1Bwd", "Attack2H2Bwd", "Attack2H3Bwd"}
+        end
+        if prone then
+            attacks = {"Attack2HFloor"}
+            soundSwing = "AttackStomp"
+        end
+    end
 
-        local attacks
-        soundVoice = female and "VoiceFemaleMeleeAttack" or "VoiceMaleMeleeAttack"
-        if task.weapon == "Base.BareHands" or meleeItemType == WeaponType.UNARMED then
-            attacks = {"HighKick", "FrontKick", "AttackBareHands1", "AttackBareHands2", "AttackBareHands3", "AttackBareHands4", "AttackBareHands5", "AttackBareHands6"}
-            if task.shm then
-                attacks = {"AttackBareHands2Bwd", "AttackBareHands4Bwd"}
-            end
-        elseif meleeItemType == WeaponType.TWO_HANDED then
-            attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
-            if task.shm then
-                attacks = {"Attack2H1Bwd", "Attack2H2Bwd", "Attack2H3Bwd"}
-            end
-        -- elseif meleeItemType == WeaponType.heavy then
-        --    attacks = {"Attack2HHeavy1", "Attack2HHeavy2"}
-        elseif meleeItemType == WeaponType.ONE_HANDED then
-            attacks = {"Attack1H1", "Attack1H2", "Attack1H3", "Attack1H4", "Attack1H5"}
-            if task.shm then
-                attacks = {"Attack1H1Bwd", "Attack1H2Bwd", "Attack1H3Bwd"}
-            end
-        elseif meleeItemType == WeaponType.SPEAR then
-            attacks = {"AttackS1", "AttackS2"}
-            if task.shm then
-                attacks = {"AttackS1Bwd", "AttackS2Bwd"}
-            end
-        elseif meleeItemType == WeaponType.CHAINSAW then
-            attacks = {"AttackChainsaw1", "AttackChainsaw2"}
-        elseif meleeItemType == WeaponType.KNIFE then
-            soundVoice = female and "VoiceFemaleMeleeStab" or "VoiceMaleMeleeStab"
-            attacks = {"AttackKnife"} -- , "AttackKnifeMiss"
-            if task.shm then
-                attacks = {"AttackKnifeBwd"}
-            end
-        else -- two handed / knife ?
-            attacks = {"Attack2H1", "Attack2H2", "Attack2H3", "Attack2H4"}
-            if task.shm then
-                attacks = {"Attack2H1Bwd", "Attack2H2Bwd", "Attack2H3Bwd"}
-            end
+    if not prone and instanceof(enemy, "IsoPlayer") and Bandit.HasExpertise(bandit, Bandit.Expertise.Infected) then
+        local dist = BanditUtils.DistTo(enemy:getX(), enemy:getY(), bandit:getX(), bandit:getY())
+        if dist < 0.855 then
+            attacks = {"Bite"}
+            task.bite = true
+            task.attackTime = 20
+            soundVoice = nil
+            soundSwing = nil
         end
+    end
 
-        if instanceof(enemy, "IsoPlayer") and Bandit.HasExpertise(bandit, Bandit.Expertise.Infected) then
-            local dist = BanditUtils.DistTo(enemy:getX(), enemy:getY(), bandit:getX(), bandit:getY())
-            if dist < 0.855 then
-                attacks = {"Bite"}
-                task.bite = true
-                task.attackTime = 20
-                soundVoice = nil
-                soundSwing = nil
-            end
-        end
-
-        if attacks then 
-            anim = attacks[1+ZombRand(#attacks)]
-        end
+    if attacks then 
+        anim = attacks[1+ZombRand(#attacks)]
     end
 
     if soundSwing then
@@ -574,8 +585,18 @@ ZombieActions.Smack.onStart = function(bandit, task)
 end
 
 ZombieActions.Smack.onWorking = function(bandit, task)
-    bandit:faceLocationF(task.x, task.y)
+    
     local bumpType = bandit:getBumpType()
+    if task.shm then
+        local fd = bandit:getForwardDirection()
+        fd:setLength(-0.002)
+        local newx = bandit:getX() + fd:getX()
+        local newy = bandit:getY() + fd:getY()
+        bandit:setX(newx)
+        bandit:setY(newy)
+
+    end
+    bandit:faceLocationF(task.x, task.y)
 
     if bumpType ~= task.anim then return false end
 
@@ -627,5 +648,6 @@ ZombieActions.Smack.onWorking = function(bandit, task)
 end
 
 ZombieActions.Smack.onComplete = function(bandit, task)
+    local asn = bandit:getActionStateName()
     return true
 end

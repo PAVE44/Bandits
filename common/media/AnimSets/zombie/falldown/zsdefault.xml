@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animNode>
-	<m_Name>zsfrombehind</m_Name>
-	<m_AnimName>Bob_HitDeath_Walking</m_AnimName>
+	<m_Name>zsdefault</m_Name>
+	<m_AnimName>Bob_HitDeath_WalkBwdAim</m_AnimName>
 	<m_DeferredBoneName>Bip01</m_DeferredBoneName>
 	<m_deferredBoneAxis>Z</m_deferredBoneAxis>
 	<m_Looped>false</m_Looped>
@@ -16,14 +16,14 @@
 	<m_Conditions x_name="9abd84ea-924c-4036-b0a6-01f0a0c3a430">
 		<m_Name>FromBehind</m_Name>
 		<m_Type>BOOL</m_Type>
-		<m_Value>true</m_Value>
+		<m_Value>false</m_Value>
 	</m_Conditions>
-	<m_Events x_name="4abc9373-0c93-482f-8419-ec8b7e314ec6">
+	<m_Events x_name="5447f236-874a-4476-9b6d-0cc406014bfd">
 		<m_EventName>FallOnFront</m_EventName>
 		<m_TimePc>0.1</m_TimePc>
-		<m_ParameterValue>true</m_ParameterValue>
+		<m_ParameterValue>false</m_ParameterValue>
 	</m_Events>
-	<m_Events x_name="dd99df1d-8f64-4585-9599-8ebab948aa39">
+	<m_Events x_name="5317c17e-a175-49cf-9538-0ccb1e39ea36">
 		<m_EventName>PlaySound</m_EventName>
 		<m_TimePc>0.5</m_TimePc>
 		<m_ParameterValue>BodyHitGround</m_ParameterValue>

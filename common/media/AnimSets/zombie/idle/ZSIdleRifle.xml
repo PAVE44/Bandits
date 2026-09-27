@@ -16,4 +16,12 @@
 		<m_Type>STRING</m_Type>
 		<m_StringValue>rifle</m_StringValue>
 	</m_Conditions>
+	<m_Transitions>
+		<m_Target>ZSWalkRifle</m_Target>
+		<m_AnimName>Bob_IdleToWalk_Rifle</m_AnimName>
+	</m_Transitions>
+	<m_Transitions>
+		<m_Target>ZSRunRifle</m_Target>
+		<m_AnimName>Bob_IdleToRun_Rifle</m_AnimName>
+	</m_Transitions>
 </animNode>

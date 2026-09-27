@@ -58,12 +58,12 @@ end
 function BanditMenu.MakeProcedure (player, square)
     local cell = getCell()
 
-    local sx = square:getX() - 10
-    local sy = square:getY() - 10
+    local sx = square:getX() 
+    local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 60
-    local h = 60
+    local w = 16
+    local h = 160
 
     local lines = {}
 
@@ -90,15 +90,16 @@ function BanditMenu.MakeProcedure (player, square)
                             local isAttachedFloor = spriteProps:has(IsoFlagType.attachedFloor)
                             local isExterior = spriteProps:has(IsoFlagType.exterior)
                             local isCanBeRemoved = spriteProps:has(IsoFlagType.canBeRemoved)
+                            local isCanBeCut = spriteProps:has(IsoFlagType.canBeCut)
                             
                             if spriteName then
-                                --[[if isSolidFloor and isExterior and not isAttachedFloor then
+                                if isSolidFloor and isExterior  then
                                     --nature floor - skip it
                                     print ("nature floor")
                                 elseif objectType == IsoObjectType.tree then
                                     print ("tree")
 
-                                elseif isCanBeRemoved == true then
+                                elseif isCanBeRemoved == true or isCanBeCut == true then
                                     print ("grass")
 
                                 elseif isSolidFloor or isAttachedFloor then
@@ -108,8 +109,7 @@ function BanditMenu.MakeProcedure (player, square)
                                 elseif false and objectType == IsoObjectType.wall then
                                     -- walls 
                                     table.insert(lines, "\tBanditBasePlacements.IsoThumpable (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
-                                ]]
-                                if instanceof(object, 'IsoDoor') then
+                                elseif instanceof(object, 'IsoDoor') then
                                     -- door
                                     table.insert(lines, "\tBanditBasePlacements.IsoDoor (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
 
@@ -136,7 +136,7 @@ function BanditMenu.MakeProcedure (player, square)
     for k, v in pairs(lines) do
         output = output .. v
     end
-    print (output)
+    -- print (output)
     fileWriter:write(output)
     fileWriter:close()
                             
@@ -221,9 +221,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
     local player = getSpecificPlayer(playerID)
     local square = BanditCompatibility.GetClickedSquare()
 
-    print (player:getDirectionAngle())
-    print ("ROOF: " .. tostring(square:haveRoofFull()))
-    print (player:getDirectionAngle())
     local zombie = square:getZombie()
     if not zombie then
         local squareS = square:getS()
@@ -236,10 +233,6 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
                 end
             end
         end
-    end
-
-    if zombie then
-        print ("zombieid" .. BanditUtils.GetZombieID(zombie))
     end
 
     -- Player options
@@ -267,7 +260,7 @@ function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
         context:addOption("[DGB] Bandit Map", player, BanditMenu.Map)
         -- context:addOption("[DGB] Add Wanderer Group", player, BanditMenu.AddWandererGroup, square)
         -- context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
-        -- context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
+        context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
         context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
 
         if zombie then

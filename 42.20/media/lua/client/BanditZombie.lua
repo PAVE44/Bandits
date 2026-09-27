@@ -20,6 +20,7 @@ BanditZombie.CacheLightBCnt = 0
 local GetZombieID = BanditUtils.GetZombieID
 local IsReanimated = BanditCompatibility.IsReanimatedForGrappleOnly
 local GetBrain = BanditBrain.Get
+local LastTieredZombieUpdatesState = nil
 
 local function removeZombieFromCaches(id)
     BanditZombie.Cache[id] = nil
@@ -97,6 +98,8 @@ end
 local function flush()
     if isServer() then return end
 
+    local prevCacheLight = BanditZombie.CacheLight
+
     -- prepare local cache vars
     local cache = {}
     local cacheLight = {}
@@ -120,7 +123,16 @@ local function flush()
 
             local zx, zy, zz, zd = zombie:getX(), zombie:getY(), zombie:getZ(), zombie:getDirectionAngle()
 
-            local light = {id = id, x = zx, y = zy, z = zz, d = zd}
+            local light = prevCacheLight[id]
+            if not light then
+                light = {}
+            end
+
+            light.id = id
+            light.x = zx
+            light.y = zy
+            light.z = zz
+            light.d = zd
 
             local isBandit = zombie:getVariableBoolean("Bandit")
             light.isBandit = isBandit
@@ -130,6 +142,8 @@ local function flush()
                 cacheLightB[id] = light
                 bcnt = bcnt + 1
             else
+                light.brain = nil
+                light.rid = nil
                 cacheLightZ[id] = light
                 zcnt = zcnt + 1
             end
@@ -148,12 +162,11 @@ local function flush()
 
     -- without this enforcement, bandits can only move and not do any other action while outside of player view
     -- but it tanks performance, so only enable if necessary 
-    if BanditZombie.CacheLightBCnt < 50 and BanditZombie.CacheLightZCnt < 50 then
-        getCore():setOptionTieredZombieUpdates(false)
-        -- print ("Tiered zombie updates disabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
-    else
-        getCore():setOptionTieredZombieUpdates(true)
-        -- print ("Tiered zombie updates enabled, bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
+    local shouldEnableTieredUpdates = not (BanditZombie.CacheLightBCnt < 50 and BanditZombie.CacheLightZCnt < 50)
+    if LastTieredZombieUpdatesState ~= shouldEnableTieredUpdates then
+        getCore():setOptionTieredZombieUpdates(shouldEnableTieredUpdates)
+        LastTieredZombieUpdatesState = shouldEnableTieredUpdates
+        -- print ("Tiered zombie updates state changed: " .. tostring(shouldEnableTieredUpdates) .. ", bandit count: " .. BanditZombie.CacheLightBCnt .. " / 50, zombie count: " .. BanditZombie.CacheLightZCnt .. " / 50")
     end
 
     BanditPermanent.Check()

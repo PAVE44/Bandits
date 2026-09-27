@@ -41,7 +41,7 @@ local function initBanditModData(isNewGame)
     for i = 0, BanditClusterCount - 1 do
         local clusterName = getClusterName(i)
         BanditClusters[i] = ModData.getOrCreate(clusterName)
-        print ("[GMD] Cluster " .. clusterName .. " created.")
+        print ("[BANDITS] GMD Cluster " .. clusterName .. " created.")
         if isClient() then
             ModData.request(clusterName)
         end
@@ -107,7 +107,7 @@ local function everyTenMinutes()
         for _, _ in pairs(globalData) do
             cnt = cnt + 1
         end
-        -- print ("[GMD] Cluster " .. i .. " is " .. cnt .. " long.")
+        -- print ("[BANDITS] GMD Cluster " .. i .. " is " .. cnt .. " long.")
     end
 end
 

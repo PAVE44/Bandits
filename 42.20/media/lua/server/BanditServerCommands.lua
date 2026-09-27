@@ -97,13 +97,10 @@ BanditServer.Commands.BanditCorpse = function(player, args)
     if square then
         local objects = square:getStaticMovingObjects()
         for i=0, objects:size()-1 do
-            print ("found static obj")
             local object = objects:get(i)
             if instanceof (object, "IsoDeadBody") then
-                print ("found dead body")
                 local md = object:getModData()
                 if md.brainId == args.id then
-                    print ("found the right dead body")
                     body = object
                     break
                 end
@@ -112,7 +109,7 @@ BanditServer.Commands.BanditCorpse = function(player, args)
     end
 
     if body then
-        print ("SERVER FOUND DEAD BANDIT BODY")
+        -- print ("SERVER FOUND DEAD BANDIT BODY")
         body:sync()
         
     end

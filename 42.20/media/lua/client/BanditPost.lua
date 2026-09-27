@@ -84,4 +84,4 @@ function BanditPost.OnKeyPressed(keynum)
     end
 end
 
-Events.OnKeyPressed.Add(BanditPost.OnKeyPressed)
+-- Events.OnKeyPressed.Add(BanditPost.OnKeyPressed)

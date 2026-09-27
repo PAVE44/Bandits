@@ -31,7 +31,7 @@ ZSClient.Commands.UpdateHealth  = function(args)
         local zombie = BanditZombie.Cache[id]
         if zombie then
             local health = zombie:getHealth()
-            print ("CLIENT HEALTH CURRENT: " .. health .. " NEW:" .. args.h)
+            -- print ("CLIENT HEALTH CURRENT: " .. health .. " NEW:" .. args.h)
             if health > args.h then
                 zombie:setHealth(args.h)
             end

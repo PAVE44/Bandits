@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
 	<m_Name>ZSIdle2handed</m_Name>
-	<m_AnimName>Bob_IdleBat</m_AnimName>
+	<m_AnimName>Bob_IdleAimBat</m_AnimName>
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SpeedScale>0.80</m_SpeedScale>
-	<m_BlendTime>0.35</m_BlendTime>
-	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
+	<m_BlendTime>1.35</m_BlendTime>
 	<m_Conditions>
 		<m_Name>Bandit</m_Name>
 		<m_Type>BOOL</m_Type>
@@ -16,4 +15,12 @@
 		<m_Type>STRING</m_Type>
 		<m_StringValue>twohanded</m_StringValue>
 	</m_Conditions>
+	<m_Transitions>
+		<m_Target>ZSWalk2handed</m_Target>
+		<m_AnimName>Bob_AimToIdle_Bat</m_AnimName>
+	</m_Transitions>
+	<m_Transitions>
+		<m_Target>ZSRun2handed</m_Target>
+		<m_AnimName>Bob_IdleToRun_Bat</m_AnimName>
+	</m_Transitions>
 </animNode>

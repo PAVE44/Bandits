@@ -289,7 +289,74 @@ BanditServer.Wanderers.destinations = {
         x = 5558,  
         y = 12480,
         z = 0
-    }
+    },
+    {
+        name = "LV Bridge",
+        x = 12308,  
+        y = 6775,
+        z = 0
+    },
+    {
+        name = "Pole Positionm",
+        x = 12651,  
+        y = 6433,
+        z = 0
+    },
+    {
+        name = "LV Hospital",
+        x = 12467,  
+        y = 3701,
+        z = 0
+    },
+    {
+        name = "LV Shore Villa 1",
+        x = 12064,  
+        y = 3121,
+        z = 0
+    },
+    {
+        name = "LV Shore Villa 2",
+        x = 12065,  
+        y = 2159,
+        z = 0
+    },
+    {
+        name = "LV Mall",
+        x = 13508,  
+        y = 1288,
+        z = 0
+    },
+    {
+        name = "LV Southside",
+        x = 13979,  
+        y = 3251,
+        z = 0
+    },
+    {
+        name = "LV Edgewood Court",
+        x = 14150,  
+        y = 2629,
+        z = 0
+    },
+    {
+        name = "LV Fountain View Sq",
+        x = 13420,  
+        y = 1880,
+        z = 0
+    },
+    {
+        name = "LV Checkpoint",
+        x = 12512,  
+        y = 4210,
+        z = 0
+    },
+    {
+        name = "LV Ray Road Bridge",
+        x = 12977,  
+        y = 5195,
+        z = 0
+    },
+
 }
 
 BanditServer.Wanderers.speed = 4
@@ -309,7 +376,7 @@ BanditServer.Wanderers.AddGroup = function(group)
     if not group.destination then group.destination = BanditUtils.Choice(BanditServer.Wanderers.destinations) end
 
     if #gmd.Wanderers >= 100 then
-        print ("[WANDERERS] Maximum number of wanderer groups reached. Cannot add more.")
+        print ("[BANDITS] Maximum number of wanderer groups reached. Cannot add more.")
         return false
     end
     table.insert(gmd.Wanderers, group)
@@ -494,7 +561,7 @@ local updateGroups = function()
                     local dist2 = ((otherGroup.x - group.x) * (otherGroup.x - group.x)) + ((otherGroup.y - group.y) * (otherGroup.y - group.y))
                     if dist2 <= contactRange2 then
                         if group.cid ~= otherGroup.cid then
-                            print ("[WANDERERS] Group " .. group.cid .. " is in contact with group " .. otherGroup.cid)
+                            print ("[BANDITS] Group " .. group.cid .. " is in contact with group " .. otherGroup.cid)
                             local groupSize = group.size
                             local otherGroupSize = otherGroup.size
 
@@ -534,7 +601,7 @@ local updateGroups = function()
                 group.x = group.x + (dx / distance) * movement
                 group.y = group.y + (dy / distance) * movement
 
-                -- print ("[WANDERERS] Group " .. group.cid .. " moved to (" .. group.x .. ", " .. group.y .. ") towards " .. group.destination.name .. " distance: " .. distance)
+                -- print ("[BANDITS] Group " .. group.cid .. " moved to (" .. group.x .. ", " .. group.y .. ") towards " .. group.destination.name .. " distance: " .. distance)
 
                 --[[
                 if false and first then
@@ -548,7 +615,7 @@ local updateGroups = function()
             else
                 -- Reached destination, choose a new one
                 group.destination = BanditUtils.Choice(destinations)
-                print ("[WANDERERS] Group " .. group.cid .. " reached destination and is now heading to " .. group.destination.name)
+                print ("[BANDITS] Group " .. group.cid .. " reached destination and is now heading to " .. group.destination.name)
             end
         end
 
@@ -568,7 +635,7 @@ local updateGroups = function()
             end
 
             if playerSelected then
-                print ("[WANDERERS] Group " .. group.cid .. " is being devirtualized at (" .. group.x .. ", " .. group.y .. ")")
+                print ("[BANDITS] Group " .. group.cid .. " is being devirtualized at (" .. group.x .. ", " .. group.y .. ")")
                 local args = {
                     cid = group.cid,
                     size = 1,
@@ -590,7 +657,7 @@ local updateGroups = function()
                         zombie:changeState(ZombieOnGroundState.instance())
                         zombie:setAttackedBy(cell:getFakeZombieForHit())
                         zombie:die()
-                        -- print ("[WANDERERS] Removed zombie at (" .. zombie:getX() .. ", " .. zombie:getY() .. ")")
+                        -- print ("[BANDITS] Removed zombie at (" .. zombie:getX() .. ", " .. zombie:getY() .. ")")
                     end
                 end
 
@@ -618,15 +685,17 @@ local updateGroups = function()
                     end
                 end
 
-                local clan = BanditCustom.ClanGet(group.cid)
                 if SandboxVars.Bandits.General_ArrivalIcon  then
-                    local icon, color, desc = getIconDataByProgram("Looter", clan.spawn.friendly)
-                    if icon and color and desc then
-                        if isServer() then
-                            local args = {icon=icon, time=1800, x=group.x, y=group.y, color=color, desc=desc}
-                            sendServerCommand('Commands', 'SetMarker', args)
-                        else
-                            BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, group.x, group.y, color, desc)
+                    local clan = BanditCustom.ClanGet(group.cid)
+                    if clan and clan.spawn then
+                        local icon, color, desc = getIconDataByProgram("Looter", clan.spawn.friendly)
+                        if icon and color and desc then
+                            if isServer() then
+                                local args = {icon=icon, time=1800, x=group.x, y=group.y, color=color, desc=desc}
+                                sendServerCommand('Commands', 'SetMarker', args)
+                            else
+                                BanditEventMarkerHandler.set(getRandomUUID(), icon, 1800, group.x, group.y, color, desc)
+                            end
                         end
                     end
                 end

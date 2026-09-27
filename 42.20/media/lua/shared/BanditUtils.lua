@@ -180,19 +180,21 @@ function BanditUtils.AddHole (character)
         local item = itemVisuals:get(i)
         if item then
             item:setBlood(bodyPart.name, 1)
-            local clothing = item:getInventoryItem()
-            if instanceof(clothing, "Clothing") then
-                local coveredPartList = clothing:getCoveredParts()
-                for i=0, coveredPartList:size()-1 do
-                    local coveredPart = coveredPartList:get(i)
-                    if coveredPart == bodyPart.name then
-                        item:setHole(bodyPart.name)
+            local itemType = item:getItemType()
+            if itemType then
+                local itemTemp = BanditCompatibility.InstanceItem(itemType)
+                if itemTemp and itemTemp:IsClothing() then
+                    local coveredPartList = itemTemp:getCoveredParts()
+                    for i=0, coveredPartList:size()-1 do
+                        local coveredPart = coveredPartList:get(i)
+                        if coveredPart == bodyPart.name then
+                            item:setHole(bodyPart.name)
+                        end
                     end
                 end
             end
         end
     end
-    character:resetModelNextFrame()
     character:resetModel()
 end
 
@@ -347,19 +349,23 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                     dmg = dmg * 2
                 end
 
-                victim:setBumpDone(true)
+                -- victim:setBumpDone(true)
                 victim:setHitFromBehind(shooter:isBehind(victim))
                 -- victim:setHitAngle(shooter:getForwardDirection())
+                victim:setAttackedBy(shooter)
                 victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-                victim:setHitReaction("ShotBelly")
+                -- victim:setHitReaction("ShotBelly")
+                
 
+                victim:setHitHeadWhileOnFloor(0)
+                victim:setHitLegsWhileOnFloor(false)
                 if isSeen then
                     victim:Hit(item, fakeZombie, dmg, false, 1, false)
                 else
                     local fakeItem = BanditCompatibility.InstanceItem("Base.Katana")
                     victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
                 end
-                victim:setAttackedBy(shooter)
+                
                 BanditUtils.AddHole(victim)
                 BanditCompatibility.Splash(victim, item, fakeZombie)
 
@@ -663,11 +669,6 @@ end
 
 function BanditUtils.IsController(zombie)
 
-    -- ZOMBIE/BANDIT BEHAVIOUR IS FULLY CLIENT CONTROLLED
-    -- SO CLIENTS ARE MIRRORING ACTIONS FOR ZOMBIES
-    -- NOW, WE WANT VISUAL MIRRORING BY ALL CLIENTS 
-    -- BUT THE ACTUAL ACTION CONSEQUENCES TO HAPPEN ONCE
-
     local gamemode = getWorld():getGameMode()
 
     if gamemode ~= "Multiplayer" then return true end
@@ -675,7 +676,7 @@ function BanditUtils.IsController(zombie)
     local zx = zombie:getX()
     local zy = zombie:getY()
 
-    local bestDist = 10000
+    local bestDistSq = math.huge
     local bestPlayerId
     local playerList = getOnlinePlayers()
     for i=0, playerList:size()-1 do
@@ -683,9 +684,11 @@ function BanditUtils.IsController(zombie)
         local px = player:getX()
         local py = player:getY()
 
-        local dist = BanditUtils.DistTo(zx, zy, px, py)
-        if dist < bestDist then
-            bestDist = dist
+        local dx = zx - px
+        local dy = zy - py
+        local distSq = (dx * dx) + (dy * dy)
+        if distSq < bestDistSq then
+            bestDistSq = distSq
             bestPlayerId = BanditUtils.GetCharacterID(player)
         end
     end
@@ -811,8 +814,10 @@ function BanditUtils.GetClosestPlayerLocation(character, config)
 
     if not config then config = {} end
 
-    local mustSee = config.mustSee or true
+    local mustSee = config.mustSee and true or false
     local hearDist = config.hearDist or 7
+    local hearDistSq = hearDist * hearDist
+    local bestDistSq = math.huge
 
     local cx, cy, cz = character:getX(), character:getY(), character:getZ()
     local playerList = BanditPlayer.GetPlayers()
@@ -821,18 +826,24 @@ function BanditUtils.GetClosestPlayerLocation(character, config)
         local player = playerList:get(i)
         if player and not BanditPlayer.IsGhost(player) then
             local px, py, pz = player:getX(), player:getY(), player:getZ()
-            local dist = BanditUtils.DistTo(cx, cy, px, py)
+            local dx = cx - px
+            local dy = cy - py
+            local distSq = (dx * dx) + (dy * dy)
             local levelDiff = math.abs(pz - cz)
-            if dist < result.dist and (not mustSee or (character:CanSee(player) or dist < hearDist))and (not config.levelDiff or levelDiff <= config.levelDiff) then
-                result.dist = dist
-                result.x = player:getX()
-                result.y = player:getY()
-                result.z = player:getZ()
+            if distSq < bestDistSq and (not mustSee or (distSq < hearDistSq or character:CanSee(player))) and (not config.levelDiff or levelDiff <= config.levelDiff) then
+                bestDistSq = distSq
+                result.x = px
+                result.y = py
+                result.z = pz
                 result.d = player:getDirectionAngle()
                 result.id = BanditUtils.GetCharacterID(player)
                 result.player = true
             end
         end
+    end
+
+    if result.id then
+        result.dist = math.sqrt(bestDistSq)
     end
 
     -- try last known location if no player found
@@ -865,18 +876,25 @@ function BanditUtils.GetClosestZombieLocation(character, config)
     if not config then config = {} end
 
     local cx, cy, cz = character:getX(), character:getY(), character:getZ()
+    local bestDistSq = math.huge
 
     local zombieList = BanditZombie.CacheLightZ
     for id, zombie in pairs(zombieList) do
-        local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
+        local dx = cx - zombie.x
+        local dy = cy - zombie.y
+        local distSq = (dx * dx) + (dy * dy)
         local levelDiff = math.abs(zombie.z - cz)
-        if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
-            result.dist = dist
+        if distSq < bestDistSq and (not config.levelDiff or levelDiff <= config.levelDiff) then
+            bestDistSq = distSq
             result.x = zombie.x
             result.y = zombie.y
             result.z = zombie.z
             result.id = zombie.id
         end
+    end
+
+    if result.id then
+        result.dist = math.sqrt(bestDistSq)
     end
 
     return result
@@ -895,19 +913,26 @@ function BanditUtils.GetClosestBanditLocation(character, config)
     if not config then config = {} end
 
     local cx, cy, cz = character:getX(), character:getY(), character:getZ()
+    local bestDistSq = math.huge
 
     local zombieList = BanditZombie.CacheLightB
     for id, zombie in pairs(zombieList) do
-        local dist = math.sqrt(((cx - zombie.x) * (cx - zombie.x)) + ((cy - zombie.y) * (cy - zombie.y)))
+        local dx = cx - zombie.x
+        local dy = cy - zombie.y
+        local distSq = (dx * dx) + (dy * dy)
         local levelDiff = math.abs(zombie.z - cz)
-        if dist < result.dist and cid ~= id and (not config.levelDiff or levelDiff <= config.levelDiff) then
-            result.dist = dist
+        if distSq < bestDistSq and cid ~= id and (not config.levelDiff or levelDiff <= config.levelDiff) then
+            bestDistSq = distSq
             result.x = zombie.x
             result.y = zombie.y
             result.z = zombie.z
             result.d = zombie.d
             result.id = zombie.id
         end
+    end
+
+    if result.id then
+        result.dist = math.sqrt(bestDistSq)
     end
 
     return result
@@ -924,6 +949,7 @@ function BanditUtils.GetClosestEnemyBanditLocation(character, config)
     if not config then config = {} end
 
     local cx, cy, cz = character:getX(), character:getY(), character:getZ()
+    local bestDistSq = math.huge
 
     local banditList = BanditZombie.CacheLightB
     if instanceof(character, "IsoZombie") then
@@ -931,10 +957,12 @@ function BanditUtils.GetClosestEnemyBanditLocation(character, config)
         for id, otherBandit in pairs(banditList) do
             if BanditUtils.AreEnemies(brain, otherBandit.brain) then
             -- if brain.clan ~= otherBandit.brain.clan and (brain.hostile or otherBandit.brain.hostile) then
-                local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
+                local dx = cx - otherBandit.x
+                local dy = cy - otherBandit.y
+                local distSq = (dx * dx) + (dy * dy)
                 local levelDiff = math.abs(otherBandit.z - cz)
-                if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
-                    result.dist = dist
+                if distSq < bestDistSq and (not config.levelDiff or levelDiff <= config.levelDiff) then
+                    bestDistSq = distSq
                     result.x = otherBandit.x
                     result.y = otherBandit.y
                     result.z = otherBandit.z
@@ -945,10 +973,12 @@ function BanditUtils.GetClosestEnemyBanditLocation(character, config)
     elseif instanceof(character, "IsoPlayer") then
         for id, otherBandit in pairs(banditList) do
             if otherBandit.brain.hostile or otherBandit.brain.hostileP then
-                local dist = math.sqrt(((cx - otherBandit.x) * (cx - otherBandit.x)) + ((cy - otherBandit.y) * (cy - otherBandit.y)))
+                local dx = cx - otherBandit.x
+                local dy = cy - otherBandit.y
+                local distSq = (dx * dx) + (dy * dy)
                 local levelDiff = math.abs(otherBandit.z - cz)
-                if dist < result.dist and (not config.levelDiff or levelDiff <= config.levelDiff) then
-                    result.dist = dist
+                if distSq < bestDistSq and (not config.levelDiff or levelDiff <= config.levelDiff) then
+                    bestDistSq = distSq
                     result.x = otherBandit.x
                     result.y = otherBandit.y
                     result.z = otherBandit.z
@@ -957,6 +987,11 @@ function BanditUtils.GetClosestEnemyBanditLocation(character, config)
             end
         end
     end
+
+    if result.id then
+        result.dist = math.sqrt(bestDistSq)
+    end
+
     return result
 end
 
@@ -1009,7 +1044,7 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
             task = {action="GoTo", time=50, endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
         end
     else
-        task = {action="Move", time=15+ZombRand(10), endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
+        task = {action="Move", time=115+ZombRand(10), endurance=endurance, x=x, y=y, z=z, walkType=walkType, closeSlow=closeSlow}
     end
     return task
 end

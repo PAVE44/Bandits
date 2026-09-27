@@ -19,7 +19,7 @@ BanditPlayer.GetPlayers = function()
     local world = getWorld()
     local gamemode = world:getGameMode()
 
-    local playerList = {}
+    local playerList
     if gamemode == "Multiplayer" then
         playerList = getOnlinePlayers()
     else
@@ -221,7 +221,7 @@ end
 
 
 Events.EveryOneMinute.Add(UpdatePlayersOnline)
-Events.OnPlayerUpdate.Add(PanicHandler)
+--Events.OnPlayerUpdate.Add(PanicHandler)
 Events.OnPlayerDeath.Add(ResetBanditKills)
 Events.EveryTenMinutes.Add(UpdateVisitedBuildings)
 -- Events.OnGameStart.Add(Cake)

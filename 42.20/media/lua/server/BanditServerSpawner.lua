@@ -198,7 +198,7 @@ local function generateSpawnPointUniform(player, d, count)
         -- Check if the player is inside any basement region
         for _, basement in ipairs(basements) do
             if isInBasement(px, py, basement) then
-                print("[INFO] Player is inside a basement region. Wave will not be spawned.")
+                print("[Bandits] Player is inside a basement region. Wave will not be spawned.")
                 return
             end
         end
@@ -207,7 +207,7 @@ local function generateSpawnPointUniform(player, d, count)
     -- Check if RVInterior exists before using it (b41!)
     if RVInterior then
         if RVInterior.playerInsideInterior(player) then
-            print("[INFO] Player is inside an RV interior. Wave will not be spawned.")
+            print("[Bandits] Player is inside an RV interior. Wave will not be spawned.")
             return
         end
     end
@@ -227,11 +227,11 @@ local function generateSpawnPointUniform(player, d, count)
                 z = z
             }
             if SafeHouse.isSafeHouse(square, nil, true) then
-                print("[INFO] Spawn point is inside a safehouse, skipping.")
+                print("[Bandits] Spawn point is inside a safehouse, skipping.")
             elseif not square:isFree(false) then
-                print("[INFO] Square is occupied, skipping.")
+                print("[Bandits] Square is occupied, skipping.")
             elseif isTooCloseToPlayer(x, y) then
-                print("[INFO] Spawn is too close to one of the players, skipping.")
+                print("[Bandits] Spawn is too close to one of the players, skipping.")
             else
                 sp.groundType = getGroundType(square)
                 sp.zone = getZone(square)
@@ -250,7 +250,7 @@ local function generateSpawnPointUniform(player, d, count)
         end
         return ret
     else
-        print ("[ERR] No valid spawn points available. Wave will not be spawned.")
+        print ("[Bandits] No valid spawn points available. Wave will not be spawned.")
     end
 
     return {}
@@ -780,7 +780,7 @@ local function spawnHouse(player, spawnPoint)
         local lastVisit = gmd.VisitedBuildings[bid] -- 1
         local coolDown = 7 * 24
         if now - coolDown < lastVisit then
-            print ("[INFO] Defenders are not allowed to spawn in a building visited by a player in last 7 days.")
+            print ("[Bandits] Defenders are not allowed to spawn in a building visited by a player in last 7 days.")
             return false
         end
     end
