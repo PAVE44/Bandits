@@ -62,8 +62,8 @@ function BanditMenu.MakeProcedure (player, square)
     local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 16
-    local h = 160
+    local w = 5
+    local h = 5
 
     local lines = {}
 
@@ -147,6 +147,9 @@ function BanditMenu.ShowBrain (player, square, zombie)
 
     -- add breakpoint below to see data
     local brain = BanditBrain.Get(zombie)
+    
+    local gmd = GetBanditClusterData(id)
+    local brainGMD = gmd[id]
     local moddata = zombie:getModData()
     
     local isUseless = zombie:isUseless()

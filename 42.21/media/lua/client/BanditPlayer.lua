@@ -17,7 +17,7 @@ end
 
 BanditPlayer.GetPlayers = function()
     local world = getWorld()
-    local gamemode = world:getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
 
     local playerList
     if gamemode == "Multiplayer" then
@@ -42,7 +42,7 @@ BanditPlayer.GetPlayerById = function(id)
 end
 
 BanditPlayer.GetMasterPlayer = function(bandit)
-    local gamemode = getWorld():getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
     local master
     if gamemode == "Multiplayer" then
         master = getPlayerByOnlineID(Bandit.GetMaster(bandit))

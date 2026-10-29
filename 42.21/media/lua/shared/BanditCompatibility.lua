@@ -358,7 +358,7 @@ BanditCompatibility.GetBodyLocations = function(weapon)
             Underwear = {"Underwear", "UnderwearBottom", "UnderwearTop", "UnderwearExtra1", "UnderwearExtra2", "Codpiece"},
             TopArmor = {"ShoulderpadRight", "ShoulderpadLeft", "ForeArm_Right", "ForeArm_Left", "Elbow_Right", "Elbow_Left"},
             Hands = {"Hands", "HandsRight", "HandsLeft", "RightWrist", "Right_MiddleFinger", "Right_RingFinger", "LeftWrist", "Left_MiddleFinger", "Left_RingFinger"},
-            Bags = {"FannyPackFront", "FannyPackBack", "Webbing", "Back"},
+            Bags = {"FannyPackFront", "FannyPackBack", "Webbing", "Satchel", "Back"},
             Holsters = {"AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster"},
             Bottom = {"Pants", "Pants_Skinny", "PantsExtra", "Legs1", "ShortPants", "ShortsShort", "LongSkirt", "Skirt"},
             BottomArmor = {"Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left"},
@@ -400,7 +400,7 @@ BanditCompatibility.GetBodyLocationsOrdered = function()
             "BathRobe", "FullSuit", "FullSuitHead", "Boilersuit", "Tail", "TorsoExtraVestBullet",
             "ShoulderpadRight", "ShoulderpadLeft", "Elbow_Right", "Elbow_Left", "ForeArm_Right", "ForeArm_Left",
             "Thigh_Right", "Thigh_Left", "Knee_Right", "Knee_Left", "Calf_Right", "Calf_Left",
-            "FannyPackFront", "FannyPackBack", "Webbing", "Back",
+            "FannyPackFront", "FannyPackBack", "Webbing", "Satchel", "Back",
             "AmmoStrap", "AnkleHolster", "BeltExtra", "ShoulderHolster",
             "Socks", "Shoes"
         }

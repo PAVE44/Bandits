@@ -47,8 +47,8 @@ ZombieActions.LootItems.onComplete = function(zombie, task)
         end
     end
 
-    local brain = BanditBrain.Get(zombie)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
+    -- local brain = BanditBrain.Get(zombie)
+    -- Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
 
     return true
 end

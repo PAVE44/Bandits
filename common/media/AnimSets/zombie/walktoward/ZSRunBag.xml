@@ -5,7 +5,12 @@
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>RunBag</m_StringValue>
+		<m_StringValue>Run</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditHandBag</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>left</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>Footstep</m_EventName>

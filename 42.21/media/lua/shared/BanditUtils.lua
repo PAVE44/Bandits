@@ -167,6 +167,14 @@ BanditUtils.BloodBodyParts = {
     [17] = {name=BloodBodyPartType.Hand_L},
 }
 
+local gameMode
+function BanditUtils.GetGameMode()
+    if not gameMode then
+        gameMode = getWorld():getGameMode()
+    end
+    return gameMode
+end
+
 function BanditUtils.AddHole (character)
     local bpi = 1 + BanditRandom.Get() % 17
     local bodyParts = BanditUtils.BloodBodyParts
@@ -656,12 +664,12 @@ function BanditUtils.GetCharacterID (character)
 
     if instanceof(character, "IsoPlayer") then
         local world = getWorld()
-        local gamemode = world:getGameMode()
+        local gamemode = BanditUtils.GetGameMode()
         local id = false
         if gamemode == "Multiplayer" then
             id = character:getOnlineID()
         else
-            id = 1
+            id = 1 -- fixme! getPlayerNum(player)
         end
         return id
     end
@@ -669,7 +677,7 @@ end
 
 function BanditUtils.IsController(zombie)
 
-    local gamemode = getWorld():getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
 
     if gamemode ~= "Multiplayer" then return true end
 
@@ -1035,7 +1043,7 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     if dist < 0.5 then
         -- print ("SMALL DIST")
     end
-    local gamemode = getWorld():getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
     local task
     if gamemode == "Multiplayer" then
         if dist > 30 then
@@ -1056,7 +1064,7 @@ function BanditUtils.GetMoveTaskTarget(endurance, x, y, z, tid, isPlayer, walkTy
     if dist < 0.5 then
         -- print ("SMALL DIST")
     end
-    local gamemode = getWorld():getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
     local task
     if gamemode == "Multiplayer" then
         if dist > 30 then

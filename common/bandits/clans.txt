@@ -261,11 +261,11 @@
 	spawn: defenders = true
 	spawn: campers = false
 	spawn: assault = true
-	spawn: wanderer = false
+	spawn: wanderer = true
 	spawn: roadblock = false
-	spawn: dayStart = 0
-	spawn: dayEnd = 5000
-	spawn: spawnChance = 0
+	spawn: dayStart = 5
+	spawn: dayEnd = 5
+	spawn: spawnChance = 2
 	spawn: groupMin = 1
 	spawn: groupMax = 4
 	spawn: zone = 0

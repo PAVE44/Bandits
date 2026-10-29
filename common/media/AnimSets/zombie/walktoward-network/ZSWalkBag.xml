@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="zswalkall.xml">
-	<m_Name>ZSWalkBag</m_Name>
+	<m_Name>ZSWalkHandBag</m_Name>
 	<m_AnimName>Bob_Walk_Bag</m_AnimName>
 	<m_Conditions>
 		<m_Name>zombieWalkType</m_Name>
 		<m_Type>STRING</m_Type>
-		<m_StringValue>WalkBag</m_StringValue>
+		<m_StringValue>Walk</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditHandBag</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>left</m_StringValue>
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>Footstep</m_EventName>

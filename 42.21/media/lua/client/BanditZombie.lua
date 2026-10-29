@@ -46,7 +46,7 @@ local function onZombieUpdate(zombie)
     if isServer() then return end
     local ts = getTimestampMs()
     -- cheap early-outs first
-    if IsReanimated(zombie) or zombie:isRagdoll() or not zombie:isAlive() then
+    if IsReanimated(zombie) or not zombie:isAlive() then
         local id = GetZombieID(zombie)
         if BanditZombie.Cache[id] then removeZombieFromCaches(id) end
         return
@@ -115,7 +115,7 @@ local function flush()
     for i = 0, zombieListSize - 1 do
         local zombie = zombieList:get(i)
 
-        if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) and not zombie:isRagdoll() then
+        if not BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then
 
             local id = BanditUtils.GetZombieID(zombie)
 

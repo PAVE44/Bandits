@@ -48,7 +48,7 @@ end
 
 local getPlayers = function()
     local world = getWorld()
-    local gamemode = world:getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
 
     local playerList = {}
     if gamemode == "Multiplayer" then
@@ -290,10 +290,22 @@ local function generateSpawnPointBuilding(building, groupSize)
     return spawnPoints
 end
 
--- args: program, permanent, key
-local function banditize(zombie, bandit, clan, args)
-    local id = zombie:getPersistentOutfitID()
-    if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
+local function copyBrainData(value, copies)
+    if type(value) ~= "table" then return value end
+    copies = copies or {}
+    if copies[value] then return copies[value] end
+
+    local copy = {}
+    copies[value] = copy
+    for key, item in pairs(value) do
+        copy[key] = copyBrainData(item, copies)
+    end
+    return copy
+end
+
+-- builds a brain without touching the world, so it can also be used for virtual (bodyless) bandits
+-- args: program, stage, permanent, key, occupation, loyal, pid, hostile, hostileP, voice, fullname
+local function makeBrain(id, bandit, clan, args, bx, by, bz, female)
 
     local brain = {}
 
@@ -303,9 +315,9 @@ local function banditize(zombie, bandit, clan, args)
 
     brain.born = getGameTime():getWorldAgeHours()
     brain.bornCoords = {}
-    brain.bornCoords.x = zombie:getX()
-    brain.bornCoords.y = zombie:getY()
-    brain.bornCoords.z = zombie:getZ()
+    brain.bornCoords.x = bx
+    brain.bornCoords.y = by
+    brain.bornCoords.z = bz
 
     brain.stationary = false
     brain.sleeping = false
@@ -363,9 +375,9 @@ local function banditize(zombie, bandit, clan, args)
         end
     end
 
-    brain.clothing = bandit.clothing or {}
-    brain.tint = bandit.tint or {}
-    brain.bag = bandit.bag
+    brain.clothing = copyBrainData(bandit.clothing or {})
+    brain.tint = copyBrainData(bandit.tint or {})
+    brain.bag = copyBrainData(bandit.bag)
 
     brain.loot = {}
     brain.inventory = {}
@@ -404,7 +416,8 @@ local function banditize(zombie, bandit, clan, args)
     brain.programFallback = args.program
 
     -- bwo uses it
-    brain.occupation = args.occupation
+    brain.occupation = copyBrainData(args.occupation)
+    brain.permaInv = copyBrainData(args.permaInv)
     brain.loyal = args.loyal or false
 
     brain.master = args.pid
@@ -414,8 +427,19 @@ local function banditize(zombie, bandit, clan, args)
     -- enforcing args
     if args.hostile ~= nil then brain.hostile = args.hostile end
     if args.hostileP ~= nil then brain.hostileP = args.hostileP end
-    brain.voice = args.voice or Bandit.PickVoice(zombie)
+    brain.voice = args.voice or Bandit.PickVoiceByGender(female)
     brain.fullname = args.fullname or BanditNames.GenerateName(bandit.general.female)
+
+    return brain
+end
+
+-- args: program, permanent, key
+local function banditize(zombie, bandit, clan, args)
+    local id = zombie:getPersistentOutfitID()
+    if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
+
+    local brain = makeBrain(id, bandit, clan, args, zombie:getX(), zombie:getY(), zombie:getZ(), zombie:isFemale())
+    brain.spawnedAtMs = getTimestampMs()
 
     Bandit.ApplyVisuals(zombie, brain)
     -- ready!
@@ -429,6 +453,7 @@ local function banditize(zombie, bandit, clan, args)
     if LogLevel >= 3 then print ("[BANDITS] banditize finished id " .. id) end
 
     -- zombie:getModData().IsBandit = true
+    return id
 end
 
 -- args: pid, waveId or cid, 
@@ -492,6 +517,59 @@ local function spawnGroup(spawnPoints, args)
     return i - 1
 end
 
+-- reserved id space: the engine only produces ids whose bits 16..30 are a valid outfit index,
+-- so ids built from 2^30 can never collide with a real zombie
+local VIRTUAL_ID_BASE = 1073741824
+local VIRTUAL_ID_MAX = 32767
+
+local function nextVirtualId()
+    local gmd = GetBanditModData()
+    local counter = gmd.VirtualIdCounter or 0
+
+    for i = 1, VIRTUAL_ID_MAX do
+        counter = counter + 1
+        if counter > VIRTUAL_ID_MAX then counter = 1 end
+
+        local id = VIRTUAL_ID_BASE + counter
+        local cluster = GetBanditClusterData(id)
+        if cluster and not cluster[id] then
+            gmd.VirtualIdCounter = counter
+            return id
+        end
+    end
+end
+
+-- creates a bandit brain with no body, managed remotely until its position is in a loaded cell
+-- args: cid, program, stage, occupation, hostile, hostileP, loyal, pid, permanent, key, x, y, z
+local function spawnVirtual(args)
+    local clan = BanditCustom.ClanGet(args.cid)
+    if not clan then return end
+
+    local banditOptions = BanditCustom.GetFromClan(args.cid)
+    if not banditOptions then return end
+
+    local keys = {}
+    for key in pairs(banditOptions) do
+        table.insert(keys, key)
+    end
+    if #keys == 0 then return end
+
+    local bid = keys[1 + ZombRand(#keys)]
+    local bandit = banditOptions[bid]
+    bandit.general.bid = bid
+
+    local id = nextVirtualId()
+    if not id then return end
+
+    local brain = makeBrain(id, bandit, clan, args, args.x, args.y, args.z, bandit.general.female)
+    brain.virtual = true
+    brain.lastSeen = {x = args.x, y = args.y, z = args.z}
+
+    local gmd = GetBanditClusterData(id)
+    gmd[id] = brain
+    return id
+end
+
 local function spawnRestore(brain)
     local knockedDown = false
     local crawler = false
@@ -519,6 +597,7 @@ local function spawnRestore(brain)
     args.program = brain.program.name
     args.stage = brain.program.stage
     args.occupation = brain.occupation
+    args.permaInv = brain.permaInv
     args.loyal = brain.loyal
     args.master = brain.pid
     args.permanent = brain.permanent
@@ -529,9 +608,10 @@ local function spawnRestore(brain)
     end
 
     local zombieList = BanditCompatibility.AddZombiesInOutfit(gx, gy, gz, outfit, femaleChance, crawler, fallOnFront, fakeDead, knockedDown, invulnerable, sitting, health)
+    if not zombieList or zombieList:size() == 0 then return end
 
     local zombie = zombieList:get(0)
-    banditize(zombie, bandit, clan, args)
+    local id = banditize(zombie, bandit, clan, args)
 
     -- remove old one
     --[[
@@ -539,6 +619,7 @@ local function spawnRestore(brain)
     gmd[oldId] = nil
     TransmitBanditCluster(oldId)]]
 
+    return id
 end
 
 local function spawnIndividual(sp, args)
@@ -1005,7 +1086,7 @@ local function checkEvent()
     if isClient() then return end
 
     local world = getWorld()
-    local gamemode = world:getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
     local player 
     local day
 
@@ -1141,7 +1222,17 @@ end
 -- used for restoring an individual
 BanditServer.Spawner.Restore = function(player, args)
     local brain = args
-    spawnRestore(brain)
+    return spawnRestore(brain)
+end
+
+-- creates a bodyless bandit, spawned for real once its position is in a loaded cell
+BanditServer.Spawner.Virtual = function(player, args)
+    if not args.cid then return end
+    if not (args.x and args.y and args.z) then return end
+    if not args.program then args.program = "Bandit" end
+
+    if player then args.pid = BanditUtils.GetCharacterID(player) end
+    return spawnVirtual(args)
 end
 
 -- used for dedicated spawning by mods

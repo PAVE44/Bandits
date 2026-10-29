@@ -10,7 +10,7 @@ ZombieActions.Move.onStart = function(zombie, task)
     if not square:isFree(false) then
         if task.x > zombie:getX() then
             zombie:setX(zombie:getX() + 0.05)
-            zombie:addLineChatElement("BLOCKED NEW X: " .. (zombie:getX() + 0.1), 0.8, 0.8, 0.1)
+            -- zombie:addLineChatElement("BLOCKED NEW X: " .. (zombie:getX() + 0.1), 0.8, 0.8, 0.1)
         else
             zombie:setX(zombie:getX() - 0.05)
         end

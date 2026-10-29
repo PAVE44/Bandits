@@ -240,7 +240,7 @@ end
 function Bandit.ApplyClothing(bandit, brain)
     applyClothing(bandit, brain)
     bandit:resetModel()
-    Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
+    -- Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
 end
 
 function Bandit.ApplyBody(bandit, brain)
@@ -276,7 +276,7 @@ function Bandit.ApplyVisuals(bandit, brain)
     -- Reset model to apply changes
     bandit:resetModel()
 
-    Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
+    -- Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
 end
 
 function Bandit.AddTask(zombie, task)
@@ -698,7 +698,7 @@ function Bandit.SetWeapons(zombie, weapons)
     if brain then
         brain.weapons = weapons
         -- BanditBrain.Update(zombie, brain)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
+        -- Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         -- sendClientCommand(getPlayer(), 'Commands', 'BanditUpdate', brain)
     end
 end
@@ -718,6 +718,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
     end
 
     -- update inventory
+    --[[
     local inventory = zombie:getInventory()
     local items = ArrayList.new()
     inventory:getAllEvalRecurse(predicateAll, items)
@@ -726,6 +727,7 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
         item:getModData().preserve = true
         zombie:addItemToSpawnAtDeath(item)
     end
+    ]]
 
     -- update weapons that the bandit has
     if weapons.melee and weapons.melee ~= "Base.BareHands" then 
@@ -815,6 +817,89 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
                         zombie:addItemToSpawnAtDeath(ammo)
                     end
                 end
+            end
+        end
+    end
+
+    if brain.keys then
+        for _, keyId in pairs(brain.keys) do
+            local item = BanditCompatibility.InstanceItem("Base.Key1")
+            item:setKeyId(keyId)
+            item:setName("Unknown Key")
+            item:getModData().preserve = true
+            zombie:addItemToSpawnAtDeath(item)
+        end
+    end
+
+    if brain.permaInv then
+        for _, itemData in pairs(brain.permaInv) do
+            local itemType = itemData.fullType
+            local item = BanditCompatibility.InstanceItem(itemType)
+            if item then
+                if itemData.weight then
+                    item:setActualWeight(itemData.weight)
+                end
+                if itemData.calories then
+                    item:setCalories(itemData.calories)
+                end
+                if itemData.lipids then
+                    item:setLipids(itemData.lipids)
+                end
+                if itemData.proteins then
+                    item:setProteins(itemData.proteins)
+                end
+                if itemData.carbohydrates then
+                    item:setCarbohydrates(itemData.carbohydrates)
+                end
+                if itemData.hungerChange then
+                    item:setHungChange(itemData.hungerChange)
+                end
+                if itemData.baseHunger then
+                    item:setBaseHunger(itemData.baseHunger)
+                end
+                if itemData.thirstChange then
+                    item:setThirstChange(itemData.thirstChange)
+                end
+                if itemData.unhappyChange then
+                    item:setUnhappyChange(itemData.unhappyChange)
+                end
+                if itemData.boredomChange then
+                    item:setBoredomChange(itemData.boredomChange)
+                end
+                if itemData.extraItems then
+                    for i, extraItem in ipairs(itemData.extraItems) do
+                        item:addExtraItem(extraItem)
+                    end
+                    item:setIsCookable(true)
+                end
+                if itemData.cooked then
+                    item:setCooked(true)
+                    item:setHeat(2.5)
+                end
+                if itemData.dirty then
+                    item:setDirtiness(itemData.dirty)
+                end
+                if itemData.blood then
+                    item:setBloodLevel(itemData.blood)
+                end
+                if itemData.wet then
+                    item:setWetness(itemData.wet)
+                end
+
+                local md = item:getModData()
+                md.BWO = md.BWO or {}
+                if itemData.BWO then
+                    for k, v in pairs(itemData.BWO) do
+                        md.BWO[k] = v
+                    end
+                end
+
+                if md.BWO.name then
+                    item:setName(md.BWO.name)
+                end
+                
+                md.preserve = true
+                zombie:addItemToSpawnAtDeath(item)
             end
         end
     end
@@ -1165,15 +1250,19 @@ function Bandit.SurpressZombieSounds(bandit)
     BanditCompatibility.SurpressZombieSounds(bandit)
 end
 
-function Bandit.PickVoice(zombie)
+function Bandit.PickVoiceByGender(female)
     local maleOptions = {"1", "2", "3", "4"} -- , "14", "16", "18", "21"}
     local femaleOptions = {"1", "2", "4"}
 
-    if zombie:isFemale() then
+    if female then
         return BanditUtils.Choice(femaleOptions)
     else
         return BanditUtils.Choice(maleOptions)
     end
+end
+
+function Bandit.PickVoice(zombie)
+    return Bandit.PickVoiceByGender(zombie:isFemale())
 end
 
 function Bandit.Say(zombie, phrase, force)
@@ -1347,6 +1436,25 @@ function Bandit.GetCombatWalktype(bandit, enemy, dist)
     return walkType
 end
 
+function Bandit.HasKey(bandit, object)
+    local brain = BanditBrain.Get(bandit)
+    local square = object:getSquare()
+    local def = square and square:getBuildingDef()
+
+    if not def and square then
+        local fd = bandit:getForwardDirection()
+        fd:setLength(2)
+        local vx = bandit:getX() + fd:getX()
+        local vy = bandit:getY() + fd:getY()
+        local frontSquare = getCell():getGridSquare(vx, vy, bandit:getZ())
+        def = frontSquare and frontSquare:getBuildingDef()
+    end
+
+    if not def then return false end
+    local bid = def:getX() .. "-" .. def:getY()
+    return brain.keys and brain.keys[bid] ~= nil
+end
+
 function Bandit.GetSkinTexture(female, idx)
     if female then
         return "FemaleBody0" .. tostring(idx)
@@ -1506,3 +1614,4 @@ function Bandit.GetBeardStyle(female, idx)
     ]]
 
 end
+

@@ -469,7 +469,7 @@ end
 
 local getPlayers = function()
     local world = getWorld()
-    local gamemode = world:getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
 
     local playerList = {}
     if gamemode == "Multiplayer" then
@@ -728,7 +728,7 @@ local orchestrator = function()
     if isClient() then return end
 
     local world = getWorld()
-    local gamemode = world:getGameMode()
+    local gamemode = BanditUtils.GetGameMode()
     local player 
     local day
 
