@@ -62,7 +62,7 @@ BanditPlayer.WakeEveryone = function()
         if localPlayer then
             localPlayer:forceAwake()
             setGameSpeed(1)
-            sendClientCommand(localPlayer, 'Commands', 'WakeEveryone', {})
+            sendClientCommand(localPlayer, 'Commands', 'WakeEveryone', {a=1})
         end
         return
     end
