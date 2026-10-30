@@ -1912,9 +1912,11 @@ local function ProcessTask(bandit, task)
     if not task.action then return end
     if not task.state then task.state = "NEW" end
 
+    
     -- bandit:addLineChatElement(task.action .. tostring(ZombRand(1000), 0.8, 0.8, 0.1))
 
     if task.state == "NEW" then
+        -- print ("new: " .. bandit:getActionStateName() .. " " .. bandit:getBumpType() .. " " .. bandit:getVariableString("BanditWalkType"))
         if not task.time then task.time = 1000 end
         
         if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
@@ -1959,19 +1961,25 @@ local function ProcessTask(bandit, task)
         end
 
     elseif task.state == "WORKING" then
-
+        -- print ("working: " .. bandit:getActionStateName() .. " " .. bandit:getBumpType()  .. bandit:getVariableString("BanditWalkType"))
         -- normalize time speed
-        local decrement = 1 / ((60 + 0.5) * 0.01666667)
+        local decrement = 1 / ((getAverageFPS() + 0.5) * 0.01666667)
+        --local decrement = 1 / ((60 + 0.5) * 0.01666667)
         task.time = task.time - decrement
 
         local done = ZombieActions[task.action].onWorking(bandit, task)
         if done or task.time <= 0 then 
-            task.state = "COMPLETED"
+
+            if ZombieActions[task.action].onComplete then
+                task.state = "COMPLETED"
+            else
+                Bandit.RemoveTask(bandit)
+            end
+            
         end
-        -- Bandit.UpdateTask(bandit, task)
 
     elseif task.state == "COMPLETED" then
-
+        -- print ("working: " .. bandit:getActionStateName() .. " " .. bandit:getBumpType() .. " " .. bandit:getVariableString("BanditWalkType"))
         if task.sound then
             local emitter = bandit:getEmitter()
             if not emitter:isPlaying(task.sound) then
@@ -2081,6 +2089,7 @@ end
 
 -- main function to handle bandits
 local function OnBanditUpdate(zombie)
+    
     local ts = getTimestampMs()
     
     if isServer() then return end
@@ -2247,7 +2256,7 @@ local function OnBanditUpdate(zombie)
 
     local task = Bandit.GetTask(bandit)
     if task then
-            
+    
         -- local ts = getTimestampMs()
         ProcessTask(bandit, task)
         -- local elapsed = getTimestampMs() - ts
@@ -2257,7 +2266,6 @@ local function OnBanditUpdate(zombie)
     else
         local task = {action = "Idle", time = 100}
         ProcessTask(bandit, task)
-        print("No task for bandit")
     end
 end
 

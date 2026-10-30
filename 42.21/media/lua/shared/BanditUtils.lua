@@ -328,51 +328,44 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
         elseif instanceof(victim, "IsoZombie") then
             local brainVictim = BanditBrain.Get(victim)
             if BanditUtils.AreEnemies(brainVictim, brainShooter) then
-            -- if not brainVictim or (brainVictim.clan ~= brainShooter.clan and (brainShooter.hostile or brainVictim.hostile)) then
+               
+                local dmg = ZombRandFloat(item:getMinDamage(), item:getMaxDamage())
 
-                local isSeen = false
-                local playerList = BanditPlayer.GetPlayers()
-                for i=0, playerList:size()-1 do
-                    local player = playerList:get(i)
-                    if player and player:CanSee(victim) and victim:getSquare():isCanSee(0) then
-                        isSeen = true
-                    end
-                end
-
-                local isSeen = false
-                local playerList = BanditPlayer.GetPlayers()
-                for i=0, playerList:size()-1 do
-                    local player = playerList:get(i)
-                    if player then
-                        if  player:CanSee(victim) then
-                            if victim:getSquare():isCanSee(0) then
-                                isSeen = true
-                            end
-                        end
-                    end
-                end
-
-                local dmg = item:getMaxDamage()
-                if instanceof(victim, "IsoZombie") then
-                    dmg = dmg * 2
+                -- vanilla modDelta for firearms: 2.0 for shotguns (range falloff), 1.0 otherwise
+                local modDelta = 1
+                if item:isRangeFalloff() then
+                    modDelta = 2
                 end
 
                 -- victim:setBumpDone(true)
-                victim:setHitFromBehind(shooter:isBehind(victim))
+                -- ranged hit-from-behind (vanilla): dot of shooter->victim direction with victim forward > 0.5
+                local hitFromBehind = false
+                local hdx = victim:getX() - shooter:getX()
+                local hdy = victim:getY() - shooter:getY()
+                local hlen = math.sqrt(hdx * hdx + hdy * hdy)
+                if hlen > 0 then
+                    local fwd = victim:getForwardDirection()
+                    hitFromBehind = (hdx * fwd:getX() + hdy * fwd:getY()) / hlen > 0.5
+                end
+                victim:setHitFromBehind(hitFromBehind)
                 -- victim:setHitAngle(shooter:getForwardDirection())
                 victim:setAttackedBy(shooter)
                 victim:setPlayerAttackPosition(victim:testDotSide(shooter))
-                -- victim:setHitReaction("ShotBelly")
-                
-
                 victim:setHitHeadWhileOnFloor(0)
                 victim:setHitLegsWhileOnFloor(false)
-                if isSeen then
-                    victim:Hit(item, fakeZombie, dmg, false, 1, false)
-                else
-                    local fakeItem = BanditCompatibility.InstanceItem("Base.Katana")
-                    victim:Hit(fakeItem, fakeZombie, dmg, false, 1, false)
+
+                -- bullet flesh impact sound on the victim (vanilla BulletHitSurface: 1=Flesh, 2=Flesh_Hollow)
+                local zombieHitSound = item:getZombieHitSound()
+                if zombieHitSound then
+                    local victimEmitter = victim:getEmitter()
+                    local vsid = victimEmitter:playSound(zombieHitSound)
+                    local surface = victim:isOnFloor() and 2 or 1
+                    BanditCompatibility.setParameterValueByName(victimEmitter, vsid, "BulletHitSurface", surface)
                 end
+
+                shooter:setVariable("ZombieHitReaction", "ShotBelly")
+                victim:Hit(item, shooter, dmg, false, modDelta, false)
+                shooter:clearVariable("ZombieHitReaction")
                 
                 BanditUtils.AddHole(victim)
                 BanditCompatibility.Splash(victim, item, fakeZombie)
@@ -403,15 +396,12 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
     return landed
 end
 
-function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, incendiary)
+function BanditUtils.ManageLineOfFire (shooter, x1, y1, z, weaponItem, damageSplit, incendiary)
 
     local cell = getCell()
 
     local x0 = math.floor(shooter:getX())
     local y0 = math.floor(shooter:getY())
-    local x1 = math.floor(enemy:getX())
-    local y1 = math.floor(enemy:getY())
-    local z = enemy:getZ()
 
     local dx = math.abs(x1 - x0)
     local dy = math.abs(y1 - y0)
@@ -428,6 +418,12 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
     local player = getSpecificPlayer(0)
     local piercing = weaponItem:isPiercingBullets()
     local projectiles = BanditUtils.GetProjectileCount(weaponItem:getWeaponReloadType())
+
+    -- total characters this shot may stop at: one per projectile,
+    -- a piercing projectile may pass through and hit one extra victim
+    local maxVictims = projectiles
+    if piercing then maxVictims = projectiles * 2 end
+    local victims = 0
 
     -- Bresenham's line of fire to detect what needs to destroyed between shooter and target
     local i = 0
@@ -558,10 +554,8 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
 
                 -- manage character "obstacles"
                 local chrs = square:getMovingObjects()
-                local landed = false
-                --for i=0, math.min(chrs:size()-1, projectiles) do
-                for i=0, chrs:size()-1 do
-                    local chr = chrs:get(i)
+                for j=0, chrs:size()-1 do
+                    local chr = chrs:get(j)
                     if instanceof(chr, "IsoZombie") or instanceof(chr, "IsoPlayer") then
                         if BanditUtils.GetCharacterID(shooter) ~= BanditUtils.GetCharacterID(chr) then 
                             
@@ -571,16 +565,18 @@ function BanditUtils.ManageLineOfFire (shooter, enemy, weaponItem, damageSplit, 
                                 hasArmor = true
                             end
                             if not hasArmor then
-                                landed = BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
+                                local landed = BanditUtils.Hit(shooter, weaponItem, chr, damageSplit)
                                 if incendiary then
                                     chr:setOnFire(true)
                                 end
+                                if landed then
+                                    victims = victims + 1
+                                    if victims >= maxVictims then return false end
+                                end
                             end
-                            if i + 1 >= projectiles and landed then break end
                         end
                     end
                 end
-                if not piercing and landed then return false end
 
             end
         end

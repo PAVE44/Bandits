@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSIdleSneakRunSlow</m_Name>
+	<m_AnimName>Bob_IdleSneak</m_AnimName>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_BlendTime>0.35</m_BlendTime>
+	<m_randomAdvanceFraction>0.50</m_randomAdvanceFraction>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>ZombieWalkType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>RunSneakSlow</m_StringValue>
+	</m_Conditions>
+	<m_Transitions>
+		<m_Target>ZSRunSneakSlow</m_Target>
+		<m_AnimName>Bob_SneakToSneakRun</m_AnimName>
+	</m_Transitions>
+</animNode>

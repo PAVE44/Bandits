@@ -11,6 +11,8 @@
 		<m_Type>BOOL</m_Type>
 		<m_BoolValue>true</m_BoolValue>
 	</m_Conditions>
+        <m_Conditions />
+        <m_Conditions />
 	<m_Conditions>
 		<m_Name>BanditHandBag</m_Name>
 		<m_Type>STRING</m_Type>

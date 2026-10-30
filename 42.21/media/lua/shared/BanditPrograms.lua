@@ -159,6 +159,7 @@ end
 BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     local tasks = {}
 
+    --[[
     local brain = BanditBrain.Get(bandit)
     local weapon = brain.weapons[slot]
     local weaponItem = BanditCompatibility.InstanceItem(weapon.name)
@@ -210,7 +211,13 @@ BanditPrograms.Weapon.Shoot = function(bandit, enemyCharacter, slot)
     end
 
     return tasks
+    --]]
+    local eid = BanditUtils.GetCharacterID(enemyCharacter)
+    local task = {action="Shoot", slot=slot, eid=eid}
+    table.insert(tasks, task)
+    return tasks
 end
+
 BanditPrograms.Weapon.Rack = function(bandit, slot)
     local tasks = {}
 

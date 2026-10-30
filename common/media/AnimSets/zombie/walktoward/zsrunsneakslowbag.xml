@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="zsrunsneakslowall.xml">
+	<m_Name>ZSRunSneakSlowBag</m_Name>
+	<m_AnimName>Bob_RunSneakSlow_Bag</m_AnimName>
+	<m_Conditions>
+		<m_Name>zombieWalkType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>RunSneak</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>BanditHandBag</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>left</m_StringValue>
+	</m_Conditions>
+	<m_Events>
+		<m_EventName>Footstep</m_EventName>
+		<m_TimePc>0.15</m_TimePc>
+		<m_ParameterValue>walk</m_ParameterValue>
+	</m_Events>
+	<m_Events>
+		<m_EventName>Footstep</m_EventName>
+		<m_TimePc>0.6</m_TimePc>
+		<m_ParameterValue>walk</m_ParameterValue>
+	</m_Events>
+</animNode>

@@ -169,12 +169,15 @@ BanditCompatibility.StartMuzzleFlash = function(shooter)
         if patched then
             shooter:startMuzzleFlash()
         else
-
+            -- muzzle light
             local square = shooter:getSquare()
-            -- shooter:startMuzzleFlash() -- it does not work in b42 apparently, so here is how to do this now:
-            -- shooter:setMuzzleFlashDuration(getTimestampMs())
             local lightSource = IsoLightSource.new(square:getX(), square:getY(), square:getZ(), 0.8, 0.8, 0.7, 18, 1)
             getCell():addLamppost(lightSource)
+
+            -- muzzle flash sprite, client-rendered per shooter (see BanditProjectile.lua)
+            if BanditMuzzleFlash then
+                BanditMuzzleFlash.Add(shooter:getX(), shooter:getY(), shooter:getZ(), shooter:getDirectionAngle())
+            end
         end
     else
         shooter:startMuzzleFlash()

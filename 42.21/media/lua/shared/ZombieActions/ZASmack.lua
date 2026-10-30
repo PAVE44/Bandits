@@ -598,7 +598,7 @@ ZombieActions.Smack.onWorking = function(bandit, task)
     end
     bandit:faceLocationF(task.x, task.y)
 
-    if bumpType ~= task.anim then return false end
+    if bumpType ~= task.anim then return true end
 
     if not task.hit and task.time <= task.attackTime then
 
@@ -645,9 +645,4 @@ ZombieActions.Smack.onWorking = function(bandit, task)
     end
 
     return false
-end
-
-ZombieActions.Smack.onComplete = function(bandit, task)
-    local asn = bandit:getActionStateName()
-    return true
 end
