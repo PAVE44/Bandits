@@ -463,8 +463,6 @@ local function banditize(zombie, bandit, clan, args)
     gmd[id] = brain
     TransmitBanditCluster(id)
 
-    
-
     if LogLevel >= 3 then print ("[BANDITS] banditize finished id " .. id) end
 
     -- zombie:getModData().IsBandit = true

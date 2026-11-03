@@ -50,7 +50,6 @@ BanditServer.Commands.BanditRemove  = function(player, args)
         local gmd = GetBanditClusterData(id)
         if gmd[id] then
             gmd[id] = nil
-            -- print ("[INFO] Bandit removed: " .. id)
         end
         TransmitBanditCluster(id)
     end

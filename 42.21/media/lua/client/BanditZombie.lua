@@ -174,8 +174,13 @@ end
 
 -- returns IsoZombie by id
 BanditZombie.GetInstanceById = function(id)
-    if BanditZombie.Cache[id] then
-        return BanditZombie.Cache[id]
+    local zombie = BanditZombie.Cache[id]
+    -- the engine pools and reuses IsoZombie objects: after a body is removed or
+    -- virtualized on chunk unload, the same instance can return as a *different*
+    -- bandit before the next cache flush drops the old key; validate identity and
+    -- world presence so a stale key never leaks another bandit's live body
+    if zombie and zombie:getSquare() and GetZombieID(zombie) == id then
+        return zombie
     end
     return nil
 end
