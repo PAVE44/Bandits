@@ -435,14 +435,21 @@ end
 
 -- args: program, permanent, key
 local function banditize(zombie, bandit, clan, args)
+    -- the engine builds the id from the outfit index and a random variant, so it can be
+    -- 0 (outfit name did not resolve) or collide with the id of an existing brain; in both
+    -- cases redress to roll a fresh id, otherwise two bodies share one brain and the
+    -- orphaned body degenerates into a plain vanilla zombie once its entry is removed
     local id = zombie:getPersistentOutfitID()
-    if id == 0 then
-        -- the requested outfit did not resolve, so the engine left the persistent id at 0;
-        -- redress with a known outfit, otherwise the brain cannot be tracked and the body
-        -- degenerates into a plain vanilla zombie
-        print ("[BANDITS] banditize: outfit did not resolve, redressing in Naked1")
-        zombie:dressInPersistentOutfit("Naked1")
+    local attempts = 0
+    while attempts < 20 do
+        local cluster = GetBanditClusterData(id)
+        if id ~= 0 and not (cluster and cluster[id]) then break end
+        zombie:dressInPersistentOutfit("Naked" .. (1 + ZombRand(100)))
         id = zombie:getPersistentOutfitID()
+        attempts = attempts + 1
+    end
+    if attempts > 0 then
+        print ("[BANDITS] banditize: rerolled persistent id " .. attempts .. " time(s) to avoid a collision, id " .. id)
     end
     if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
 
