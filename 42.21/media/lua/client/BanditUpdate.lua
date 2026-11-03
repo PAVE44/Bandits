@@ -2161,6 +2161,19 @@ local function OnBanditUpdate(zombie)
             Banditize(zombie, brain)
         end
     else
+        -- orphan cull: only this mod dresses zombies in Naked* outfits, so a live
+        -- Naked* zombie without a brain entry is an ex-bandit that lost its brain;
+        -- the entry lookup already happened above, so this catches orphans within a
+        -- single zombie update (SP/host only: on MP clients cluster data may lag)
+        if not isClient() then
+            local outfit = zombie:getOutfitName()
+            if outfit and string.sub(outfit, 1, 5) == "Naked" then
+                print ("[BANDITS] removed orphaned bandit body, id " .. id .. " at " .. math.floor(zx) .. "," .. math.floor(zy) .. "," .. math.floor(zz))
+                zombie:removeFromWorld()
+                zombie:removeFromSquare()
+                return
+            end
+        end
         if zombie:getVariableBoolean("Bandit") then
             Zombify(zombie)
         end
