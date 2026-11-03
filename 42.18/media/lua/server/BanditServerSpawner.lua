@@ -293,6 +293,14 @@ end
 -- args: program, permanent, key
 local function banditize(zombie, bandit, clan, args)
     local id = zombie:getPersistentOutfitID()
+    if id == 0 then
+        -- the requested outfit did not resolve, so the engine left the persistent id at 0;
+        -- redress with a known outfit, otherwise the brain cannot be tracked and the body
+        -- degenerates into a plain vanilla zombie
+        print ("[BANDITS] banditize: outfit did not resolve, redressing in Naked1")
+        zombie:dressInPersistentOutfit("Naked1")
+        id = zombie:getPersistentOutfitID()
+    end
     if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
 
     local brain = {}
@@ -477,7 +485,7 @@ local function spawnGroup(spawnPoints, args)
         local sp = spawnPoints[i]
 
         -- local outfit = BanditUtils.Choice({"Generic01", "Generic02", "Generic03", "Generic04", "Generic05"})
-        local outfit = "Naked" .. (1 + ZombRand(101))
+        local outfit = "Naked" .. (1 + ZombRand(100))
         local zombieList = BanditCompatibility.AddZombiesInOutfit(sp.x, sp.y, sp.z, outfit, femaleChance, 
                                                                   crawler, fallOnFront, fakeDead, 
                                                                   knockedDown, invulnerable, sitting,
@@ -499,7 +507,7 @@ local function spawnRestore(brain)
     local fakeDead = false
     local invulnerable = false
     local sitting = false
-    local outfit = "Naked" .. (1 + ZombRand(101))
+    local outfit = "Naked" .. (1 + ZombRand(100))
     local femaleChance = 0
     local health = 1
     local oldId = brain.id
@@ -548,7 +556,7 @@ local function spawnIndividual(sp, args)
     local fakeDead = false
     local invulnerable = false
     local sitting = false
-    local outfit = "Naked" .. (1 + ZombRand(101))
+    local outfit = "Naked" .. (1 + ZombRand(100))
 
     local bid = args.bid
     if not bid then return end

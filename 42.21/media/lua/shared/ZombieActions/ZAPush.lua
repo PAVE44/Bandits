@@ -1,7 +1,15 @@
 ZombieActions = ZombieActions or {}
 
 local function ShovePlayer (attacker, player)
-    local facing = player:isBehind(attacker)
+
+    local hitFromBehind = false
+    local hdx = player:getX() - attacker:getX()
+    local hdy = player:getY() - attacker:getY()
+    local hlen = math.sqrt(hdx * hdx + hdy * hdy)
+    if hlen > 0 then
+        local fwd = player:getForwardDirection()
+        hitFromBehind = (hdx * fwd:getX() + hdy * fwd:getY()) / hlen > 0.5
+    end
 
     player:clearVariable("BumpFallType")
     player:setBumpType("stagger")
@@ -12,7 +20,7 @@ local function ShovePlayer (attacker, player)
         player:setBumpFall(false)
     end
 
-    if facing then
+    if not hitFromBehind then
         player:setBumpFallType("pushedFront")
     else
         player:setBumpFallType("pushedBehind")
@@ -20,9 +28,17 @@ local function ShovePlayer (attacker, player)
 end
 
 local function ShoveZombie (attacker, zombie)
-    local behind = attacker:isBehind(zombie)
+    
+    local hitFromBehind = false
+    local hdx = zombie:getX() - attacker:getX()
+    local hdy = zombie:getY() - attacker:getY()
+    local hlen = math.sqrt(hdx * hdx + hdy * hdy)
+    if hlen > 0 then
+        local fwd = zombie:getForwardDirection()
+        hitFromBehind = (hdx * fwd:getX() + hdy * fwd:getY()) / hlen > 0.5
+    end
 
-    zombie:setHitFromBehind(attacker:isBehind(zombie))
+    zombie:setHitFromBehind(hitFromBehind)
     zombie:setPlayerAttackPosition(zombie:testDotSide(attacker))
     zombie:setHitForce(1)
     --zombie:setStaggerBack(true)
@@ -41,9 +57,9 @@ ZombieActions.Push.onStart = function(bandit, task)
         local primaryItemType = WeaponType.getWeaponType(primaryItem)
 
         if primaryItemType == WeaponType.FIREARM then
-            anim = BanditUtils.Choice({"WhipRifle1", "WhipRifle2"})
+            anim = BanditUtils.Choice({"WhipRifle1", "WhipRifle2", "HighKick", "FrontKick"})
         elseif primaryItemType == WeaponType.HANDGUN then
-            anim = BanditUtils.Choice({"WhipPistol1", "WhipPistol2"})
+            anim = BanditUtils.Choice({"WhipPistol1", "WhipPistol2", "HighKick", "FrontKick"})
         end
     end
 
@@ -63,7 +79,7 @@ ZombieActions.Push.onWorking = function(bandit, task)
     local bumpType = bandit:getBumpType()
     if bumpType ~= task.anim then return task.hit == true end
 
-    if not task.hit and task.time <= 60 then
+    if not task.hit and task.time <= 54 then
 
         task.hit = true
 

@@ -1117,10 +1117,11 @@ local function ManageCombat(bandit)
                                             combat = not shove
                                         end
                                     else
+                                        local asn = enemyCharacter:getActionStateName()
                                         if distSq < 0.30 then
                                             shove = true
                                             combat = false
-                                        else
+                                        elseif asn == "bumped" then
                                             switch = true
                                             switchTo = weapons.melee
                                         end
@@ -1919,7 +1920,7 @@ local function ProcessTask(bandit, task)
         -- print ("new: " .. bandit:getActionStateName() .. " " .. bandit:getBumpType() .. " " .. bandit:getVariableString("BanditWalkType"))
         if not task.time then task.time = 1000 end
         
-        if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" then
+        if task.action ~= "Shoot" and task.action ~= "Aim" and task.action ~= "Rack"  and task.action ~= "Load" and task.action ~= "Bandage" then
             Bandit.SetAim(bandit, false)
         end
 
@@ -2408,7 +2409,10 @@ local function OnZombieDead(bandit)
             end
         end
 
-        Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
+        if brain then
+            Bandit.UpdateItemsToSpawnAtDeath(bandit, brain)
+        end
+
         bandit:DoZombieInventory()
 
         -- drop extra suitcase item 
