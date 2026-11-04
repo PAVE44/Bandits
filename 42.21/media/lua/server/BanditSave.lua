@@ -1,6 +1,13 @@
+local function isEscapeMenuOpen()
+    return MainScreen.instance ~= nil
+        and MainScreen.instance.inGame == true
+        and MainScreen.instance:getIsVisible()
+end
 
 local function onSave()
     if isClient() then return end
+
+    if not isEscapeMenuOpen() then return end
 
     local cell = getCell()
     if not cell then return end
@@ -39,7 +46,10 @@ local function cullOrphans()
     local zombieList = cell:getZombieList()
     for i = zombieList:size() - 1, 0, -1 do
         local zombie = zombieList:get(i)
-        if zombie:getHealth() > 0 then
+        -- skip dying/dead bandits: their entry is removed on death while the body
+        -- still runs through the death sequence, and removing it would destroy the
+        -- body before the engine turns it into a corpse
+        if zombie:isAlive() and zombie:getHealth() > 0 and not zombie:getModData().isDeadBandit then
             local outfit = zombie:getOutfitName()
             if outfit and string.sub(outfit, 1, 5) == "Naked" then
                 local id = BanditUtils.GetZombieID(zombie)

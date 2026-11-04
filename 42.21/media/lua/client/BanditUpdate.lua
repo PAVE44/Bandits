@@ -420,8 +420,6 @@ local function ManageActionState(bandit)
         bandit:clearAggroList()
         bandit:setTarget(nil)
         return true
-    elseif asn == "pathfind" then
-        return true
     elseif asn =="thump" then
         bandit:addLineChatElement(asn, 0.2, 0.8, 0.1)
         bandit:changeState(ZombieIdleState.instance())
@@ -580,6 +578,7 @@ local function ManageCollisions(bandit)
     local dirrad = bandit:getDirectionAngleRadians()
     local isodir = IsoDirections.cardinalFromAngle(dirrad)
 
+    --[[
     local fenceSquare = square
     local fenceFlag = IsoFlagType.HoppableW
     if isodir == IsoDirections.N or isodir == IsoDirections.S then
@@ -589,16 +588,21 @@ local function ManageCollisions(bandit)
         fenceSquare = square:getAdjacentSquare(isodir)
     end
     if fenceSquare and fenceSquare:has(fenceFlag) then
+        --[[
         local x = bandit:getX() + math.cos(dirrad) * 0.1
         local y = bandit:getY() + math.sin(dirrad) * 0.1
         bandit:setX(x)
         bandit:setY(y)
         bandit:setNextX(x)
         bandit:setNextY(y)
-        bandit:changeState(ClimbOverFenceState.instance())
-        bandit:setBumpType("ClimbFenceEnd")
+        if bandit:isFacingLocation(fenceSquare:getX() +0.5, fenceSquare:getY()+0.5, 0.5) then
+            bandit:changeState(ClimbOverFenceState.instance())
+            bandit:setBumpType("ClimbFenceEnd")
+        else
+            bandit:faceLocation(fenceSquare:getX() +0.5, fenceSquare:getY()+0.5)
+        end
         return tasks
-    end
+    end]]
 
     --bandit:addLineChatElement("X: " .. bandit:getX() .. ", Y: " .. bandit:getY() .. ", Z: " .. bandit:getZ(), 0.8, 0.8, 0.1)
     -- bandit:addLineChatElement("Facing direction: " .. bandit:getDirectionAngle(), 0.8, 0.8, 0.1)
@@ -938,7 +942,7 @@ local function ManageCollisions(bandit)
                         end
 
                         -- LOW FENCE COLLISION
-                        --[[
+                        
                         if lowFence or hoppable then
                             if bandit:isFacingObject(object, 0.5) then
                                 bandit:changeState(ClimbOverFenceState.instance())
@@ -951,7 +955,7 @@ local function ManageCollisions(bandit)
                             end
                             return tasks
                         end
-                        ]]
+                        
 
                         -- TALL FENCE COLLISION
                         local tallFence = properties:get("FenceTypeHigh")
@@ -2164,8 +2168,13 @@ local function OnBanditUpdate(zombie)
         -- orphan cull: only this mod dresses zombies in Naked* outfits, so a live
         -- Naked* zombie without a brain entry is an ex-bandit that lost its brain;
         -- the entry lookup already happened above, so this catches orphans within a
-        -- single zombie update (SP/host only: on MP clients cluster data may lag)
-        if not isClient() then
+        -- single zombie update (SP/host only: on MP clients cluster data may lag).
+        -- never cull a dying/dead bandit: its entry is removed on death while the
+        -- body still updates through the death sequence, and removing it here would
+        -- destroy the body before the engine turns it into a corpse
+        if not isClient()
+            and zombie:isAlive() and zombie:getHealth() > 0
+            and not zombie:getModData().isDeadBandit then
             local outfit = zombie:getOutfitName()
             if outfit and string.sub(outfit, 1, 5) == "Naked" then
                 print ("[BANDITS] removed orphaned bandit body, id " .. id .. " at " .. math.floor(zx) .. "," .. math.floor(zy) .. "," .. math.floor(zz))

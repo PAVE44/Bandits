@@ -4,8 +4,10 @@ ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
     zombie:setVariable("BanditWalkType", task.walkType)
-    --zombie:setCollideType("wall")
+    zombie:addLineChatElement("Move Start", 0.8, 0.8, 0.1)
 
+
+    
     local square = zombie:getCurrentSquare()
     if not square:isFree(false) then
         if task.x > zombie:getX() then
@@ -20,9 +22,18 @@ ZombieActions.Move.onStart = function(zombie, task)
             zombie:setY(zombie:getY() - 0.05)
         end
     end
+
+    local dist = BanditUtils.DistTo(task.x, task.y, zombie:getX(), zombie:getY())
+    if dist < 0.5 then
+        return true
+    end
+
     if BanditUtils.IsController(zombie) then
-        zombie:getPathFindBehavior2():pathToLocation(task.x, task.y, task.z)
-        zombie:getPathFindBehavior2():update()
+        zombie:getPathFindBehavior2():pathToLocationF(task.x, task.y, task.z)
+        -- force PathFindState: it owns path2 and runs PathFindBehavior2.update() itself
+        zombie:setVariable("bPathfind", true)
+        zombie:setVariable("bMoving", false)
+        task.moveTicks = 0
     end
 
     return true
@@ -47,11 +58,9 @@ ZombieActions.Move.onWorking = function(zombie, task)
 
     if BanditUtils.IsController(zombie) then
 
-        local result = zombie:getPathFindBehavior2():update()
-        if result == BehaviorResult.Failed then
-            return true
-        end
-        if result == BehaviorResult.Succeeded then
+        -- the state machine needs a few ticks to enter PathFindState, which clears bPathfind when the path ends
+        task.moveTicks = (task.moveTicks or 0) + 1
+        if task.moveTicks > 3 and not zombie:getVariableBoolean("bPathfind") then
             return true
         end
     end
@@ -68,6 +77,3 @@ ZombieActions.Move.onComplete = function(zombie, task)
     end
     return true
 end
-
-
-
