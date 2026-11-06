@@ -62,8 +62,8 @@ function BanditMenu.MakeProcedure (player, square)
     local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 5
-    local h = 5
+    local w = 20
+    local h = 20
 
     local lines = {}
 
@@ -73,7 +73,7 @@ function BanditMenu.MakeProcedure (player, square)
     
     for x = 0, w do
         for y = 0, h do
-            for z = 0, 0 do
+            for z = 0, 1 do
                 local square = cell:getGridSquare(sx + x, sy + y, sz + z)
                 if square then
                     local objects = square:getObjects()
@@ -104,7 +104,8 @@ function BanditMenu.MakeProcedure (player, square)
 
                                 elseif isSolidFloor or isAttachedFloor then
                                     --floors
-                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    -- table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
                                 
                                 elseif false and objectType == IsoObjectType.wall then
                                     -- walls 
@@ -119,7 +120,8 @@ function BanditMenu.MakeProcedure (player, square)
 
                                 else
                                     -- special objects?
-                                    table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    --table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
                                     
                                 end
                             end

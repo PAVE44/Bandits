@@ -615,6 +615,10 @@ local function spawnRestore(brain)
     args.master = brain.pid
     args.permanent = brain.permanent
     args.key = brain.key
+    args.hostile = brain.hostile
+    args.hostileP = brain.hostileP
+    args.fullname = brain.fullname
+    args.voice = brain.voice
 
     if bandit.general.female then
         femaleChance = 100

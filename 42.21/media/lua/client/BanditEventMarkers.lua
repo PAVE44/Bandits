@@ -6,7 +6,7 @@ BanditEventMarker = ISUIElement:derive("BanditEventMarker")
 
 BanditEventMarker.iconSize = 96
 BanditEventMarker.clickableSize = 45
-BanditEventMarker.maxRange = 500
+BanditEventMarker.maxRange = 1500
 
 function BanditEventMarker:initialise()
     ISUIElement.initialise(self)

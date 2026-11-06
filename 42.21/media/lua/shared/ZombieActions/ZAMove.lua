@@ -4,9 +4,6 @@ ZombieActions.Move = {}
 ZombieActions.Move.onStart = function(zombie, task)
 
     zombie:setVariable("BanditWalkType", task.walkType)
-    zombie:addLineChatElement("Move Start", 0.8, 0.8, 0.1)
-
-
     
     local square = zombie:getCurrentSquare()
     if not square:isFree(false) then
