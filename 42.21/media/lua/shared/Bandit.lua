@@ -205,7 +205,14 @@ local function applyAttachments(bandit, brain)
 
     for _, slot in pairs({"primary", "secondary", "melee"}) do
 
-        if brain.weapons[slot].name then
+        -- skip attaching wapon if it is already held
+        local alreadyHeld = false
+        local heldItem = bandit:getPrimaryHandItem()
+        if heldItem and heldItem:getFullType() == brain.weapons[slot].name then
+            alreadyHeld = true
+        end
+
+        if brain.weapons[slot].name and not alreadyHeld then
             local weapon = BanditCompatibility.InstanceItem(brain.weapons[slot].name)
 
             if weapon then

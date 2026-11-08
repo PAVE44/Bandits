@@ -21,7 +21,8 @@ ZombieActions.Move.onStart = function(zombie, task)
     end
 
     local dist = BanditUtils.DistTo(task.x, task.y, zombie:getX(), zombie:getY())
-    if dist < 0.5 then
+    if dist < 0.2 then
+
         return true
     end
 

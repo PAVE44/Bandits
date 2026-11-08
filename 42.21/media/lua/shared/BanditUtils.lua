@@ -1043,6 +1043,12 @@ function BanditUtils.GetMoveTask(endurance, x, y, z, walkType, dist, closeSlow)
     if dist < 0.5 then
         -- print ("SMALL DIST")
     end
+    if math.abs(math.floor(x) - x ) < 0.01 then
+        x = x + 0.5
+    end
+    if math.abs(math.floor(y) - y ) < 0.01 then
+        y = y + 0.5
+    end
     local gamemode = BanditUtils.GetGameMode()
     local task
     if gamemode == "Multiplayer" then

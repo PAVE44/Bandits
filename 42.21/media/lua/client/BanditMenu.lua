@@ -62,8 +62,8 @@ function BanditMenu.MakeProcedure (player, square)
     local sy = square:getY()
     local sz = square:getZ()
 
-    local w = 20
-    local h = 20
+    local w = 13
+    local h = 7
 
     local lines = {}
 
@@ -105,7 +105,7 @@ function BanditMenu.MakeProcedure (player, square)
                                 elseif isSolidFloor or isAttachedFloor then
                                     --floors
                                     -- table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
-                                    table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
+                                    -- table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
                                 
                                 elseif false and objectType == IsoObjectType.wall then
                                     -- walls 
@@ -121,7 +121,12 @@ function BanditMenu.MakeProcedure (player, square)
                                 else
                                     -- special objects?
                                     --table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
-                                    table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
+                                    
+                                    -- removal 
+                                    --table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
+
+                                    -- blueprint add
+                                    table.insert(lines, "{x = " .. tostring(x) .. ", y = " .. tostring(y) .. ", z = " .. tostring(z) .. ", sprite = \"" .. spriteName .. "\"},\n")
                                     
                                 end
                             end
@@ -131,7 +136,7 @@ function BanditMenu.MakeProcedure (player, square)
             end
         end
     end
-    local fileWriter = getFileWriter("waitingroom2.txt", true, true)
+    local fileWriter = getFileWriter("waitingroom3.txt", true, true)
     table.insert(lines, "end\n\n")
 
     local output = ""
