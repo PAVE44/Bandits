@@ -289,7 +289,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
     local accuracyThreshold = calculateHitChance(dist, sightGeneral + sightCharacter + sightScope)
     --  print ("AT: " .. accuracyThreshold)
     -- if ZombRand(10000) < accuracyThreshold then
-    local n = BanditRandom.Get()
+    local n = ZombRand(10000)-- BanditRandom.Get()
     if n < accuracyThreshold then
         -- print ("HIT N: " .. n)
         if instanceof(victim, "IsoPlayer") and (brainShooter.hostile or brainShooter.hostileP) then
@@ -332,9 +332,9 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                 local dmg = ZombRandFloat(item:getMinDamage(), item:getMaxDamage())
 
                 -- vanilla modDelta for firearms: 2.0 for shotguns (range falloff), 1.0 otherwise
-                local modDelta = 1
+                local modDelta = 1.3
                 if item:isRangeFalloff() then
-                    modDelta = 2
+                    modDelta = 2.5
                 end
 
                 -- victim:setBumpDone(true)
@@ -371,6 +371,7 @@ function BanditUtils.Hit(shooter, item, victim, damageSplit)
                 BanditCompatibility.Splash(victim, item, fakeZombie)
 
                 local h = victim:getHealth()
+                -- victim:addLineChatElement(("health: " .. h .. " " .. ZombRand(100)), 1, 1, 1)
                 local id = BanditUtils.GetCharacterID(bandit)
                 local args = {id=id, h=h}
                 sendClientCommand(getSpecificPlayer(0), 'Sync', 'Health', args)

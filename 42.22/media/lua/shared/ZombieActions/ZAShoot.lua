@@ -45,7 +45,7 @@ ZombieActions.Shoot.onStart = function(bandit, task)
 
     -- fire tick
     local fireDelay = 1
-    task.tickFire = task.recoilDelay - fireDelay
+    task.tickFire = task.recoilDelay
 
     -- shell ground tick
     if not weaponItem:isManuallyRemoveSpentRounds() then
@@ -71,6 +71,8 @@ ZombieActions.Shoot.onStart = function(bandit, task)
         if weaponItem:getFireMode() == "Auto" then
             task.anim = "AttackRifleSmallAuto"
             task.auto = true
+            local autospeed = 1 / (recoilDelay / 45)
+            bandit:setVariable("BanditAutoSpeed", autospeed)
         else
             if recoilDelay >= 28 then
                 task.anim = "AttackRifle"
@@ -91,7 +93,7 @@ ZombieActions.Shoot.onStart = function(bandit, task)
     -- apply a slight random offset to the firing direction (degrees)
     local maxAimOffset = 5
     if task.auto then
-        maxAimOffset = maxAimOffset * 1.8
+        maxAimOffset = maxAimOffset * 1.5
     end
     local aimOffset = ZombRandFloat(0, 2 * maxAimOffset) - maxAimOffset
     task.fireAngle = bandit:getDirectionAngle() + aimOffset
@@ -107,6 +109,8 @@ end
 
 ZombieActions.Shoot.onWorking = function(bandit, task)
     if bandit:getBumpType() ~= task.anim then 
+        return true
+        --[[
         local elapsed = 1000 - task.time
         local reqTime = task.recoilDelay
         if task.auto then
@@ -116,7 +120,7 @@ ZombieActions.Shoot.onWorking = function(bandit, task)
             return true 
         else
             bandit:setBumpType(task.anim2)
-        end
+        end]]
     end
 
     local enemy = BanditZombie.Cache[task.eid] or BanditPlayer.GetPlayerById(task.eid)

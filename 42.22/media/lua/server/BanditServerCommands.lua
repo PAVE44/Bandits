@@ -64,24 +64,25 @@ BanditServer.Commands.BanditFlush  = function(player, args)
     print ("[INFO] All bandits removed!!!")
 end
 
--- merges the given brain keys into the roster entry; tasks are per-client
--- transient state and never reach the roster
-BanditServer.UpdateBrainPart = function(id, part)
-    if not id then return nil end
-    local gmd = GetBanditClusterData(id)
-    local brain = gmd and gmd[id]
-    if not brain then return nil end
-
-    for k, v in pairs(part) do
-        if k ~= "id" and k ~= "tasks" and k ~= "origin" then
-            brain[k] = v
-        end
-    end
-    return brain
-end
-
 BanditServer.Commands.BanditUpdatePart = function(player, args)
-    local brain = BanditServer.UpdateBrainPart(args.id, args)
+
+    -- merges the given brain keys into the roster entry; tasks are per-client
+    -- transient state and never reach the roster
+    local updateBrainPart = function(id, part)
+        if not id then return nil end
+        local gmd = GetBanditClusterData(id)
+        local brain = gmd and gmd[id]
+        if not brain then return nil end
+
+        for k, v in pairs(part) do
+            if k ~= "id" and k ~= "tasks" and k ~= "origin" then
+                brain[k] = v
+            end
+        end
+        return brain
+    end
+
+    local brain = updateBrainPart(args.id, args)
     if not brain then return end
 
     -- a partial update does not change the roster, so clients receive just the
