@@ -448,25 +448,21 @@ function BanditUtils.ManageLineOfFire (shooter, x1, y1, z, weaponItem, damageSpl
             -- intermediate obstacles, but always process the target end zone,
             -- otherwise point-blank targets (dist <= 1) can never be hit
             if (i > 1 or endZone) and square then
-                -- manage wall obstacle
-                local props = square:getProperties()
-                local names = props:getPropertyNames()
-
-                if props then
-                    -- square:playSound("BulletImpact")
-                    local matName = props:get("Material")
-                    if not matName then
-                        matName = props:get("MaterialType")
+                -- Neighbor squares are hit candidates, not additional bullet impacts.
+                if endZone and c.x == x1 and c.y == y1 then
+                    local props = square:getProperties()
+                    if props then
+                        local matName = props:get("Material")
+                        if not matName then
+                            matName = props:get("MaterialType")
+                        end
+                        if matName then
+                            local emitter = getWorld():getFreeEmitter(c.x, c.y, c.z)
+                            local sid = emitter:playSound("BulletImpact")
+                            local sidx = BanditUtils.Mat2id[matName] or 0
+                            BanditCompatibility.setParameterValueByName(emitter, sid, "BulletHitSurface", sidx)
+                        end
                     end
-                    if matName then
-                        -- print (matName)
-                        local emitter = getWorld():getFreeEmitter(c.x, c.y, c.z)
-                        local sid = emitter:playSound("BulletImpact")
-                        local sidx = BanditUtils.Mat2id[matName] or 0
-                        BanditCompatibility.setParameterValueByName(emitter, sid, "BulletHitSurface", sidx)
-                        -- BanditProjectile.Stop(brainShooter.id)
-                    end
-                    -- return false
                 end
 
                 -- manage window obstacle

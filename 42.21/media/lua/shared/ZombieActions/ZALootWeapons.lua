@@ -81,7 +81,7 @@ local function lootContainer(zombie, container, task)
 
                     for i=1, #toRemove do
                         container:Remove(toRemove[i])
-                        container:removeItemOnServer(toRemove[i])
+                        sendRemoveItemFromContainer(container, toRemove[i])
                     end
                     break
                 end
@@ -90,7 +90,7 @@ local function lootContainer(zombie, container, task)
                 if isBareHands then
                     weapons.melee = item:getFullType()
                     container:Remove(item)
-                    container:removeItemOnServer(item)
+                    sendRemoveItemFromContainer(container, item)
                     break
                 end
             end
@@ -104,35 +104,6 @@ local function lootContainer(zombie, container, task)
     Bandit.ForceSyncPart(zombie, syncData)
     -- Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
 
-    --[[
-    local success = false
-    for _, v in pairs(task.toRemove) do
-        for i=0, items:size()-1 do
-            local item = items:get(i)
-            local name = item:getFullType() 
-            if v == name then
-                container:Remove(item)
-                container:removeItemOnServer(item)
-                success = true
-            end
-        end
-    end
-
-    if success then
-        local weapons = Bandit.GetWeapons(zombie)
-        for k, v in pairs(task.toAdd) do
-            weapons[k] = v
-        end
-        Bandit.SetWeapons(zombie, weapons)
-
-        -- requires a sync
-        local brain = BanditBrain.Get(zombie)
-        local syncData = {}
-        syncData.id = brain.id
-        syncData.weapons = weapons
-        Bandit.ForceSyncPart(zombie, syncData)
-    end
-    ]]
     return success
 end
 

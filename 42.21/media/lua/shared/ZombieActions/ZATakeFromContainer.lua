@@ -37,9 +37,7 @@ ZombieActions.TakeFromContainer.onComplete = function(zombie, task)
                     local item = items:get(i)
                     if item:getFullType() == task.itemType then
                         container:Remove(item)
-                        if BanditUtils.IsController(zombie) then
-                            container:removeItemOnServer(item)
-                        end
+                        sendRemoveItemFromContainer(container, item)
 
                         if not isClient() then
                             if container:getParent() and container:getParent():getOverlaySprite() then

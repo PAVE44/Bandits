@@ -1,0 +1,293 @@
+--
+-- ********************************
+-- *** Zombie Bandits           ***
+-- ********************************
+-- *** Coded by: Slayer         ***
+-- ********************************
+--
+
+BanditMenu = BanditMenu or {}
+
+function BanditMenu.AddWandererGroup(player, square)
+
+    local cids = {
+        "2681ecf5-d0d9-481d-b769-7c4fb626eb81",
+        "a2dec2f0-c76d-4640-8a71-733a547a1ebc",
+        "bf5985eb-7cb0-44ba-8392-f656ffe421f4",
+    }
+    local group = {}
+    group.x = square:getX()
+    group.y = square:getY()
+    group.z = square:getZ()
+    group.cid = BanditUtils.Choice(cids)
+    group.size = 1 + ZombRand(5)
+    BanditServer.Wanderers.AddGroup(group)
+end
+
+function BanditMenu.Tent(player, square)
+    local sx = square:getX()
+    local sy = square:getY()
+    local sz = square:getZ()
+
+    BanditBasePlacements.Tent(sx, sy, sz)
+end
+
+
+function BanditMenu.Map(player)
+    if BanditMenu.mapInstance then
+        BanditMenu.mapInstance:removeFromUIManager()
+        BanditMenu.mapInstance = nil
+    else
+        local map = BanditMap:new(200, 200, 800, 800, nil, "Bandit Map")
+        map:initialise()
+        map:addToUIManager()
+        BanditMenu.mapInstance = map
+    end
+end
+
+function BanditMenu.BanditTest (player)
+    BanditTest.Check()
+end
+
+function BanditMenu.TestAction (player, square, zombie)
+
+    local task = {action="Time", anim="TEST", time=400}
+    Bandit.AddTask(zombie, task)
+end
+
+function BanditMenu.MakeProcedure (player, square)
+    local cell = getCell()
+
+    local sx = square:getX() 
+    local sy = square:getY()
+    local sz = square:getZ()
+
+    local w = 13
+    local h = 7
+
+    local lines = {}
+
+    table.insert(lines, "require \"MysteryPlacements\"\n")
+    table.insert(lines, "\n")
+    table.insert(lines, "function ProcMedicalTent (sx, sy, sz)\n")
+    
+    for x = 0, w do
+        for y = 0, h do
+            for z = 0, 1 do
+                local square = cell:getGridSquare(sx + x, sy + y, sz + z)
+                if square then
+                    local objects = square:getObjects()
+
+                    for i=0, objects:size()-1 do
+                        local object = objects:get(i)
+                        if object then
+
+                            local objectType = object:getType()
+                            local spriteName = object:getSprite():getName()
+                            local spriteProps = object:getSprite():getProperties()
+
+                            local isSolidFloor = spriteProps:has(IsoFlagType.solidfloor)
+                            local isAttachedFloor = spriteProps:has(IsoFlagType.attachedFloor)
+                            local isExterior = spriteProps:has(IsoFlagType.exterior)
+                            local isCanBeRemoved = spriteProps:has(IsoFlagType.canBeRemoved)
+                            local isCanBeCut = spriteProps:has(IsoFlagType.canBeCut)
+                            
+                            if spriteName then
+                                if isSolidFloor and isExterior  then
+                                    --nature floor - skip it
+                                    print ("nature floor")
+                                elseif objectType == IsoObjectType.tree then
+                                    print ("tree")
+
+                                elseif isCanBeRemoved == true or isCanBeCut == true then
+                                    print ("grass")
+
+                                elseif isSolidFloor or isAttachedFloor then
+                                    --floors
+                                    -- table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    -- table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
+                                
+                                elseif false and objectType == IsoObjectType.wall then
+                                    -- walls 
+                                    table.insert(lines, "\tBanditBasePlacements.IsoThumpable (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                elseif instanceof(object, 'IsoDoor') then
+                                    -- door
+                                    table.insert(lines, "\tBanditBasePlacements.IsoDoor (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+
+                                elseif instanceof(object, 'IsoWindow') then
+                                    -- window
+                                    table.insert(lines, "\tBanditBasePlacements.IsoWindow (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+
+                                else
+                                    -- special objects?
+                                    --table.insert(lines, "\tBanditBasePlacements.IsoObject (\"" .. spriteName .. "\", sx + " .. tostring(x) .. ", sy + " .. tostring(y) .. ", sz + " .. tostring(z) .. ")\n")
+                                    
+                                    -- removal 
+                                    --table.insert(lines, "SMap.RegisterBuilder(\"removal\", {" .. (sx + x ) .. ", " .. (sy + y) .. ", " .. (sz + z) .. ", \"" .. spriteName .. "\"})\n")
+
+                                    -- blueprint add
+                                    table.insert(lines, "{x = " .. tostring(x) .. ", y = " .. tostring(y) .. ", z = " .. tostring(z) .. ", sprite = \"" .. spriteName .. "\"},\n")
+                                    
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    local fileWriter = getFileWriter("waitingroom3.txt", true, true)
+    table.insert(lines, "end\n\n")
+
+    local output = ""
+    for k, v in pairs(lines) do
+        output = output .. v
+    end
+    -- print (output)
+    fileWriter:write(output)
+    fileWriter:close()
+                            
+end
+
+function BanditMenu.ShowBrain (player, square, zombie)
+    local id = BanditUtils.GetCharacterID(zombie)
+
+    -- add breakpoint below to see data
+    local brain = BanditBrain.Get(zombie)
+    
+    local gmd = GetBanditClusterData(id)
+    local brainGMD = gmd[id]
+    local moddata = zombie:getModData()
+    
+    local isUseless = zombie:isUseless()
+    local isBandit = zombie:getVariableBoolean("Bandit")
+    local walktype = zombie:getVariableString("zombieWalkType")
+    local walktype2 = zombie:getVariableString("BanditWalkType")
+    local isBanditTarget = zombie:getVariableString("BanditTarget")
+    local primary = zombie:getVariableString("BanditPrimary")
+    local primaryType = zombie:getVariableString("BanditPrimaryType")
+    local secondary = zombie:getVariableString("BanditSecondary")
+    local outfit = zombie:getOutfitName()
+    local ans = zombie:getActionStateName()
+    local under = zombie:isUnderVehicle()
+    local veh = zombie:getVehicle()
+    local health = zombie:getHealth()
+    local zx = zombie:getX()
+    local zy = zombie:getY()
+    local hv = zombie:getHumanVisual()
+    local bv = hv:getBodyVisuals()
+    local moddata = zombie:getModData()
+    local target = zombie:getTarget()
+    local animator = zombie:getAdvancedAnimator()
+    local inventory = zombie:getInventory()
+    local ragdoll = zombie:isRagdoll()
+    -- local astate = zombie:getAnimationDebug()
+    local baseData = BanditPlayerBase.data
+
+    zombie:resetModelNextFrame()
+    zombie:resetModel()
+
+end
+
+function BanditMenu.SwitchProgram(player, bandit, program)
+    local brain = BanditBrain.Get(bandit)
+    if brain then
+        local pid = BanditUtils.GetCharacterID(player)
+
+        brain.master = pid
+        brain.program = {}
+        brain.program.name = program
+        brain.program.stage = "Prepare"
+        BanditBrain.Update(bandit, brain)
+
+        local syncData = {}
+        syncData.id = brain.id
+        syncData.master = brain.master
+        syncData.program = brain.program
+        Bandit.ForceSyncPart(bandit, syncData)
+    end
+end
+
+function BanditMenu.BanditFlush(player)
+    local args = {a=1}
+    sendClientCommand(player, 'Commands', 'BanditFlush', args)
+end
+
+function BanditMenu.SpawnClan(player, square, cid)
+    local player = getSpecificPlayer(0)
+    local args = {}
+    args.cid = cid
+    args.x = square:getX()
+    args.y = square:getY()
+    args.z = square:getZ()
+    args.program = "Bandit"
+    args.size = 6
+    -- args.voice = 101
+    sendClientCommand(player, 'Spawner', 'Clan', args)
+end
+
+function BanditMenu.WorldContextMenuPre(playerID, context, worldobjects, test)
+    local world = getWorld()
+    local player = getSpecificPlayer(playerID)
+    local square = BanditCompatibility.GetClickedSquare()
+
+    local zombie = square:getZombie()
+    if not zombie then
+        local squareS = square:getS()
+        if squareS then
+            zombie = squareS:getZombie()
+            if not zombie then
+                local squareW = square:getW()
+                if squareW then
+                    zombie = squareW:getZombie()
+                end
+            end
+        end
+    end
+
+    -- Player options
+    if zombie and zombie:getVariableBoolean("Bandit") then
+        local brain = BanditBrain.Get(zombie)
+        if not (brain.hostile or brain.hostileP) then
+            local banditOption = context:addOption(brain.fullname)
+            local banditMenu = context:getNew(context)
+
+            if brain.program.name == "Looter" then
+                context:addSubMenu(banditOption, banditMenu)
+                banditMenu:addOption("Join Me!", player, BanditMenu.SwitchProgram, zombie, "Companion")
+            elseif brain.program.name == "Companion" or brain.program.name == "CompanionGuard" then
+                context:addSubMenu(banditOption, banditMenu)
+                banditMenu:addOption("Leave Me!", player, BanditMenu.SwitchProgram, zombie, "Looter")
+            end
+        end
+    end
+
+    -- Debug options
+    if isDebugEnabled() then
+
+        
+        -- context:addOption("[DGB] Tent", player, BanditMenu.Tent, square)
+        context:addOption("[DGB] Bandit Map", player, BanditMenu.Map)
+        -- context:addOption("[DGB] Add Wanderer Group", player, BanditMenu.AddWandererGroup, square)
+        -- context:addOption("[DGB] Tests", player, BanditMenu.BanditTest)
+        context:addOption("[DGB] Make Procedure", player, BanditMenu.MakeProcedure, square)
+        context:addOption("[DGB] Remove All Bandits", player, BanditMenu.BanditFlush, square)
+
+        if zombie then
+            context:addOption("[DGB] Show Brain", player, BanditMenu.ShowBrain, square, zombie)
+        end
+    end
+
+    if isDebugEnabled() or isAdmin() then
+        BanditCustom.Load()
+        local clanData  = BanditCustom.ClanGetAllSorted()
+        local clanSpawnOption = context:addOption("Spawn Bandit Clan")
+        local clanSpawnMenu = context:getNew(context)
+        context:addSubMenu(clanSpawnOption, clanSpawnMenu)
+        for cid, clan in pairs(clanData) do
+            clanSpawnMenu:addOption("Clan " .. clan.general.name, player, BanditMenu.SpawnClan, square, cid)
+        end
+    end
+end
+
+Events.OnPreFillWorldObjectContextMenu.Add(BanditMenu.WorldContextMenuPre)

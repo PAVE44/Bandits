@@ -23,6 +23,11 @@
 	</m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>
+		<m_TimePc>0.40</m_TimePc>
+		<m_ParameterValue>BanditHit=true</m_ParameterValue>
+	</m_Events>
+	<m_Events>
+		<m_EventName>SetVariable</m_EventName>
 		<m_Time>End</m_Time>
 		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
 	</m_Events>

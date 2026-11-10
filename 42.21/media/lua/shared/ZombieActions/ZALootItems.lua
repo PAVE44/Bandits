@@ -40,7 +40,7 @@ ZombieActions.LootItems.onComplete = function(zombie, task)
                     local name = item:getFullType() 
                     -- print ("ITEM: " .. name)
                     container:Remove(item)
-                    container:removeItemOnServer(item)
+                    sendRemoveItemFromContainer(container, item)
                     zinventory:AddItem(item)
                 end
             end
