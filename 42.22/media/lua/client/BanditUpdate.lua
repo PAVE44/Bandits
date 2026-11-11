@@ -2155,6 +2155,17 @@ local function OnBanditUpdate(zombie)
     -- local world = getWorld()
     -- local gamemode = world:getGameMode()
     local brain = BanditBrain.Get(zombie)
+
+    -- Seated bandits retain normal hostility, but not on-foot movement/combat AI.
+    if brain and zombie:getVehicle() and not zombie:isDead() then
+        brain.inVehicle = true
+        zombie:setVariable("Bandit", true)
+        zombie:setUseless(true)
+        zombie:setTarget(nil)
+        zombie:clearAggroList()
+        return
+    end
+    if brain then brain.inVehicle = false end
     
     -- BANDITIZE ZOMBIES SPAWNED AND ENQUEUED BY SERVER
     -- OR ZOMBIFY IF HAS BEEN REMOVED FROM CLUSTER
