@@ -17,6 +17,11 @@
 		<m_ParameterValue>BumpAnimFinished=true</m_ParameterValue>
 	</m_Events>
 	<m_Events>
+		<m_EventName>SetVariable</m_EventName>
+		<m_TimePc>0.27</m_TimePc>
+		<m_ParameterValue>BanditSmoke=true</m_ParameterValue>
+	</m_Events>
+	<m_Events>
 		<m_EventName>PlaySound</m_EventName>
 		<m_TimePc>0.15</m_TimePc>
 		<m_ParameterValue>Smoke</m_ParameterValue>
