@@ -240,6 +240,48 @@ local function applyAttachments(bandit, brain)
     end
 end
 
+function Bandit.Banditize(zombie, brain)
+    BanditBrain.Update(zombie, brain)
+    zombie:setNoTeeth(true)
+    zombie:setVariable("Bandit", true)
+    zombie:getModData().isDeadBandit = false
+    zombie:setVariable("LimpSpeed", 0.80)
+    zombie:setVariable("RunSpeed", 0.65 + ZombRandFloat(0, 0.05))
+    zombie:setVariable("WalkSpeed", 0.98 + ZombRandFloat(0, 0.05))
+    zombie:setVariable("BanditPrimary", "")
+    zombie:setVariable("BanditSecondary", "")
+    zombie:setWalkType("Walk")
+    zombie:setVariable("BanditWalkType", "Walk")
+
+    -- Skips native testDefense, which assumes a player with moodles.
+    zombie:setVariable("ZombieHitReaction", "Chainsaw")
+    zombie:setVariable("NoLungeTarget", true)
+    zombie:getEmitter():stopAll()
+    zombie:setPrimaryHandItem(nil)
+    zombie:setSecondaryHandItem(nil)
+    zombie:resetEquippedHandsModels()
+    zombie:clearAttachedItems()
+    zombie:setTurnAlertedValues(-5, 5)
+    zombie:getModData().brainId = brain.id
+    zombie:getDescriptor():setVoicePrefix("Bandit")
+end
+
+function Bandit.Zombify(bandit)
+    bandit:setNoTeeth(false)
+    bandit:setUseless(false)
+    bandit:setVariable("Bandit", false)
+    bandit:setVariable("BanditPrimary", "")
+    bandit:setVariable("BanditSecondary", "")
+    bandit:setWalkType("2")
+    bandit:setVariable("BanditWalkType", "")
+    bandit:setPrimaryHandItem(nil)
+    bandit:setSecondaryHandItem(nil)
+    bandit:resetEquippedHandsModels()
+    bandit:clearAttachedItems()
+    bandit:getModData().brainId = nil
+    BanditBrain.Remove(bandit)
+end
+
 function Bandit.ForceSyncPart(zombie, syncData)
     sendClientCommand(getSpecificPlayer(0), 'Commands', 'BanditUpdatePart', syncData)
 end

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+	<m_Name>ZSIdleSpear</m_Name>
+	<m_AnimName>Bob_IdleAimSpear</m_AnimName>
+	<m_ConditionPriority>8</m_ConditionPriority>
+	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
+	<m_SpeedScale>0.80</m_SpeedScale>
+	<m_BlendTime>1.35</m_BlendTime>
+	<m_Conditions>
+		<m_Name>Bandit</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+	<m_Conditions />
+	<m_Conditions>
+		<m_Name>BanditPrimaryType</m_Name>
+		<m_Type>STRING</m_Type>
+		<m_StringValue>spear</m_StringValue>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>bMoving</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>false</m_BoolValue>
+	</m_Conditions>
+	<m_Transitions>
+		<m_Target>ZSWalk</m_Target>
+		<m_AnimName>Bob_AimToIdle_Spear</m_AnimName>
+	</m_Transitions>
+	<m_Transitions>
+		<m_Target>ZSRun</m_Target>
+		<m_AnimName>Bob_IdleToRun</m_AnimName>
+	</m_Transitions>
+</animNode>

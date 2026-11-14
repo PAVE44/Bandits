@@ -1,3 +1,4 @@
+require "Bandit"
 require "BanditZombie"
 
 local sum1 = 0
@@ -186,74 +187,6 @@ local function IsShotClear (shooter, enemy)
     return true
 end
 
--- turns a zombie into a bandit
-local function Banditize(zombie, brain)
-
-    -- load brain
-    BanditBrain.Update(zombie, brain)
-
-    -- just in case
-    zombie:setNoTeeth(true)
-
-    -- used to determine if zombie is a bandit, can be used by other mods
-    zombie:setVariable("Bandit", true)
-    zombie:getModData().isDeadBandit = false
-    zombie:setVariable("LimpSpeed", 0.80)
-    zombie:setVariable("RunSpeed", 0.65 + ZombRandFloat(0, 0.05))
-    zombie:setVariable("WalkSpeed", 0.98 + ZombRandFloat(0, 0.05))
-
-    -- bandit primary and secondary hand items
-    zombie:setVariable("BanditPrimary", "")
-    zombie:setVariable("BanditSecondary", "")
-
-    -- bandit walking type defined in animations
-    zombie:setWalkType("Walk")
-    zombie:setVariable("BanditWalkType", "Walk")
-
-    -- this shit here is important, removes black screen crashes
-    -- with this var set, game engine skips testDefense function that
-    -- wrongly refers to moodles, which zombie object does not have
-    zombie:setVariable("ZombieHitReaction", "Chainsaw")
-
-    -- prevents the bandit from being the target of a lunge attack
-    zombie:setVariable("NoLungeTarget", true)
-
-    -- stfu
-    zombie:getEmitter():stopAll()
-
-    zombie:setPrimaryHandItem(nil)
-    zombie:setSecondaryHandItem(nil)
-    zombie:resetEquippedHandsModels()
-    zombie:clearAttachedItems()
-
-    -- makes bandit unstuck after spawns
-    zombie:setTurnAlertedValues(-5, 5)
-
-    zombie:getModData().brainId = brain.id
-
-    local desc = zombie:getDescriptor()
-    -- local test = desc:getVoicePrefix()
-    desc:setVoicePrefix("Bandit")
-
-end
-
--- turns bandit into a zombie
-local function Zombify(bandit)
-    bandit:setNoTeeth(false)
-    bandit:setUseless(false)
-    bandit:setVariable("Bandit", false)
-    bandit:setVariable("BanditPrimary", "")
-    bandit:setVariable("BanditSecondary", "")
-    bandit:setWalkType("2")
-    bandit:setVariable("BanditWalkType", "")
-    bandit:setPrimaryHandItem(nil)
-    bandit:setSecondaryHandItem(nil)
-    bandit:resetEquippedHandsModels()
-    bandit:clearAttachedItems()
-    bandit:getModData().brainId = nil
-    BanditBrain.Remove(bandit)
-end
-
 -- updates bandit torches light
 local TorchLightDefs = {
     {d=0, r=2, c={r = 1, g = 0.9, b = 0.8}},
@@ -436,7 +369,11 @@ local function ManageActionState(bandit)
     -- Default behavior (for undefined states)
     bandit:setTarget(nil)
 
-    bandit:setUseless(BanditUtils.GetGameMode() ~= "Multiplayer" or Bandit.IsForceStationary(bandit))
+    if isServer() or isClient() then
+        bandit:setUseless(Bandit.IsForceStationary(bandit))
+    else
+        bandit:setUseless(true)    
+    end
 
     return true
 end
@@ -1304,7 +1241,7 @@ local function ManageCombat(bandit)
         end
     end
 
-    if BanditUtils.GetGameMode() == "Multiplayer" and IsWindowClose(bandit) then
+    if isClient() and IsWindowClose(bandit) then
         if bandit:getPrimaryHandItem() then
             bandit:setPrimaryHandItem(nil)
         end
@@ -2102,7 +2039,7 @@ local function OnBanditUpdate(zombie)
     if BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then return end
     if BanditCompatibility.IsRagdoll(zombie) then return end
 
-    local isMP = BanditUtils.GetGameMode() == "Multiplayer"
+    local isMP = isClient()
 
     -- hack for multiplayer
     if isMP then
@@ -2158,6 +2095,9 @@ local function OnBanditUpdate(zombie)
 
     -- Seated bandits retain normal hostility, but not on-foot movement/combat AI.
     if brain and zombie:getVehicle() and not zombie:isDead() then
+        if not zombie:getVariableBoolean("Bandit") then Bandit.Banditize(zombie, brain) end
+        Bandit.SurpressZombieSounds(zombie)
+        Bandit.ApplyVisuals(zombie, brain)
         brain.inVehicle = true
         zombie:setVariable("Bandit", true)
         zombie:setUseless(true)
@@ -2173,7 +2113,7 @@ local function OnBanditUpdate(zombie)
     if gmd and gmd[id] then
         if not zombie:getVariableBoolean("Bandit") then
             brain = gmd[id]
-            Banditize(zombie, brain)
+            Bandit.Banditize(zombie, brain)
         end
     else
         -- orphan cull: only this mod dresses zombies in Naked* outfits, so a live
@@ -2195,7 +2135,7 @@ local function OnBanditUpdate(zombie)
             end
         end
         if zombie:getVariableBoolean("Bandit") then
-            Zombify(zombie)
+            Bandit.Zombify(zombie)
         end
     end
     

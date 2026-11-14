@@ -47,11 +47,8 @@ local isGhost = function(player)
 end
 
 local getPlayers = function()
-    local world = getWorld()
-    local gamemode = BanditUtils.GetGameMode()
-
     local playerList = {}
-    if gamemode == "Multiplayer" then
+    if isServer() or isClient() then
         playerList = getOnlinePlayers()
     else
         playerList = IsoPlayer.getPlayers()
@@ -434,7 +431,7 @@ local function makeBrain(id, bandit, clan, args, bx, by, bz, female)
 end
 
 -- args: program, permanent, key
-local function banditize(zombie, bandit, clan, args)
+local function banditize(zombie, bandit, clan, args, saved)
     -- the engine builds the id from the outfit index and a random variant, so it can be
     -- 0 (outfit name did not resolve) or collide with the id of an existing brain; in both
     -- cases redress to roll a fresh id, otherwise two bodies share one brain and the
@@ -453,7 +450,10 @@ local function banditize(zombie, bandit, clan, args)
     end
     if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
 
-    local brain = makeBrain(id, bandit, clan, args, zombie:getX(), zombie:getY(), zombie:getZ(), zombie:isFemale())
+    local brain = saved and copyBrainData(saved)
+        or makeBrain(id, bandit, clan, args, zombie:getX(), zombie:getY(), zombie:getZ(), zombie:isFemale())
+    brain.id = id
+    brain.virtual, brain.remote, brain.recycle = nil, nil, nil
     brain.spawnedAtMs = getTimestampMs()
 
     Bandit.ApplyVisuals(zombie, brain)
@@ -506,6 +506,7 @@ local function spawnGroup(spawnPoints, args)
         banditSelected[key] = banditOptions[key]
     end
 
+    local spawned = {}
     local i = 1
     for bid, bandit in pairs(banditSelected) do
         bandit.general.bid = bid
@@ -524,10 +525,11 @@ local function spawnGroup(spawnPoints, args)
         if zombieList:size() > 0 then
             local zombie = zombieList:get(0)
             banditize(zombie, bandit, clan, args)
+            spawned[#spawned + 1] = zombie
             i = i + 1
         end
     end
-    return i - 1
+    return i - 1, spawned
 end
 
 -- reserved id space: the engine only produces ids whose bits 16..30 are a valid outfit index,
@@ -1102,12 +1104,10 @@ end
 local function checkEvent()
     if isClient() then return end
 
-    local world = getWorld()
-    local gamemode = BanditUtils.GetGameMode()
     local player 
     local day
 
-    if gamemode == "Multiplayer" then
+    if isServer() then 
         local playerList = getOnlinePlayers()
         if playerList:size() > 0 then
             local pid = ZombRand(playerList:size())
@@ -1129,13 +1129,16 @@ local function checkEvent()
     end]]
 
     for cid, clan in pairs(clanData) do
+
         local spawnConfig = clan.spawn
 
         if spawnConfig then 
+
             spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
             spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
 
             if spawnConfig.dayStart and spawnConfig.dayEnd then
+
                 if day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
 
                     if not spawnConfig.spawnChance then 
@@ -1250,6 +1253,31 @@ BanditServer.Spawner.Virtual = function(player, args)
 
     if player then args.pid = BanditUtils.GetCharacterID(player) end
     return spawnVirtual(args)
+end
+
+-- Synchronous normal generation for physical vehicle occupants in single-player.
+BanditServer.Spawner.Occupant = function(player, args, saved)
+    if isClient() or isServer() then error("Vehicle occupant generation requires single-player") end
+    local zombie, brain
+    if saved then
+        local bandit = BanditCustom.GetById(saved.bid)
+        local clan = BanditCustom.ClanGet(saved.cid)
+        if not bandit or not clan then error("Cannot restore vehicle occupant definition " .. tostring(saved.bid)) end
+        local bodies = BanditCompatibility.AddZombiesInOutfit(args.x, args.y, args.z,
+            "Naked" .. (1 + ZombRand(100)), saved.female and 100 or 0,
+            false, false, false, false, false, false, saved.health)
+        if not bodies or bodies:isEmpty() then error("Could not restore vehicle occupant body") end
+        zombie = bodies:get(0)
+        local id = banditize(zombie, bandit, clan, args, saved)
+        brain = GetBanditClusterData(id)[id]
+        zombie:setHealth(saved.health)
+    else
+        local _, bodies = spawnGroup({{x = args.x, y = args.y, z = args.z}}, args)
+        zombie = bodies and bodies[1]
+        if not zombie then error("Could not generate vehicle occupant from clan " .. tostring(args.cid)) end
+        brain = GetBanditClusterData(zombie:getPersistentOutfitID())[zombie:getPersistentOutfitID()]
+    end
+    return zombie, brain
 end
 
 -- used for dedicated spawning by mods

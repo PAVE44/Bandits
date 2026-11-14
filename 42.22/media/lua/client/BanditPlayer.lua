@@ -17,10 +17,8 @@ end
 
 BanditPlayer.GetPlayers = function()
     local world = getWorld()
-    local gamemode = BanditUtils.GetGameMode()
 
-    local playerList
-    if gamemode == "Multiplayer" then
+    if isServer() or isClient() then
         playerList = getOnlinePlayers()
     else
         playerList = IsoPlayer.getPlayers()
@@ -42,9 +40,8 @@ BanditPlayer.GetPlayerById = function(id)
 end
 
 BanditPlayer.GetMasterPlayer = function(bandit)
-    local gamemode = BanditUtils.GetGameMode()
     local master
-    if gamemode == "Multiplayer" then
+    if isServer() or isClient() then
         master = getPlayerByOnlineID(Bandit.GetMaster(bandit))
     else
         master = getSpecificPlayer(0)
