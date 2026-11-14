@@ -468,9 +468,10 @@ local isGhost = function(player)
 end
 
 local getPlayers = function()
+    local gamemode = BanditUtils.GetGameMode()
 
     local playerList = {}
-    if isServer() or isClient() then
+    if gamemode == "Multiplayer" then
         playerList = getOnlinePlayers()
     else
         playerList = IsoPlayer.getPlayers()
@@ -725,10 +726,12 @@ end
 local orchestrator = function()
     if isClient() then return end
 
+    local world = getWorld()
+    local gamemode = BanditUtils.GetGameMode()
     local player 
     local day
 
-    if isServer() then
+    if gamemode == "Multiplayer" then
         local playerList = getOnlinePlayers()
         if playerList:size() > 0 then
             local pid = ZombRand(playerList:size())

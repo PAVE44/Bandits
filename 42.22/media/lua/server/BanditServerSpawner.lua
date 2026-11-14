@@ -47,8 +47,10 @@ local isGhost = function(player)
 end
 
 local getPlayers = function()
+    local gamemode = BanditUtils.GetGameMode()
+
     local playerList = {}
-    if isServer() or isClient() then
+    if gamemode == "Multiplayer" then
         playerList = getOnlinePlayers()
     else
         playerList = IsoPlayer.getPlayers()
@@ -431,7 +433,7 @@ local function makeBrain(id, bandit, clan, args, bx, by, bz, female)
 end
 
 -- args: program, permanent, key
-local function banditize(zombie, bandit, clan, args, saved)
+local function banditize(zombie, bandit, clan, args)
     -- the engine builds the id from the outfit index and a random variant, so it can be
     -- 0 (outfit name did not resolve) or collide with the id of an existing brain; in both
     -- cases redress to roll a fresh id, otherwise two bodies share one brain and the
@@ -450,10 +452,7 @@ local function banditize(zombie, bandit, clan, args, saved)
     end
     if LogLevel >= 3 then print ("[BANDITS] banditize started id " .. id) end
 
-    local brain = saved and copyBrainData(saved)
-        or makeBrain(id, bandit, clan, args, zombie:getX(), zombie:getY(), zombie:getZ(), zombie:isFemale())
-    brain.id = id
-    brain.virtual, brain.remote, brain.recycle = nil, nil, nil
+    local brain = makeBrain(id, bandit, clan, args, zombie:getX(), zombie:getY(), zombie:getZ(), zombie:isFemale())
     brain.spawnedAtMs = getTimestampMs()
 
     Bandit.ApplyVisuals(zombie, brain)
@@ -1104,15 +1103,17 @@ end
 local function checkEvent()
     if isClient() then return end
 
+    local gamemode = BanditUtils.GetGameMode()
     local player 
     local day
 
-    if isServer() then 
+    if gamemode == "Multiplayer" then
         local playerList = getOnlinePlayers()
         if playerList:size() > 0 then
             local pid = ZombRand(playerList:size())
             player = playerList:get(pid)
             day = player:getHoursSurvived() / 24
+            print("[BANDITS] Multiplayer player selected: " .. tostring(pid))
         end
     else
         day = getWorldAge()
@@ -1129,15 +1130,15 @@ local function checkEvent()
     end]]
 
     for cid, clan in pairs(clanData) do
-
         local spawnConfig = clan.spawn
 
         if spawnConfig then 
-
             spawnConfig.dayStart = tonumber(spawnConfig.dayStart)
             spawnConfig.dayEnd = tonumber(spawnConfig.dayEnd)
 
             if spawnConfig.dayStart and spawnConfig.dayEnd then
+
+                print("[BANDITS] Checking spawn configuration for clan " .. cid .. " for day " .. day)
 
                 if day >= spawnConfig.dayStart and day <= spawnConfig.dayEnd then
 
@@ -1268,9 +1269,15 @@ BanditServer.Spawner.Occupant = function(player, args, saved)
             false, false, false, false, false, false, saved.health)
         if not bodies or bodies:isEmpty() then error("Could not restore vehicle occupant body") end
         zombie = bodies:get(0)
-        local id = banditize(zombie, bandit, clan, args, saved)
-        brain = GetBanditClusterData(id)[id]
+        local id = banditize(zombie, bandit, clan, args)
+        brain = copyBrainData(saved)
+        brain.id = id
+        brain.virtual, brain.remote, brain.recycle = nil, nil, nil
+        brain.spawnedAtMs = getTimestampMs()
+        GetBanditClusterData(id)[id] = brain
+        Bandit.ApplyVisuals(zombie, brain)
         zombie:setHealth(saved.health)
+        TransmitBanditCluster(id)
     else
         local _, bodies = spawnGroup({{x = args.x, y = args.y, z = args.z}}, args)
         zombie = bodies and bodies[1]

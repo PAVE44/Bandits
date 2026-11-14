@@ -1,4 +1,3 @@
-require "Bandit"
 require "BanditZombie"
 
 local sum1 = 0
@@ -369,11 +368,7 @@ local function ManageActionState(bandit)
     -- Default behavior (for undefined states)
     bandit:setTarget(nil)
 
-    if isServer() or isClient() then
-        bandit:setUseless(Bandit.IsForceStationary(bandit))
-    else
-        bandit:setUseless(true)    
-    end
+    bandit:setUseless(BanditUtils.GetGameMode() ~= "Multiplayer" or Bandit.IsForceStationary(bandit))
 
     return true
 end
@@ -1241,7 +1236,7 @@ local function ManageCombat(bandit)
         end
     end
 
-    if isClient() and IsWindowClose(bandit) then
+    if BanditUtils.GetGameMode() == "Multiplayer" and IsWindowClose(bandit) then
         if bandit:getPrimaryHandItem() then
             bandit:setPrimaryHandItem(nil)
         end
@@ -2039,7 +2034,7 @@ local function OnBanditUpdate(zombie)
     if BanditCompatibility.IsReanimatedForGrappleOnly(zombie) then return end
     if BanditCompatibility.IsRagdoll(zombie) then return end
 
-    local isMP = isClient()
+    local isMP = BanditUtils.GetGameMode() == "Multiplayer"
 
     -- hack for multiplayer
     if isMP then
