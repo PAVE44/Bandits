@@ -72,17 +72,21 @@ local function onZombieUpdate(zombie)
     light.d = zombie:getDirectionAngle()
 
     local isBandit = zombie:getVariableBoolean("Bandit")
+    local isZombie = zombie:getVariableBoolean("Zombie")
     light.isBandit = isBandit
 
     if isBandit then
-        -- if GetBrain is expensive, consider caching it on enter-bandit only
         light.brain = GetBrain(zombie)
         light.rid = getRoomId(zombie)
         BanditZombie.CacheLightB[id] = light
         BanditZombie.CacheLightZ[id] = nil
-    else
+    elseif isZombie then
         light.brain = nil
         BanditZombie.CacheLightZ[id] = light
+        BanditZombie.CacheLightB[id] = nil
+    else
+
+        BanditZombie.CacheLightZ[id] = nil
         BanditZombie.CacheLightB[id] = nil
     end
     -- THIS IS NOW WELL OPTIMIZED
@@ -135,21 +139,24 @@ local function flush()
             light.d = zd
 
             local isBandit = zombie:getVariableBoolean("Bandit")
+            local isZombie = zombie:getVariableBoolean("Zombie")
             light.isBandit = isBandit
-            if isBandit  then
+            if isBandit then
                 light.brain = BanditBrain.Get(zombie)
                 light.rid = getRoomId(zombie)
                 cacheLightB[id] = light
                 bcnt = bcnt + 1
-            else
+
+                cacheLight[id] = light
+            elseif isZombie then
                 light.brain = nil
                 light.rid = nil
                 cacheLightZ[id] = light
                 zcnt = zcnt + 1
-            end
-            cacheLight[id] = light
-        end
 
+                cacheLight[id] = light
+            end
+        end
     end
 
     -- recreate global cache vars with new findings
@@ -171,6 +178,8 @@ local function flush()
 
     BanditPermanent.Check()
 end
+
+BanditZombie.Update = onZombieUpdate
 
 -- returns IsoZombie by id
 BanditZombie.GetInstanceById = function(id)

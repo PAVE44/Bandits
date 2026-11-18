@@ -2,31 +2,26 @@ ZombieActions = ZombieActions or {}
 
 ZombieActions.Equip = {}
 ZombieActions.Equip.onStart = function(zombie, task)
-    task.tick = 1
 
-    --[[
-    if task.itemSecondary then
-        if hands == "barehand" or hands == "onehanded" or hands == "handgun" or hands == "throwing" then
-            local oldSecondaryPrimary = zombie:getVariableString("BanditSecondary")
-            if oldSecondaryPrimary ~= task.itemSecondary then
-                local secondaryItem = BanditCompatibility.InstanceItem(task.itemSecondary)
-                zombie:setSecondaryHandItem(secondaryItem)
-                zombie:setVariable("BanditSecondary", task.itemSecondary)
+    task.stage = 1
+    
+    if not task.itemPrimary then
+        return false
+    end
 
-                local ls = secondaryItem:getLightStrength()
-                if ls > 0 then
-                    secondaryItem:setActivated(true)
-                    zombie:setVariable("BanditTorch", true)
-                else
-                    zombie:setVariable("BanditTorch", false)
-                end
-            end
-        else
-            print ("ERROR: Cannot equip secondary item because primary item occupies both hands")
-        end
-    end]]
-
+    if task.itemPrimary == "Base.BareHands" then
+        return true
+    end
+    
     local primaryItem = BanditCompatibility.InstanceItem(task.itemPrimary)
+    if not primaryItem then
+        return false
+    end
+
+    -- default
+    task.anim1 = "AttachHolsterLeft"
+    task.anim2 = "AttachHolsterLeftOut"
+
     local attachmentType = primaryItem:getAttachmentType()
     for _, def in pairs(ISHotbarAttachDefinition) do
         if def.attachments then
@@ -36,16 +31,19 @@ ZombieActions.Equip.onStart = function(zombie, task)
                         task.anim1 = "AttachHolsterRight"
                         task.anim2 = "AttachHolsterRightOut"
                         task.slot = v
+                        zombie:setBumpType(task.anim1)
                         return true
                     elseif def.type == "Back" then
                         task.anim1 = "AttachBack"
                         task.anim2 = "AttachBackOut"
                         task.slot = v
+                        zombie:setBumpType(task.anim1)
                         return true
                     elseif def.type == "SmallBeltLeft" then
                         task.anim1 = "AttachHolsterLeft"
                         task.anim2 = "AttachHolsterLeftOut"
                         task.slot = v
+                        zombie:setBumpType(task.anim1)
                         return true
                     end
                 end
@@ -53,40 +51,35 @@ ZombieActions.Equip.onStart = function(zombie, task)
         end
     end
 
-    task.anim1 = "AttachHolsterLeft"
-    task.anim2 = "AttachHolsterLeftOut"
+    
+
     return true
 end
 
 ZombieActions.Equip.onWorking = function(zombie, task)
-    if task.tick == 1 then
-        zombie:setBumpType(task.anim1)
-    end
 
-    if task.tick == 15 then
-        if task.slot then
-            zombie:setAttachedItem(task.slot, nil)
-        end
-
-        zombie:setBumpType(task.anim2)
-
-        if task.itemPrimary then
-            Bandit.SetHands(zombie, task.itemPrimary)
-        end
-    end
-
-    if task.tick >= 40 or
-       (task.tick > 20 and zombie:getBumpType() ~= task.anim1 and zombie:getBumpType() ~= task.anim2) then
+    if not task.itemPrimary then
         return true
     end
 
+    if task.stage == 1 and zombie:getBumpType() ~= task.anim1 then
+        
+        if task.slot then
+            zombie:setAttachedItem(task.slot, nil)
+        end
+        Bandit.SetHands(zombie, task.itemPrimary)
 
-    task.tick = task.tick + 1
+        if task.anim2 then
+            zombie:setBumpType(task.anim2)
+        end
+        task.stage = 2
+        return false
+    end
+
+    if task.stage == 2 and zombie:getBumpType() ~= task.anim2 then
+        return true
+    end
 
     return false
-end
-
-ZombieActions.Equip.onComplete = function(zombie, task)
-    return true
 end
 

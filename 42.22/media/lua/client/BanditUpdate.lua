@@ -253,6 +253,7 @@ local function ManageOnFire(bandit)
         return
     end
 
+    --[[
     local cell = bandit:getCell()
     local bx, by, bz = bandit:getX(), bandit:getY(), bandit:getZ()
 
@@ -268,6 +269,7 @@ local function ManageOnFire(bandit)
             end
         end
     end
+    ]]
 end
 
 -- reduces cooldown for bandit speech
@@ -376,28 +378,6 @@ end
 -- manages endurance regain tasks 
 local function ManageEndurance(bandit)
 
-    local player = getSpecificPlayer(0)
-    if player then
-        if bandit:isMoving() then
-            if bandit:getVariableString("BanditWalkType") == "Run" then
-                
-                local px, py, pz = player:getX(), player:getY(), player:getZ()
-                local zx, zy, zz = bandit:getX(), bandit:getY(), bandit:getZ()
-                local dist = ((zx - px) * (zx - px)) + ((zy - py) * (zy - py))
-                if pz == zz and dist < 9 then
-                    local volume = getSoundManager():getSoundVolume()
-                    local emitter = bandit:getEmitter()
-                    local sound = "ZSBreath_Male"
-                    if bandit:isFemale() then sound = "ZSBreath_Female" end
-                    if not emitter:isPlaying(sound) then
-                        local id = emitter:playSound(sound)
-                        emitter:setVolume(id, volume * 0.6)
-                    end
-                end
-            end
-        end
-    end
-
     if not SandboxVars.Bandits.General_LimitedEndurance then
         return {}
     end
@@ -423,7 +403,6 @@ end
 local function ManageHealth(bandit)
     local tasks = {}
 
-    -- temporarily removed until bleeding bug in week one investigation is complete
     if SandboxVars.Bandits.General_BleedOut then
         local healing = false
         local health = bandit:getHealth()
@@ -540,6 +519,8 @@ local function ManageCollisions(bandit)
     -- bandit:addLineChatElement("Facing direction: " .. bandit:getDirectionAngle(), 0.8, 0.8, 0.1)
 
     local collided = bandit:isCollidedWithDoor() or bandit:isCollidedThisFrame() or bandit:isCollided()
+    
+    --[[
     if not collided then
         local edgeDistance
         if isodir == IsoDirections.W then
@@ -558,6 +539,7 @@ local function ManageCollisions(bandit)
             collided = door and not door:IsOpen()
         end
     end
+    ]]
     if not collided then return {} end
     
     --bandit:addLineChatElement("collided ", 0.8, 0.8, 0.1)
@@ -1023,7 +1005,7 @@ local function ManageCombat(bandit)
                     local dx = zx - px
                     local dy = zy - py
                     local distSq = (dx * dx) + (dy * dy)
-                    if distSq < bestDistSq and math.abs(zz - pz) < 0.5 then
+                    if distSq < bestDistSq and math.abs(zz - pz) < 2.5 then
                         local spottedScore = CalcSpottedScore(potentialEnemy, distSq)
                         if not banditSquare:isSomethingTo(potentialEnemySquare) and spottedScore > 0.49 then
                             bestDistSq, enemyCharacter = distSq, potentialEnemy
@@ -1900,8 +1882,8 @@ local function ProcessTask(bandit, task)
     elseif task.state == "WORKING" then
         -- print ("working: " .. bandit:getActionStateName() .. " " .. bandit:getBumpType()  .. bandit:getVariableString("BanditWalkType"))
         -- normalize time speed
-        local decrement = 1 / ((getAverageFPS() + 0.5) * 0.01666667)
-        --local decrement = 1 / ((60 + 0.5) * 0.01666667)
+        --local decrement = 1 / ((getAverageFPS() + 0.5) * 0.01666667)
+        local decrement = 1
         task.time = task.time - decrement
 
         local done = ZombieActions[task.action].onWorking(bandit, task)
@@ -2027,7 +2009,7 @@ end
 -- main function to handle bandits
 local function OnBanditUpdate(zombie)
     
-    local ts = getTimestampMs()
+    -- local ts = getTimestampMs()
     
     if isServer() then return end
     if not Bandit.Engine then return end
@@ -2088,17 +2070,27 @@ local function OnBanditUpdate(zombie)
     -- local gamemode = world:getGameMode()
     local brain = BanditBrain.Get(zombie)
 
-    -- Seated bandits retain normal hostility, but not on-foot movement/combat AI.
-    if brain and zombie:getVehicle() and not zombie:isDead() then
-        if not zombie:getVariableBoolean("Bandit") then Bandit.Banditize(zombie, brain) end
-        Bandit.SurpressZombieSounds(zombie)
-        Bandit.ApplyVisuals(zombie, brain)
-        brain.inVehicle = true
-        zombie:setVariable("Bandit", true)
-        zombie:setUseless(true)
-        zombie:setTarget(nil)
-        zombie:clearAggroList()
-        return
+    local seatedVehicle = zombie:getVehicle()
+    if brain and seatedVehicle then
+        if seatedVehicle:isRemovedFromWorld() or seatedVehicle:getSeat(zombie) == -1 then
+            print("[Bandit] Clearing orphaned vehicle reference for " .. tostring(id))
+            seatedVehicle:exit(zombie)
+            zombie:setVehicle(nil)
+            zombie:setCollidable(true)
+            zombie:setInvulnerable(false)
+            zombie:setUseless(false)
+        elseif not zombie:isDead() then
+            -- Seated bandits retain normal hostility, but not on-foot movement/combat AI.
+            if not zombie:getVariableBoolean("Bandit") then Bandit.Banditize(zombie, brain) end
+            Bandit.SurpressZombieSounds(zombie)
+            Bandit.ApplyVisuals(zombie, brain)
+            brain.inVehicle = true
+            zombie:setVariable("Bandit", true)
+            zombie:setUseless(true)
+            zombie:setTarget(nil)
+            zombie:clearAggroList()
+            return
+        end
     end
     if brain then brain.inVehicle = false end
     
@@ -2148,7 +2140,12 @@ local function OnBanditUpdate(zombie)
     ------------------------------------------------------------------------------------------------------------------------------------
     -- BANDIT UPDATE AFTER THIS LINE
     ------------------------------------------------------------------------------------------------------------------------------------
-    if not zombie:getVariableBoolean("Bandit") then return end
+    local isBandit = zombie:getVariableBoolean("Bandit")
+    if not isBandit then
+        zombie:setVariable("Zombie", true)
+        return
+    end
+    
     if not brain then return end
 
     -- distant bandits are not updated by this mod so they need to be set useless

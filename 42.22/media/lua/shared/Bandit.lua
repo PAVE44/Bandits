@@ -244,6 +244,7 @@ function Bandit.Banditize(zombie, brain)
     BanditBrain.Update(zombie, brain)
     zombie:setNoTeeth(true)
     zombie:setVariable("Bandit", true)
+    zombie:setVariable("Zombie", false)
     zombie:getModData().isDeadBandit = false
     zombie:setVariable("LimpSpeed", 0.80)
     zombie:setVariable("RunSpeed", 0.65 + ZombRandFloat(0, 0.05))
@@ -264,12 +265,14 @@ function Bandit.Banditize(zombie, brain)
     zombie:setTurnAlertedValues(-5, 5)
     zombie:getModData().brainId = brain.id
     zombie:getDescriptor():setVoicePrefix("Bandit")
+    BanditZombie.Update(zombie)
 end
 
 function Bandit.Zombify(bandit)
     bandit:setNoTeeth(false)
     bandit:setUseless(false)
     bandit:setVariable("Bandit", false)
+    bandit:setVariable("Zombie", true)
     bandit:setVariable("BanditPrimary", "")
     bandit:setVariable("BanditSecondary", "")
     bandit:setWalkType("2")
@@ -280,6 +283,7 @@ function Bandit.Zombify(bandit)
     bandit:clearAttachedItems()
     bandit:getModData().brainId = nil
     BanditBrain.Remove(bandit)
+    BanditZombie.Update(bandit)
 end
 
 function Bandit.ForceSyncPart(zombie, syncData)
@@ -877,6 +881,16 @@ function Bandit.UpdateItemsToSpawnAtDeath(zombie, brain)
             item:setName("Unknown Key")
             item:getModData().preserve = true
             zombie:addItemToSpawnAtDeath(item)
+        end
+    end
+
+    if brain.money then
+        for i = 1, brain.money do
+            local item = BanditCompatibility.InstanceItem("Base.Money")
+            if item then
+                item:getModData().preserve = true
+                zombie:addItemToSpawnAtDeath(item)
+            end
         end
     end
 

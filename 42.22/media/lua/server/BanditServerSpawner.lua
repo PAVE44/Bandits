@@ -303,7 +303,7 @@ local function copyBrainData(value, copies)
 end
 
 -- builds a brain without touching the world, so it can also be used for virtual (bodyless) bandits
--- args: program, stage, permanent, key, occupation, loyal, pid, hostile, hostileP, voice, fullname
+-- args: program, stage, permanent, key, occupation, money, loyal, pid, hostile, hostileP, voice, fullname
 local function makeBrain(id, bandit, clan, args, bx, by, bz, female)
 
     local brain = {}
@@ -417,6 +417,7 @@ local function makeBrain(id, bandit, clan, args, bx, by, bz, female)
     -- bwo uses it
     brain.occupation = copyBrainData(args.occupation)
     brain.permaInv = copyBrainData(args.permaInv)
+    brain.money = args.money or 0
     brain.loyal = args.loyal or false
 
     brain.master = args.pid
@@ -554,7 +555,7 @@ local function nextVirtualId()
 end
 
 -- creates a bandit brain with no body, managed remotely until its position is in a loaded cell
--- args: cid, program, stage, occupation, hostile, hostileP, loyal, pid, permanent, key, x, y, z
+-- args: cid, program, stage, occupation, money, hostile, hostileP, loyal, pid, permanent, key, x, y, z
 local function spawnVirtual(args)
     local clan = BanditCustom.ClanGet(args.cid)
     if not clan then return end
@@ -612,6 +613,7 @@ local function spawnRestore(brain)
     args.stage = brain.program.stage
     args.occupation = brain.occupation
     args.permaInv = brain.permaInv
+    args.money = brain.money
     args.loyal = brain.loyal
     args.master = brain.pid
     args.permanent = brain.permanent

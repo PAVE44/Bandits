@@ -11,7 +11,7 @@ ZombieActions.Aim.onWorking = function(zombie, task)
     task.tick = task.tick + 1
     zombie:faceLocationF(task.x, task.y)
     if zombie:getBumpType() ~= task.anim then 
-        if task.tick < 10 then
+        if task.tick < 3 then
             zombie:setBumpType(task.anim)
             -- print (task.tick .. " " .. task.anim)
         else

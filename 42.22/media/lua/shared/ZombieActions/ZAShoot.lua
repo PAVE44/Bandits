@@ -88,6 +88,20 @@ ZombieActions.Shoot.onStart = function(bandit, task)
             task.anim = "AttackHandgunSmall"
         end
     end
+
+    --[[
+    local zdiff = ez - bz
+    local dist2 = (bx - ex) * (bx - ex) + (by - ey) * (by - ey)
+    local height = zdiff * 3
+    local slopeThreshold = math.tan(math.rad(22.5))
+    local shootUp = zdiff > 0 and height * height >= dist2 * slopeThreshold * slopeThreshold
+
+    if shootUp then
+        task.anim = task.anim .. "Up45"
+    end
+    ]]
+
+
     bandit:setBumpType(task.anim)
 
     -- apply a slight random offset to the firing direction (degrees)

@@ -440,6 +440,7 @@ local function Hit(attacker, item, victim, hr)
                 if hr then
                     fakeZombie:setVariable("ZombieHitReaction", hr)
                 end
+                victim:setInvulnerable(false)
                 victim:Hit(item, fakeZombie, dmg, false, 1, false) -- no-ragdoll hit
                 victim:playSound(item:getZombieHitSound())
 

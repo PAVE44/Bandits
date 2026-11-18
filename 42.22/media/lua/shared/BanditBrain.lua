@@ -17,6 +17,10 @@ end
 
 function BanditBrain.IsOutOfAmmo(brain)
     local weapons = brain.weapons
+
+    if not weapons.primary then weapons.primary = {} end
+    if not weapons.secondary then weapons.secondary = {} end
+
     if not weapons.primary.bulletsLeft then weapons.primary.bulletsLeft = 0 end
     if not weapons.secondary.bulletsLeft then weapons.secondary.bulletsLeft = 0 end
     if not weapons.primary.magCount then weapons.primary.magCount = 0 end
@@ -42,9 +46,12 @@ end
 
 function BanditBrain.NeedResupplySlot(brain, slot)
     local weapons = brain.weapons
+
+    if not weapons[slot] then weapons[slot] = {} end
+
     if not weapons[slot].name or 
         (
-            weapons.primary.bulletsLeft <= 0 and 
+            weapons[slot].bulletsLeft <= 0 and 
             (
                 (weapons[slot].type == "mag" and weapons[slot].magCount <= 0) or
                 (weapons[slot].type == "nomag" and weapons[slot].ammoCount <= 0)

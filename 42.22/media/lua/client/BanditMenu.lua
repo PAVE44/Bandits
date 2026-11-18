@@ -171,6 +171,9 @@ function BanditMenu.ShowBrain (player, square, zombie)
     local ans = zombie:getActionStateName()
     local under = zombie:isUnderVehicle()
     local veh = zombie:getVehicle()
+    if veh then
+        id = veh:getId()
+    end
     local health = zombie:getHealth()
     local zx = zombie:getX()
     local zy = zombie:getY()
