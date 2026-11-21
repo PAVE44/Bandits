@@ -627,11 +627,9 @@ ZombieActions.Smack.onWorking = function(bandit, task)
                 if player:isAlive() and eid == task.eid then
                     if task.bite then
                         Bite(bandit, player)
-                        task.time = 40
                     else
                         if bandit:getActionStateName() == "bumped" then
                             Hit (bandit, item, player)
-                            task.time = 50
                         end
                     end
                 end

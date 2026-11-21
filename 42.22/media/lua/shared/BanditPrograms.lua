@@ -247,7 +247,7 @@ BanditPrograms.Weapon.Rack = function(bandit, slot)
     end
 
     if not weapon.racked then
-        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound}
         table.insert(tasks, task)
         return tasks
     end
@@ -313,21 +313,21 @@ BanditPrograms.Weapon.Reload = function(bandit, slot)
         
         if clipMode then 
             if weapon.clipIn then
-                local task = {action="Unload", slot=slot, drop=magazineType, anim=unloadAnim, sound=unloadSound, time=90}
+                local task = {action="Unload", slot=slot, drop=magazineType, anim=unloadAnim, sound=unloadSound}
                 table.insert(tasks, task)
                 return tasks
             else
-                local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+                local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound}
                 table.insert(tasks, task)
                 return tasks
             end
         else
-            local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound, time=90}
+            local task = {action="Load", slot=slot, anim=loadAnim, sound=loadSound}
             table.insert(tasks, task)
             return tasks
         end
     elseif not weapon.racked then
-        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound, time=90}
+        local task = {action="Rack", slot=slot, anim=rackAnim, sound=rackSound}
         table.insert(tasks, task)
         return tasks
     end

@@ -7,7 +7,7 @@ ZombieActions.FillWater.onStart = function(zombie, task)
     if item then
         zombie:setPrimaryHandItem(item)
         inventory:Remove(item)
-        Bandit.UpdateItemsToSpawnAtDeath(zombie)
+        -- Bandit.UpdateItemsToSpawnAtDeath(zombie)
     end
     return true
 end
@@ -62,7 +62,7 @@ ZombieActions.FillWater.onComplete = function(zombie, task)
 
     local inventory = zombie:getInventory()
     inventory:AddItem(item)
-    Bandit.UpdateItemsToSpawnAtDeath(zombie)
+    -- Bandit.UpdateItemsToSpawnAtDeath(zombie)
 
     return true
 end

@@ -12,7 +12,7 @@ ZombieActions.Zombify.onWorking = function(zombie, task)
 end
 
 ZombieActions.Zombify.onComplete = function(zombie, task)
-    zombie:changeState(ZombieOnGroundState.instance())
+    zombie:getModData().isDeadBandit = true
     local id = BanditUtils.GetCharacterID(zombie)
     local args = {}
     args.id = id

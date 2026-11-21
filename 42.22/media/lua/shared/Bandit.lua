@@ -275,13 +275,67 @@ function Bandit.Zombify(bandit)
     bandit:setVariable("Zombie", true)
     bandit:setVariable("BanditPrimary", "")
     bandit:setVariable("BanditSecondary", "")
-    bandit:setWalkType("2")
     bandit:setVariable("BanditWalkType", "")
     bandit:setPrimaryHandItem(nil)
     bandit:setSecondaryHandItem(nil)
     bandit:resetEquippedHandsModels()
     bandit:clearAttachedItems()
     bandit:getModData().brainId = nil
+
+    local sprinterPercentage = SandboxVars.ZombieLore.SprinterPercentage
+    if sprinterPercentage then
+        if ZombRand(100) < sprinterPercentage then
+            local variant = 1 + ZombRand(5)
+            if variant == 1 then
+                bandit:setWalkType("sprint1")
+            elseif variant == 2 then
+                bandit:setWalkType("sprint2")
+            elseif variant == 3 then
+                bandit:setWalkType("sprint3")
+            elseif variant == 4 then
+                bandit:setWalkType("sprint4")
+            else
+                bandit:setWalkType("sprint")
+            end
+        else
+            bandit:setWalkType("2")
+        end
+    else
+        bandit:setWalkType("2")
+    end
+
+    local prefix = "MaleZombie"
+    if bandit:isFemale() then
+        prefix = "FemaleZombie"
+    end
+    local desc = bandit:getDescriptor()
+    desc:setVoicePrefix(prefix)
+
+    local skinMap = {
+        ["MaleBody01"] = "M_ZedBody01_level1",
+        ["MaleBody01a"] = "M_ZedBody01_level1",
+        ["MaleBody02"] = "M_ZedBody02_level1",
+        ["MaleBody02a"] = "M_ZedBody02_level1",
+        ["MaleBody03"] = "M_ZedBody03_level1",
+        ["MaleBody03a"] = "M_ZedBody03_level1",
+        ["MaleBody04"] = "M_ZedBody03_level1",
+        ["MaleBody04a"] = "M_ZedBody03_level1",
+        ["MaleBody05"] = "M_ZedBody04_level1",
+        ["MaleBody05a"] = "M_ZedBody04_level1",
+        ["FemaleBody01"] = "F_ZedBody01_level1",
+        ["FemaleBody02"] = "F_ZedBody02_level1",
+        ["FemaleBody03"] = "F_ZedBody03_level1",
+        ["FemaleBody04"] = "F_ZedBody03_level1",
+        ["FemaleBody05"] = "F_ZedBody04_level1",
+    }
+
+    local hv = bandit:getHumanVisual()
+    local skin = hv:getSkinTexture()
+    if skinMap[skin] then
+        hv:setSkinTextureName(skinMap[skin])
+    end
+    bandit:resetModel()
+
     BanditBrain.Remove(bandit)
     BanditZombie.Update(bandit)
 end

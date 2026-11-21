@@ -666,11 +666,11 @@ local function ManageCollisions(bandit)
 
                                 elseif not object:IsOpen() and not object:isSmashed() and not BanditBrain.HasTaskType(brain, "SmashWindow") then
                                     if SandboxVars.Bandits.General_SmashWindow and (brain.hostile or brain.demolish) then
-                                        local task = {action="SmashWindow", anim="WindowSmash", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        local task = {action="SmashWindow", anim="WindowSmash", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                         table.insert(tasks, task)
                                         return tasks
                                     elseif not object:isPermaLocked() and not BanditBrain.HasTaskType(brain, "OpenWindow") then
-                                        local task = {action="OpenWindow", anim="WindowOpen", time=25, x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
+                                        local task = {action="OpenWindow", anim="WindowOpen", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ()}
                                         table.insert(tasks, task)
                                         return tasks
                                     end
@@ -890,7 +890,7 @@ local function ManageCollisions(bandit)
                             if not isWallTo then
                                 if bandit:isPrimaryEquipped(weapons.melee) then
                                     Bandit.ClearTasks(bandit)
-                                    local task = {action="Destroy", anim="FrontKick", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), soundEnd=object:getThumpSound(), time=80}
+                                    local task = {action="Destroy", anim="FrontKick", x=object:getSquare():getX(), y=object:getSquare():getY(), z=object:getSquare():getZ(), soundEnd=object:getThumpSound()}
                                     table.insert(tasks, task)
                                 else
                                     if not BanditBrain.HasActionTask(brain) then
@@ -1236,7 +1236,7 @@ local function ManageCombat(bandit)
 
             if bandit:isFacingObject(enemyCharacter, 0.1) then
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Push", anim="Shove", sound="AttackShove", time=60, endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Push", anim="Shove", sound="AttackShove", endurance=-0.05, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -1248,7 +1248,7 @@ local function ManageCombat(bandit)
             Bandit.ClearTasks(bandit)
 
             local eid = BanditUtils.GetCharacterID(enemyCharacter)
-            local task = {action="Smack", time=65, endurance=-0.03, shm=false, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+            local task = {action="Smack", endurance=-0.03, shm=false, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
             table.insert(tasks, task)
         end
 
@@ -1271,7 +1271,7 @@ local function ManageCombat(bandit)
                     shouldHitMoving = true
                 end
                 local eid = BanditUtils.GetCharacterID(enemyCharacter)
-                local task = {action="Smack", time=65, endurance=-0.03, shm=shouldHitMoving, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
+                local task = {action="Smack", endurance=-0.03, shm=shouldHitMoving, weapon=weapons.melee, eid=eid, x=enemyCharacter:getX(), y=enemyCharacter:getY(), z=enemyCharacter:getZ()}
                 table.insert(tasks, task)
             else
                 bandit:faceThisObject(enemyCharacter)
@@ -1831,7 +1831,6 @@ local function ProcessTask(bandit, task)
     if not task.action then return end
     if not task.state then task.state = "NEW" end
 
-    
     -- bandit:addLineChatElement(task.action .. tostring(ZombRand(1000), 0.8, 0.8, 0.1))
 
     if task.state == "NEW" then
@@ -2069,7 +2068,6 @@ local function OnBanditUpdate(zombie)
     -- local world = getWorld()
     -- local gamemode = world:getGameMode()
     local brain = BanditBrain.Get(zombie)
-
     local seatedVehicle = zombie:getVehicle()
     if brain and seatedVehicle then
         if seatedVehicle:isRemovedFromWorld() or seatedVehicle:getSeat(zombie) == -1 then

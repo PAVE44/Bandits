@@ -56,7 +56,7 @@ ZombiePrograms.Bandit.Main = function(bandit)
             local tx, ty, tz = square:getX() + 0.5, square:getY() + 0.5, square:getZ()
             local dist = BanditUtils.DistTo(bx, by, tx, ty)
             if distBest < 1.2 and bz == tz then
-                local task = {action="LightToggle", time=20, active=true, x=tx, y=ty, z=tz}
+                local task = {action="LightToggle", active=true, x=tx, y=ty, z=tz}
                 table.insert(tasks, task)
                 return {status=true, next="Main", tasks=tasks}
             else
